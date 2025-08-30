@@ -1,0 +1,30 @@
+<?php
+require __DIR__.'/config/config.php'; require_auth();
+$kw = trim($_GET['kw'] ?? '');
+$q = "SELECT id,name,quantity,unit,price,payer_name,created_at FROM purchases WHERE 1";
+$params=[];
+if($kw!==''){ $q.=" AND name LIKE ?"; $params[]="%$kw%"; }
+$q.=" ORDER BY id DESC";
+$s=$pdo->prepare($q); $s->execute($params);
+$rows=$s->fetchAll();
+?><!doctype html><html lang="ar" dir="rtl"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>تقرير المشتريات</title>
+<style>body{font-family:Cairo,Arial} table{width:100%;border-collapse:collapse} th,td{border:1px solid #ddd;padding:6px} th{background:#f7f7f7} .head{display:flex;justify-content:space-between;align-items:center}</style>
+</head><body>
+<div class="head">
+  <div><h3>تقرير المشتريات</h3><div>تم التوليد: <?= date('Y-m-d H:i') ?></div></div>
+  <img src="assets/logo.svg" width="60">
+</div>
+<table>
+<thead><tr><th>#</th><th>الاسم</th><th>الكمية</th><th>الوحدة</th><th>السعر</th><th>الدافع</th><th>التاريخ</th></tr></thead>
+<tbody>
+<?php foreach($rows as $r): ?>
+<tr>
+  <td><?= $r['id'] ?></td><td><?= esc($r['name']) ?></td><td><?= $r['quantity'] ?></td><td><?= esc($r['unit']) ?></td>
+  <td><?= number_format((float)$r['price'],2) ?></td><td><?= esc($r['payer_name']) ?></td><td><?= esc($r['created_at']) ?></td>
+</tr>
+<?php endforeach; ?>
+</tbody></table>
+<script>window.print()</script>
+</body></html>

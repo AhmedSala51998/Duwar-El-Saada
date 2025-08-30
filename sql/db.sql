@@ -1,0 +1,2 @@
+-- duwar_al_saada v5 schema (same as auto-bootstrap)
+-- استخدم config/config.php لإنشاء الجداول تلقائيًا أو استورد هذا الملف لو تحب.

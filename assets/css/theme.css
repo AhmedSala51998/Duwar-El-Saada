@@ -1,0 +1,22 @@
+
+:root{
+  --orange:#ff6a00;
+  --orange-soft:rgba(255,106,0,.12);
+  --ink:#1f2328;
+}
+*{font-family:'Cairo',system-ui,Arial;}
+
+.navbar-brand span{color:var(--orange)}
+.btn-orange{background:var(--orange);color:#fff;border:none}
+.btn-orange:hover{opacity:.92;background:var(--orange);color:#fff;border:none}
+
+.sidebar-link{display:block;padding:.6rem .8rem;border-radius:.8rem;color:#333;text-decoration:none}
+.sidebar-link:hover{background:var(--orange-soft);color:#000}
+
+.badge-unit{background:var(--orange-soft);color:#8a3f00}
+.table-actions .btn{padding:.25rem .5rem}
+
+.flash{border:1px solid var(--orange);background:var(--orange-soft);padding:.6rem 1rem;border-radius:.6rem}
+
+
+
