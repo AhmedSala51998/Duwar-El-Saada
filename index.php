@@ -47,50 +47,79 @@ $rentalsByPayer = $pdo->query("
 ?>
 
 <div class="row g-3">
+  <!-- كارت الترحيب -->
   <div class="col-lg-4">
-    <div class="card p-4 border-0 shadow-sm" style="background:linear-gradient(135deg, rgba(255,106,0,.9), rgba(255,180,120,.9));color:#fff">
-      <h4>أهلًا <?= esc(current_user()) ?> 👋</h4>
-      <div>أدِر المشتريات، الأوامر، العُهد، الرسوم، الاشتراكات والإيجارات بسهولة.</div>
+    <div class="card p-4 border-0 shadow-lg h-100" 
+         style="background:linear-gradient(135deg,#ff6a00,#ffb478);color:#fff;border-radius:15px;">
+      <h4 class="mb-2">أهلًا <?= esc(current_user()) ?> 👋</h4>
+      <p class="mb-0">أدِر المشتريات، الأوامر، العُهد، الرسوم، الاشتراكات والإيجارات بسهولة.</p>
     </div>
   </div>
+
+  <!-- كروت الإحصائيات -->
   <div class="col-lg-8">
     <div class="row g-3">
-      <div class="col-md-2">
-        <div class="card p-3 shadow-sm">
-          <div class="text-muted">أصناف</div>
-          <div class="fs-3"><?= $pc ?></div>
+
+      <!-- أصناف -->
+      <div class="col-md-4 col-lg-2">
+        <div class="card p-3 text-center h-100"
+             style="border:2px solid #ff6a00;border-radius:15px;box-shadow:0 4px 12px rgba(255,106,0,0.3);">
+          <div class="fs-2 mb-2 text-orange"><i class="bi bi-bag"></i></div>
+          <div class="text-muted small">الأصناف</div>
+          <div class="fw-bold fs-4"><?= $pc ?></div>
         </div>
       </div>
-      <div class="col-md-2">
-        <div class="card p-3 shadow-sm">
-          <div class="text-muted">أوامر</div>
-          <div class="fs-3"><?= $oc ?></div>
+
+      <!-- أوامر -->
+      <div class="col-md-4 col-lg-2">
+        <div class="card p-3 text-center h-100"
+             style="border:2px solid #ff6a00;border-radius:15px;box-shadow:0 4px 12px rgba(255,106,0,0.3);">
+          <div class="fs-2 mb-2 text-primary"><i class="bi bi-gear"></i></div>
+          <div class="text-muted small">الأوامر</div>
+          <div class="fw-bold fs-4"><?= $oc ?></div>
         </div>
       </div>
-      <div class="col-md-2">
-        <div class="card p-3 shadow-sm">
-          <div class="text-muted">العُهد</div>
-          <div class="fs-3"><?= $ac ?></div>
+
+      <!-- العهد -->
+      <div class="col-md-4 col-lg-2">
+        <div class="card p-3 text-center h-100"
+             style="border:2px solid #ff6a00;border-radius:15px;box-shadow:0 4px 12px rgba(255,106,0,0.3);">
+          <div class="fs-2 mb-2 text-success"><i class="bi bi-building"></i></div>
+          <div class="text-muted small">العُهد</div>
+          <div class="fw-bold fs-4"><?= $ac ?></div>
         </div>
       </div>
-      <div class="col-md-2">
-        <div class="card p-3 shadow-sm">
-          <div class="text-muted">الرسوم الحكومية</div>
-          <div class="fs-3"><?= $gf_count ?></div>
+
+      <!-- الرسوم الحكومية -->
+      <div class="col-md-4 col-lg-2">
+        <div class="card p-3 text-center h-100"
+             style="border:2px solid #ff6a00;border-radius:15px;box-shadow:0 4px 12px rgba(255,106,0,0.3);">
+          <div class="fs-2 mb-2 text-danger"><i class="bi bi-file-earmark-text"></i></div>
+          <div class="text-muted small">الرسوم</div>
+          <div class="fw-bold fs-4"><?= $gf_count ?></div>
         </div>
       </div>
-      <div class="col-md-2">
-        <div class="card p-3 shadow-sm">
-          <div class="text-muted">الاشتراكات</div>
-          <div class="fs-3"><?= $subs_count ?></div>
+
+      <!-- الاشتراكات -->
+      <div class="col-md-4 col-lg-2">
+        <div class="card p-3 text-center h-100"
+             style="border:2px solid #ff6a00;border-radius:15px;box-shadow:0 4px 12px rgba(255,106,0,0.3);">
+          <div class="fs-2 mb-2 text-info"><i class="bi bi-journal-bookmark"></i></div>
+          <div class="text-muted small">الاشتراكات</div>
+          <div class="fw-bold fs-4"><?= $subs_count ?></div>
         </div>
       </div>
-      <div class="col-md-2">
-        <div class="card p-3 shadow-sm">
-          <div class="text-muted">الإيجارات</div>
-          <div class="fs-3"><?= $rentals_count ?></div>
+
+      <!-- الإيجارات -->
+      <div class="col-md-4 col-lg-2">
+        <div class="card p-3 text-center h-100"
+             style="border:2px solid #ff6a00;border-radius:15px;box-shadow:0 4px 12px rgba(255,106,0,0.3);">
+          <div class="fs-2 mb-2 text-warning"><i class="bi bi-house-door"></i></div>
+          <div class="text-muted small">الإيجارات</div>
+          <div class="fw-bold fs-4"><?= $rentals_count ?></div>
         </div>
       </div>
+
     </div>
   </div>
 </div>

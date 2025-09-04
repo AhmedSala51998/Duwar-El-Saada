@@ -24,41 +24,106 @@ $current_page = basename($_SERVER['PHP_SELF']);
       color: #fff !important;
       border-radius: 6px;
     }
+    .custom-navbar {
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(0,0,0,0.08); /* ✅ أسود خفيف جدًا */
+      padding: .7rem 1rem;
+    }
+    /* لون البرتقالي */
+    .text-orange { color: #ff6a00 !important; }
+
+    /* الدور */
+    .role-badge {
+      background: #fff3e6;
+      color: #ff6a00;
+      font-weight: 600;
+      border-radius: 50px;
+      padding: .5rem 1rem;
+      box-shadow: 0 2px 6px rgba(255,106,0,.2);
+    }
+
+    /* روابط */
+    .navbar .nav-link {
+      font-weight: 500;
+      padding: .6rem 1.2rem;
+      border-radius: 12px;
+      color: #555 !important;
+      transition: all .2s ease;
+    }
+    .navbar .nav-link:hover {
+      background: rgba(255,106,0,.08);
+      color: #ff6a00 !important;
+    }
+    .navbar .nav-link.active {
+      background: rgba(255,106,0,.15);
+      color: #ff6a00 !important;
+      font-weight: 600;
+    }
+
+    /* زر خروج */
+    .btn-logout {
+      background: linear-gradient(135deg,#ff6a00,#ff944d);
+      color: #fff;
+      font-weight: 600;
+      padding: .6rem 1.4rem;
+      border-radius: 50px;
+      box-shadow: 0 4px 12px rgba(255,106,0,.3);
+      transition: all .3s ease;
+    }
+    .btn-logout:hover {
+      background: linear-gradient(135deg,#e65a00,#ff7a1f);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(255,106,0,.4);
+      color: #fff !important;
+    }
   </style>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg bg-white shadow-sm sticky-top">
+<nav class="navbar navbar-expand-lg sticky-top custom-navbar">
   <div class="container-fluid">
+
     <!-- زر القائمة للموبايل -->
-    <button class="btn btn-outline-secondary d-md-none me-2" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
+    <button class="btn d-md-none me-2 text-orange fs-3 border-0" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
       <i class="bi bi-list"></i>
     </button>
 
-    <!-- لوجو -->
-    <a class="navbar-brand d-flex align-items-center gap-2" href="<?= BASE_URL ?>/index.php">
-      <img src="<?= BASE_URL ?>/assets/logo.svg" width="36" height="36" alt="logo">
-      <span class="fw-bold"><?= esc(APP_NAME) ?></span>
+    <!-- اللوجو -->
+    <a class="navbar-brand d-flex align-items-center gap-2 fw-bold text-orange" href="<?= BASE_URL ?>/index.php">
+      <img src="<?= BASE_URL ?>/assets/logo.svg" width="42" height="42" alt="logo" class="rounded shadow-sm">
+      <span class="fs-5"><?= esc(APP_NAME) ?></span>
     </a>
 
-    <!-- زرار القايمة في الديسكتوب -->
-    <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#nav">
+    <!-- زرار القائمة -->
+    <button class="navbar-toggler border-0" data-bs-toggle="collapse" data-bs-target="#nav">
       <span class="navbar-toggler-icon"></span>
     </button>
+
+    <!-- عناصر النافبار -->
     <div class="collapse navbar-collapse" id="nav">
-      <ul class="navbar-nav ms-auto align-items-lg-center">
-        <li class="nav-item me-3">
-          <span class="badge bg-secondary-subtle text-dark">دور: <?= esc(current_role()) ?></span>
-        </li>
-        <li class="nav-item me-2">
-          <a class="nav-link <?= $current_page=='users.php'?'active':'' ?>" href="<?= BASE_URL ?>/users.php">
-            <i class="bi bi-people"></i> المستخدمون
-          </a>
-        </li>
+      <ul class="navbar-nav ms-auto align-items-lg-center gap-3">
+
+        <!-- الدور -->
         <li class="nav-item">
-          <a class="btn btn-orange" href="<?= BASE_URL ?>/logout.php">
-            <i class="bi bi-box-arrow-right"></i> خروج
+          <span class="badge role-badge">
+            <i class="bi bi-person-badge me-1"></i> <?= esc(current_role()) ?>
+          </span>
+        </li>
+
+        <!-- المستخدمون -->
+        <li class="nav-item">
+          <a class="nav-link <?= $current_page=='users.php'?'active':'' ?>" href="<?= BASE_URL ?>/users.php">
+            <i class="bi bi-people me-1"></i> المستخدمون
           </a>
         </li>
+
+        <!-- خروج -->
+        <li class="nav-item">
+          <a class="btn btn-logout" href="<?= BASE_URL ?>/logout.php">
+            <i class="bi bi-box-arrow-right me-1"></i> خروج
+          </a>
+        </li>
+
       </ul>
     </div>
   </div>
