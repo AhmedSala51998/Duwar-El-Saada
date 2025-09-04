@@ -1,8 +1,8 @@
 <?php
-define('APP_NAME','دوار السعادة');
-define('BASE_URL','');
+if(!defined('APP_NAME')) define('APP_NAME','دوار السعادة');
+if(!defined('BASE_URL')) define('BASE_URL','');
 date_default_timezone_set('Asia/Riyadh');
-session_start();
+if(session_status() === PHP_SESSION_NONE) session_start();
 
 // DB
 $DB_HOST = getenv('DB_HOST') ?: 'localhost';
@@ -10,50 +10,78 @@ $DB_NAME = getenv('DB_NAME') ?: 'u552468652_duwar_al_saada';
 $DB_USER = getenv('DB_USER') ?: 'u552468652_duwar_al_saada';
 $DB_PASS = getenv('DB_PASS') ?: 'Duwar_al_saada12345@';
 
-try{
-  $pdo = new PDO("mysql:host=$DB_HOST;dbname=$DB_NAME;charset=utf8mb4",$DB_USER,$DB_PASS,[
-    PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION,
-    PDO::ATTR_DEFAULT_FETCH_MODE=>PDO::FETCH_ASSOC
-  ]);
-}catch(Exception $e){ die('DB connection failed: '.$e->getMessage()); }
+try {
+    $pdo = new PDO("mysql:host=$DB_HOST;dbname=$DB_NAME;charset=utf8mb4",$DB_USER,$DB_PASS,[
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+    ]);
+} catch(Exception $e) {
+    die('DB connection failed: '.$e->getMessage());
+}
 
 // ---- Helpers ----
-function esc($s){ return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); }
-function is_auth(){ return !empty($_SESSION['user_id']); }
-function current_user(){ return $_SESSION['username'] ?? 'guest'; }
-function current_role(){ return $_SESSION['role'] ?? 'staff'; }
-function require_auth(){ if(!is_auth()){ header('Location: '.BASE_URL.'/login.php'); exit; } }
-function require_role($roles){
-  $roles = is_array($roles)?$roles:[$roles];
-  if(!is_auth()){ header('Location: '.BASE_URL.'/login.php'); exit; }
-  if(!in_array(current_role(), $roles)){
-    http_response_code(403);
-    echo "<div style='direction:rtl;padding:2rem;font-family:Cairo,sans-serif'>لا تملك صلاحية الوصول.</div>";
-    exit;
-  }
+if (!function_exists('esc')) {
+    function esc($s){ return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); }
 }
-// CSRF
-function csrf_token(){ if(empty($_SESSION['_csrf'])) $_SESSION['_csrf']=bin2hex(random_bytes(32)); return $_SESSION['_csrf']; }
-function csrf_validate($t){ return isset($_SESSION['_csrf']) && hash_equals($_SESSION['_csrf'],$t); }
-// Upload
-function upload_image($field,$dir='uploads'){
-  if(empty($_FILES[$field]['name'])) return null;
-  if(!is_dir($dir)) mkdir($dir,0777,true);
-  $ext = strtolower(pathinfo($_FILES[$field]['name'], PATHINFO_EXTENSION));
-  if(!in_array($ext, ['jpg','jpeg','png','gif','webp'])) return null;
-  $name = uniqid('img_').'.'.$ext;
-  move_uploaded_file($_FILES[$field]['tmp_name'], $dir.'/'.$name);
-  return $name;
+
+if (!function_exists('is_auth')) {
+    function is_auth(){ return !empty($_SESSION['user_id']); }
 }
-// Flash
-function flash($key,$msg=null){
-  if($msg===null){
-    $m = $_SESSION['flash'][$key] ?? null;
-    unset($_SESSION['flash'][$key]);
-    return $m;
-  } else {
-    $_SESSION['flash'][$key] = $msg;
-  }
+
+if (!function_exists('current_user')) {
+    function current_user(){ return $_SESSION['username'] ?? 'guest'; }
+}
+
+if (!function_exists('current_role')) {
+    function current_role(){ return $_SESSION['role'] ?? 'staff'; }
+}
+
+if (!function_exists('require_auth')) {
+    function require_auth(){ if(!is_auth()){ header('Location: '.BASE_URL.'/login.php'); exit; } }
+}
+
+if (!function_exists('require_role')) {
+    function require_role($roles){
+        $roles = is_array($roles)?$roles:[$roles];
+        if(!is_auth()){ header('Location: '.BASE_URL.'/login.php'); exit; }
+        if(!in_array(current_role(), $roles)){
+            http_response_code(403);
+            echo "<div style='direction:rtl;padding:2rem;font-family:Cairo,sans-serif'>لا تملك صلاحية الوصول.</div>";
+            exit;
+        }
+    }
+}
+
+if (!function_exists('csrf_token')) {
+    function csrf_token(){ if(empty($_SESSION['_csrf'])) $_SESSION['_csrf']=bin2hex(random_bytes(32)); return $_SESSION['_csrf']; }
+}
+
+if (!function_exists('csrf_validate')) {
+    function csrf_validate($t){ return isset($_SESSION['_csrf']) && hash_equals($_SESSION['_csrf'],$t); }
+}
+
+if (!function_exists('upload_image')) {
+    function upload_image($field,$dir='uploads'){
+        if(empty($_FILES[$field]['name'])) return null;
+        if(!is_dir($dir)) mkdir($dir,0777,true);
+        $ext = strtolower(pathinfo($_FILES[$field]['name'], PATHINFO_EXTENSION));
+        if(!in_array($ext, ['jpg','jpeg','png','gif','webp'])) return null;
+        $name = uniqid('img_').'.'.$ext;
+        move_uploaded_file($_FILES[$field]['tmp_name'], $dir.'/'.$name);
+        return $name;
+    }
+}
+
+if (!function_exists('flash')) {
+    function flash($key,$msg=null){
+        if($msg===null){
+            $m = $_SESSION['flash'][$key] ?? null;
+            unset($_SESSION['flash'][$key]);
+            return $m;
+        } else {
+            $_SESSION['flash'][$key] = $msg;
+        }
+    }
 }
 
 // ---- Schema (auto-bootstrap) ----
