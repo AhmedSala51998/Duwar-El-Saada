@@ -84,7 +84,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 <?php if($can_edit): ?>
 <div class="modal fade" id="edit<?= $r['id'] ?>">
   <div class="modal-dialog"><div class="modal-content">
-    <form method="post" action="subscription_edit.php" enctype="multipart/form-data">
+    <form method="post" action="subscription_edit" enctype="multipart/form-data">
       <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
       <input type="hidden" name="id" value="<?= $r['id'] ?>">
       <div class="modal-header"><h5 class="modal-title">تعديل الاشتراك</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
@@ -127,7 +127,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
     <div class="modal-body">هل أنت متأكد أنك تريد حذف الاشتراك <b><?= esc($r['service_name']) ?></b> ؟</div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
-      <a href="subscription_delete.php?id=<?= $r['id'] ?>" class="btn btn-danger">حذف</a>
+      <a href="subscription_delete?id=<?= $r['id'] ?>" class="btn btn-danger">حذف</a>
     </div>
   </div></div>
 </div>
@@ -142,7 +142,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 <?php if($can_edit): ?>
 <div class="modal fade" id="addSubscription">
   <div class="modal-dialog"><div class="modal-content">
-    <form method="post" action="subscription_add.php" enctype="multipart/form-data">
+    <form method="post" action="subscription_add" enctype="multipart/form-data">
       <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
       <div class="modal-header"><h5 class="modal-title">إضافة اشتراك</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
       <div class="modal-body vstack gap-3">

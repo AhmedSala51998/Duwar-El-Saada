@@ -126,7 +126,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
       <div class="modal fade" id="e<?= $r['id'] ?>">
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
-            <form method="post" action="purchase_edit.php" enctype="multipart/form-data">
+            <form method="post" action="purchase_edit" enctype="multipart/form-data">
               <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
               <input type="hidden" name="id" value="<?= $r['id'] ?>">
               <div class="modal-header">
@@ -167,7 +167,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
                           accept="image/*"
                           onchange="previewFile(this,'file-text-prod-<?= $r['id'] ?>','preview-prod-<?= $r['id'] ?>')">
                     <img id="preview-prod-<?= $r['id'] ?>" 
-                        src="<?= $r['product_image'] ? BASE_URL.'uploads/'.$r['product_image'] : '' ?>" 
+                        src="<?= $r['product_image'] ? 'uploads/'.$r['product_image'] : '' ?>" 
                         style="<?= $r['product_image'] ? 'display:block;max-width:100px;margin-top:8px;' : 'display:none;' ?>"/>
                   </label>
                 </div>
@@ -184,7 +184,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
                           accept="image/*"
                           onchange="previewFile(this,'file-text-inv-<?= $r['id'] ?>','preview-inv-<?= $r['id'] ?>')">
                     <img id="preview-inv-<?= $r['id'] ?>" 
-                        src="<?= $r['invoice_image'] ? BASE_URL.'uploads/'.$r['invoice_image'] : '' ?>" 
+                        src="<?= $r['invoice_image'] ? 'uploads/'.$r['invoice_image'] : '' ?>" 
                         style="<?= $r['invoice_image'] ? 'display:block;max-width:100px;margin-top:8px;' : 'display:none;' ?>"/>
                   </label>
                 </div>
@@ -224,7 +224,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
-            <a href="purchase_delete.php?id=<?= $r['id'] ?>" class="btn btn-danger">حذف</a>
+            <a href="purchase_delete?id=<?= $r['id'] ?>" class="btn btn-danger">حذف</a>
           </div>
         </div>
       </div>
@@ -238,7 +238,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
 
 <?php if($can_edit): ?>
 <div class="modal fade" id="addM"><div class="modal-dialog modal-lg"><div class="modal-content">
-  <form method="post" action="purchase_add.php" enctype="multipart/form-data">
+  <form method="post" action="purchase_add" enctype="multipart/form-data">
     <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
     <div class="modal-header"><h5 class="modal-title">إضافة صنف</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
     <div class="modal-body">
@@ -247,29 +247,38 @@ $can_edit = in_array(current_role(), ['admin','manager']);
         <div class="col-md-3"><label class="form-label">الكمية</label><input type="number" step="0.001" name="quantity" class="form-control" required></div>
         <div class="col-md-3"><label class="form-label">الوحدة</label><select name="unit" class="form-select"><option>عدد</option><option>جرام</option><option>كيلو</option><option>لتر</option></select></div>
         <div class="col-md-4"><label class="form-label">السعر</label><input type="number" step="0.01" name="price" class="form-control"></div>
-                 <!-- صورة المنتج -->
-          <div class="col-md-6">
-            <label class="form-label">صورة المنتج</label>
-            <label class="custom-file-upload w-100">
-              <i class="bi bi-cloud-arrow-up"></i>
-              <span id="file-text-prod">اختر صورة للمنتج</span>
-              <input type="file" name="product_image" id="purchase_product_image" accept="image/*"
-                     onchange="previewFile(this,'file-text-prod','preview-prod')">
+        <!-- صورة المنتج -->
+        <div class="col-md-6">
+          <label class="form-label">صورة المنتج</label>
+          <label class="custom-file-upload w-100">
+            <i class="bi bi-cloud-arrow-up"></i>
+            <span id="file-text-prod">اختر صورة للمنتج</span>
+            <input type="file" name="product_image" id="purchase_product_image" accept="image/*"
+                  onchange="previewFile(this,'file-text-prod','preview-prod')">
+            <?php if(!empty($row['product_image'])): ?>
+              <img id="preview-prod" src="<?= BASE_URL.'uploads/'.$row['product_image'] ?>" style="display:block; max-width:100%; margin-top:5px"/>
+            <?php else: ?>
               <img id="preview-prod" style="display:none"/>
-            </label>
-          </div>
+            <?php endif; ?>
+          </label>
+        </div>
 
-          <!-- صورة الفاتورة -->
-          <div class="col-md-6">
-            <label class="form-label">صورة الفاتورة</label>
-            <label class="custom-file-upload w-100">
-              <i class="bi bi-receipt"></i>
-              <span id="file-text-inv">اختر صورة للفاتورة</span>
-              <input type="file" name="invoice_image" id="purchase_invoice_image" accept="image/*"
-                     onchange="previewFile(this,'file-text-inv','preview-inv')">
+        <!-- صورة الفاتورة -->
+        <div class="col-md-6">
+          <label class="form-label">صورة الفاتورة</label>
+          <label class="custom-file-upload w-100">
+            <i class="bi bi-receipt"></i>
+            <span id="file-text-inv">اختر صورة للفاتورة</span>
+            <input type="file" name="invoice_image" id="purchase_invoice_image" accept="image/*"
+                  onchange="previewFile(this,'file-text-inv','preview-inv')">
+            <?php if(!empty($row['invoice_image'])): ?>
+              <img id="preview-inv" src="<?= BASE_URL.'uploads/'.$row['invoice_image'] ?>" style="display:block; max-width:100%; margin-top:5px"/>
+            <?php else: ?>
               <img id="preview-inv" style="display:none"/>
-            </label>
-          </div>
+            <?php endif; ?>
+          </label>
+        </div>
+
         <div class="col-md-6"><label class="form-label">اسم الدافع</label>
           <select name="payer_name" class="form-control">
             <option hidden>اختر الدافع</option>

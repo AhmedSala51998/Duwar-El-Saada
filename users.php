@@ -1,4 +1,15 @@
 <?php require __DIR__.'/partials/header.php'; require_role('admin'); ?>
+<?php if(!empty($_SESSION['toast'])): $toast=$_SESSION['toast']; unset($_SESSION['toast']); ?>
+<div class="position-fixed top-0 end-0 p-3" style="z-index:2000">
+  <div id="liveToast" class="toast align-items-center text-bg-<?= $toast['type'] ?> border-0 show fade">
+    <div class="d-flex"><div class="toast-body"><?= esc($toast['msg']) ?></div>
+    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button></div>
+  </div>
+</div>
+<script>
+document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById("liveToast");if(el){new bootstrap.Toast(el,{delay:2500}).show();}});
+</script>
+<?php endif; ?>
 <?php $rows=$pdo->query("SELECT * FROM users ORDER BY id DESC")->fetchAll(); ?>
 <div class="d-flex justify-content-between align-items-center mb-3">
   <h3 class="mb-0">المستخدمون</h3>
@@ -36,7 +47,7 @@
 <div class="modal fade" id="e<?= $r['id'] ?>">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form method="post" action="user_edit.php">
+      <form method="post" action="user_edit">
         <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
         <input type="hidden" name="id" value="<?= $r['id'] ?>">
         <div class="modal-header">
@@ -73,7 +84,7 @@
 <div class="modal fade" id="d<?= $r['id'] ?>">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form method="get" action="user_delete.php">
+      <form method="get" action="user_delete">
         <input type="hidden" name="id" value="<?= $r['id'] ?>">
         <div class="modal-header">
           <h5 class="modal-title">تأكيد الحذف</h5>
@@ -99,7 +110,7 @@
 <div class="modal fade" id="add">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form method="post" action="user_add.php">
+      <form method="post" action="user_add">
         <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
         <div class="modal-header">
           <h5 class="modal-title">مستخدم جديد</h5>

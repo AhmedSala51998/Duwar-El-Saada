@@ -130,7 +130,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
     <div class="modal fade" id="e<?= $r['id'] ?>">
       <div class="modal-dialog">
         <div class="modal-content">
-          <form method="post" action="asset_edit.php" enctype="multipart/form-data">
+          <form method="post" action="asset_edit" enctype="multipart/form-data">
             <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
             <input type="hidden" name="id" value="<?= $r['id'] ?>">
 
@@ -173,7 +173,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
                   <input type="file" name="image" id="asset_image_edit_<?= $r['id'] ?>" accept="image/*"
                         onchange="previewFile(this,'file-text-edit-<?= $r['id'] ?>','preview-edit-<?= $r['id'] ?>')">
                   <?php if(!empty($r['image'])): ?>
-                    <img id="preview-edit-<?= $r['id'] ?>" src="<?= BASE_URL.'/uploads/'.esc($r['image']) ?>" style="max-width:100px;margin-top:8px;"/>
+                    <img id="preview-edit-<?= $r['id'] ?>" src="<?= 'uploads/'.esc($r['image']) ?>" style="max-width:100px;margin-top:8px;"/>
                   <?php else: ?>
                     <img id="preview-edit-<?= $r['id'] ?>" style="display:none;max-width:100px;margin-top:8px;"/>
                   <?php endif; ?>
@@ -204,7 +204,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
-            <a href="asset_delete.php?id=<?= $r['id'] ?>" class="btn btn-danger">حذف</a>
+            <a href="asset_delete?id=<?= $r['id'] ?>" class="btn btn-danger">حذف</a>
           </div>
         </div>
       </div>
@@ -219,7 +219,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
 <div class="modal fade" id="add">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form method="post" action="asset_add.php" enctype="multipart/form-data">
+      <form method="post" action="asset_add" enctype="multipart/form-data">
         <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
         <div class="modal-header">
           <h5 class="modal-title">إضافة أصل</h5>
