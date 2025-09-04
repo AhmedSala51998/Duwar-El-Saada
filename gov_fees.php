@@ -135,25 +135,37 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 <!-- إضافة مودال -->
 <?php if($can_edit): ?>
 <div class="modal fade" id="addFee">
-  <div class="modal-dialog"><div class="modal-content">
-    <form method="post" action="gov_fee_add" enctype="multipart/form-data">
-      <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
-      <div class="modal-header"><h5 class="modal-title">إضافة رسوم حكومية</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
-      <div class="modal-body vstack gap-3">
-        <input name="fee_title" class="form-control" placeholder="عنوان الرسوم">
-        <input name="fee_type" class="form-control" placeholder="نوع الرسوم">
-        <input type="number" step="0.01" name="fee_amount" class="form-control" placeholder="السعر">
-        <select name="payer" class="form-select">
-          <option>شركة</option><option>مؤسسة</option><option>فيصل الميطري</option><option>بسام</option>
-        </select>
-        <label class="custom-file-upload w-100"><i class="bi bi-image"></i><span id="file-text-add">اختر فاتورة</span>
-          <input type="file" name="invoice_image" accept="image/*" onchange="previewFile(this,'file-text-add','preview-add')">
-          <img id="preview-add" style="display:none;max-width:100px;margin-top:8px"/>
-        </label>
-      </div>
-      <div class="modal-footer"><button class="btn btn-orange">حفظ</button></div>
-    </form>
-  </div></div>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="post" action="gov_fee_add" enctype="multipart/form-data">
+        <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
+        <div class="modal-header">
+          <h5 class="modal-title">إضافة رسوم حكومية</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button> <!-- X -->
+        </div>
+        <div class="modal-body vstack gap-3">
+          <input required name="fee_title" class="form-control" placeholder="عنوان الرسوم">
+          <input required name="fee_type" class="form-control" placeholder="نوع الرسوم">
+          <input required type="number" step="0.01" name="fee_amount" class="form-control" placeholder="السعر">
+          <select name="payer" class="form-select">
+            <option>شركة</option>
+            <option>مؤسسة</option>
+            <option>فيصل الميطري</option>
+            <option>بسام</option>
+          </select>
+          <label class="custom-file-upload w-100">
+            <i class="bi bi-image"></i>
+            <span id="file-text-add">اختر فاتورة</span>
+            <input required type="file" name="invoice_image" accept="image/*" onchange="previewFile(this,'file-text-add','preview-add')">
+            <img id="preview-add" style="display:none;max-width:100px;margin-top:8px"/>
+          </label>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-orange">حفظ</button> <!-- submit صريح -->
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
 <?php endif; ?>
 
