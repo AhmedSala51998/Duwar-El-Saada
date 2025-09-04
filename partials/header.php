@@ -1,14 +1,30 @@
-<?php require __DIR__.'/../config/config.php'; require_auth(); ?>
+<?php
+require __DIR__.'/../config/config.php'; 
+require_auth();
+
+// تحديد اسم الصفحة الحالية
+$current_page = basename($_SERVER['PHP_SELF']);
+?>
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title><?= esc(APP_NAME) ?></title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
-<link href="<?= BASE_URL ?>/assets/css/theme.css" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><?= esc(APP_NAME) ?></title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+  <link href="<?= BASE_URL ?>/assets/css/theme.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    /* تمييز الصفحة النشطة */
+    .sidebar-link.active,
+    .nav-link.active {
+      background-color: #ff6600; /* لون الهوفر بتاعك */
+      color: #fff !important;
+      border-radius: 6px;
+    }
+  </style>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg bg-white shadow-sm sticky-top">
@@ -25,17 +41,23 @@
     </a>
 
     <!-- زرار القايمة في الديسكتوب -->
-    <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#nav"><span class="navbar-toggler-icon"></span></button>
+    <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#nav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
     <div class="collapse navbar-collapse" id="nav">
       <ul class="navbar-nav ms-auto align-items-lg-center">
         <li class="nav-item me-3">
           <span class="badge bg-secondary-subtle text-dark">دور: <?= esc(current_role()) ?></span>
         </li>
         <li class="nav-item me-2">
-          <a class="nav-link" href="<?= BASE_URL ?>/users.php"><i class="bi bi-people"></i> المستخدمون</a>
+          <a class="nav-link <?= $current_page=='users.php'?'active':'' ?>" href="<?= BASE_URL ?>/users.php">
+            <i class="bi bi-people"></i> المستخدمون
+          </a>
         </li>
         <li class="nav-item">
-          <a class="btn btn-orange" href="<?= BASE_URL ?>/logout.php"><i class="bi bi-box-arrow-right"></i> خروج</a>
+          <a class="btn btn-orange" href="<?= BASE_URL ?>/logout.php">
+            <i class="bi bi-box-arrow-right"></i> خروج
+          </a>
         </li>
       </ul>
     </div>
@@ -49,18 +71,15 @@
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
   </div>
   <div class="offcanvas-body">
-    <a class="sidebar-link d-block mb-2" href="<?= BASE_URL ?>/index.php"><i class="bi bi-house"></i> الرئيسية</a>
-    <a class="sidebar-link d-block mb-2" href="<?= BASE_URL ?>/purchases.php"><i class="bi bi-bag"></i> تهيئة المشتريات</a>
-    <a class="sidebar-link d-block mb-2" href="<?= BASE_URL ?>/orders.php"><i class="bi bi-gear"></i> أوامر التشغيل</a>
-    <a class="sidebar-link d-block mb-2" href="<?= BASE_URL ?>/assetes.php"><i class="bi bi-building"></i> العُهد</a>
-
-    <!-- الصفحات الجديدة -->
-    <a class="sidebar-link d-block mb-2" href="<?= BASE_URL ?>/gov_fees.php"><i class="bi bi-file-earmark-text"></i> الرسوم الحكومية</a>
-    <a class="sidebar-link d-block mb-2" href="<?= BASE_URL ?>/subscriptions.php"><i class="bi bi-journal-bookmark"></i> الاشتراكات والخدمات</a>
-    <a class="sidebar-link d-block mb-2" href="<?= BASE_URL ?>/rentals.php"><i class="bi bi-house-door"></i> الإيجارات</a>
-
-    <a class="sidebar-link d-block" href="<?= BASE_URL ?>/reports.php"><i class="bi bi-graph-up"></i> التقارير</a>
- </div>
+    <a class="sidebar-link d-block mb-2 <?= $current_page=='index.php'?'active':'' ?>" href="<?= BASE_URL ?>/index.php"><i class="bi bi-house"></i> الرئيسية</a>
+    <a class="sidebar-link d-block mb-2 <?= $current_page=='purchases.php'?'active':'' ?>" href="<?= BASE_URL ?>/purchases.php"><i class="bi bi-bag"></i> تهيئة المشتريات</a>
+    <a class="sidebar-link d-block mb-2 <?= $current_page=='orders.php'?'active':'' ?>" href="<?= BASE_URL ?>/orders.php"><i class="bi bi-gear"></i> أوامر التشغيل</a>
+    <a class="sidebar-link d-block mb-2 <?= $current_page=='assetes.php'?'active':'' ?>" href="<?= BASE_URL ?>/assetes.php"><i class="bi bi-building"></i> العُهد</a>
+    <a class="sidebar-link d-block mb-2 <?= $current_page=='gov_fees.php'?'active':'' ?>" href="<?= BASE_URL ?>/gov_fees.php"><i class="bi bi-file-earmark-text"></i> الرسوم الحكومية</a>
+    <a class="sidebar-link d-block mb-2 <?= $current_page=='subscriptions.php'?'active':'' ?>" href="<?= BASE_URL ?>/subscriptions.php"><i class="bi bi-journal-bookmark"></i> الاشتراكات والخدمات</a>
+    <a class="sidebar-link d-block mb-2 <?= $current_page=='rentals.php'?'active':'' ?>" href="<?= BASE_URL ?>/rentals.php"><i class="bi bi-house-door"></i> الإيجارات</a>
+    <a class="sidebar-link d-block <?= $current_page=='reports.php'?'active':'' ?>" href="<?= BASE_URL ?>/reports.php"><i class="bi bi-graph-up"></i> التقارير</a>
+  </div>
 </div>
 
 <div class="container-fluid">
@@ -69,19 +88,15 @@
     <aside class="col-lg-2 col-md-3 border-end min-vh-100 d-none d-md-block">
       <div class="p-3">
         <div class="text-muted small mb-2">القائمة</div>
-        <a class="sidebar-link d-block mb-2" href="<?= BASE_URL ?>/index.php"><i class="bi bi-house"></i> الرئيسية</a>
-        <a class="sidebar-link d-block mb-2" href="<?= BASE_URL ?>/purchases.php"><i class="bi bi-bag"></i> تهيئة المشتريات</a>
-        <a class="sidebar-link d-block mb-2" href="<?= BASE_URL ?>/orders.php"><i class="bi bi-gear"></i> أوامر التشغيل</a>
-        <a class="sidebar-link d-block mb-2" href="<?= BASE_URL ?>/assetes.php"><i class="bi bi-building"></i> العُهد</a>
-
-        <!-- الصفحات الجديدة -->
-        <a class="sidebar-link d-block mb-2" href="<?= BASE_URL ?>/gov_fees.php"><i class="bi bi-file-earmark-text"></i> الرسوم الحكومية</a>
-        <a class="sidebar-link d-block mb-2" href="<?= BASE_URL ?>/subscriptions.php"><i class="bi bi-journal-bookmark"></i> الاشتراكات والخدمات</a>
-        <a class="sidebar-link d-block mb-2" href="<?= BASE_URL ?>/rentals.php"><i class="bi bi-house-door"></i> الإيجارات</a>
-
-        <a class="sidebar-link d-block" href="<?= BASE_URL ?>/reports.php"><i class="bi bi-graph-up"></i> التقارير</a>
-     </div>
-
+        <a class="sidebar-link d-block mb-2 <?= $current_page=='index.php'?'active':'' ?>" href="<?= BASE_URL ?>/index.php"><i class="bi bi-house"></i> الرئيسية</a>
+        <a class="sidebar-link d-block mb-2 <?= $current_page=='purchases.php'?'active':'' ?>" href="<?= BASE_URL ?>/purchases.php"><i class="bi bi-bag"></i> تهيئة المشتريات</a>
+        <a class="sidebar-link d-block mb-2 <?= $current_page=='orders.php'?'active':'' ?>" href="<?= BASE_URL ?>/orders.php"><i class="bi bi-gear"></i> أوامر التشغيل</a>
+        <a class="sidebar-link d-block mb-2 <?= $current_page=='assetes.php'?'active':'' ?>" href="<?= BASE_URL ?>/assetes.php"><i class="bi bi-building"></i> العُهد</a>
+        <a class="sidebar-link d-block mb-2 <?= $current_page=='gov_fees.php'?'active':'' ?>" href="<?= BASE_URL ?>/gov_fees.php"><i class="bi bi-file-earmark-text"></i> الرسوم الحكومية</a>
+        <a class="sidebar-link d-block mb-2 <?= $current_page=='subscriptions.php'?'active':'' ?>" href="<?= BASE_URL ?>/subscriptions.php"><i class="bi bi-journal-bookmark"></i> الاشتراكات والخدمات</a>
+        <a class="sidebar-link d-block mb-2 <?= $current_page=='rentals.php'?'active':'' ?>" href="<?= BASE_URL ?>/rentals.php"><i class="bi bi-house-door"></i> الإيجارات</a>
+        <a class="sidebar-link d-block <?= $current_page=='reports.php'?'active':'' ?>" href="<?= BASE_URL ?>/reports.php"><i class="bi bi-graph-up"></i> التقارير</a>
+      </div>
     </aside>
 
     <!-- المحتوى -->
