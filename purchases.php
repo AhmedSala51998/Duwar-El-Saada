@@ -155,39 +155,39 @@ $can_edit = in_array(current_role(), ['admin','manager']);
                     <label class="form-label">السعر</label>
                     <input type="number" step="0.01" name="price" class="form-control" value="<?= esc($r['price']) ?>">
                   </div>
-                  <!-- صورة المنتج -->
-                  <div class="col-md-6">
-                    <label class="form-label">صورة المنتج</label>
-                    <label class="custom-file-upload w-100">
-                      <i class="bi bi-cloud-arrow-up"></i>
-                      <span id="file-text-prod-<?= $r['id'] ?>">اختر صورة للمنتج</span>
-                      <input type="file" 
-                            name="product_image" 
-                            id="purchase_product_image_<?= $r['id'] ?>" 
-                            accept="image/*"
-                            onchange="previewFile(this,'file-text-prod-<?= $r['id'] ?>','preview-prod-<?= $r['id'] ?>')">
-                      <img id="preview-prod-<?= $r['id'] ?>" 
-                          src="<?= $r['product_image'] ? BASE_URL.'/uploads/'.$r['product_image'] : '' ?>" 
-                          style="<?= $r['product_image'] ? 'display:block;max-width:100px;margin-top:8px;' : 'display:none;' ?>"/>
-                    </label>
-                  </div>
+                <!-- صورة المنتج -->
+                <div class="col-md-6">
+                  <label class="form-label">صورة المنتج</label>
+                  <label class="custom-file-upload w-100">
+                    <i class="bi bi-cloud-arrow-up"></i>
+                    <span id="file-text-prod-<?= $r['id'] ?>">اختر صورة للمنتج</span>
+                    <input type="file" 
+                          name="product_image" 
+                          id="purchase_product_image_<?= $r['id'] ?>" 
+                          accept="image/*"
+                          onchange="previewFile(this,'file-text-prod-<?= $r['id'] ?>','preview-prod-<?= $r['id'] ?>')">
+                    <img id="preview-prod-<?= $r['id'] ?>" 
+                        src="<?= $r['product_image'] ? BASE_URL.'uploads/'.$r['product_image'] : '' ?>" 
+                        style="<?= $r['product_image'] ? 'display:block;max-width:100px;margin-top:8px;' : 'display:none;' ?>"/>
+                  </label>
+                </div>
 
-                  <!-- صورة الفاتورة -->
-                  <div class="col-md-6">
-                    <label class="form-label">صورة الفاتورة</label>
-                    <label class="custom-file-upload w-100">
-                      <i class="bi bi-receipt"></i>
-                      <span id="file-text-inv-<?= $r['id'] ?>">اختر صورة للفاتورة</span>
-                      <input type="file" 
-                            name="invoice_image" 
-                            id="purchase_invoice_image_<?= $r['id'] ?>" 
-                            accept="image/*"
-                            onchange="previewFile(this,'file-text-inv-<?= $r['id'] ?>','preview-inv-<?= $r['id'] ?>')">
-                      <img id="preview-inv-<?= $r['id'] ?>" 
-                          src="<?= $r['invoice_image'] ? BASE_URL.'/uploads/'.$r['invoice_image'] : '' ?>" 
-                          style="<?= $r['invoice_image'] ? 'display:block;max-width:100px;margin-top:8px;' : 'display:none;' ?>"/>
-                    </label>
-                  </div>
+                <!-- صورة الفاتورة -->
+                <div class="col-md-6">
+                  <label class="form-label">صورة الفاتورة</label>
+                  <label class="custom-file-upload w-100">
+                    <i class="bi bi-receipt"></i>
+                    <span id="file-text-inv-<?= $r['id'] ?>">اختر صورة للفاتورة</span>
+                    <input type="file" 
+                          name="invoice_image" 
+                          id="purchase_invoice_image_<?= $r['id'] ?>" 
+                          accept="image/*"
+                          onchange="previewFile(this,'file-text-inv-<?= $r['id'] ?>','preview-inv-<?= $r['id'] ?>')">
+                    <img id="preview-inv-<?= $r['id'] ?>" 
+                        src="<?= $r['invoice_image'] ? BASE_URL.'uploads/'.$r['invoice_image'] : '' ?>" 
+                        style="<?= $r['invoice_image'] ? 'display:block;max-width:100px;margin-top:8px;' : 'display:none;' ?>"/>
+                  </label>
+                </div>
 
                   <div class="col-md-6">
                     <label class="form-label">اسم الدافع</label>

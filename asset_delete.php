@@ -3,4 +3,4 @@ $id=(int)($_GET['id']??0); if($id){ $pdo->prepare("DELETE FROM assets WHERE id=?
         'type' => 'success',
         'msg'  => 'تمت العملية بنجاح'
     ];; }
-header('Location: '.BASE_URL.'/assets.php');
+header('Location: '.BASE_URL.'/assetes.php');

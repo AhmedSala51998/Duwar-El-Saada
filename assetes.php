@@ -96,6 +96,8 @@ $can_edit = in_array(current_role(), ['admin','manager']);
       <th>#</th>
       <th>صورة</th>
       <th>الاسم</th>
+      <th>النوع</th>
+      <th>العدد</th>
       <th>السعر</th>
       <th>الدافع</th>
       <th>التاريخ</th>
@@ -108,13 +110,14 @@ $can_edit = in_array(current_role(), ['admin','manager']);
       <td><?= $r['id'] ?></td>
       <td><?php if($r['image']): ?><img src="uploads/<?= esc($r['image']) ?>" width="44" class="rounded"><?php endif; ?></td>
       <td><?= esc($r['name']) ?></td>
+      <td><?= esc($r['type']) ?></td>
+      <td><?= (int)$r['quantity'] ?></td>
       <td><?= number_format((float)$r['price'],2) ?></td>
       <td><?= esc($r['payer_name']) ?></td>
       <td><?= esc($r['created_at']) ?></td>
       <?php if($can_edit): ?>
       <td class="table-actions">
         <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#e<?= $r['id'] ?>"><i class="bi bi-pencil"></i></button>
-        <!-- زرار الحذف يفتح مودال -->
         <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#del<?= $r['id'] ?>">
           <i class="bi bi-trash"></i>
         </button>
@@ -141,18 +144,27 @@ $can_edit = in_array(current_role(), ['admin','manager']);
                 <label class="form-label">الاسم</label>
                 <input name="name" class="form-control" value="<?= esc($r['name']) ?>" required>
               </div>
-
+              <div>
+                <label class="form-label">النوع</label>
+                <input name="type" class="form-control" value="<?= esc($r['type']) ?>">
+              </div>
+              <div>
+                <label class="form-label">العدد</label>
+                <input type="number" name="quantity" class="form-control" value="<?= (int)$r['quantity'] ?>" min="1">
+              </div>
               <div>
                 <label class="form-label">السعر</label>
                 <input type="number" step="0.01" name="price" class="form-control" value="<?= esc($r['price']) ?>">
               </div>
-
               <div>
                 <label class="form-label">اسم الدافع</label>
-                <input name="payer_name" class="form-control" value="<?= esc($r['payer_name']) ?>">
+                <select name="payer_name" class="form-control">
+                  <option value="شركة" <?= $r['payer_name']=='شركة'?'selected':'' ?>>شركة</option>
+                  <option value="مؤسسة" <?= $r['payer_name']=='مؤسسة'?'selected':'' ?>>مؤسسة</option>
+                  <option value="فيصل الميطري" <?= $r['payer_name']=='فيصل الميطري'?'selected':'' ?>>فيصل الميطري</option>
+                  <option value="بسام" <?= $r['payer_name']=='بسام'?'selected':'' ?>>بسام</option>
+                </select>
               </div>
-
-              <!-- صورة الأصل -->
               <div>
                 <label class="form-label">صورة</label>
                 <label class="custom-file-upload w-100">
@@ -160,10 +172,8 @@ $can_edit = in_array(current_role(), ['admin','manager']);
                   <span id="file-text-edit-<?= $r['id'] ?>">اختر صورة</span>
                   <input type="file" name="image" id="asset_image_edit_<?= $r['id'] ?>" accept="image/*"
                         onchange="previewFile(this,'file-text-edit-<?= $r['id'] ?>','preview-edit-<?= $r['id'] ?>')">
-                  <!-- عرض الصورة الحالية -->
                   <?php if(!empty($r['image'])): ?>
-                    <img id="preview-edit-<?= $r['id'] ?>" src="<?= BASE_URL.'/uploads/'.esc($r['image']) ?>"
-                        style="max-width:100px;margin-top:8px;"/>
+                    <img id="preview-edit-<?= $r['id'] ?>" src="<?= BASE_URL.'/uploads/'.esc($r['image']) ?>" style="max-width:100px;margin-top:8px;"/>
                   <?php else: ?>
                     <img id="preview-edit-<?= $r['id'] ?>" style="display:none;max-width:100px;margin-top:8px;"/>
                   <?php endif; ?>
@@ -178,7 +188,6 @@ $can_edit = in_array(current_role(), ['admin','manager']);
         </div>
       </div>
     </div>
-
     <?php endif; ?>
 
     <!-- Modal الحذف -->
@@ -201,7 +210,6 @@ $can_edit = in_array(current_role(), ['admin','manager']);
       </div>
     </div>
     <?php endif; ?>
-
     <?php endforeach; ?>
   </tbody>
 </table>
@@ -223,15 +231,26 @@ $can_edit = in_array(current_role(), ['admin','manager']);
             <input name="name" class="form-control" required>
           </div>
           <div>
+            <label class="form-label">النوع</label>
+            <input name="type" class="form-control">
+          </div>
+          <div>
+            <label class="form-label">العدد</label>
+            <input type="number" name="quantity" class="form-control" value="1" min="1">
+          </div>
+          <div>
             <label class="form-label">السعر</label>
             <input type="number" step="0.01" name="price" class="form-control">
           </div>
           <div>
             <label class="form-label">اسم الدافع</label>
-            <input name="payer_name" class="form-control">
+             <select name="payer_name" class="form-control">
+                <option value="شركة">شركة</option>
+                <option value="مؤسسة">مؤسسة</option>
+                <option value="فيصل الميطري">فيصل الميطري</option>
+                <option value="بسام">بسام</option>
+              </select>
           </div>
-
-          <!-- صورة الأصل -->
           <div>
             <label class="form-label">صورة</label>
             <label class="custom-file-upload w-100">
@@ -250,7 +269,6 @@ $can_edit = in_array(current_role(), ['admin','manager']);
     </div>
   </div>
 </div>
-
 <?php endif; ?>
 <?php require __DIR__.'/partials/footer.php'; ?>
 <script>
