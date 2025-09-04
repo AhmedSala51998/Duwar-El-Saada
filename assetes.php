@@ -161,7 +161,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
                 <select name="payer_name" class="form-control">
                   <option value="شركة" <?= $r['payer_name']=='شركة'?'selected':'' ?>>شركة</option>
                   <option value="مؤسسة" <?= $r['payer_name']=='مؤسسة'?'selected':'' ?>>مؤسسة</option>
-                  <option value="فيصل الميطري" <?= $r['payer_name']=='فيصل الميطري'?'selected':'' ?>>فيصل الميطري</option>
+                  <option value="فيصل المطيري" <?= $r['payer_name']=='فيصل المطيري'?'selected':'' ?>>فيصل المطيري</option>
                   <option value="بسام" <?= $r['payer_name']=='بسام'?'selected':'' ?>>بسام</option>
                 </select>
               </div>
@@ -247,7 +247,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
              <select name="payer_name" class="form-control">
                 <option value="شركة">شركة</option>
                 <option value="مؤسسة">مؤسسة</option>
-                <option value="فيصل الميطري">فيصل الميطري</option>
+                <option value="فيصل المطيري">فيصل المطيري</option>
                 <option value="بسام">بسام</option>
               </select>
           </div>

@@ -93,7 +93,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
         <select name="payer" class="form-select">
           <option <?= $r['payer']=='شركة'?'selected':'' ?>>شركة</option>
           <option <?= $r['payer']=='مؤسسة'?'selected':'' ?>>مؤسسة</option>
-          <option <?= $r['payer']=='فيصل الميطري'?'selected':'' ?>>فيصل الميطري</option>
+          <option <?= $r['payer']=='فيصل المطيري'?'selected':'' ?>>فيصل المطيري</option>
           <option <?= $r['payer']=='بسام'?'selected':'' ?>>بسام</option>
         </select>
         <label class="custom-file-upload w-100">
@@ -150,7 +150,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
           <select name="payer" class="form-select">
             <option>شركة</option>
             <option>مؤسسة</option>
-            <option>فيصل الميطري</option>
+            <option>فيصل المطيري</option>
             <option>بسام</option>
           </select>
           <label class="custom-file-upload w-100">

@@ -193,7 +193,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
                     <label class="form-label">اسم الدافع</label>
                     <select name="payer_name" class="form-select">
                       <option hidden>اختر الدافع</option>
-                      <?php foreach (['شركة','مؤسسة','فيصل الغامدي','بسام'] as $payer): ?>
+                      <?php foreach (['شركة','مؤسسة','فيصل المطيري','بسام'] as $payer): ?>
                         <option <?= $r['payer_name']===$payer?'selected':'' ?>><?= $payer ?></option>
                       <?php endforeach; ?>
                     </select>
@@ -284,7 +284,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
             <option hidden>اختر الدافع</option>
             <option>شركة</option>
             <option>مؤسسة</option>
-            <option>فيصل الغامدي</option>
+            <option>فيصل المطيري</option>
             <option>بسام</option>
           </select>
         </div>
