@@ -1,14 +1,14 @@
 <?php
 define('APP_NAME','دوار السعادة');
-define('BASE_URL','/duwar_al_saada_dashboard_v5');
+define('BASE_URL','');
 date_default_timezone_set('Asia/Riyadh');
 session_start();
 
 // DB
 $DB_HOST = getenv('DB_HOST') ?: 'localhost';
-$DB_NAME = getenv('DB_NAME') ?: 'duwar_al_saada';
-$DB_USER = getenv('DB_USER') ?: 'root';
-$DB_PASS = getenv('DB_PASS') ?: '';
+$DB_NAME = getenv('DB_NAME') ?: 'u552468652_duwar_al_saada';
+$DB_USER = getenv('DB_USER') ?: 'u552468652_duwar_al_saada';
+$DB_PASS = getenv('DB_PASS') ?: 'Duwar_al_saada';
 
 try{
   $pdo = new PDO("mysql:host=$DB_HOST;dbname=$DB_NAME;charset=utf8mb4",$DB_USER,$DB_PASS,[
