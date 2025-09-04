@@ -62,5 +62,5 @@ if($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? '')
     }
 }
 
-header('Location: '.BASE_URL.'/assets.php');
+header('Location: '.BASE_URL.'/assetes.php');
 exit;
