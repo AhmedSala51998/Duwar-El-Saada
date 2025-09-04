@@ -99,7 +99,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
-            <a href="order_delete.php?id=<?= $o['id'] ?>" class="btn btn-danger">حذف</a>
+            <a href="order_delete?id=<?= $o['id'] ?>" class="btn btn-danger">حذف</a>
           </div>
         </div>
       </div>
@@ -113,7 +113,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
 
 <?php if($can_edit): ?>
 <div class="modal fade" id="addOrder"><div class="modal-dialog"><div class="modal-content">
-  <form method="post" action="order_add.php">
+  <form method="post" action="order_add">
     <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
     <div class="modal-header">
       <h5 class="modal-title">إنشاء أمر تشغيل</h5>
