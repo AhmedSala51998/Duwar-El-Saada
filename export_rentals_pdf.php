@@ -52,6 +52,12 @@ th{background:#f7f7f7}
 <?php endforeach; ?>
 </tbody>
 </table>
-<script>window.print()</script>
+<script>
+  window.print();
+  window.onafterprint = function () {
+    // بيرجع خطوة للخلف
+    window.history.back();
+  };
+</script>
 </body>
 </html>
