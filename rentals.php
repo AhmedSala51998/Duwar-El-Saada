@@ -68,8 +68,8 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 <td><?= $r['id'] ?></td>
 <td><?= esc($r['rental_name']) ?></td>
 <td><?= esc($r['payment_type']) ?></td>
-<td><?= number_format((float)$r['amount'],2) ?></td>
-<td><?= esc($r['rental_type']) ?></td>
+<td><?= number_format((float)$r['rental_price'],2) ?></td>
+<td><?= esc($r['rental_kind']) ?></td>
 <td><?= esc($r['payer']) ?></td>
 <td><?php if($r['invoice_image']): ?><img src="uploads/<?= esc($r['invoice_image']) ?>" width="50"><?php endif; ?></td>
 <?php if($can_edit): ?>
