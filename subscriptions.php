@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 <td><?= esc($r['service_name']) ?></td>
 <td><?= esc($r['subscribers']) ?></td>
 <td><?= esc($r['subscription_type']) ?></td>
-<td><?= number_format((float)$r['amount'],2) ?></td>
+<td><?= number_format((float)$r['service_price'],2) ?></td>
 <td><?= esc($r['payer']) ?></td>
 <td><?php if($r['invoice_image']): ?><img src="uploads/<?= esc($r['invoice_image']) ?>" width="50"><?php endif; ?></td>
 <?php if($can_edit): ?>
@@ -95,7 +95,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
           <option <?= $r['subscription_type']=='شهري'?'selected':'' ?>>شهري</option>
           <option <?= $r['subscription_type']=='سنوي'?'selected':'' ?>>سنوي</option>
         </select>
-        <input type="number" step="0.01" name="amount" class="form-control" value="<?= esc($r['amount']) ?>" placeholder="السعر">
+        <input type="number" step="0.01" name="service_price" class="form-control" value="<?= esc($r['service_price']) ?>" placeholder="السعر">
         <select name="payer" class="form-select">
           <option <?= $r['payer']=='شركة'?'selected':'' ?>>شركة</option>
           <option <?= $r['payer']=='مؤسسة'?'selected':'' ?>>مؤسسة</option>
