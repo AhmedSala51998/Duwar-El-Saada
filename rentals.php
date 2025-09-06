@@ -94,8 +94,8 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
           <option <?= $r['payment_type']=='شهري'?'selected':'' ?>>شهري</option>
           <option <?= $r['payment_type']=='سنوي'?'selected':'' ?>>سنوي</option>
         </select>
-        <input type="number" step="0.01" name="amount" class="form-control" value="<?= esc($r['amount']) ?>" placeholder="السعر">
-        <input name="rental_type" class="form-control" value="<?= esc($r['rental_type']) ?>" placeholder="نوع الإيجار">
+        <input type="number" step="0.01" name="rental_price" class="form-control" value="<?= esc($r['rental_price']) ?>" placeholder="السعر">
+        <input name="rental_kind" class="form-control" value="<?= esc($r['rental_kind']) ?>" placeholder="نوع الإيجار">
         <select name="payer" class="form-select">
           <option <?= $r['payer']=='شركة'?'selected':'' ?>>شركة</option>
           <option <?= $r['payer']=='مؤسسة'?'selected':'' ?>>مؤسسة</option>
@@ -155,8 +155,8 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
             <option>شهري</option>
             <option>سنوي</option>
           </select>
-          <input required type="number" step="0.01" name="amount" class="form-control" placeholder="السعر">
-          <input required name="rental_type" class="form-control" placeholder="نوع الإيجار">
+          <input required type="number" step="0.01" name="rental_price" class="form-control" placeholder="السعر">
+          <input required name="rental_kind" class="form-control" placeholder="نوع الإيجار">
           <select name="payer" class="form-select">
             <option>شركة</option>
             <option>مؤسسة</option>
