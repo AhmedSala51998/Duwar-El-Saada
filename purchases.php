@@ -80,6 +80,18 @@ $can_edit = in_array(current_role(), ['admin','manager']);
     <a class="btn btn-outline-dark" href="export_purchases_excel.php?kw=<?= urlencode($kw) ?>"><i class="bi bi-file-earmark-spreadsheet"></i> Excel</a>
     <a class="btn btn-outline-dark" href="export_purchases_pdf.php?kw=<?= urlencode($kw) ?>"><i class="bi bi-filetype-pdf"></i> PDF</a>
     <?php if($can_edit): ?><button class="btn btn-orange" data-bs-toggle="modal" data-bs-target="#addM"><i class="bi bi-plus-lg"></i> إضافة</button><?php endif; ?>
+    <div class="d-flex gap-2">
+        <!-- زر تحميل نموذج Excel -->
+        <a class="btn btn-outline-success" href="uploads/purchase_template.xlsx" download>
+            <i class="bi bi-download"></i> تحميل نموذج Excel
+        </a>
+
+        <!-- زر رفع Excel الحالي -->
+        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#importExcel">
+            <i class="bi bi-file-text"></i> إضافة أصناف عبر Excel
+        </button>
+    </div>
+
   </div>
 </div>
 
@@ -294,6 +306,47 @@ $can_edit = in_array(current_role(), ['admin','manager']);
   </form>
 </div></div></div>
 <?php endif; ?>
+<?php if($can_edit): ?>
+<!-- Modal استيراد Excel -->
+<div class="modal fade" id="importExcel">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="post" action="purchase_import_excel" enctype="multipart/form-data">
+        <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
+        <div class="modal-header">
+          <h5 class="modal-title"><i class="bi bi-file-earmark-spreadsheet"></i> استيراد أصناف من Excel</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <label class="form-label">اختر ملف Excel</label>
+          <label class="custom-file-upload w-100">
+            <i class="bi bi-cloud-arrow-up"></i>
+            <span id="file-text-excel">اختر ملف Excel</span>
+            <input required type="file" name="excel_file" id="excel_file" accept=".xlsx,.xls"
+                   onchange="document.getElementById('file-text-excel').textContent=this.files[0].name">
+          </label>
+          <div class="alert alert-info mt-3">
+            📌 يجب أن يحتوي ملف الإكسل على الأعمدة بالـ **keys** التالية:  
+            <ul class="mb-0">
+              <li><b>name</b> : اسم المنتج</li>
+              <li><b>quantity</b> : الكمية</li>
+              <li><b>unit</b> : الوحدة</li>
+              <li><b>price</b> : السعر</li>
+              <li><b>payer_name</b> : اسم الدافع</li>
+              <li><b>image_path</b> : صورة المنتج</li>
+              <li><b>invoice_path</b> : صورة الفاتورة</li>
+            </ul>
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success"><i class="bi bi-check-lg"></i> رفع</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<?php endif; ?>
 <?php require __DIR__.'/partials/footer.php'; ?>
 <script>
   function previewFile(input, textId, previewId) {
@@ -309,4 +362,12 @@ $can_edit = in_array(current_role(), ['admin','manager']);
       reader.readAsDataURL(file);
     }
   }
+  document.querySelector('#importExcel form').addEventListener('submit', function(e){
+    const fileInput = document.getElementById('excel_file');
+    if(!fileInput.files.length){
+        e.preventDefault();
+        alert('❌ الرجاء اختيار ملف Excel أولاً');
+    }
+  });
+
 </script>
