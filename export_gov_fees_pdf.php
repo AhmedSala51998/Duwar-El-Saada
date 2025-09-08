@@ -3,11 +3,33 @@ require __DIR__.'/config/config.php';
 require_auth();
 
 $kw = trim($_GET['kw'] ?? '');
+$from_date = $_GET['from_date'] ?? '';
+$to_date = $_GET['to_date'] ?? '';
+
 $q = "SELECT * FROM gov_fees WHERE 1"; 
 $ps = [];
-if($kw!==''){ $q .= " AND fee_title LIKE ?"; $ps[] = "%$kw%"; }
+
+// فلترة بالكلمة المفتاحية
+if($kw !== '') {
+    $q .= " AND fee_title LIKE ?";
+    $ps[] = "%$kw%";
+}
+
+// فلترة بالتواريخ
+if($from_date !== '') {
+    $q .= " AND DATE(created_at) >= ?";
+    $ps[] = $from_date;
+}
+if($to_date !== '') {
+    $q .= " AND DATE(created_at) <= ?";
+    $ps[] = $to_date;
+}
+
 $q .= " ORDER BY id DESC";
-$s = $pdo->prepare($q); $s->execute($ps); $rows = $s->fetchAll();
+
+$s = $pdo->prepare($q); 
+$s->execute($ps); 
+$rows = $s->fetchAll();
 ?>
 <!doctype html>
 <html lang="ar" dir="rtl">
@@ -16,8 +38,9 @@ $s = $pdo->prepare($q); $s->execute($ps); $rows = $s->fetchAll();
 <style>
 body{font-family:Cairo,Arial}
 table{width:100%;border-collapse:collapse}
-th,td{border:1px solid #ddd;padding:6px}
+th,td{border:1px solid #ddd;padding:6px;text-align:center}
 th{background:#f7f7f7}
+h2{text-align:center;margin-bottom:10px}
 </style>
 <title>تقرير الرسوم الحكومية</title>
 </head>
@@ -50,7 +73,6 @@ th{background:#f7f7f7}
 <script>
   window.print();
   window.onafterprint = function () {
-    // بيرجع خطوة للخلف
     window.history.back();
   };
 </script>

@@ -4,22 +4,38 @@ require_auth();
 
 require_once __DIR__.'/libs/SimpleXLSXGen.php';
 
-// استعلام البيانات
 $kw = trim($_GET['kw'] ?? '');
+$from_date = $_GET['from_date'] ?? '';
+$to_date = $_GET['to_date'] ?? '';
+
 $q = "SELECT id,name,quantity,unit,price,payer_name,created_at FROM purchases WHERE 1";
-$params=[];
-if($kw!==''){ 
-    $q.=" AND name LIKE ?"; 
-    $params[]="%$kw%"; 
+$params = [];
+
+// فلترة بالكلمة المفتاحية
+if($kw !== '') { 
+    $q .= " AND name LIKE ?"; 
+    $params[] = "%$kw%"; 
 }
-$q.=" ORDER BY id DESC";
-$s=$pdo->prepare($q); 
+
+// فلترة بالتواريخ
+if($from_date !== '') {
+    $q .= " AND DATE(created_at) >= ?";
+    $params[] = $from_date;
+}
+if($to_date !== '') {
+    $q .= " AND DATE(created_at) <= ?";
+    $params[] = $to_date;
+}
+
+$q .= " ORDER BY id DESC";
+
+$s = $pdo->prepare($q); 
 $s->execute($params);
-$rows=$s->fetchAll(PDO::FETCH_ASSOC);
+$rows = $s->fetchAll(PDO::FETCH_ASSOC);
 
 // تجهيز البيانات كـ array
 $data = [];
-$data[] = ["ID","الاسم","الكمية","الوحدة","السعر","الدافع","التاريخ"]; // العناوين
+$data[] = ["ID","الاسم","الكمية","الوحدة","السعر","الدافع","التاريخ"];
 foreach ($rows as $r) {
     $data[] = [
         $r['id'],

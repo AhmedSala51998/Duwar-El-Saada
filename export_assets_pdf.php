@@ -2,17 +2,33 @@
 require __DIR__.'/config/config.php'; 
 require_auth();
 
-$kw=trim($_GET['kw']??''); 
-$q="SELECT id,name,type,quantity,price,payer_name,created_at FROM assets WHERE 1"; 
-$ps=[]; 
-if($kw!==''){ 
-  $q.=" AND name LIKE ?"; 
-  $ps[]="%$kw%"; 
+$kw = trim($_GET['kw'] ?? ''); 
+$from_date = $_GET['from_date'] ?? '';
+$to_date = $_GET['to_date'] ?? '';
+
+$q = "SELECT id,name,type,quantity,price,payer_name,created_at FROM assets WHERE 1"; 
+$ps = []; 
+
+// فلترة بالكلمة المفتاحية
+if ($kw !== '') { 
+  $q .= " AND name LIKE ?"; 
+  $ps[] = "%$kw%"; 
 } 
-$q.=" ORDER BY id DESC";
-$s=$pdo->prepare($q); 
+
+// فلترة بالتواريخ
+if ($from_date !== '') {
+  $q .= " AND DATE(created_at) >= ?";
+  $ps[] = $from_date;
+}
+if ($to_date !== '') {
+  $q .= " AND DATE(created_at) <= ?";
+  $ps[] = $to_date;
+}
+
+$q .= " ORDER BY id DESC";
+$s = $pdo->prepare($q); 
 $s->execute($ps); 
-$rows=$s->fetchAll();
+$rows = $s->fetchAll();
 ?>
 <!doctype html>
 <html lang="ar" dir="rtl">
@@ -57,7 +73,6 @@ $rows=$s->fetchAll();
 <script>
   window.print();
   window.onafterprint = function () {
-    // بيرجع خطوة للخلف
     window.history.back();
   };
 </script>

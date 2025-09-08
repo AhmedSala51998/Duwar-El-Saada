@@ -3,9 +3,28 @@ require __DIR__.'/config/config.php';
 require_auth();
 
 $kw = trim($_GET['kw'] ?? '');
+$from_date = $_GET['from_date'] ?? '';
+$to_date = $_GET['to_date'] ?? '';
+
 $q = "SELECT * FROM rentals WHERE 1"; 
 $ps = [];
-if($kw!==''){ $q .= " AND rental_name LIKE ?"; $ps[] = "%$kw%"; }
+
+// فلترة بالكلمة المفتاحية
+if($kw !== ''){ 
+    $q .= " AND rental_name LIKE ?"; 
+    $ps[] = "%$kw%"; 
+}
+
+// فلترة بالتواريخ
+if($from_date !== '') {
+    $q .= " AND DATE(created_at) >= ?";
+    $ps[] = $from_date;
+}
+if($to_date !== '') {
+    $q .= " AND DATE(created_at) <= ?";
+    $ps[] = $to_date;
+}
+
 $q .= " ORDER BY id DESC";
 
 $s = $pdo->prepare($q); 
@@ -18,9 +37,10 @@ $rows = $s->fetchAll();
 <meta charset="utf-8">
 <style>
 body{font-family:Cairo,Arial}
-table{width:100%;border-collapse:collapse}
-th,td{border:1px solid #ddd;padding:6px}
+table{width:100%;border-collapse:collapse;margin-top:15px}
+th,td{border:1px solid #ddd;padding:6px;text-align:center}
 th{background:#f7f7f7}
+h2{text-align:center;margin-bottom:10px}
 </style>
 <title>تقرير الإيجارات</title>
 </head>
@@ -55,7 +75,6 @@ th{background:#f7f7f7}
 <script>
   window.print();
   window.onafterprint = function () {
-    // بيرجع خطوة للخلف
     window.history.back();
   };
 </script>
