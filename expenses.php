@@ -226,12 +226,16 @@ function renderSubField(mainId, subId, wrapperId, currentValue="") {
 
   wrapper.innerHTML = "";
 
-  // لو القيمة الحالية مش ف اللستة → input مباشرة
   let isCustom = true;
   if(expenseTypes[main.value]){
     if(expenseTypes[main.value].includes(currentValue)){
       isCustom = false;
     }
+  }
+
+  // الحالة: مودال الإضافة (لسه مفيش قيمة محفوظة) → دايمًا select
+  if(!currentValue){
+    isCustom = false;
   }
 
   if(isCustom && currentValue){ 
@@ -284,6 +288,7 @@ function renderSubField(mainId, subId, wrapperId, currentValue="") {
     }
   });
 }
+
 
 
 // إضافة listener للإضافة (add modal)
