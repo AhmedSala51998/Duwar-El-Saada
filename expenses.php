@@ -86,6 +86,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
       <div class="modal-header"><h5 class="modal-title">تعديل مصروف</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
       <div class="modal-body vstack gap-3">
         <!-- الخانة الأولى -->
+        <label>الخانة الأولى</label>
         <select id="main_expense_edit<?= $r['id'] ?>" name="main_expense" class="form-select" required>
           <option value="">اختر</option>
           <option <?= $r['main_expense']=="ايجارات"?"selected":"" ?>>ايجارات</option>
@@ -97,17 +98,21 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
         </select>
 
         <!-- الخانة الثانية -->
-        <select id="sub_expense_edit<?= $r['id'] ?>" name="sub_expense" class="form-select" required>
-          <option value="<?= esc($r['sub_expense']) ?>"><?= esc($r['sub_expense']) ?></option>
-        </select>
+        <label>الخانة الثانية</label>
+        <div id="sub_expense_edit_wrapper<?= $r['id'] ?>">
+          <input type="text" id="sub_expense_edit<?= $r['id'] ?>" name="sub_expense" class="form-control" value="<?= esc($r['sub_expense']) ?>" required>
+        </div>
 
         <!-- البيان -->
+        <label>الخانة الثالثة</label>
         <input name="expense_desc" class="form-control" value="<?= esc($r['expense_desc']) ?>" placeholder="شرح المصروف">
 
         <!-- القيمة -->
+        <label>الخانة الرابعة</label>
         <input type="number" step="0.01" name="expense_amount" class="form-control" value="<?= esc($r['expense_amount']) ?>">
 
         <!-- المرفق -->
+        <label>الخانة الخامسة</label>
         <label class="custom-file-upload w-100">
           <i class="bi bi-image"></i>
           <span id="file-text-edit-<?= $r['id'] ?>">اختر مرفق</span>
@@ -166,9 +171,11 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
           </select>
 
           <label>الخانة الثانية</label>
-          <select id="sub_expense" name="sub_expense" class="form-select" required>
-            <option value="">اختر من الخانة الأولى</option>
-          </select>
+          <div id="sub_expense_wrapper">
+            <select id="sub_expense" name="sub_expense" class="form-select" required>
+              <option value="">اختر من الخانة الأولى</option>
+            </select>
+          </div>
 
           <label>الخانة الثالثة</label>
           <input type="text" name="expense_desc" class="form-control" placeholder="ادخال شرح المصروف">
@@ -201,21 +208,68 @@ const expenseTypes = {
   "مصروفات اخرى": ["أخرى"]
 };
 
-function fillSub(mainId,subId){
+// دالة رسم الخانة الثانية (select أو input)
+function renderSubField(mainId, subId, wrapperId, currentValue="") {
   let main = document.getElementById(mainId);
-  let sub = document.getElementById(subId);
-  if(!main || !sub) return;
-  sub.innerHTML = "<option value=''>اختر</option>";
+  let wrapper = document.getElementById(wrapperId);
+  if(!main || !wrapper) return;
+
+  wrapper.innerHTML = "";
+
+  // إنشاء select
+  let sub = document.createElement("select");
+  sub.id = subId;
+  sub.name = "sub_expense";
+  sub.className = "form-select";
+  sub.required = true;
+
+  let opt = document.createElement("option");
+  opt.value = ""; opt.textContent = "اختر";
+  sub.appendChild(opt);
+
   if(expenseTypes[main.value]){
     expenseTypes[main.value].forEach(v=>{
-      let opt=document.createElement("option");
-      opt.value=v; opt.textContent=v;
-      sub.appendChild(opt);
+      let option=document.createElement("option");
+      option.value=v; option.textContent=v;
+      if(v===currentValue) option.selected=true;
+      sub.appendChild(option);
     });
   }
+
+  wrapper.appendChild(sub);
+
+  // لو "أخرى" → input
+  sub.addEventListener("change", function(){
+    if(this.value==="أخرى"){
+      wrapper.innerHTML="";
+      let input=document.createElement("input");
+      input.type="text";
+      input.name="sub_expense";
+      input.id=subId;
+      input.className="form-control";
+      input.placeholder="ادخل نوع المصروف";
+      input.required=true;
+      wrapper.appendChild(input);
+    }
+  });
 }
 
-document.getElementById("main_expense")?.addEventListener("change", ()=>fillSub("main_expense","sub_expense"));
+// مودال الإضافة
+document.getElementById("main_expense")?.addEventListener("change", ()=>{
+  renderSubField("main_expense","sub_expense","sub_expense_wrapper");
+});
+
+// مودالات التعديل
+<?php foreach($rows as $r): ?>
+document.getElementById("main_expense_edit<?= $r['id'] ?>")?.addEventListener("change", function(){
+  renderSubField("main_expense_edit<?= $r['id'] ?>","sub_expense_edit<?= $r['id'] ?>","sub_expense_edit_wrapper<?= $r['id'] ?>");
+});
+
+// عند تحميل الصفحة يرسم القيم القديمة
+document.addEventListener("DOMContentLoaded", ()=>{
+  renderSubField("main_expense_edit<?= $r['id'] ?>","sub_expense_edit<?= $r['id'] ?>","sub_expense_edit_wrapper<?= $r['id'] ?>","<?= esc($r['sub_expense']) ?>");
+});
+<?php endforeach; ?>
 
 function previewFile(input,textId,previewId){
   const file=input.files[0];
