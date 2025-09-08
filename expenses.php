@@ -1,14 +1,20 @@
 <?php
-require __DIR__.'/config/config.php'; 
+require __DIR__.'/config/config.php';
 require_role(['admin','manager']);
 
 $kw = trim($_GET['kw'] ?? '');
-$q = "SELECT * FROM expenses WHERE 1"; 
+$q = "SELECT * FROM expenses WHERE 1";
 $ps = [];
 if($kw!==''){ $q .= " AND main_expense LIKE ?"; $ps[] = "%$kw%"; }
 $q .= " ORDER BY id DESC";
 $s = $pdo->prepare($q); $s->execute($ps); $rows = $s->fetchAll();
 $can_edit = in_array(current_role(), ['admin','manager']);
+
+// Prepare small structure to pass to JS for edit rows
+$editRowsJs = [];
+foreach($rows as $r){
+  $editRowsJs[] = ['id'=>$r['id'],'main'=>$r['main_expense'],'sub'=>$r['sub_expense']];
+}
 ?>
 <?php require __DIR__.'/partials/header.php'; ?>
 
@@ -80,7 +86,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 <?php if($can_edit): ?>
 <div class="modal fade" id="edit<?= $r['id'] ?>">
   <div class="modal-dialog"><div class="modal-content">
-    <form method="post" action="expenses_edit" enctype="multipart/form-data">
+    <form method="post" action="expenses_edit.php" enctype="multipart/form-data">
       <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
       <input type="hidden" name="id" value="<?= $r['id'] ?>">
       <div class="modal-header"><h5 class="modal-title">تعديل مصروف</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
@@ -100,7 +106,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
         <!-- الخانة الثانية -->
         <label>الخانة الثانية</label>
         <div id="sub_expense_edit_wrapper<?= $r['id'] ?>">
-          <input type="text" id="sub_expense_edit<?= $r['id'] ?>" name="sub_expense" class="form-control" value="<?= esc($r['sub_expense']) ?>" required>
+          <!-- محتوى الـ sub سيُبنى بواسطة JS عند تحميل الصفحة -->
         </div>
 
         <!-- البيان -->
@@ -154,7 +160,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 <div class="modal fade" id="addExpense">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form method="post" action="expenses_add" enctype="multipart/form-data">
+      <form method="post" action="expenses_add.php" enctype="multipart/form-data">
         <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
         <div class="modal-header"><h5 class="modal-title">إضافة مصروف</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
         <div class="modal-body vstack gap-3">
@@ -172,9 +178,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 
           <label>الخانة الثانية</label>
           <div id="sub_expense_wrapper">
-            <select id="sub_expense" name="sub_expense" class="form-select" required>
-              <option value="">اختر من الخانة الأولى</option>
-            </select>
+            <!-- سيبنى بواسطة JS -->
           </div>
 
           <label>الخانة الثالثة</label>
@@ -200,77 +204,164 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 
 <script>
 const expenseTypes = {
+  "ايجارات": ["أخرى"],
   "حكومية": ["إقامات ونقل كفالة","تأمينات","أخرى"],
   "مرافق وخدمات": ["كهرباء","مياه","غاز","هاتف وانترنت","أخرى"],
   "رواتب": ["رواتب موظفين","أخرى"],
   "سكن": ["سكن وإعاشة","كهرباء","مياه","أخرى"],
-  "ايجارات": ["أخرى"],
   "مصروفات اخرى": ["أخرى"]
 };
 
-// دالة رسم الخانة الثانية (select أو input)
-function renderSubField(mainId, subId, wrapperId, currentValue="") {
-  let main = document.getElementById(mainId);
-  let wrapper = document.getElementById(wrapperId);
-  if(!main || !wrapper) return;
-
-  wrapper.innerHTML = "";
-
-  // إنشاء select
-  let sub = document.createElement("select");
-  sub.id = subId;
-  sub.name = "sub_expense";
-  sub.className = "form-select";
-  sub.required = true;
-
-  let opt = document.createElement("option");
-  opt.value = ""; opt.textContent = "اختر";
-  sub.appendChild(opt);
-
-  if(expenseTypes[main.value]){
-    expenseTypes[main.value].forEach(v=>{
-      let option=document.createElement("option");
-      option.value=v; option.textContent=v;
-      if(v===currentValue) option.selected=true;
-      sub.appendChild(option);
-    });
-  }
-
-  wrapper.appendChild(sub);
-
-  // لو "أخرى" → input
-  sub.addEventListener("change", function(){
-    if(this.value==="أخرى"){
-      wrapper.innerHTML="";
-      let input=document.createElement("input");
-      input.type="text";
-      input.name="sub_expense";
-      input.id=subId;
-      input.className="form-control";
-      input.placeholder="ادخل نوع المصروف";
-      input.required=true;
-      wrapper.appendChild(input);
-    }
-  });
+// Helper: يقرأ القيمة الحالية داخل wrapper (select أو input)
+function getCurrentSubVal(wrapper){
+  const el = wrapper.querySelector('select, input');
+  return el ? el.value : '';
 }
 
-// مودال الإضافة
-document.getElementById("main_expense")?.addEventListener("change", ()=>{
-  renderSubField("main_expense","sub_expense","sub_expense_wrapper");
+// يرسم الحقل المناسب (select أو input) داخل الـ wrapper
+function renderSubField(mainId, wrapperId, currentValue=""){
+  const main = document.getElementById(mainId);
+  const wrapper = document.getElementById(wrapperId);
+  if(!main || !wrapper) return;
+
+  const opts = expenseTypes[main.value] || [];
+  wrapper.innerHTML="";
+
+  // إذا القيمة موجودة ضمن الخيارات => نعرض select ومختار القيمة
+  if(opts.length > 0 && opts.includes(currentValue)){
+    const sel = document.createElement('select');
+    sel.name = "sub_expense";
+    sel.className = "form-select";
+    // إضافة خيار افتراضي
+    const dopt = document.createElement('option'); dopt.value=""; dopt.textContent="اختر"; sel.appendChild(dopt);
+    opts.forEach(v=>{
+      const o = document.createElement('option'); o.value = v; o.textContent = v;
+      if(v === currentValue) o.selected = true;
+      sel.appendChild(o);
+    });
+    wrapper.appendChild(sel);
+
+    // لو اختر "أخرى" حول للحقل النصي
+    sel.addEventListener('change', function(){
+      if(this.value === "أخرى"){
+        wrapper.innerHTML = "";
+        const input = document.createElement('input');
+        input.type = "text";
+        input.name = "sub_expense";
+        input.className = "form-control";
+        input.placeholder = "ادخل نوع المصروف";
+        input.required = true;
+        wrapper.appendChild(input);
+        // تحويل تلقائي لو كتب المستخدم اسم يطابق خيار لاحقاً
+        input.addEventListener('blur', function(){
+          const val = this.value.trim();
+          if(val !== "" && (expenseTypes[main.value] || []).includes(val)){
+            renderSubField(mainId, wrapperId, val);
+          }
+        });
+      }
+    });
+
+  } else if(opts.length > 0 && (currentValue === "" || !opts.includes(currentValue))){
+    // إذا لا توجد قيمة حالية من الخيارات → نعرض select افتراضي
+    // لكن إذا currentValue غير فارغ ولم يكن في القوائم → نعرض input مملوء بالقيمة
+    if(currentValue !== "" && !opts.includes(currentValue)){
+      const input = document.createElement('input');
+      input.type = "text";
+      input.name = "sub_expense";
+      input.className = "form-control";
+      input.value = currentValue;
+      input.required = true;
+      wrapper.appendChild(input);
+
+      // لو المستخدم كتب نص يطابق خيار نحول تلقائياً إلى select
+      input.addEventListener('blur', function(){
+        const val = this.value.trim();
+        if(val !== "" && (expenseTypes[main.value] || []).includes(val)){
+          renderSubField(mainId, wrapperId, val);
+        }
+      });
+
+    } else {
+      const sel = document.createElement('select');
+      sel.name = "sub_expense";
+      sel.className = "form-select";
+      const dopt = document.createElement('option'); dopt.value=""; dopt.textContent="اختر"; sel.appendChild(dopt);
+      opts.forEach(v=>{
+        const o = document.createElement('option'); o.value = v; o.textContent = v;
+        sel.appendChild(o);
+      });
+      wrapper.appendChild(sel);
+
+      sel.addEventListener('change', function(){
+        if(this.value === "أخرى"){
+          wrapper.innerHTML = "";
+          const input = document.createElement('input');
+          input.type = "text";
+          input.name = "sub_expense";
+          input.className = "form-control";
+          input.placeholder = "ادخل نوع المصروف";
+          input.required = true;
+          wrapper.appendChild(input);
+          input.addEventListener('blur', function(){
+            const val = this.value.trim();
+            if(val !== "" && (expenseTypes[main.value] || []).includes(val)){
+              renderSubField(mainId, wrapperId, val);
+            }
+          });
+        }
+      });
+    }
+  } else {
+    // لا توجد خيارات للخانة الأولى المحددة → نعرض input
+    const input = document.createElement('input');
+    input.type = "text";
+    input.name = "sub_expense";
+    input.className = "form-control";
+    input.value = currentValue || "";
+    input.required = true;
+    wrapper.appendChild(input);
+
+    input.addEventListener('blur', function(){
+      const val = this.value.trim();
+      if(val !== "" && (expenseTypes[main.value] || []).includes(val)){
+        renderSubField(mainId, wrapperId, val);
+      }
+    });
+  }
+}
+
+// إضافة listener للإضافة (add modal)
+document.getElementById("main_expense")?.addEventListener("change", function(){
+  // نحافظ على القيمة الحالية لو كان هناك input/select
+  const wrapper = document.getElementById("sub_expense_wrapper");
+  const cur = getCurrentSubVal(wrapper);
+  renderSubField("main_expense","sub_expense_wrapper", cur);
 });
 
-// مودالات التعديل
-<?php foreach($rows as $r): ?>
-document.getElementById("main_expense_edit<?= $r['id'] ?>")?.addEventListener("change", function(){
-  renderSubField("main_expense_edit<?= $r['id'] ?>","sub_expense_edit<?= $r['id'] ?>","sub_expense_edit_wrapper<?= $r['id'] ?>");
-});
+// نهيئ مودالات التعديل بعد التحميل
+const editRows = <?= json_encode($editRowsJs, JSON_HEX_TAG|JSON_HEX_APOS|JSON_HEX_AMP|JSON_HEX_QUOT) ?>;
 
-// عند تحميل الصفحة يرسم القيم القديمة
-document.addEventListener("DOMContentLoaded", ()=>{
-  renderSubField("main_expense_edit<?= $r['id'] ?>","sub_expense_edit<?= $r['id'] ?>","sub_expense_edit_wrapper<?= $r['id'] ?>","<?= esc($r['sub_expense']) ?>");
-});
-<?php endforeach; ?>
+document.addEventListener("DOMContentLoaded", function(){
+  // أولاً نهيئ كل مودال تعديل بقيمة الـ sub المخزنة
+  editRows.forEach(row=>{
+    const mainId = "main_expense_edit" + row.id;
+    const wrapperId = "sub_expense_edit_wrapper" + row.id;
+    // render initial
+    renderSubField(mainId, wrapperId, row.sub);
 
+    // عندما يغيّر المستخدم الخانة الأولى داخل المودال
+    document.getElementById(mainId)?.addEventListener("change", function(){
+      const wrapper = document.getElementById(wrapperId);
+      const cur = getCurrentSubVal(wrapper);
+      renderSubField(mainId, wrapperId, cur);
+    });
+  });
+
+  // أيضاً نريد تهيئة الـ add modal لو كانت value موجودة مسبقاً (لمرة أولى)
+  // لو احتجت تهيئة افتراضية هنا يمكن استدعاء renderSubField("main_expense","sub_expense_wrapper","")
+});
+  
 function previewFile(input,textId,previewId){
   const file=input.files[0];
   if(file){

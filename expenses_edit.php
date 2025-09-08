@@ -9,30 +9,42 @@ if($_SERVER['REQUEST_METHOD']==='POST' && csrf_validate($_POST['_csrf'] ?? '')) 
     $o->execute([$id]);
     $old = $o->fetch(PDO::FETCH_ASSOC);
 
+    // trim and sanitize minimal
+    $main = trim($_POST['main_expense'] ?? '');
+    $sub  = trim($_POST['sub_expense'] ?? '');
+    $desc = trim($_POST['expense_desc'] ?? '');
+    $amount = (float)($_POST['expense_amount'] ?? 0);
+
+    // upload_image should be your existing helper that returns filename or null
+    $uploaded = upload_image('expense_file');
+    $fileToSave = $uploaded ?: ($old['expense_file'] ?? null);
+
     $newData = [
-        'main_expense'   => trim($_POST['main_expense']),
-        'sub_expense'    => trim($_POST['sub_expense']),
-        'expense_desc'   => trim($_POST['expense_desc']),
-        'expense_amount' => (float)($_POST['expense_amount'] ?? 0),
-        'expense_file'   => upload_image('expense_file') ?: ($old['expense_file'] ?? null)
+        'main_expense'   => $main,
+        'sub_expense'    => $sub,
+        'expense_desc'   => $desc,
+        'expense_amount' => $amount,
+        'expense_file'   => $fileToSave
     ];
 
     $changed = false;
     foreach ($newData as $k => $v) {
-        if ($old[$k] != $v) { $changed = true; break; }
+        if (!isset($old[$k]) || $old[$k] != $v) { $changed = true; break; }
     }
 
     if($changed){
-        $pdo->prepare("UPDATE expenses SET main_expense=?, sub_expense=?, expense_desc=?, expense_amount=?, expense_file=? WHERE id=?")
-            ->execute([
-                $newData['main_expense'],
-                $newData['sub_expense'],
-                $newData['expense_desc'],
-                $newData['expense_amount'],
-                $newData['expense_file'],
-                $id
-            ]);
+        $stmt = $pdo->prepare("UPDATE expenses SET main_expense=?, sub_expense=?, expense_desc=?, expense_amount=?, expense_file=? WHERE id=?");
+        $stmt->execute([
+            $newData['main_expense'],
+            $newData['sub_expense'],
+            $newData['expense_desc'],
+            $newData['expense_amount'],
+            $newData['expense_file'],
+            $id
+        ]);
         $_SESSION['toast'] = ['type'=>'success','msg'=>'تم التعديل بنجاح'];
+    } else {
+        $_SESSION['toast'] = ['type'=>'info','msg'=>'لا تغييرات للحفظ'];
     }
 }
 
