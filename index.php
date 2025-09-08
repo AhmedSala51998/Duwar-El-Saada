@@ -11,6 +11,9 @@ $gf_count = (int)$pdo->query("SELECT COUNT(*) c FROM gov_fees")->fetch()['c'];
 $subs_count = (int)$pdo->query("SELECT COUNT(*) c FROM subscriptions")->fetch()['c'];
 $rentals_count = (int)$pdo->query("SELECT COUNT(*) c FROM rentals")->fetch()['c'];
 
+// المصروفات
+$expenses_count = (int)$pdo->query("SELECT COUNT(*) c FROM expenses")->fetch()['c'];
+
 // المشتريات بالشهور (آخر 6 شهور)
 $purchasesByMonth = $pdo->query("
   SELECT DATE_FORMAT(created_at,'%Y-%m') m, COUNT(*) c 
@@ -25,25 +28,27 @@ $ordersByMonth = $pdo->query("
   GROUP BY m ORDER BY m DESC LIMIT 6
 ")->fetchAll(PDO::FETCH_KEY_PAIR);
 
-// العهد حسب الدافع
-$assetsByPayer = $pdo->query("
-  SELECT payer_name, COUNT(*) c FROM assets GROUP BY payer_name
+// المصروفات حسب الشهر
+$expensesByMonth = $pdo->query("
+  SELECT DATE_FORMAT(created_at,'%Y-%m') m, SUM(amount) total 
+  FROM expenses 
+  GROUP BY m ORDER BY m DESC LIMIT 6
 ")->fetchAll(PDO::FETCH_KEY_PAIR);
+
+// العهد حسب الدافع
+$assetsByPayer = $pdo->query("SELECT payer_name, COUNT(*) c FROM assets GROUP BY payer_name")->fetchAll(PDO::FETCH_KEY_PAIR);
 
 // الرسوم الحكومية حسب الدافع
-$govFeesByPayer = $pdo->query("
-  SELECT payer, COUNT(*) c FROM gov_fees GROUP BY payer
-")->fetchAll(PDO::FETCH_KEY_PAIR);
+$govFeesByPayer = $pdo->query("SELECT payer, COUNT(*) c FROM gov_fees GROUP BY payer")->fetchAll(PDO::FETCH_KEY_PAIR);
 
 // الاشتراكات حسب الدافع
-$subsByPayer = $pdo->query("
-  SELECT payer, COUNT(*) c FROM subscriptions GROUP BY payer
-")->fetchAll(PDO::FETCH_KEY_PAIR);
+$subsByPayer = $pdo->query("SELECT payer, COUNT(*) c FROM subscriptions GROUP BY payer")->fetchAll(PDO::FETCH_KEY_PAIR);
 
 // الإيجارات حسب الدافع
-$rentalsByPayer = $pdo->query("
-  SELECT payer, COUNT(*) c FROM rentals GROUP BY payer
-")->fetchAll(PDO::FETCH_KEY_PAIR);
+$rentalsByPayer = $pdo->query("SELECT payer, COUNT(*) c FROM rentals GROUP BY payer")->fetchAll(PDO::FETCH_KEY_PAIR);
+
+// المصروفات حسب الدافع
+$expensesByPayer = $pdo->query("SELECT payer_name, SUM(amount) total FROM expenses GROUP BY payer_name")->fetchAll(PDO::FETCH_KEY_PAIR);
 ?>
 
 <div class="row g-3">
@@ -52,14 +57,13 @@ $rentalsByPayer = $pdo->query("
     <div class="card p-4 border-0 shadow-lg h-100" 
          style="background:linear-gradient(135deg,#ff6a00,#ffb478);color:#fff;border-radius:15px;">
       <h4 class="mb-2">أهلًا <?= esc(current_user()) ?> 👋</h4>
-      <p class="mb-0">أدِر المشتريات، الأوامر، العُهد، الرسوم، الاشتراكات والإيجارات بسهولة.</p>
+      <p class="mb-0">أدِر المشتريات، الأوامر، العُهد، الرسوم، الاشتراكات والإيجارات والمصروفات بسهولة.</p>
     </div>
   </div>
 
   <!-- كروت الإحصائيات -->
   <div class="col-lg-8">
     <div class="row g-3">
-
       <!-- أصناف -->
       <div class="col-md-4 col-lg-2">
         <div class="card p-3 text-center h-100"
@@ -120,6 +124,16 @@ $rentalsByPayer = $pdo->query("
         </div>
       </div>
 
+      <!-- المصروفات -->
+      <div class="col-md-4 col-lg-2">
+        <div class="card p-3 text-center h-100"
+             style="border:2px solid #ff6a00;border-radius:15px;box-shadow:0 4px 12px rgba(255,106,0,0.3);">
+          <div class="fs-2 mb-2 text-secondary"><i class="bi bi-cash-stack"></i></div>
+          <div class="text-muted small">المصروفات</div>
+          <div class="fw-bold fs-4"><?= $expenses_count ?></div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -127,40 +141,67 @@ $rentalsByPayer = $pdo->query("
 <hr>
 
 <div class="row g-4">
+  <!-- المشتريات -->
   <div class="col-md-6">
     <div class="card p-3 shadow-sm">
       <h5 class="mb-3">المشتريات (آخر 6 شهور)</h5>
       <canvas id="purchasesChart" height="200"></canvas>
     </div>
   </div>
+
+  <!-- أوامر التشغيل -->
   <div class="col-md-6">
     <div class="card p-3 shadow-sm">
       <h5 class="mb-3">أوامر التشغيل</h5>
       <canvas id="ordersChart" height="200"></canvas>
     </div>
   </div>
+
+  <!-- العهد حسب الدافع -->
   <div class="col-md-6">
     <div class="card p-3 shadow-sm">
       <h5 class="mb-3">العُهد حسب الدافع</h5>
       <canvas id="assetsChart" height="200"></canvas>
     </div>
   </div>
+
+  <!-- الرسوم الحكومية حسب الدافع -->
   <div class="col-md-6">
     <div class="card p-3 shadow-sm">
       <h5 class="mb-3">الرسوم الحكومية حسب الدافع</h5>
       <canvas id="govFeesChart" height="200"></canvas>
     </div>
   </div>
+
+  <!-- الاشتراكات حسب الدافع -->
   <div class="col-md-6">
     <div class="card p-3 shadow-sm">
       <h5 class="mb-3">الاشتراكات حسب الدافع</h5>
       <canvas id="subsChart" height="200"></canvas>
     </div>
   </div>
+
+  <!-- الإيجارات حسب الدافع -->
   <div class="col-md-6">
     <div class="card p-3 shadow-sm">
       <h5 class="mb-3">الإيجارات حسب الدافع</h5>
       <canvas id="rentalsChart" height="200"></canvas>
+    </div>
+  </div>
+
+  <!-- المصروفات حسب الشهر -->
+  <div class="col-md-6">
+    <div class="card p-3 shadow-sm">
+      <h5 class="mb-3">المصروفات حسب الشهر</h5>
+      <canvas id="expensesChart" height="200"></canvas>
+    </div>
+  </div>
+
+  <!-- المصروفات حسب الدافع -->
+  <div class="col-md-6">
+    <div class="card p-3 shadow-sm">
+      <h5 class="mb-3">المصروفات حسب الدافع</h5>
+      <canvas id="expensesByPayerChart" height="200"></canvas>
     </div>
   </div>
 </div>
@@ -212,6 +253,22 @@ new Chart(document.getElementById('rentalsChart').getContext('2d'), {
   data: {
     labels: <?= json_encode(array_keys($rentalsByPayer)) ?>,
     datasets: [{ data: <?= json_encode(array_values($rentalsByPayer)) ?>, backgroundColor: ['#0d6efd','#6c757d','#198754','#fd7e14','#dc3545'] }]
+  }
+});
+
+new Chart(document.getElementById('expensesChart').getContext('2d'), {
+  type: 'bar',
+  data: {
+    labels: <?= json_encode(array_keys($expensesByMonth)) ?>,
+    datasets: [{ label: 'المصروفات', data: <?= json_encode(array_values($expensesByMonth)) ?>, backgroundColor: 'rgba(108, 117, 125, 0.7)' }]
+  }
+});
+
+new Chart(document.getElementById('expensesByPayerChart').getContext('2d'), {
+  type: 'doughnut',
+  data: {
+    labels: <?= json_encode(array_keys($expensesByPayer)) ?>,
+    datasets: [{ data: <?= json_encode(array_values($expensesByPayer)) ?>, backgroundColor: ['#6c757d','#0d6efd','#198754','#fd7e14','#dc3545'] }]
   }
 });
 </script>

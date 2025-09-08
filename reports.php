@@ -59,5 +59,15 @@
     </div>
   </div>
 
+  <!-- إضافة المصروفات -->
+  <div class="col-md-4">
+    <div class="card p-3 h-100">
+      <h5>المصروفات</h5>
+      <p class="text-muted small">تصدير جميع المصروفات.</p>
+      <a style="margin-bottom:5px" class="btn btn-outline-dark" href="export_expenses_excel.php"><i class="bi bi-file-earmark-spreadsheet"></i> Excel</a>
+      <a class="btn btn-outline-dark" href="export_expenses_pdf.php"><i class="bi bi-filetype-pdf"></i> PDF</a>
+    </div>
+  </div>
+
 </div>
 <?php require __DIR__.'/partials/footer.php'; ?>
