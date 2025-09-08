@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 <?php if($can_edit): ?>
 <div class="modal fade" id="edit<?= $r['id'] ?>">
   <div class="modal-dialog"><div class="modal-content">
-    <form method="post" action="expenses_edit.php" enctype="multipart/form-data">
+    <form method="post" action="expenses_edit" enctype="multipart/form-data">
       <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
       <input type="hidden" name="id" value="<?= $r['id'] ?>">
       <div class="modal-header"><h5 class="modal-title">تعديل مصروف</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
@@ -160,7 +160,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 <div class="modal fade" id="addExpense">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form method="post" action="expenses_add.php" enctype="multipart/form-data">
+      <form method="post" action="expenses_add" enctype="multipart/form-data">
         <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
         <div class="modal-header"><h5 class="modal-title">إضافة مصروف</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
         <div class="modal-body vstack gap-3">
