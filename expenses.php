@@ -219,77 +219,117 @@ function getCurrentSubVal(wrapper){
 }
 
 // يرسم الحقل المناسب (select أو input) داخل الـ wrapper
-function renderSubField(mainId, subId, wrapperId, currentValue="") {
-  let main = document.getElementById(mainId);
-  let wrapper = document.getElementById(wrapperId);
+function renderSubField(mainId, wrapperId, currentValue=""){
+  const main = document.getElementById(mainId);
+  const wrapper = document.getElementById(wrapperId);
   if(!main || !wrapper) return;
 
-  wrapper.innerHTML = "";
+  const opts = expenseTypes[main.value] || [];
+  wrapper.innerHTML="";
 
-  let isCustom = true;
-  if(expenseTypes[main.value]){
-    if(expenseTypes[main.value].includes(currentValue)){
-      isCustom = false;
+  // إذا القيمة موجودة ضمن الخيارات => نعرض select ومختار القيمة
+  if(opts.length > 0 && opts.includes(currentValue)){
+    const sel = document.createElement('select');
+    sel.name = "sub_expense";
+    sel.className = "form-select";
+    // إضافة خيار افتراضي
+    const dopt = document.createElement('option'); dopt.value=""; dopt.textContent="اختر"; sel.appendChild(dopt);
+    opts.forEach(v=>{
+      const o = document.createElement('option'); o.value = v; o.textContent = v;
+      if(v === currentValue) o.selected = true;
+      sel.appendChild(o);
+    });
+    wrapper.appendChild(sel);
+
+    // لو اختر "أخرى" حول للحقل النصي
+    sel.addEventListener('change', function(){
+      if(this.value === "أخرى"){
+        wrapper.innerHTML = "";
+        const input = document.createElement('input');
+        input.type = "text";
+        input.name = "sub_expense";
+        input.className = "form-control";
+        input.placeholder = "ادخل نوع المصروف";
+        input.required = true;
+        wrapper.appendChild(input);
+        // تحويل تلقائي لو كتب المستخدم اسم يطابق خيار لاحقاً
+        input.addEventListener('blur', function(){
+          const val = this.value.trim();
+          if(val !== "" && (expenseTypes[main.value] || []).includes(val)){
+            renderSubField(mainId, wrapperId, val);
+          }
+        });
+      }
+    });
+
+  } else if(opts.length > 0 && (currentValue === "" || !opts.includes(currentValue))){
+    // إذا لا توجد قيمة حالية من الخيارات → نعرض select افتراضي
+    // لكن إذا currentValue غير فارغ ولم يكن في القوائم → نعرض input مملوء بالقيمة
+    if(currentValue !== "" && !opts.includes(currentValue)){
+      const input = document.createElement('input');
+      input.type = "text";
+      input.name = "sub_expense";
+      input.className = "form-control";
+      input.value = currentValue;
+      input.required = true;
+      wrapper.appendChild(input);
+
+      // لو المستخدم كتب نص يطابق خيار نحول تلقائياً إلى select
+      input.addEventListener('blur', function(){
+        const val = this.value.trim();
+        if(val !== "" && (expenseTypes[main.value] || []).includes(val)){
+          renderSubField(mainId, wrapperId, val);
+        }
+      });
+
+    } else {
+      const sel = document.createElement('select');
+      sel.name = "sub_expense";
+      sel.className = "form-select";
+      const dopt = document.createElement('option'); dopt.value=""; dopt.textContent="اختر"; sel.appendChild(dopt);
+      opts.forEach(v=>{
+        const o = document.createElement('option'); o.value = v; o.textContent = v;
+        sel.appendChild(o);
+      });
+      wrapper.appendChild(sel);
+
+      sel.addEventListener('change', function(){
+        if(this.value === "أخرى"){
+          wrapper.innerHTML = "";
+          const input = document.createElement('input');
+          input.type = "text";
+          input.name = "sub_expense";
+          input.className = "form-control";
+          input.placeholder = "ادخل نوع المصروف";
+          input.required = true;
+          wrapper.appendChild(input);
+          input.addEventListener('blur', function(){
+            const val = this.value.trim();
+            if(val !== "" && (expenseTypes[main.value] || []).includes(val)){
+              renderSubField(mainId, wrapperId, val);
+            }
+          });
+        }
+      });
     }
-  }
-
-  // الحالة: مودال الإضافة (لسه مفيش قيمة محفوظة) → دايمًا select
-  if(!currentValue){
-    isCustom = false;
-  }
-
-  if(isCustom && currentValue){ 
-    // input
-    let input=document.createElement("input");
-    input.type="text";
-    input.name="sub_expense";
-    input.id=subId;
-    input.className="form-control";
-    input.value=currentValue;
-    input.required=true;
+  } else {
+    // لا توجد خيارات للخانة الأولى المحددة → نعرض input
+    const input = document.createElement('input');
+    input.type = "text";
+    input.name = "sub_expense";
+    input.className = "form-control";
+    input.value = currentValue || "";
+    input.required = true;
     wrapper.appendChild(input);
-    return;
-  }
 
-  // غير كده → select
-  let sub = document.createElement("select");
-  sub.id = subId;
-  sub.name = "sub_expense";
-  sub.className = "form-select";
-  sub.required = true;
-
-  let opt = document.createElement("option");
-  opt.value = ""; opt.textContent = "اختر";
-  sub.appendChild(opt);
-
-  if(expenseTypes[main.value]){
-    expenseTypes[main.value].forEach(v=>{
-      let option=document.createElement("option");
-      option.value=v; option.textContent=v;
-      if(v===currentValue) option.selected=true;
-      sub.appendChild(option);
+    input.addEventListener('blur', function(){
+      const val = this.value.trim();
+      if(val !== "" && (expenseTypes[main.value] || []).includes(val)){
+        renderSubField(mainId, wrapperId, val);
+      }
     });
   }
-
-  wrapper.appendChild(sub);
-
-  // لو اختار "أخرى" → يتحول input
-  sub.addEventListener("change", function(){
-    if(this.value==="أخرى"){
-      wrapper.innerHTML="";
-      let input=document.createElement("input");
-      input.type="text";
-      input.name="sub_expense";
-      input.id=subId;
-      input.className="form-control";
-      input.placeholder="ادخل نوع المصروف";
-      input.required=true;
-      wrapper.appendChild(input);
-    }
-  });
 }
-
-
 
 // إضافة listener للإضافة (add modal)
 document.getElementById("main_expense")?.addEventListener("change", function(){
