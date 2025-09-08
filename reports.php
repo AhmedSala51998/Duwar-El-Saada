@@ -2,19 +2,24 @@
 <h3 class="mb-3">التقارير والتصدير</h3>
 
 <!-- فلترة بالتاريخ -->
-<form method="GET" class="row g-3 mb-4">
+<form method="GET" class="row g-3 mb-4 align-items-end">
   <div class="col-md-3">
-    <label>من تاريخ</label>
+    <label class="form-label">من تاريخ</label>
     <input type="date" name="from_date" class="form-control" value="<?= $_GET['from_date'] ?? '' ?>">
   </div>
+
   <div class="col-md-3">
-    <label>إلى تاريخ</label>
+    <label class="form-label">إلى تاريخ</label>
     <input type="date" name="to_date" class="form-control" value="<?= $_GET['to_date'] ?? '' ?>">
   </div>
-  <div class="col-md-2 d-flex align-items-end">
-    <button type="submit" class="btn btn-primary">تطبيق الفلتر</button>
+
+  <div class="col-md-2 d-flex">
+    <button type="submit" class="btn w-100" style="background-color: rgba(255,165,0,0.5); border: 1px solid orange; color: white;">
+      تطبيق الفلتر
+    </button>
   </div>
 </form>
+
 
 <div class="row g-3">
 <?php
