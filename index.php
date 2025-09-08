@@ -1,6 +1,9 @@
 <?php require __DIR__.'/partials/header.php'; ?>
 
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 // العدادات الحالية
 $pc = (int)$pdo->query("SELECT COUNT(*) c FROM purchases")->fetch()['c'];
 $oc = (int)$pdo->query("SELECT COUNT(*) c FROM orders")->fetch()['c'];
@@ -30,7 +33,7 @@ $ordersByMonth = $pdo->query("
 
 // المصروفات حسب الشهر
 $expensesByMonth = $pdo->query("
-  SELECT DATE_FORMAT(created_at,'%Y-%m') m, SUM(amount) total 
+  SELECT DATE_FORMAT(created_at,'%Y-%m') m, SUM(expense_amount) total 
   FROM expenses 
   GROUP BY m ORDER BY m DESC LIMIT 6
 ")->fetchAll(PDO::FETCH_KEY_PAIR);
@@ -47,8 +50,6 @@ $subsByPayer = $pdo->query("SELECT payer, COUNT(*) c FROM subscriptions GROUP BY
 // الإيجارات حسب الدافع
 $rentalsByPayer = $pdo->query("SELECT payer, COUNT(*) c FROM rentals GROUP BY payer")->fetchAll(PDO::FETCH_KEY_PAIR);
 
-// المصروفات حسب الدافع
-$expensesByPayer = $pdo->query("SELECT payer_name, SUM(amount) total FROM expenses GROUP BY payer_name")->fetchAll(PDO::FETCH_KEY_PAIR);
 ?>
 
 <div class="row g-3">
@@ -197,13 +198,6 @@ $expensesByPayer = $pdo->query("SELECT payer_name, SUM(amount) total FROM expens
     </div>
   </div>
 
-  <!-- المصروفات حسب الدافع -->
-  <div class="col-md-6">
-    <div class="card p-3 shadow-sm">
-      <h5 class="mb-3">المصروفات حسب الدافع</h5>
-      <canvas id="expensesByPayerChart" height="200"></canvas>
-    </div>
-  </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -264,13 +258,6 @@ new Chart(document.getElementById('expensesChart').getContext('2d'), {
   }
 });
 
-new Chart(document.getElementById('expensesByPayerChart').getContext('2d'), {
-  type: 'doughnut',
-  data: {
-    labels: <?= json_encode(array_keys($expensesByPayer)) ?>,
-    datasets: [{ data: <?= json_encode(array_values($expensesByPayer)) ?>, backgroundColor: ['#6c757d','#0d6efd','#198754','#fd7e14','#dc3545'] }]
-  }
-});
 </script>
 
 <?php require __DIR__.'/partials/footer.php'; ?>
