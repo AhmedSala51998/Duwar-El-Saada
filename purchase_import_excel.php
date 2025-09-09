@@ -90,8 +90,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
                 $price,
                 $payer_name,
                 $payment_source,
-                $productImagePath,
-                $invoiceImagePath
+                $data['image_path'] ?? null,
+                $data['invoice_path'] ?? null
             ]);
             $count++;
         }
