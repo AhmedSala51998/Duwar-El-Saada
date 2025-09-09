@@ -10,11 +10,20 @@ $q .= " ORDER BY id DESC";
 $s = $pdo->prepare($q); $s->execute($ps); $rows = $s->fetchAll();
 $can_edit = in_array(current_role(), ['admin','manager']);
 
-// Prepare small structure to pass to JS for edit rows
+// تحضير JS لحقول التعديل
 $editRowsJs = [];
 foreach($rows as $r){
-  $editRowsJs[] = ['id'=>$r['id'],'main'=>$r['main_expense'],'sub'=>$r['sub_expense']];
+  $editRowsJs[] = [
+    'id'=>$r['id'],
+    'main'=>$r['main_expense'],
+    'sub'=>$r['sub_expense'],
+    'payment_source'=>$r['payment_source'] ?? ''
+  ];
 }
+
+// جلب العهود لكل مستخدم
+$usersStmt = $pdo->query("SELECT id,name,custody_amount FROM users ORDER BY name");
+$users = $usersStmt->fetchAll();
 ?>
 <?php require __DIR__.'/partials/header.php'; ?>
 
@@ -61,6 +70,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 <th>نوع المصروف</th>
 <th>بيان المصروف</th>
 <th>قيمة المصروف</th>
+<th>مصدر الدفع</th>
 <th>المرفق</th>
 <?php if($can_edit): ?><th>عمليات</th><?php endif; ?>
 </tr>
@@ -73,6 +83,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 <td><?= esc($r['sub_expense']) ?></td>
 <td><?= esc($r['expense_desc']) ?></td>
 <td><?= number_format((float)$r['expense_amount'],2) ?></td>
+<td><?= esc($r['payment_source'] ?? '') ?></td>
 <td><?php if($r['expense_file']): ?><img src="uploads/<?= esc($r['expense_file']) ?>" width="50"><?php endif; ?></td>
 <?php if($can_edit): ?>
 <td>
@@ -91,7 +102,6 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
       <input type="hidden" name="id" value="<?= $r['id'] ?>">
       <div class="modal-header"><h5 class="modal-title">تعديل مصروف</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
       <div class="modal-body vstack gap-3">
-        <!-- الخانة الأولى -->
         <label>المصروفات</label>
         <select id="main_expense_edit<?= $r['id'] ?>" name="main_expense" class="form-select" required>
           <option value="">اختر</option>
@@ -103,21 +113,24 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
           <option <?= $r['main_expense']=="مصروفات اخرى"?"selected":"" ?>>مصروفات اخرى</option>
         </select>
 
-        <!-- الخانة الثانية -->
         <label>نوع المصروف</label>
-        <div id="sub_expense_edit_wrapper<?= $r['id'] ?>">
-          <!-- محتوى الـ sub سيُبنى بواسطة JS عند تحميل الصفحة -->
-        </div>
+        <div id="sub_expense_edit_wrapper<?= $r['id'] ?>"></div>
 
-        <!-- البيان -->
+        <label>مصدر الدفع</label>
+        <select name="payment_source" class="form-select">
+          <option value="">اختر مصدر الدفع</option>
+          <option value="مالك" <?= ($r['payment_source']=='مالك')?'selected':'' ?>>مالك</option>
+          <option value="بنك" <?= ($r['payment_source']=='بنك')?'selected':'' ?>>بنك</option>
+          <option value="كاش" <?= ($r['payment_source']=='كاش')?'selected':'' ?>>كاش</option>
+          <option value="عهدة" <?= ($r['payment_source']=='عهدة')?'selected':'' ?>>عهدة</option>
+        </select>
+
         <label>بيان المصروف</label>
         <input name="expense_desc" class="form-control" value="<?= esc($r['expense_desc']) ?>" placeholder="شرح المصروف">
 
-        <!-- القيمة -->
         <label>قيمة المصروف</label>
         <input type="number" step="0.01" name="expense_amount" class="form-control" value="<?= esc($r['expense_amount']) ?>">
 
-        <!-- المرفق -->
         <label>المرفق</label>
         <label class="custom-file-upload w-100">
           <i class="bi bi-image"></i>
@@ -136,20 +149,6 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 </div>
 <?php endif; ?>
 
-<!-- مودال الحذف -->
-<?php if($can_edit): ?>
-<div class="modal fade" id="del<?= $r['id'] ?>">
-  <div class="modal-dialog"><div class="modal-content">
-    <div class="modal-header"><h5 class="modal-title">تأكيد الحذف</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
-    <div class="modal-body">هل أنت متأكد أنك تريد حذف المصروف <b><?= esc($r['expense_desc']) ?></b> ؟</div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
-      <a href="expenses_delete?id=<?= $r['id'] ?>" class="btn btn-danger">حذف</a>
-    </div>
-  </div></div>
-</div>
-<?php endif; ?>
-
 <?php endforeach; ?>
 </tbody>
 </table>
@@ -164,7 +163,6 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
         <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
         <div class="modal-header"><h5 class="modal-title">إضافة مصروف</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
         <div class="modal-body vstack gap-3">
-
           <label>المصروفات</label>
           <select id="main_expense" name="main_expense" class="form-select" required>
             <option value="">اختر</option>
@@ -177,9 +175,16 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
           </select>
 
           <label>نوع المصروف</label>
-          <div id="sub_expense_wrapper">
-            <!-- سيبنى بواسطة JS -->
-          </div>
+          <div id="sub_expense_wrapper"></div>
+
+          <label>مصدر الدفع</label>
+          <select name="payment_source" id="payment_source_add" class="form-select">
+            <option value="">اختر مصدر الدفع</option>
+            <option value="مالك">مالك</option>
+            <option value="بنك">بنك</option>
+            <option value="كاش">كاش</option>
+            <option value="عهدة">عهدة</option>
+          </select>
 
           <label>بيان المصروف</label>
           <input type="text" name="expense_desc" class="form-control" placeholder="ادخال شرح المصروف">
