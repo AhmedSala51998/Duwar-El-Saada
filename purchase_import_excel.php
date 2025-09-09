@@ -1,16 +1,22 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 require __DIR__ . '/config/config.php';
 require_auth();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? '')) {
+
     if (!isset($_FILES['excel_file']) || $_FILES['excel_file']['error'] !== UPLOAD_ERR_OK) {
         $_SESSION['toast'] = ['type'=>'danger','msg'=>'❌ لم يتم رفع الملف بشكل صحيح'];
-        header('Location: ' . BASE_URL . '/purchases.php'); exit;
+        header('Location: ' . BASE_URL . '/purchases.php'); 
+        exit;
     }
 
     require_once __DIR__ . '/libs/SimpleXLSX.php';
     $filePath = $_FILES['excel_file']['tmp_name'];
-    
+
     if ($xlsx = \Shuchkin\SimpleXLSX::parse($filePath)) {
         $rows = $xlsx->rows();
         $header = array_map('trim', $rows[0]);
@@ -20,15 +26,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
         foreach($required as $col){
             if(!in_array($col,$header)){
                 $_SESSION['toast'] = ['type'=>'danger','msg'=>"❌ الملف لا يحتوي على العمود: $col"];
-                header('Location: ' . BASE_URL . '/purchases.php'); exit;
+                header('Location: ' . BASE_URL . '/purchases.php'); 
+                exit;
             }
         }
 
-        $stmt = $pdo->prepare("INSERT INTO purchases (name, quantity, unit, price, payer_name, payment_source, product_image, invoice_image, custody_used, remaining_to_pay, created_at) VALUES (?,?,?,?,?,?,?,?,?,?,NOW())");
+        $stmt = $pdo->prepare("
+            INSERT INTO purchases 
+            (name, quantity, unit, price, payer_name, payment_source, product_image, invoice_image, created_at) 
+            VALUES (?,?,?,?,?,?,?,?,NOW())
+        ");
+
         $count = 0;
 
         foreach($rows as $r){
-            $data = array_combine($header,$r);
+            $data = array_combine($header, $r);
 
             // نسخ صورة المنتج
             $productImagePath = null;
@@ -50,9 +62,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
             $payer_name = trim($data['payer_name'] ?? '');
             $payment_source = trim($data['payment_source'] ?? 'مالك');
 
-            $deduct_from_custody = 0;
-            $remaining_to_pay = $price;
-
             // تطبيق منطق العهدة
             if($payment_source === 'عهدة' && $payer_name){
                 $stmt_custody = $pdo->prepare("SELECT amount, id FROM custodies WHERE person_name=? ORDER BY taken_at DESC LIMIT 1");
@@ -62,18 +71,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
                 if($custody && $custody['amount'] > 0){
                     if($custody['amount'] >= $price){
                         $deduct_from_custody = $price;
-                        $remaining_to_pay = 0;
                     } else {
                         $deduct_from_custody = $custody['amount'];
-                        $remaining_to_pay = $price - $custody['amount'];
                     }
                     // خصم من العهدة
-                    $pdo->prepare("UPDATE custodies SET amount = amount - ? WHERE id=?")->execute([$deduct_from_custody, $custody['id']]);
+                    $pdo->prepare("UPDATE custodies SET amount = amount - ? WHERE id=?")
+                        ->execute([$deduct_from_custody, $custody['id']]);
                 } else {
                     // لا يوجد رصيد → تحويل المصدر للمالك
                     $payment_source = 'مالك';
-                    $deduct_from_custody = 0;
-                    $remaining_to_pay = $price;
                 }
             }
 
@@ -85,9 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
                 $payer_name,
                 $payment_source,
                 $productImagePath,
-                $invoiceImagePath,
-                $deduct_from_custody,
-                $remaining_to_pay
+                $invoiceImagePath
             ]);
             $count++;
         }
@@ -96,6 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
     } else {
         $_SESSION['toast'] = ['type'=>'danger','msg'=>"❌ خطأ في قراءة الملف: ".\Shuchkin\SimpleXLSX::parseError()];
     }
+
 } else {
     $_SESSION['toast'] = ['type'=>'danger','msg'=>'❌ طلب غير صالح'];
 }
