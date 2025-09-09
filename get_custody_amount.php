@@ -1,8 +1,8 @@
 <?php
 require __DIR__.'/config/config.php';
+header('Content-Type: application/json');
 
 $person = $_GET['person_name'] ?? '';
-header('Content-Type: application/json');
 
 if($person){
     $stmt = $pdo->prepare("SELECT amount FROM custodies WHERE person_name=? ORDER BY taken_at DESC LIMIT 1");
