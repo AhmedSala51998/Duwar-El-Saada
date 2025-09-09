@@ -10,7 +10,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
     $old->execute([$id]);
     $oldData = $old->fetch(PDO::FETCH_ASSOC);
 
-    // تجهيز البيانات الجديدة
     $newData = [
         'name'          => trim($_POST['name']),
         'quantity'      => (float)($_POST['quantity'] ?? 0),
@@ -18,51 +17,60 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
         'price'         => (float)($_POST['price'] ?? 0),
         'product_image' => upload_image('product_image') ?: ($oldData['product_image'] ?? null),
         'invoice_image' => upload_image('invoice_image') ?: ($oldData['invoice_image'] ?? null),
-        'payer_name'    => trim($_POST['payer_name'] ?? '')
+        'payer_name'    => trim($_POST['payer_name'] ?? ''),
+        'payment_source'=> $_POST['payment_source'] ?? 'كاش'
     ];
 
-    // تحقق من التكرار مع السجلات الأخرى (باستثناء السجل الحالي)
+    // تحقق من التكرار
     $check = $pdo->prepare("SELECT COUNT(*) FROM purchases WHERE name=? AND unit=? AND payer_name=? AND id<>?");
     $check->execute([$newData['name'], $newData['unit'], $newData['payer_name'], $id]);
     $exists = $check->fetchColumn();
 
-    if ($exists > 0) {
-        $_SESSION['toast'] = [
-            'type' => 'warning',
-            'msg'  => 'هناك عملية شراء بنفس الاسم، الوحدة والدافع موجودة بالفعل'
-        ];
+    if($exists>0){
+        $_SESSION['toast'] = ['type'=>'warning','msg'=>'هناك عملية شراء بنفس الاسم، الوحدة والدافع موجودة بالفعل'];
     } else {
-        // التحقق من وجود تغييرات
-        $changed = false;
-        foreach ($newData as $key => $value) {
-            if ($oldData[$key] != $value) {
-                $changed = true;
-                break;
+
+        // استرجاع العهدة القديمة إذا كانت مدفوعة من العهدة
+        if($oldData['payment_source'] === 'عهدة'){
+            $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? ORDER BY taken_at DESC LIMIT 1");
+            $stmtC->execute([$oldData['payer_name']]);
+            $custody = $stmtC->fetch();
+            if($custody){
+                $newAmount = $custody['amount'] + $oldData['price'];
+                $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
             }
         }
 
-        // نفذ التحديث فقط لو في تغييرات
-        if ($changed) {
-            $pdo->prepare("
-                UPDATE purchases 
-                SET name=?, quantity=?, unit=?, price=?, product_image=?, invoice_image=?, payer_name=? 
-                WHERE id=?
-            ")->execute([
-                $newData['name'],
-                $newData['quantity'],
-                $newData['unit'],
-                $newData['price'],
-                $newData['product_image'],
-                $newData['invoice_image'],
-                $newData['payer_name'],
-                $id
-            ]);
-
-            $_SESSION['toast'] = [
-                'type' => 'success',
-                'msg'  => 'تم تعديل العملية بنجاح'
-            ];
+        // خصم العهدة الجديدة إذا مصدر الدفع "عهدة"
+        if($newData['payment_source'] === 'عهدة'){
+            $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? ORDER BY taken_at DESC LIMIT 1");
+            $stmtC->execute([$newData['payer_name']]);
+            $custody = $stmtC->fetch();
+            if($custody && $custody['amount'] >= $newData['price']){
+                $newAmount = $custody['amount'] - $newData['price'];
+                $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
+            } else {
+                $_SESSION['toast'] = ['type'=>'danger','msg'=>'رصيد العهدة غير كافي'];
+                header('Location: ' . BASE_URL . '/purchases.php'); exit;
+            }
         }
+
+        $pdo->prepare("
+            UPDATE purchases SET name=?, quantity=?, unit=?, price=?, product_image=?, invoice_image=?, payer_name=?, payment_source=? 
+            WHERE id=?
+        ")->execute([
+            $newData['name'],
+            $newData['quantity'],
+            $newData['unit'],
+            $newData['price'],
+            $newData['product_image'],
+            $newData['invoice_image'],
+            $newData['payer_name'],
+            $newData['payment_source'],
+            $id
+        ]);
+
+        $_SESSION['toast'] = ['type'=>'success','msg'=>'تم تعديل العملية بنجاح'];
     }
 }
 
