@@ -14,7 +14,7 @@
   </div>
 
   <div class="col-md-2 d-flex">
-    <button type="submit" class="btn w-100" style="background-color: rgba(255,165,0,0.5); border: 1px solid orange; color: white;">
+    <button type="submit" class="btn w-100" style="background-color: #ff6a00; border: 1px solid #ff6a00; color: white;">
       تطبيق الفلتر
     </button>
   </div>
