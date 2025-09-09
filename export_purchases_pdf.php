@@ -6,16 +6,15 @@ $kw = trim($_GET['kw'] ?? '');
 $from_date = $_GET['from_date'] ?? '';
 $to_date = $_GET['to_date'] ?? '';
 
-$q = "SELECT id,name,quantity,unit,price,payer_name,created_at FROM purchases WHERE 1";
+$q = "SELECT id, name, quantity, unit, price, payer_name, payment_source, created_at 
+      FROM purchases WHERE 1";
 $params = [];
 
-// فلترة بالكلمة المفتاحية
 if($kw !== '') { 
     $q .= " AND name LIKE ?"; 
     $params[] = "%$kw%"; 
 }
 
-// فلترة بالتواريخ
 if($from_date !== '') {
     $q .= " AND DATE(created_at) >= ?";
     $params[] = $from_date;
@@ -63,6 +62,7 @@ h3{margin:0}
 <th>الوحدة</th>
 <th>السعر</th>
 <th>الدافع</th>
+<th>مصدر الدفع</th>
 <th>التاريخ</th>
 </tr>
 </thead>
@@ -75,6 +75,7 @@ h3{margin:0}
   <td><?= esc($r['unit']) ?></td>
   <td><?= number_format((float)$r['price'],2) ?></td>
   <td><?= esc($r['payer_name']) ?></td>
+  <td><?= esc($r['payment_source']) ?></td>
   <td><?= esc($r['created_at']) ?></td>
 </tr>
 <?php endforeach; ?>

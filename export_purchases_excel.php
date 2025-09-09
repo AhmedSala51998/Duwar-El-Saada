@@ -8,7 +8,7 @@ $kw = trim($_GET['kw'] ?? '');
 $from_date = $_GET['from_date'] ?? '';
 $to_date = $_GET['to_date'] ?? '';
 
-$q = "SELECT id,name,quantity,unit,price,payer_name,created_at FROM purchases WHERE 1";
+$q = "SELECT id, name, quantity, unit, price, payer_name, payment_source, created_at FROM purchases WHERE 1";
 $params = [];
 
 // فلترة بالكلمة المفتاحية
@@ -35,7 +35,7 @@ $rows = $s->fetchAll(PDO::FETCH_ASSOC);
 
 // تجهيز البيانات كـ array
 $data = [];
-$data[] = ["ID","الاسم","الكمية","الوحدة","السعر","الدافع","التاريخ"];
+$data[] = ["ID","الاسم","الكمية","الوحدة","السعر","الدافع","مصدر الدفع","التاريخ"];
 foreach ($rows as $r) {
     $data[] = [
         $r['id'],
@@ -44,6 +44,7 @@ foreach ($rows as $r) {
         $r['unit'],
         $r['price'],
         $r['payer_name'],
+        $r['payment_source'],
         $r['created_at']
     ];
 }
