@@ -49,12 +49,23 @@ if (!empty($_GET['to_date'])) $filterParams .= '&to_date=' . $_GET['to_date'];
 
 <div class="col-md-4">
   <div class="card p-3 h-100">
-    <h5>العُهد</h5>
+    <h5>الأصول</h5>
     <p class="text-muted small">تصدير الأصول.</p>
     <a style="margin-bottom:5px" class="btn btn-outline-dark" href="export_assets_excel.php?1=1<?= $filterParams ?>"><i class="bi bi-file-earmark-spreadsheet"></i> Excel</a>
     <a class="btn btn-outline-dark" href="export_assets_pdf.php?1=1<?= $filterParams ?>"><i class="bi bi-filetype-pdf"></i> PDF</a>
   </div>
 </div>
+
+<!-- ✅ العُهد (جدول custodies) -->
+<div class="col-md-4">
+  <div class="card p-3 h-100">
+    <h5>العُهد</h5>
+    <p class="text-muted small">تصدير جميع العُهد.</p>
+    <a style="margin-bottom:5px" class="btn btn-outline-dark" href="export_custodies_excel.php?1=1<?= $filterParams ?>"><i class="bi bi-file-earmark-spreadsheet"></i> Excel</a>
+    <a class="btn btn-outline-dark" href="export_custodies_pdf.php?1=1<?= $filterParams ?>"><i class="bi bi-filetype-pdf"></i> PDF</a>
+  </div>
+</div>
+<!-- ✅ انتهى -->
 
 <div class="col-md-4">
   <div class="card p-3 h-100">

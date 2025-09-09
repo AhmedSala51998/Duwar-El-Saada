@@ -75,7 +75,7 @@ $rows=$s->fetchAll();
 $can_edit = in_array(current_role(), ['admin','manager']);
 ?>
 <div class="d-flex flex-wrap gap-2 justify-content-between align-items-center mb-3">
-  <h3 class="mb-0">العُهد</h3>
+  <h3 class="mb-0">الأصول</h3>
   <div class="d-flex gap-2">
     <form class="d-flex gap-2" method="get">
       <input class="form-control" name="kw" placeholder="بحث بالاسم" value="<?= esc($kw) ?>">

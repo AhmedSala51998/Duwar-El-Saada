@@ -4,52 +4,46 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-// العدادات الحالية
+
+// العدادات
 $pc = (int)$pdo->query("SELECT COUNT(*) c FROM purchases")->fetch()['c'];
 $oc = (int)$pdo->query("SELECT COUNT(*) c FROM orders")->fetch()['c'];
 $ac = (int)$pdo->query("SELECT COUNT(*) c FROM assets")->fetch()['c'];
-
-// الإحصائيات الجديدة
+$cc = (int)$pdo->query("SELECT COUNT(*) c FROM custodies")->fetch()['c']; // العهد
 $gf_count = (int)$pdo->query("SELECT COUNT(*) c FROM gov_fees")->fetch()['c'];
 $subs_count = (int)$pdo->query("SELECT COUNT(*) c FROM subscriptions")->fetch()['c'];
 $rentals_count = (int)$pdo->query("SELECT COUNT(*) c FROM rentals")->fetch()['c'];
-
-// المصروفات
 $expenses_count = (int)$pdo->query("SELECT COUNT(*) c FROM expenses")->fetch()['c'];
 
-// المشتريات بالشهور (آخر 6 شهور)
+// المشتريات بالشهور
 $purchasesByMonth = $pdo->query("
   SELECT DATE_FORMAT(created_at,'%Y-%m') m, COUNT(*) c 
-  FROM purchases 
-  GROUP BY m ORDER BY m DESC LIMIT 6
+  FROM purchases GROUP BY m ORDER BY m DESC LIMIT 6
 ")->fetchAll(PDO::FETCH_KEY_PAIR);
 
-// أوامر التشغيل حسب الشهر
+// أوامر التشغيل
 $ordersByMonth = $pdo->query("
   SELECT DATE_FORMAT(created_at,'%Y-%m') m, COUNT(*) c 
-  FROM orders 
-  GROUP BY m ORDER BY m DESC LIMIT 6
+  FROM orders GROUP BY m ORDER BY m DESC LIMIT 6
 ")->fetchAll(PDO::FETCH_KEY_PAIR);
 
-// المصروفات حسب الشهر
+// المصروفات
 $expensesByMonth = $pdo->query("
   SELECT DATE_FORMAT(created_at,'%Y-%m') m, SUM(expense_amount) total 
-  FROM expenses 
-  GROUP BY m ORDER BY m DESC LIMIT 6
+  FROM expenses GROUP BY m ORDER BY m DESC LIMIT 6
 ")->fetchAll(PDO::FETCH_KEY_PAIR);
 
-// العهد حسب الدافع
+// العهد (custodies) بالشهور
+$custodiesByMonth = $pdo->query("
+  SELECT DATE_FORMAT(created_at,'%Y-%m') m, COUNT(*) c 
+  FROM custodies GROUP BY m ORDER BY m DESC LIMIT 6
+")->fetchAll(PDO::FETCH_KEY_PAIR);
+
+// الباقي حسب الدافع
 $assetsByPayer = $pdo->query("SELECT payer_name, COUNT(*) c FROM assets GROUP BY payer_name")->fetchAll(PDO::FETCH_KEY_PAIR);
-
-// الرسوم الحكومية حسب الدافع
 $govFeesByPayer = $pdo->query("SELECT payer, COUNT(*) c FROM gov_fees GROUP BY payer")->fetchAll(PDO::FETCH_KEY_PAIR);
-
-// الاشتراكات حسب الدافع
 $subsByPayer = $pdo->query("SELECT payer, COUNT(*) c FROM subscriptions GROUP BY payer")->fetchAll(PDO::FETCH_KEY_PAIR);
-
-// الإيجارات حسب الدافع
 $rentalsByPayer = $pdo->query("SELECT payer, COUNT(*) c FROM rentals GROUP BY payer")->fetchAll(PDO::FETCH_KEY_PAIR);
-
 ?>
 
 <div class="row g-3">
@@ -65,6 +59,7 @@ $rentalsByPayer = $pdo->query("SELECT payer, COUNT(*) c FROM rentals GROUP BY pa
   <!-- كروت الإحصائيات -->
   <div class="col-lg-8">
     <div class="row g-3">
+
       <!-- أصناف -->
       <div class="col-md-4 col-lg-2">
         <div class="card p-3 text-center h-100"
@@ -85,13 +80,23 @@ $rentalsByPayer = $pdo->query("SELECT payer, COUNT(*) c FROM rentals GROUP BY pa
         </div>
       </div>
 
-      <!-- العهد -->
+      <!-- الأصول -->
       <div class="col-md-4 col-lg-2">
         <div class="card p-3 text-center h-100"
              style="border:2px solid #ff6a00;border-radius:15px;box-shadow:0 4px 12px rgba(255,106,0,0.3);">
           <div class="fs-2 mb-2 text-success"><i class="bi bi-building"></i></div>
-          <div class="text-muted small">العُهد</div>
+          <div class="text-muted small">الأصول</div>
           <div class="fw-bold fs-4"><?= $ac ?></div>
+        </div>
+      </div>
+
+      <!-- العهد -->
+      <div class="col-md-4 col-lg-2">
+        <div class="card p-3 text-center h-100"
+             style="border:2px solid #ff6a00;border-radius:15px;box-shadow:0 4px 12px rgba(255,106,0,0.3);">
+          <div class="fs-2 mb-2 text-dark"><i class="bi bi-shield-check"></i></div>
+          <div class="text-muted small">العُهد</div>
+          <div class="fw-bold fs-4"><?= $cc ?></div>
         </div>
       </div>
 
@@ -158,39 +163,15 @@ $rentalsByPayer = $pdo->query("SELECT payer, COUNT(*) c FROM rentals GROUP BY pa
     </div>
   </div>
 
-  <!-- العهد حسب الدافع -->
+  <!-- العهد حسب الشهر -->
   <div class="col-md-6">
     <div class="card p-3 shadow-sm">
-      <h5 class="mb-3">العُهد حسب الدافع</h5>
-      <canvas id="assetsChart" height="200"></canvas>
+      <h5 class="mb-3">العُهد (آخر 6 شهور)</h5>
+      <canvas id="custodiesChart" height="200"></canvas>
     </div>
   </div>
 
-  <!-- الرسوم الحكومية حسب الدافع -->
-  <div class="col-md-6">
-    <div class="card p-3 shadow-sm">
-      <h5 class="mb-3">الرسوم الحكومية حسب الدافع</h5>
-      <canvas id="govFeesChart" height="200"></canvas>
-    </div>
-  </div>
-
-  <!-- الاشتراكات حسب الدافع -->
-  <div class="col-md-6">
-    <div class="card p-3 shadow-sm">
-      <h5 class="mb-3">الاشتراكات حسب الدافع</h5>
-      <canvas id="subsChart" height="200"></canvas>
-    </div>
-  </div>
-
-  <!-- الإيجارات حسب الدافع -->
-  <div class="col-md-6">
-    <div class="card p-3 shadow-sm">
-      <h5 class="mb-3">الإيجارات حسب الدافع</h5>
-      <canvas id="rentalsChart" height="200"></canvas>
-    </div>
-  </div>
-
-  <!-- المصروفات حسب الشهر -->
+  <!-- المصروفات -->
   <div class="col-md-6">
     <div class="card p-3 shadow-sm">
       <h5 class="mb-3">المصروفات حسب الشهر</h5>
@@ -198,6 +179,34 @@ $rentalsByPayer = $pdo->query("SELECT payer, COUNT(*) c FROM rentals GROUP BY pa
     </div>
   </div>
 
+  <!-- باقي الشارتات -->
+  <div class="col-md-6">
+    <div class="card p-3 shadow-sm">
+      <h5 class="mb-3">الأصول حسب الدافع</h5>
+      <canvas id="assetsChart" height="200"></canvas>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card p-3 shadow-sm">
+      <h5 class="mb-3">الرسوم الحكومية حسب الدافع</h5>
+      <canvas id="govFeesChart" height="200"></canvas>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card p-3 shadow-sm">
+      <h5 class="mb-3">الاشتراكات حسب الدافع</h5>
+      <canvas id="subsChart" height="200"></canvas>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card p-3 shadow-sm">
+      <h5 class="mb-3">الإيجارات حسب الدافع</h5>
+      <canvas id="rentalsChart" height="200"></canvas>
+    </div>
+  </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -215,6 +224,22 @@ new Chart(document.getElementById('ordersChart').getContext('2d'), {
   data: {
     labels: <?= json_encode(array_keys($ordersByMonth)) ?>,
     datasets: [{ label: 'عدد الأوامر', data: <?= json_encode(array_values($ordersByMonth)) ?>, borderColor: 'rgba(0,123,255,0.8)', fill:false, tension:0.3 }]
+  }
+});
+
+new Chart(document.getElementById('custodiesChart').getContext('2d'), {
+  type: 'bar',
+  data: {
+    labels: <?= json_encode(array_keys($custodiesByMonth)) ?>,
+    datasets: [{ label: 'عدد العهد', data: <?= json_encode(array_values($custodiesByMonth)) ?>, backgroundColor: 'rgba(40, 167, 69, 0.7)' }]
+  }
+});
+
+new Chart(document.getElementById('expensesChart').getContext('2d'), {
+  type: 'bar',
+  data: {
+    labels: <?= json_encode(array_keys($expensesByMonth)) ?>,
+    datasets: [{ label: 'المصروفات', data: <?= json_encode(array_values($expensesByMonth)) ?>, backgroundColor: 'rgba(108, 117, 125, 0.7)' }]
   }
 });
 
@@ -249,15 +274,6 @@ new Chart(document.getElementById('rentalsChart').getContext('2d'), {
     datasets: [{ data: <?= json_encode(array_values($rentalsByPayer)) ?>, backgroundColor: ['#0d6efd','#6c757d','#198754','#fd7e14','#dc3545'] }]
   }
 });
-
-new Chart(document.getElementById('expensesChart').getContext('2d'), {
-  type: 'bar',
-  data: {
-    labels: <?= json_encode(array_keys($expensesByMonth)) ?>,
-    datasets: [{ label: 'المصروفات', data: <?= json_encode(array_values($expensesByMonth)) ?>, backgroundColor: 'rgba(108, 117, 125, 0.7)' }]
-  }
-});
-
 </script>
 
 <?php require __DIR__.'/partials/footer.php'; ?>
