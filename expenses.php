@@ -2,6 +2,9 @@
 require __DIR__.'/config/config.php';
 require_role(['admin','manager']);
 
+// جلب العهد
+$custodies = $pdo->query("SELECT person_name, SUM(amount) as balance FROM custodies GROUP BY person_name")->fetchAll(PDO::FETCH_KEY_PAIR);
+
 $kw = trim($_GET['kw'] ?? '');
 $q = "SELECT * FROM expenses WHERE 1";
 $ps = [];
