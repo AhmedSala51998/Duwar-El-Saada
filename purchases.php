@@ -306,7 +306,8 @@ $can_edit = in_array(current_role(), ['admin','manager']);
           </select>
         </div>
 
-        <div class="col-md-6"><label class="form-label">مصدر الدفع</label>
+        <div class="col-md-6">
+          <label class="form-label">مصدر الدفع</label>
           <select name="payment_source" class="form-control payment-source-select">
             <option hidden>اختر مصدر الدفع</option>
             <option>مالك</option>
@@ -385,5 +386,35 @@ document.querySelector('#importExcel form').addEventListener('submit', function(
       e.preventDefault();
       alert('❌ الرجاء اختيار ملف Excel أولاً');
   }
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const payerSelect = document.querySelector('.payer-select');
+  const paymentSelect = document.querySelector('.payment-source-select');
+
+  payerSelect.addEventListener('change', function() {
+    const payer = this.value;
+    if(!payer) return;
+
+    // أرسل اسم الدافع للـ PHP عبر fetch
+    fetch('get_custody_amount.php?person_name=' + encodeURIComponent(payer))
+      .then(res => res.json())
+      .then(data => {
+        // أولاً نشيل أي خيار عهدة موجود
+        const existing = paymentSelect.querySelector('option[data-custody]');
+        if(existing) existing.remove();
+
+        // لو فيه رصيد > 0 نضيف خيار العهدة
+        if(data.amount && data.amount > 0){
+          const option = document.createElement('option');
+          option.value = 'عهدة';
+          option.textContent = 'عهدة (الرصيد: ' + parseFloat(data.amount).toFixed(2) + ')';
+          option.setAttribute('data-custody', '1');
+          paymentSelect.appendChild(option);
+        }
+      })
+      .catch(err => console.error(err));
+  });
 });
 </script>
