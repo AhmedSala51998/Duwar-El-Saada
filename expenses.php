@@ -57,8 +57,8 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 <thead class="table-light">
 <tr>
 <th>#</th>
-<th>الخانة الأولى</th>
-<th>الخانة الثانية</th>
+<th>المصروفات</th>
+<th>نوع المصروف</th>
 <th>بيان المصروف</th>
 <th>قيمة المصروف</th>
 <th>المرفق</th>
@@ -92,7 +92,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
       <div class="modal-header"><h5 class="modal-title">تعديل مصروف</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
       <div class="modal-body vstack gap-3">
         <!-- الخانة الأولى -->
-        <label>الخانة الأولى</label>
+        <label>المصروفات</label>
         <select id="main_expense_edit<?= $r['id'] ?>" name="main_expense" class="form-select" required>
           <option value="">اختر</option>
           <option <?= $r['main_expense']=="ايجارات"?"selected":"" ?>>ايجارات</option>
@@ -104,21 +104,21 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
         </select>
 
         <!-- الخانة الثانية -->
-        <label>الخانة الثانية</label>
+        <label>نوع المصروف</label>
         <div id="sub_expense_edit_wrapper<?= $r['id'] ?>">
           <!-- محتوى الـ sub سيُبنى بواسطة JS عند تحميل الصفحة -->
         </div>
 
         <!-- البيان -->
-        <label>الخانة الثالثة</label>
+        <label>بيان المصروف</label>
         <input name="expense_desc" class="form-control" value="<?= esc($r['expense_desc']) ?>" placeholder="شرح المصروف">
 
         <!-- القيمة -->
-        <label>الخانة الرابعة</label>
+        <label>قيمة المصروف</label>
         <input type="number" step="0.01" name="expense_amount" class="form-control" value="<?= esc($r['expense_amount']) ?>">
 
         <!-- المرفق -->
-        <label>الخانة الخامسة</label>
+        <label>المرفق</label>
         <label class="custom-file-upload w-100">
           <i class="bi bi-image"></i>
           <span id="file-text-edit-<?= $r['id'] ?>">اختر مرفق</span>
@@ -165,7 +165,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
         <div class="modal-header"><h5 class="modal-title">إضافة مصروف</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
         <div class="modal-body vstack gap-3">
 
-          <label>الخانة الأولى</label>
+          <label>المصروفات</label>
           <select id="main_expense" name="main_expense" class="form-select" required>
             <option value="">اختر</option>
             <option value="ايجارات">ايجارات</option>
@@ -176,18 +176,18 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
             <option value="مصروفات اخرى">مصروفات اخرى</option>
           </select>
 
-          <label>الخانة الثانية</label>
+          <label>نوع المصروف</label>
           <div id="sub_expense_wrapper">
             <!-- سيبنى بواسطة JS -->
           </div>
 
-          <label>الخانة الثالثة</label>
+          <label>بيان المصروف</label>
           <input type="text" name="expense_desc" class="form-control" placeholder="ادخال شرح المصروف">
 
-          <label>الخانة الرابعة</label>
+          <label>قيمة المصروف</label>
           <input type="number" step="0.01" name="expense_amount" class="form-control" placeholder="المبلغ" required>
 
-          <label>الخانة الخامسة</label>
+          <label>المرفق</label>
           <label class="custom-file-upload w-100">
             <i class="bi bi-image"></i>
             <span id="file-text-add">اختر مرفق</span>
