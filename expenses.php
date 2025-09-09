@@ -10,9 +10,6 @@ $q .= " ORDER BY id DESC";
 $s = $pdo->prepare($q); $s->execute($ps); $rows = $s->fetchAll();
 $can_edit = in_array(current_role(), ['admin','manager']);
 
-// جلب العهد
-$custodies = $pdo->query("SELECT user_name, SUM(amount) as balance FROM custodies GROUP BY user_name")->fetchAll(PDO::FETCH_KEY_PAIR);
-
 // تحضير JS لحقول التعديل
 $editRowsJs = [];
 foreach($rows as $r){
@@ -35,6 +32,18 @@ foreach($rows as $r){
 .custom-file-upload img{max-height:120px;margin-top:10px;border-radius:8px}
 input[type="file"]{display:none}
 </style>
+
+<?php if(!empty($_SESSION['toast'])): $toast=$_SESSION['toast']; unset($_SESSION['toast']); ?>
+<div class="position-fixed top-0 end-0 p-3" style="z-index:2000">
+  <div id="liveToast" class="toast align-items-center text-bg-<?= $toast['type'] ?> border-0 show fade">
+    <div class="d-flex"><div class="toast-body"><?= esc($toast['msg']) ?></div>
+    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button></div>
+  </div>
+</div>
+<script>
+document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById("liveToast");if(el){new bootstrap.Toast(el,{delay:2500}).show();}});
+</script>
+<?php endif; ?>
 
 <div class="d-flex flex-wrap gap-2 justify-content-between align-items-center mb-3">
   <h3 class="mb-0">المصروفات</h3>
@@ -93,7 +102,8 @@ input[type="file"]{display:none}
       <div class="modal-header"><h5 class="modal-title">تعديل مصروف</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
       <div class="modal-body vstack gap-3">
         <label>المصروفات</label>
-        <select name="main_expense" class="form-select" required>
+        <select id="main_expense_edit<?= $r['id'] ?>" name="main_expense" class="form-select" required>
+          <option value="">اختر</option>
           <option <?= $r['main_expense']=="ايجارات"?"selected":"" ?>>ايجارات</option>
           <option <?= $r['main_expense']=="حكومية"?"selected":"" ?>>حكومية</option>
           <option <?= $r['main_expense']=="مرافق وخدمات"?"selected":"" ?>>مرافق وخدمات</option>
@@ -103,7 +113,13 @@ input[type="file"]{display:none}
         </select>
 
         <label>نوع المصروف</label>
-        <input type="text" name="sub_expense" class="form-control" value="<?= esc($r['sub_expense']) ?>">
+        <div id="sub_expense_edit_wrapper<?= $r['id'] ?>"></div>
+
+        <label>بيان المصروف</label>
+        <input name="expense_desc" class="form-control" value="<?= esc($r['expense_desc']) ?>" placeholder="شرح المصروف">
+
+        <label>قيمة المصروف</label>
+        <input type="number" step="0.01" name="expense_amount" class="form-control" value="<?= esc($r['expense_amount']) ?>">
 
         <label>الدافع</label>
         <select name="payer_name" class="form-select payer-select" data-target="payment_source_edit<?= $r['id'] ?>">
@@ -124,12 +140,17 @@ input[type="file"]{display:none}
           <?php endif; ?>
         </select>
 
-        <label>بيان المصروف</label>
-        <input name="expense_desc" class="form-control" value="<?= esc($r['expense_desc']) ?>">
-
-        <label>قيمة المصروف</label>
-        <input type="number" step="0.01" name="expense_amount" class="form-control" value="<?= esc($r['expense_amount']) ?>">
-
+        <label>المرفق</label>
+        <label class="custom-file-upload w-100">
+          <i class="bi bi-image"></i>
+          <span id="file-text-edit-<?= $r['id'] ?>">اختر مرفق</span>
+          <input type="file" name="expense_file" accept="image/*" onchange="previewFile(this,'file-text-edit-<?= $r['id'] ?>','preview-edit-<?= $r['id'] ?>')">
+          <?php if(!empty($r['expense_file'])): ?>
+            <img id="preview-edit-<?= $r['id'] ?>" src="uploads/<?= esc($r['expense_file']) ?>" style="max-width:100px;margin-top:8px"/>
+          <?php else: ?>
+            <img id="preview-edit-<?= $r['id'] ?>" style="display:none;max-width:100px;margin-top:8px"/>
+          <?php endif; ?>
+        </label>
       </div>
       <div class="modal-footer"><button class="btn btn-orange">حفظ</button></div>
     </form>
@@ -164,9 +185,9 @@ input[type="file"]{display:none}
         <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
         <div class="modal-header"><h5 class="modal-title">إضافة مصروف</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
         <div class="modal-body vstack gap-3">
-
           <label>المصروفات</label>
-          <select name="main_expense" class="form-select" required>
+          <select id="main_expense" name="main_expense" class="form-select" required>
+            <option value="">اختر</option>
             <option value="ايجارات">ايجارات</option>
             <option value="حكومية">حكومية</option>
             <option value="مرافق وخدمات">مرافق وخدمات</option>
@@ -176,9 +197,15 @@ input[type="file"]{display:none}
           </select>
 
           <label>نوع المصروف</label>
-          <input type="text" name="sub_expense" class="form-control">
+          <div id="sub_expense_wrapper"></div>
 
-          <label>الدافع</label>
+          <label>بيان المصروف</label>
+          <input type="text" name="expense_desc" class="form-control" placeholder="ادخال شرح المصروف">
+
+          <label>قيمة المصروف</label>
+          <input type="number" step="0.01" name="expense_amount" class="form-control" placeholder="المبلغ" required>
+
+           <label>الدافع</label>
           <select name="payer_name" class="form-select payer-select" data-target="payment_source_add">
             <option value="">اختر الدافع</option>
             <option value="شركة">شركة</option>
@@ -195,12 +222,13 @@ input[type="file"]{display:none}
             <option value="كاش">كاش</option>
           </select>
 
-          <label>بيان المصروف</label>
-          <input type="text" name="expense_desc" class="form-control">
-
-          <label>قيمة المصروف</label>
-          <input type="number" step="0.01" name="expense_amount" class="form-control">
-
+          <label>المرفق</label>
+          <label class="custom-file-upload w-100">
+            <i class="bi bi-image"></i>
+            <span id="file-text-add">اختر مرفق</span>
+            <input type="file" name="expense_file" accept="image/*" onchange="previewFile(this,'file-text-add','preview-add')">
+            <img id="preview-add" style="display:none;max-width:100px;margin-top:8px"/>
+          </label>
         </div>
         <div class="modal-footer"><button type="submit" class="btn btn-orange">حفظ</button></div>
       </form>
@@ -208,30 +236,6 @@ input[type="file"]{display:none}
   </div>
 </div>
 <?php endif; ?>
-<script>
-// عند اختيار الدافع، تحديث مصدر الدفع
-document.querySelectorAll('.payer-select').forEach(sel=>{
-  sel.addEventListener('change',function(){
-    let target = document.getElementById(this.dataset.target);
-    if(!target) return;
-    let payer = this.value;
-    target.innerHTML = `
-      <option value="">اختر مصدر الدفع</option>
-      <option value="مالك">مالك</option>
-      <option value="بنك">بنك</option>
-      <option value="كاش">كاش</option>
-    `;
-    // لو عنده عهدة نضيفها
-    let custodies = <?= json_encode($custodies) ?>;
-    if(custodies[payer]){
-      let opt = document.createElement('option');
-      opt.value = "عهدة";
-      opt.textContent = "عهدة (رصيد: " + custodies[payer] + ")";
-      target.appendChild(opt);
-    }
-  });
-});
-</script>
 
 <script>
 const expenseTypes = {
@@ -405,6 +409,30 @@ function previewFile(input,textId,previewId){
     reader.readAsDataURL(file);
   }
 }
+</script>
+<script>
+// عند اختيار الدافع، تحديث مصدر الدفع
+document.querySelectorAll('.payer-select').forEach(sel=>{
+  sel.addEventListener('change',function(){
+    let target = document.getElementById(this.dataset.target);
+    if(!target) return;
+    let payer = this.value;
+    target.innerHTML = `
+      <option value="">اختر مصدر الدفع</option>
+      <option value="مالك">مالك</option>
+      <option value="بنك">بنك</option>
+      <option value="كاش">كاش</option>
+    `;
+    // لو عنده عهدة نضيفها
+    let custodies = <?= json_encode($custodies) ?>;
+    if(custodies[payer]){
+      let opt = document.createElement('option');
+      opt.value = "عهدة";
+      opt.textContent = "عهدة (رصيد: " + custodies[payer] + ")";
+      target.appendChild(opt);
+    }
+  });
+});
 </script>
 
 <?php require __DIR__.'/partials/footer.php'; ?>
