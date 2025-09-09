@@ -36,13 +36,19 @@ $s->execute($ps);
 $rows=$s->fetchAll();
 
 $can_edit = in_array(current_role(), ['admin','manager']);
+$options = ['بسام','فيصل المطيري','مؤسسة','شركة'];
 ?>
 
 <div class="d-flex flex-wrap gap-2 justify-content-between align-items-center mb-3">
   <h3 class="mb-0">العُهد</h3>
   <div class="d-flex gap-2">
     <form class="d-flex gap-2" method="get">
-      <input class="form-control" name="kw" placeholder="بحث بالاسم" value="<?= esc($kw) ?>">
+      <select name="kw" class="form-select">
+        <option value="">بحث بالاسم</option>
+        <?php foreach($options as $opt): ?>
+          <option value="<?=esc($opt)?>" <?= $kw==$opt?'selected':'' ?>><?=esc($opt)?></option>
+        <?php endforeach; ?>
+      </select>
       <button class="btn btn-outline-secondary">بحث</button>
     </form>
     <a class="btn btn-outline-dark" href="export_custodies_excel.php?kw=<?=urlencode($kw)?>"><i class="bi bi-file-earmark-spreadsheet"></i> Excel</a>
@@ -90,7 +96,14 @@ $can_edit = in_array(current_role(), ['admin','manager']);
             <input type="hidden" name="id" value="<?= $r['id'] ?>">
             <div class="modal-header"><h5 class="modal-title">تعديل عهدة</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
             <div class="modal-body vstack gap-3">
-              <div><label class="form-label">اسم الشخص</label><input name="person_name" class="form-control" value="<?=esc($r['person_name'])?>" required></div>
+              <div>
+                <label class="form-label">اسم الشخص</label>
+                <select name="person_name" class="form-select" required>
+                  <?php foreach($options as $opt): ?>
+                    <option value="<?=esc($opt)?>" <?= $r['person_name']==$opt?'selected':'' ?>><?=esc($opt)?></option>
+                  <?php endforeach; ?>
+                </select>
+              </div>
               <div><label class="form-label">المبلغ</label><input type="number" step="0.01" name="amount" class="form-control" value="<?=esc($r['amount'])?>" required></div>
               <div><label class="form-label">التاريخ</label><input type="date" name="taken_at" class="form-control" value="<?=esc($r['taken_at'])?>" required></div>
               <div><label class="form-label">ملاحظات</label><textarea name="notes" class="form-control"><?=esc($r['notes'])?></textarea></div>
@@ -128,7 +141,14 @@ $can_edit = in_array(current_role(), ['admin','manager']);
         <input type="hidden" name="_csrf" value="<?=esc(csrf_token())?>">
         <div class="modal-header"><h5 class="modal-title">إضافة عهدة</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
         <div class="modal-body vstack gap-3">
-          <div><label class="form-label">اسم الشخص</label><input name="person_name" class="form-control" required></div>
+          <div>
+            <label class="form-label">اسم الشخص</label>
+            <select name="person_name" class="form-select" required>
+              <?php foreach($options as $opt): ?>
+                <option value="<?=esc($opt)?>"><?=esc($opt)?></option>
+              <?php endforeach; ?>
+            </select>
+          </div>
           <div><label class="form-label">المبلغ</label><input type="number" step="0.01" name="amount" class="form-control" required></div>
           <div><label class="form-label">التاريخ</label><input type="date" name="taken_at" class="form-control" required></div>
           <div><label class="form-label">ملاحظات</label><textarea name="notes" class="form-control"></textarea></div>

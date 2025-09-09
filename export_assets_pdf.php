@@ -42,7 +42,7 @@ $rows = $s->fetchAll();
 </style>
 </head>
 <body>
-<title>تقرير العُهد</title>
+<title>تقرير الأصول</title>
 <img src="assets/logo.svg" width="60" style="float:left">
 <table>
 <thead>
