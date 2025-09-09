@@ -50,11 +50,13 @@ h2{text-align:center;margin-bottom:10px}
 <thead>
 <tr>
 <th>#</th>
-<th>الخانة الأولى</th>
-<th>الخانة الثانية</th>
+<th>المصروفات</th>
+<th>نوع المصروف</th>
 <th>بيان المصروف</th>
 <th>قيمة المصروف</th>
 <th>المرفق</th>
+<th>الدافع</th>
+<th>مصدر الدفع</th>
 <th>التاريخ</th>
 </tr>
 </thead>
@@ -67,6 +69,8 @@ h2{text-align:center;margin-bottom:10px}
 <td><?= esc($r['expense_desc']) ?></td>
 <td><?= number_format((float)$r['expense_amount'],2) ?></td>
 <td><?= $r['expense_file'] ? esc($r['expense_file']) : '-' ?></td>
+<td><?= esc($r['payer_name'] ?? '-') ?></td>
+<td><?= esc($r['payment_source'] ?? '-') ?></td>
 <td><?= esc($r['created_at'] ?? '') ?></td>
 </tr>
 <?php endforeach; ?>

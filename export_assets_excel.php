@@ -9,7 +9,7 @@ $from_date = $_GET['from_date'] ?? '';
 $to_date = $_GET['to_date'] ?? '';
 
 // بناء الاستعلام
-$q = "SELECT id, name, type, quantity, price, payer_name, created_at FROM assets WHERE 1";
+$q = "SELECT id, name, type, quantity, price, payer_name, payment_source, created_at FROM assets WHERE 1";
 $params = [];
 
 // فلترة بالكلمة المفتاحية
@@ -37,7 +37,7 @@ $rows = $s->fetchAll(PDO::FETCH_ASSOC);
 
 // تجهيز البيانات للتصدير
 $data = [];
-$data[] = ["ID", "الاسم", "النوع", "العدد", "السعر", "الدافع", "التاريخ"];
+$data[] = ["ID", "الاسم", "النوع", "العدد", "السعر", "الدافع", "مصدر الدفع", "التاريخ"];
 
 foreach ($rows as $r) {
     $data[] = [
@@ -47,6 +47,7 @@ foreach ($rows as $r) {
         $r['quantity'],
         $r['price'],
         $r['payer_name'],
+        $r['payment_source'] ?? '-',
         $r['created_at']
     ];
 }

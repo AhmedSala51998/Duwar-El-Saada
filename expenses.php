@@ -17,13 +17,10 @@ foreach($rows as $r){
     'id'=>$r['id'],
     'main'=>$r['main_expense'],
     'sub'=>$r['sub_expense'],
-    'payment_source'=>$r['payment_source'] ?? ''
+    'payment_source'=>$r['payment_source'] ?? '',
+    'payer_name'=>$r['payer_name'] ?? ''
   ];
 }
-
-// جلب العهود لكل مستخدم
-$usersStmt = $pdo->query("SELECT id,name,custody_amount FROM users ORDER BY name");
-$users = $usersStmt->fetchAll();
 ?>
 <?php require __DIR__.'/partials/header.php'; ?>
 
@@ -52,7 +49,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
   <h3 class="mb-0">المصروفات</h3>
   <div class="d-flex gap-2">
     <form class="d-flex gap-2" method="get">
-      <input class="form-control" name="kw" placeholder="بحث بالخانة الأولى" value="<?= esc($kw) ?>">
+      <input class="form-control" name="kw" placeholder="بحث بالمصروفات" value="<?= esc($kw) ?>">
       <button class="btn btn-outline-secondary">بحث</button>
     </form>
     <?php if($can_edit): ?>
@@ -70,6 +67,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 <th>نوع المصروف</th>
 <th>بيان المصروف</th>
 <th>قيمة المصروف</th>
+<th>الدافع</th>
 <th>مصدر الدفع</th>
 <th>المرفق</th>
 <?php if($can_edit): ?><th>عمليات</th><?php endif; ?>
@@ -83,6 +81,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 <td><?= esc($r['sub_expense']) ?></td>
 <td><?= esc($r['expense_desc']) ?></td>
 <td><?= number_format((float)$r['expense_amount'],2) ?></td>
+<td><?= esc($r['payer_name'] ?? '') ?></td>
 <td><?= esc($r['payment_source'] ?? '') ?></td>
 <td><?php if($r['expense_file']): ?><img src="uploads/<?= esc($r['expense_file']) ?>" width="50"><?php endif; ?></td>
 <?php if($can_edit): ?>
@@ -115,6 +114,9 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 
         <label>نوع المصروف</label>
         <div id="sub_expense_edit_wrapper<?= $r['id'] ?>"></div>
+
+        <label>الدافع</label>
+        <input type="text" name="payer_name" class="form-control" value="<?= esc($r['payer_name'] ?? '') ?>" placeholder="اسم الدافع" required>
 
         <label>مصدر الدفع</label>
         <select name="payment_source" class="form-select">
@@ -176,6 +178,9 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 
           <label>نوع المصروف</label>
           <div id="sub_expense_wrapper"></div>
+
+          <label>الدافع</label>
+          <input type="text" name="payer_name" class="form-control" placeholder="اسم الدافع" required>
 
           <label>مصدر الدفع</label>
           <select name="payment_source" id="payment_source_add" class="form-select">

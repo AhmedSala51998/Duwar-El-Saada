@@ -9,6 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
     $expense_desc = trim($_POST['expense_desc']);
     $expense_amount = (float)($_POST['expense_amount'] ?? 0);
     $payment_source = $_POST['payment_source'] ?? 'كاش';
+    $payer_name = $_POST['payer_name'] ?? null;
 
     // خصم العهدة إذا مصدر الدفع "عهدة"
     if($payment_source === 'عهدة'){
@@ -24,13 +25,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
         }
     }
 
-    $pdo->prepare("INSERT INTO expenses(main_expense, sub_expense, expense_desc, expense_amount, expense_file, payment_source) VALUES(?,?,?,?,?,?)")
+    $pdo->prepare("INSERT INTO expenses(main_expense, sub_expense, expense_desc, expense_amount, expense_file,payer_name, payment_source) VALUES(?,?,?,?,?,? , ?)")
         ->execute([
             $main_expense,
             $sub_expense,
             $expense_desc,
             $expense_amount,
             upload_image('expense_file'),
+            $payer_name,
             $payment_source
         ]);
 

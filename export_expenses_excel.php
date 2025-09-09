@@ -32,7 +32,8 @@ $s = $pdo->prepare($q);
 $s->execute($ps); 
 $rows = $s->fetchAll(PDO::FETCH_ASSOC);
 
-$data = [["ID","الخانة الأولى","الخانة الثانية","بيان المصروف","قيمة المصروف","المرفق","التاريخ"]];
+// إعداد بيانات التصدير مع الدافع ومصدر الدفع
+$data = [["ID","المصروفات","نوع المصروف","بيان المصروف","قيمة المصروف","المرفق","الدافع","مصدر الدفع","التاريخ"]];
 foreach($rows as $r){
     $data[] = [
         $r['id'],
@@ -41,6 +42,8 @@ foreach($rows as $r){
         $r['expense_desc'],
         $r['expense_amount'],
         $r['expense_file'],
+        $r['payer_name'] ?? '',
+        $r['payment_source'] ?? '',
         $r['created_at'] ?? ''
     ];
 }
