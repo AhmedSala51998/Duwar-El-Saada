@@ -1,6 +1,6 @@
 <!-- CSS للستايل -->
 <style>
-  .custom-file-upload {
+.custom-file-upload {
     border: 2px dashed #ccc;
     border-radius: 12px;
     display: flex;
@@ -12,54 +12,55 @@
     text-align: center;
     transition: all 0.3s ease-in-out;
     background: #f9f9f9;
-  }
-  .custom-file-upload:hover {
+}
+.custom-file-upload:hover {
     border-color: #0d6efd;
     background: #eef5ff;
-  }
-  .custom-file-upload i {
+}
+.custom-file-upload i {
     font-size: 40px;
     color: #0d6efd;
     margin-bottom: 10px;
-  }
-  .custom-file-upload span {
+}
+.custom-file-upload span {
     font-size: 14px;
     color: #666;
-  }
-  .custom-file-upload img {
+}
+.custom-file-upload img {
     max-height: 120px;
     margin-top: 10px;
     border-radius: 8px;
-  }
-  input[type="file"] {
+}
+input[type="file"] {
     display: none;
-  }
+}
 </style>
+
 <?php require __DIR__.'/partials/header.php'; ?>
+
 <?php if(!empty($_SESSION['toast'])): 
-  $toast = $_SESSION['toast'];
-  unset($_SESSION['toast']); 
+$toast = $_SESSION['toast'];
+unset($_SESSION['toast']); 
 ?>
 <div class="position-fixed top-0 end-0 p-3" style="z-index: 2000">
   <div id="liveToast" class="toast align-items-center text-bg-<?= $toast['type'] ?> border-0 show fade" role="alert" aria-live="assertive" aria-atomic="true">
     <div class="d-flex">
-      <div class="toast-body">
-        <?= esc($toast['msg']) ?>
-      </div>
+      <div class="toast-body"><?= esc($toast['msg']) ?></div>
       <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
     </div>
   </div>
 </div>
 <script>
-  document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function() {
     let el = document.getElementById("liveToast");
     if(el){
       let toast = new bootstrap.Toast(el, { delay: 2500 });
       toast.show();
     }
-  });
+});
 </script>
 <?php endif; ?>
+
 <?php
 $kw = trim($_GET['kw'] ?? '');
 $q = "SELECT * FROM assets WHERE 1"; 
@@ -74,6 +75,7 @@ $s->execute($ps);
 $rows=$s->fetchAll();
 $can_edit = in_array(current_role(), ['admin','manager']);
 ?>
+
 <div class="d-flex flex-wrap gap-2 justify-content-between align-items-center mb-3">
   <h3 class="mb-0">الأصول</h3>
   <div class="d-flex gap-2">
@@ -93,19 +95,12 @@ $can_edit = in_array(current_role(), ['admin','manager']);
 <table class="table table-hover align-middle">
   <thead class="table-light">
     <tr>
-      <th>#</th>
-      <th>صورة</th>
-      <th>الاسم</th>
-      <th>النوع</th>
-      <th>العدد</th>
-      <th>السعر</th>
-      <th>الدافع</th>
-      <th>التاريخ</th>
+      <th>#</th><th>صورة</th><th>الاسم</th><th>النوع</th><th>العدد</th><th>السعر</th><th>الدافع</th><th>مصدر الدفع</th>
       <?php if($can_edit): ?><th>عمليات</th><?php endif; ?>
     </tr>
   </thead>
   <tbody>
-    <?php foreach($rows as $r): ?>
+  <?php foreach($rows as $r): ?>
     <tr>
       <td><?= $r['id'] ?></td>
       <td><?php if($r['image']): ?><img src="uploads/<?= esc($r['image']) ?>" width="44" class="rounded"><?php endif; ?></td>
@@ -114,13 +109,11 @@ $can_edit = in_array(current_role(), ['admin','manager']);
       <td><?= (int)$r['quantity'] ?></td>
       <td><?= number_format((float)$r['price'],2) ?></td>
       <td><?= esc($r['payer_name']) ?></td>
-      <td><?= esc($r['created_at']) ?></td>
+      <td><?= esc($r['payment_source'] ?? '-') ?></td>
       <?php if($can_edit): ?>
       <td class="table-actions">
         <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#e<?= $r['id'] ?>"><i class="bi bi-pencil"></i></button>
-        <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#del<?= $r['id'] ?>">
-          <i class="bi bi-trash"></i>
-        </button>
+        <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#del<?= $r['id'] ?>"><i class="bi bi-trash"></i></button>
       </td>
       <?php endif; ?>
     </tr>
@@ -140,31 +133,45 @@ $can_edit = in_array(current_role(), ['admin','manager']);
             </div>
 
             <div class="modal-body vstack gap-3">
-              <div>
-                <label class="form-label">الاسم</label>
+              <div><label class="form-label">الاسم</label>
                 <input name="name" class="form-control" value="<?= esc($r['name']) ?>" required>
               </div>
-              <div>
-                <label class="form-label">النوع</label>
+              <div><label class="form-label">النوع</label>
                 <input name="type" class="form-control" value="<?= esc($r['type']) ?>">
               </div>
-              <div>
-                <label class="form-label">العدد</label>
+              <div><label class="form-label">العدد</label>
                 <input type="number" name="quantity" class="form-control" value="<?= (int)$r['quantity'] ?>" min="1">
               </div>
-              <div>
-                <label class="form-label">السعر</label>
+              <div><label class="form-label">السعر</label>
                 <input type="number" step="0.01" name="price" class="form-control" value="<?= esc($r['price']) ?>">
               </div>
-              <div>
-                <label class="form-label">اسم الدافع</label>
-                <select name="payer_name" class="form-control">
-                  <option value="شركة" <?= $r['payer_name']=='شركة'?'selected':'' ?>>شركة</option>
-                  <option value="مؤسسة" <?= $r['payer_name']=='مؤسسة'?'selected':'' ?>>مؤسسة</option>
-                  <option value="فيصل المطيري" <?= $r['payer_name']=='فيصل المطيري'?'selected':'' ?>>فيصل المطيري</option>
-                  <option value="بسام" <?= $r['payer_name']=='بسام'?'selected':'' ?>>بسام</option>
+
+              <div><label class="form-label">اسم الدافع</label>
+                <select name="payer_name" class="form-control payer-select" data-id="<?= $r['id'] ?>">
+                  <option hidden>اختر الدافع</option>
+                  <?php foreach(['شركة','مؤسسة','فيصل المطيري','بسام'] as $payer): ?>
+                    <option <?= $r['payer_name']===$payer?'selected':'' ?>><?= $payer ?></option>
+                  <?php endforeach; ?>
                 </select>
               </div>
+
+              <div><label class="form-label">مصدر الدفع</label>
+                <select name="payment_source" class="form-control payment-source-select" id="payment_source_<?= $r['id'] ?>">
+                  <option hidden>اختر مصدر الدفع</option>
+                  <option value="مالك" <?= $r['payment_source']=='مالك'?'selected':'' ?>>مالك</option>
+                  <option value="كاش" <?= $r['payment_source']=='كاش'?'selected':'' ?>>كاش</option>
+                  <option value="بنك" <?= $r['payment_source']=='بنك'?'selected':'' ?>>بنك</option>
+                  <?php
+                    $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? ORDER BY taken_at DESC LIMIT 1");
+                    $stmtC->execute([$r['payer_name']]);
+                    $custody = $stmtC->fetch();
+                    if($custody && $custody['amount']>0){
+                      echo '<option value="عهدة" '.($r['payment_source']=='عهدة'?'selected':'').'>عهدة ('.$custody['amount'].' ريال)</option>';
+                    }
+                  ?>
+                </select>
+              </div>
+
               <div>
                 <label class="form-label">صورة</label>
                 <label class="custom-file-upload w-100">
@@ -210,7 +217,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
       </div>
     </div>
     <?php endif; ?>
-    <?php endforeach; ?>
+  <?php endforeach; ?>
   </tbody>
 </table>
 </div>
@@ -226,33 +233,36 @@ $can_edit = in_array(current_role(), ['admin','manager']);
           <button class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body vstack gap-3">
-          <div>
-            <label class="form-label">الاسم</label>
+          <div><label class="form-label">الاسم</label>
             <input name="name" class="form-control" required>
           </div>
-          <div>
-            <label class="form-label">النوع</label>
+          <div><label class="form-label">النوع</label>
             <input name="type" class="form-control">
           </div>
-          <div>
-            <label class="form-label">العدد</label>
+          <div><label class="form-label">العدد</label>
             <input type="number" name="quantity" class="form-control" value="1" min="1">
           </div>
-          <div>
-            <label class="form-label">السعر</label>
+          <div><label class="form-label">السعر</label>
             <input type="number" step="0.01" name="price" class="form-control">
           </div>
-          <div>
-            <label class="form-label">اسم الدافع</label>
-             <select name="payer_name" class="form-control">
-                <option value="شركة">شركة</option>
-                <option value="مؤسسة">مؤسسة</option>
-                <option value="فيصل المطيري">فيصل المطيري</option>
-                <option value="بسام">بسام</option>
-              </select>
+          <div><label class="form-label">اسم الدافع</label>
+            <select name="payer_name" class="form-control payer-select">
+              <option hidden>اختر الدافع</option>
+              <option>شركة</option>
+              <option>مؤسسة</option>
+              <option>فيصل المطيري</option>
+              <option>بسام</option>
+            </select>
           </div>
-          <div>
-            <label class="form-label">صورة</label>
+          <div><label class="form-label">مصدر الدفع</label>
+            <select name="payment_source" class="form-control payment-source-select">
+              <option hidden>اختر مصدر الدفع</option>
+              <option>مالك</option>
+              <option>كاش</option>
+              <option>بنك</option>
+            </select>
+          </div>
+          <div><label class="form-label">صورة</label>
             <label class="custom-file-upload w-100">
               <i class="bi bi-image"></i>
               <span id="file-text-asset">اختر صورة</span>
@@ -262,27 +272,56 @@ $can_edit = in_array(current_role(), ['admin','manager']);
             </label>
           </div>
         </div>
-        <div class="modal-footer">
-          <button class="btn btn-orange">حفظ</button>
-        </div>
+        <div class="modal-footer"><button class="btn btn-orange">حفظ</button></div>
       </form>
     </div>
   </div>
 </div>
 <?php endif; ?>
+
 <?php require __DIR__.'/partials/footer.php'; ?>
+
 <script>
-  function previewFile(input, textId, previewId) {
+function previewFile(input, textId, previewId) {
     const file = input.files[0];
-    if (file) {
-      document.getElementById(textId).textContent = file.name;
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const preview = document.getElementById(previewId);
-        preview.src = e.target.result;
-        preview.style.display = "block";
-      };
-      reader.readAsDataURL(file);
+    if(file){
+        document.getElementById(textId).textContent = file.name;
+        const reader = new FileReader();
+        reader.onload = function(e){
+            const preview = document.getElementById(previewId);
+            preview.src = e.target.result;
+            preview.style.display = "block";
+        };
+        reader.readAsDataURL(file);
     }
-  }
+}
+
+// تحديث مصدر الدفع عند اختيار الدافع
+document.addEventListener('shown.bs.modal', function(event){
+    const modal = event.target;
+    const payerSelect = modal.querySelector('.payer-select');
+    const paymentSelect = modal.querySelector('.payment-source-select');
+    if(!payerSelect || !paymentSelect) return;
+
+    payerSelect.addEventListener('change', function(){
+        const payer = this.value;
+        if(!payer) return;
+
+        fetch('get_custody_amount.php?person_name=' + encodeURIComponent(payer))
+        .then(res => res.json())
+        .then(data => {
+            const existing = paymentSelect.querySelector('option[data-custody]');
+            if(existing) existing.remove();
+
+            if(data.amount && data.amount > 0){
+                const option = document.createElement('option');
+                option.value = 'عهدة';
+                option.textContent = 'عهدة (الرصيد: ' + parseFloat(data.amount).toFixed(2) + ')';
+                option.setAttribute('data-custody','1');
+                paymentSelect.appendChild(option);
+            }
+        })
+        .catch(err => console.error(err));
+    });
+});
 </script>
