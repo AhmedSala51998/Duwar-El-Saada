@@ -351,6 +351,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
               <li><b>payer_name</b> : اسم الدافع</li>
               <li><b>image_path</b> : صورة المنتج</li>
               <li><b>invoice_path</b> : صورة الفاتورة</li>
+              <li><b>payment_source</b> : مصدر الدفع</li>
             </ul>
           </div>
         </div>
