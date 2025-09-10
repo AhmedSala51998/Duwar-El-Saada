@@ -61,7 +61,7 @@ $rentalsByPayer = $pdo->query("SELECT payer, COUNT(*) c FROM rentals GROUP BY pa
     <div class="row g-3">
 
       <!-- أصناف -->
-      <div class="col-md-4 col-lg-2">
+      <div class="col-md-4 col-lg-3">
         <div class="card p-3 text-center h-100"
              style="border:2px solid #ff6a00;border-radius:15px;box-shadow:0 4px 12px rgba(255,106,0,0.3);">
           <div class="fs-2 mb-2 text-orange"><i class="bi bi-bag"></i></div>
