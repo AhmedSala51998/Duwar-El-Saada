@@ -1,4 +1,7 @@
-<?php
+
+
+
+      <?php
 require __DIR__.'/../config/config.php'; 
 require_auth();
 
@@ -150,7 +153,51 @@ $current_page = basename($_SERVER['PHP_SELF']);
   </div>
 </nav>
 
-<!-- بقية الصفحة مثل القائمة الجانبية والمحتوى ... -->
+
+<!-- القائمة الجانبية في الموبايل (Offcanvas) -->
+<div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarMenu">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">القائمة</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+  </div>
+  <div class="offcanvas-body">
+    <a class="sidebar-link d-block mb-2 <?= $current_page=='index.php'?'active':'' ?>" href="<?= BASE_URL ?>/index.php"><i class="bi bi-house"></i> الرئيسية</a>
+    <a class="sidebar-link d-block mb-2 <?= $current_page=='purchases.php'?'active':'' ?>" href="<?= BASE_URL ?>/purchases.php"><i class="bi bi-bag"></i> تهيئة المشتريات</a>
+    <a class="sidebar-link d-block mb-2 <?= $current_page=='orders.php'?'active':'' ?>" href="<?= BASE_URL ?>/orders.php"><i class="bi bi-gear"></i> أوامر التشغيل</a>
+    <a class="sidebar-link d-block <?= $current_page=='custodies.php'?'active':'' ?>" href="<?= BASE_URL ?>/custodies.php"><i class="bi bi-wallet2"></i> العهد</a>
+    <a class="sidebar-link d-block mb-2 <?= $current_page=='assetes.php'?'active':'' ?>" href="<?= BASE_URL ?>/assetes.php"><i class="bi bi-building"></i> الأصول</a>
+    <!--<a class="sidebar-link d-block mb-2 <?= $current_page=='gov_fees.php'?'active':'' ?>" href="<?= BASE_URL ?>/gov_fees.php"><i class="bi bi-file-earmark-text"></i> الرسوم الحكومية</a>
+    <a class="sidebar-link d-block mb-2 <?= $current_page=='subscriptions.php'?'active':'' ?>" href="<?= BASE_URL ?>/subscriptions.php"><i class="bi bi-journal-bookmark"></i> الاشتراكات والخدمات</a>
+    <a class="sidebar-link d-block mb-2 <?= $current_page=='rentals.php'?'active':'' ?>" href="<?= BASE_URL ?>/rentals.php"><i class="bi bi-house-door"></i> الإيجارات</a>-->
+    <a class="sidebar-link d-block <?= $current_page=='expenses.php'?'active':'' ?>" href="<?= BASE_URL ?>/expenses.php"><i class="bi bi-cash-stack"></i> المصروفات</a>
+    <a class="sidebar-link d-block <?= $current_page=='reports.php'?'active':'' ?>" href="<?= BASE_URL ?>/reports.php"><i class="bi bi-graph-up"></i> التقارير</a>
+  </div>
+</div>
+
+<div class="container-fluid">
+  <div class="row">
+    <!-- Sidebar في الديسكتوب -->
+    <aside class="col-lg-2 col-md-3 border-end min-vh-100 d-none d-md-block">
+      <div class="p-3">
+        <div class="text-muted small mb-2">القائمة</div>
+        <a class="sidebar-link d-block mb-2 <?= $current_page=='index.php'?'active':'' ?>" href="<?= BASE_URL ?>/index.php"><i class="bi bi-house"></i> الرئيسية</a>
+        <a class="sidebar-link d-block mb-2 <?= $current_page=='purchases.php'?'active':'' ?>" href="<?= BASE_URL ?>/purchases.php"><i class="bi bi-bag"></i> تهيئة المشتريات</a>
+        <a class="sidebar-link d-block mb-2 <?= $current_page=='orders.php'?'active':'' ?>" href="<?= BASE_URL ?>/orders.php"><i class="bi bi-gear"></i> أوامر التشغيل</a>
+        <a class="sidebar-link d-block mb-2 <?= $current_page=='custodies.php'?'active':'' ?>" href="<?= BASE_URL ?>/custodies.php"><i class="bi bi-wallet2"></i> العهد</a>
+        <a class="sidebar-link d-block mb-2 <?= $current_page=='assetes.php'?'active':'' ?>" href="<?= BASE_URL ?>/assetes.php"><i class="bi bi-building"></i> الأصول</a>
+        <!--<a class="sidebar-link d-block mb-2 <?= $current_page=='gov_fees.php'?'active':'' ?>" href="<?= BASE_URL ?>/gov_fees.php"><i class="bi bi-file-earmark-text"></i> الرسوم الحكومية</a>
+        <a class="sidebar-link d-block mb-2 <?= $current_page=='subscriptions.php'?'active':'' ?>" href="<?= BASE_URL ?>/subscriptions.php"><i class="bi bi-journal-bookmark"></i> الاشتراكات والخدمات</a>
+        <a class="sidebar-link d-block mb-2 <?= $current_page=='rentals.php'?'active':'' ?>" href="<?= BASE_URL ?>/rentals.php"><i class="bi bi-house-door"></i> الإيجارات</a>-->
+        <a class="sidebar-link d-block <?= $current_page=='expenses.php'?'active':'' ?>" href="<?= BASE_URL ?>/expenses.php"><i class="bi bi-cash-stack"></i> المصروفات</a>
+        <a class="sidebar-link d-block <?= $current_page=='reports.php'?'active':'' ?>" href="<?= BASE_URL ?>/reports.php"><i class="bi bi-graph-up"></i> التقارير</a>
+      </div>
+    </aside>
+
+    <!-- المحتوى -->
+    <main class="col-12 col-md-9 col-lg-10 p-4">
+      <?php if($m = flash('msg')): ?>
+        <div class="flash mb-3"><?= esc($m) ?></div>
+      <?php endif; ?>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
@@ -178,3 +225,4 @@ $current_page = basename($_SERVER['PHP_SELF']);
 </script>
 </body>
 </html>
+
