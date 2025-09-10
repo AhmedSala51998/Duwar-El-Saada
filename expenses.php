@@ -206,6 +206,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 
           <label>نوع المصروف</label>
           <div id="sub_expense_wrapper"></div>
+          <input type="hidden" name="sub_expense" id="hidden_sub_expense_add" value="">
 
           <label>بيان المصروف</label>
           <input type="text" name="expense_desc" class="form-control" placeholder="ادخال شرح المصروف">
@@ -394,6 +395,22 @@ document.querySelectorAll('.payer-select').forEach(sel=>{
     }
   });
 });
+
+// عند اختيار المصروف الرئيسي في الإضافة
+const mainAdd = document.getElementById('main_expense');
+if(mainAdd){
+  mainAdd.addEventListener('change', function(){
+    renderSubField('main_expense','sub_expense_wrapper',
+                   document.getElementById('hidden_sub_expense_add').value,
+                   'hidden_sub_expense_add');
+  });
+
+  // تهيئة افتراضية عند تحميل الصفحة (لو فيه قيمة محفوظة)
+  renderSubField('main_expense','sub_expense_wrapper',
+                 document.getElementById('hidden_sub_expense_add').value,
+                 'hidden_sub_expense_add');
+}
+
 </script>
 
 <?php require __DIR__.'/partials/footer.php'; ?>
