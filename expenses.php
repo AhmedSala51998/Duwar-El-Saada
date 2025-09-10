@@ -262,8 +262,13 @@ function renderSubField(mainId, wrapperId, currentValue=""){
   const wrapper = document.getElementById(wrapperId);
   if(!main || !wrapper) return;
 
+  // لو مش محدد currentValue نحاول نجيب القيمة الموجودة فعلياً قبل المسح
+  if(!currentValue){
+    const old = wrapper.querySelector('select, input');
+    if(old) currentValue = old.value;
+  }
   const opts = expenseTypes[main.value] || [];
-  wrapper.innerHTML="";
+  wrapper.innerHTML = "";
 
   // إذا القيمة موجودة ضمن الخيارات => نعرض select ومختار القيمة
   if(opts.length > 0 && opts.includes(currentValue)){
