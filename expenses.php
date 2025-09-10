@@ -262,13 +262,8 @@ function renderSubField(mainId, wrapperId, currentValue=""){
   const wrapper = document.getElementById(wrapperId);
   if(!main || !wrapper) return;
 
-  // لو مش محدد currentValue نحاول نجيب القيمة الموجودة فعلياً قبل المسح
-  if(!currentValue){
-    const old = wrapper.querySelector('select, input');
-    if(old) currentValue = old.value;
-  }
   const opts = expenseTypes[main.value] || [];
-  wrapper.innerHTML = "";
+  wrapper.innerHTML="";
 
   // إذا القيمة موجودة ضمن الخيارات => نعرض select ومختار القيمة
   if(opts.length > 0 && opts.includes(currentValue)){
@@ -386,27 +381,24 @@ document.getElementById("main_expense")?.addEventListener("change", function(){
 const editRows = <?= json_encode($editRowsJs, JSON_HEX_TAG|JSON_HEX_APOS|JSON_HEX_AMP|JSON_HEX_QUOT) ?>;
 
 document.addEventListener("DOMContentLoaded", function(){
+  // أولاً نهيئ كل مودال تعديل بقيمة الـ sub المخزنة
   editRows.forEach(row=>{
     const mainId = "main_expense_edit" + row.id;
     const wrapperId = "sub_expense_edit_wrapper" + row.id;
-    
-    const mainSelect = document.getElementById(mainId);
-    if(mainSelect){
-      mainSelect.value = row.main; // يضمن المصروف الرئيسي
-    }
-
-    // ارسم النوع لأول مرة
+    // render initial
     renderSubField(mainId, wrapperId, row.sub);
 
-    // عند تغيير المصروف الرئيسي نحافظ على القيمة الحالية
-    mainSelect?.addEventListener("change", ()=>{
+    // عندما يغيّر المستخدم الخانة الأولى داخل المودال
+    document.getElementById(mainId)?.addEventListener("change", function(){
       const wrapper = document.getElementById(wrapperId);
-      const currentVal = getCurrentSubVal(wrapper);
-      renderSubField(mainId, wrapperId, currentVal);
+      const cur = getCurrentSubVal(wrapper);
+      renderSubField(mainId, wrapperId, cur);
     });
   });
-});
 
+  // أيضاً نريد تهيئة الـ add modal لو كانت value موجودة مسبقاً (لمرة أولى)
+  // لو احتجت تهيئة افتراضية هنا يمكن استدعاء renderSubField("main_expense","sub_expense_wrapper","")
+});
   
 function previewFile(input,textId,previewId){
   const file=input.files[0];
