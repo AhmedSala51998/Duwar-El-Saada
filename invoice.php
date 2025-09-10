@@ -15,6 +15,9 @@ if (!$r) {
 <style>
 /* ------------------------- الطباعة ------------------------- */
 @media print {
+  body {
+    background: #fff;
+  }
   body * {
     visibility: hidden;
   }
@@ -22,10 +25,11 @@ if (!$r) {
     visibility: visible;
   }
   .print-area {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
+    position: relative;      /* بدلاً من absolute */
+    max-width: 800px;        /* نفس العرض الظاهر في الصفحة */
+    margin: 0 auto;          /* توسيط الكارد */
+    box-shadow: none;        /* إزالة الظل عند الطباعة */
+    border: none;            /* إزالة الحدود لو وجدت */
   }
 }
 
