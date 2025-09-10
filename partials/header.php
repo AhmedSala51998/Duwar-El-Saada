@@ -1,7 +1,4 @@
-
-
-
-      <?php
+<?php
 require __DIR__.'/../config/config.php'; 
 require_auth();
 
@@ -19,44 +16,24 @@ $current_page = basename($_SERVER['PHP_SELF']);
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
   <link href="<?= BASE_URL ?>/assets/css/theme.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-
   <style>
-    body {
-      font-family: 'Cairo', sans-serif;
-      transition: background 0.3s, color 0.3s;
-    }
-
-    /* الوضع الافتراضي (Light Mode) */
-    body.light-mode {
-      background-color: #f8f9fa;
-      color: #333;
-    }
-    body.light-mode .custom-navbar {
-      background: rgba(255,255,255,0.85);
-      border-bottom: 1px solid rgba(0,0,0,0.08);
-    }
-
-    /* Dark Mode */
-    body.dark-mode {
-      background-color: #121212;
-      color: #e0e0e0;
-    }
-    body.dark-mode .custom-navbar {
-      background: rgba(18,18,18,0.95);
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-    }
-    body.dark-mode .sidebar-link,
-    body.dark-mode .nav-link {
-      color: #ccc !important;
-    }
-    body.dark-mode .sidebar-link.active,
-    body.dark-mode .nav-link.active {
-      background-color: #ff6600;
+    /* تمييز الصفحة النشطة */
+    .sidebar-link.active,
+    .nav-link.active {
+      background-color: #ff6600; /* لون الهوفر بتاعك */
       color: #fff !important;
+      border-radius: 6px;
     }
-
-    /* ألوان البرتقالي والثوابت */
+    .custom-navbar {
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(0,0,0,0.08); /* ✅ أسود خفيف جدًا */
+      padding: .7rem 1rem;
+    }
+    /* لون البرتقالي */
     .text-orange { color: #ff6a00 !important; }
+
+    /* الدور */
     .role-badge {
       background: #fff3e6;
       color: #ff6a00;
@@ -65,6 +42,26 @@ $current_page = basename($_SERVER['PHP_SELF']);
       padding: .5rem 1rem;
       box-shadow: 0 2px 6px rgba(255,106,0,.2);
     }
+
+    /* روابط */
+    .navbar .nav-link {
+      font-weight: 500;
+      padding: .6rem 1.2rem;
+      border-radius: 12px;
+      color: #555 !important;
+      transition: all .2s ease;
+    }
+    .navbar .nav-link:hover {
+      background: rgba(255,106,0,.08);
+      color: #ff6a00 !important;
+    }
+    .navbar .nav-link.active {
+      background: rgba(255,106,0,.15);
+      color: #ff6a00 !important;
+      font-weight: 600;
+    }
+
+    /* زر خروج */
     .btn-logout {
       background: linear-gradient(135deg,#ff6a00,#ff944d);
       color: #fff;
@@ -80,29 +77,12 @@ $current_page = basename($_SERVER['PHP_SELF']);
       box-shadow: 0 6px 15px rgba(255,106,0,.4);
       color: #fff !important;
     }
-
-    /* روابط النافبار */
-    .navbar .nav-link {
-      font-weight: 500;
-      padding: .6rem 1.2rem;
-      border-radius: 12px;
-      transition: all .2s ease;
-    }
-    .navbar .nav-link:hover {
-      background: rgba(255,106,0,.08);
-      color: #ff6a00 !important;
-    }
-    .navbar .nav-link.active {
-      background: rgba(255,106,0,.15);
-      color: #ff6a00 !important;
-      font-weight: 600;
-    }
   </style>
 </head>
-<body class="light-mode">
-
+<body>
 <nav class="navbar navbar-expand-lg sticky-top custom-navbar">
   <div class="container-fluid">
+
     <!-- زر القائمة للموبايل -->
     <button class="btn d-md-none me-2 text-orange fs-3 border-0" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
       <i class="bi bi-list"></i>
@@ -119,20 +99,15 @@ $current_page = basename($_SERVER['PHP_SELF']);
       <span class="navbar-toggler-icon"></span>
     </button>
 
+    <!-- عناصر النافبار -->
     <div class="collapse navbar-collapse" id="nav">
       <ul class="navbar-nav ms-auto align-items-lg-center gap-3">
+
         <!-- الدور -->
         <li class="nav-item">
           <span class="badge role-badge">
             <i class="bi bi-person-badge me-1"></i> <?= esc(current_role()) ?>
           </span>
-        </li>
-
-        <!-- التبديل بين الوضعين -->
-        <li class="nav-item">
-          <button id="toggleMode" class="btn btn-outline-secondary">
-            <i class="bi bi-moon-stars"></i>
-          </button>
         </li>
 
         <!-- المستخدمون -->
@@ -148,11 +123,11 @@ $current_page = basename($_SERVER['PHP_SELF']);
             <i class="bi bi-box-arrow-right me-1"></i> خروج
           </a>
         </li>
+
       </ul>
     </div>
   </div>
 </nav>
-
 
 <!-- القائمة الجانبية في الموبايل (Offcanvas) -->
 <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarMenu">
@@ -199,30 +174,4 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <div class="flash mb-3"><?= esc($m) ?></div>
       <?php endif; ?>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-  // حفظ الوضع الحالي في localStorage
-  const toggleBtn = document.getElementById('toggleMode');
-  const body = document.body;
-
-  // تحميل الوضع من localStorage
-  if(localStorage.getItem('mode') === 'dark') {
-    body.classList.replace('light-mode', 'dark-mode');
-    toggleBtn.innerHTML = '<i class="bi bi-sun"></i>';
-  }
-
-  toggleBtn.addEventListener('click', () => {
-    if(body.classList.contains('light-mode')) {
-      body.classList.replace('light-mode','dark-mode');
-      toggleBtn.innerHTML = '<i class="bi bi-sun"></i>';
-      localStorage.setItem('mode','dark');
-    } else {
-      body.classList.replace('dark-mode','light-mode');
-      toggleBtn.innerHTML = '<i class="bi bi-moon-stars"></i>';
-      localStorage.setItem('mode','light');
-    }
-  });
-</script>
-</body>
-</html>
-
+      
