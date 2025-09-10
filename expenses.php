@@ -386,24 +386,27 @@ document.getElementById("main_expense")?.addEventListener("change", function(){
 const editRows = <?= json_encode($editRowsJs, JSON_HEX_TAG|JSON_HEX_APOS|JSON_HEX_AMP|JSON_HEX_QUOT) ?>;
 
 document.addEventListener("DOMContentLoaded", function(){
-  // أولاً نهيئ كل مودال تعديل بقيمة الـ sub المخزنة
   editRows.forEach(row=>{
     const mainId = "main_expense_edit" + row.id;
     const wrapperId = "sub_expense_edit_wrapper" + row.id;
-    // render initial
+    
+    const mainSelect = document.getElementById(mainId);
+    if(mainSelect){
+      mainSelect.value = row.main; // يضمن المصروف الرئيسي
+    }
+
+    // ارسم النوع لأول مرة
     renderSubField(mainId, wrapperId, row.sub);
 
-    // عندما يغيّر المستخدم الخانة الأولى داخل المودال
-    document.getElementById(mainId)?.addEventListener("change", function(){
+    // عند تغيير المصروف الرئيسي نحافظ على القيمة الحالية
+    mainSelect?.addEventListener("change", ()=>{
       const wrapper = document.getElementById(wrapperId);
-      const cur = getCurrentSubVal(wrapper);
-      renderSubField(mainId, wrapperId, cur);
+      const currentVal = getCurrentSubVal(wrapper);
+      renderSubField(mainId, wrapperId, currentVal);
     });
   });
-
-  // أيضاً نريد تهيئة الـ add modal لو كانت value موجودة مسبقاً (لمرة أولى)
-  // لو احتجت تهيئة افتراضية هنا يمكن استدعاء renderSubField("main_expense","sub_expense_wrapper","")
 });
+
   
 function previewFile(input,textId,previewId){
   const file=input.files[0];
