@@ -125,7 +125,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
       <td><?= esc($r['payment_source'] ?? '-') ?></td>
       <?php if($can_edit): ?>
       <td class="table-actions">
-        <a class="btn btn-sm btn-outline-primary" href="invoice.php?id=<?= $r['id'] ?>"><i class="bi bi-printer"></i></a>
+        <a class="btn btn-sm btn-outline-primary" href="invoice?id=<?= $r['id'] ?>"><i class="bi bi-printer"></i></a>
         <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#e<?= $r['id'] ?>"><i class="bi bi-pencil"></i></button>
         <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#del<?= $r['id'] ?>">
           <i class="bi bi-trash"></i>
