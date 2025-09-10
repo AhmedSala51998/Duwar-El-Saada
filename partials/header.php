@@ -1,175 +1,133 @@
-<?php
-require __DIR__.'/../config/config.php'; 
-require_auth();
+<style>
+  /* Navbar */
+  .custom-navbar {
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+    padding: 0.6rem 1rem;
+    transition: all 0.3s ease;
+    z-index: 1030;
+  }
 
-// تحديد اسم الصفحة الحالية
-$current_page = basename($_SERVER['PHP_SELF']);
-?>
-<!doctype html>
-<html lang="ar" dir="rtl">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title><?= esc(APP_NAME) ?></title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
-  <link href="<?= BASE_URL ?>/assets/css/theme.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-  <style>
-    /* تمييز الصفحة النشطة */
-    .sidebar-link.active,
-    .nav-link.active {
-      background-color: #ff6600; /* لون الهوفر بتاعك */
-      color: #fff !important;
-      border-radius: 6px;
-    }
-    .custom-navbar {
-      background: rgba(255,255,255,0.85);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(0,0,0,0.08); /* ✅ أسود خفيف جدًا */
-      padding: .7rem 1rem;
-    }
-    /* لون البرتقالي */
-    .text-orange { color: #ff6a00 !important; }
+  .navbar-brand img {
+    transition: transform 0.3s;
+  }
+  .navbar-brand:hover img {
+    transform: scale(1.05);
+  }
 
-    /* الدور */
-    .role-badge {
-      background: #fff3e6;
-      color: #ff6a00;
-      font-weight: 600;
-      border-radius: 50px;
-      padding: .5rem 1rem;
-      box-shadow: 0 2px 6px rgba(255,106,0,.2);
-    }
+  .role-badge {
+    background: #fff3e6;
+    color: #ff6a00;
+    font-weight: 600;
+    border-radius: 50px;
+    padding: 0.4rem 0.9rem;
+    box-shadow: 0 2px 6px rgba(255,106,0,0.2);
+    font-size: 0.9rem;
+  }
 
-    /* روابط */
-    .navbar .nav-link {
-      font-weight: 500;
-      padding: .6rem 1.2rem;
-      border-radius: 12px;
-      color: #555 !important;
-      transition: all .2s ease;
-    }
-    .navbar .nav-link:hover {
-      background: rgba(255,106,0,.08);
-      color: #ff6a00 !important;
-    }
-    .navbar .nav-link.active {
-      background: rgba(255,106,0,.15);
-      color: #ff6a00 !important;
-      font-weight: 600;
-    }
+  .btn-logout {
+    background: linear-gradient(135deg,#ff6a00,#ff944d);
+    color: #fff;
+    font-weight: 600;
+    padding: 0.5rem 1.2rem;
+    border-radius: 50px;
+    box-shadow: 0 4px 12px rgba(255,106,0,0.3);
+    transition: all 0.3s ease;
+  }
+  .btn-logout:hover {
+    background: linear-gradient(135deg,#e65a00,#ff7a1f);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(255,106,0,0.4);
+    color: #fff !important;
+  }
 
-    /* زر خروج */
+  /* Sidebar */
+  .sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    color: #555;
+    transition: all 0.2s ease;
+  }
+  .sidebar-link:hover {
+    background: rgba(255,106,0,0.08);
+    color: #ff6a00;
+  }
+  .sidebar-link.active {
+    background: rgba(255,106,0,0.15);
+    color: #ff6a00;
+    font-weight: 600;
+  }
+
+  /* Offcanvas for mobile */
+  .offcanvas .sidebar-link {
+    margin-bottom: 0.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .navbar .role-badge {
+      font-size: 0.8rem;
+      padding: 0.3rem 0.7rem;
+    }
     .btn-logout {
-      background: linear-gradient(135deg,#ff6a00,#ff944d);
-      color: #fff;
-      font-weight: 600;
-      padding: .6rem 1.4rem;
-      border-radius: 50px;
-      box-shadow: 0 4px 12px rgba(255,106,0,.3);
-      transition: all .3s ease;
+      padding: 0.4rem 1rem;
+      font-size: 0.9rem;
     }
-    .btn-logout:hover {
-      background: linear-gradient(135deg,#e65a00,#ff7a1f);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 15px rgba(255,106,0,.4);
-      color: #fff !important;
-    }
-  </style>
-</head>
-<body>
+  }
+</style>
+
+<!-- Navbar -->
 <nav class="navbar navbar-expand-lg sticky-top custom-navbar">
   <div class="container-fluid">
-
-    <!-- زر القائمة للموبايل -->
-    <button class="btn d-md-none me-2 text-orange fs-3 border-0" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
+    <!-- Mobile Menu Button -->
+    <button class="btn d-md-none me-2 text-orange fs-3 border-0" 
+            data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
       <i class="bi bi-list"></i>
     </button>
 
-    <!-- اللوجو -->
+    <!-- Logo -->
     <a class="navbar-brand d-flex align-items-center gap-2 fw-bold text-orange" href="<?= BASE_URL ?>/index.php">
-      <img src="<?= BASE_URL ?>/assets/logo.svg" width="42" height="42" alt="logo" class="rounded shadow-sm">
+      <img src="<?= BASE_URL ?>/assets/logo.svg" width="40" height="40" alt="logo">
       <span class="fs-5"><?= esc(APP_NAME) ?></span>
     </a>
 
-    <!-- زرار القائمة -->
-    <button class="navbar-toggler border-0" data-bs-toggle="collapse" data-bs-target="#nav">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <!-- عناصر النافبار -->
-    <div class="collapse navbar-collapse" id="nav">
-      <ul class="navbar-nav ms-auto align-items-lg-center gap-3">
-
-        <!-- الدور -->
+    <!-- Navbar items -->
+    <div class="collapse navbar-collapse justify-content-end" id="nav">
+      <ul class="navbar-nav align-items-center gap-2">
         <li class="nav-item">
-          <span class="badge role-badge">
-            <i class="bi bi-person-badge me-1"></i> <?= esc(current_role()) ?>
-          </span>
+          <span class="badge role-badge"><i class="bi bi-person-badge me-1"></i> <?= esc(current_role()) ?></span>
         </li>
-
-        <!-- المستخدمون -->
-        <li class="nav-item">
+        <li class="nav-item d-none d-lg-block">
           <a class="nav-link <?= $current_page=='users.php'?'active':'' ?>" href="<?= BASE_URL ?>/users.php">
             <i class="bi bi-people me-1"></i> المستخدمون
           </a>
         </li>
-
-        <!-- خروج -->
         <li class="nav-item">
           <a class="btn btn-logout" href="<?= BASE_URL ?>/logout.php">
             <i class="bi bi-box-arrow-right me-1"></i> خروج
           </a>
         </li>
-
       </ul>
     </div>
   </div>
 </nav>
 
-<!-- القائمة الجانبية في الموبايل (Offcanvas) -->
+<!-- Offcanvas Sidebar for Mobile -->
 <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarMenu">
   <div class="offcanvas-header">
     <h5 class="offcanvas-title">القائمة</h5>
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
   </div>
-  <div class="offcanvas-body">
-    <a class="sidebar-link d-block mb-2 <?= $current_page=='index.php'?'active':'' ?>" href="<?= BASE_URL ?>/index.php"><i class="bi bi-house"></i> الرئيسية</a>
-    <a class="sidebar-link d-block mb-2 <?= $current_page=='purchases.php'?'active':'' ?>" href="<?= BASE_URL ?>/purchases.php"><i class="bi bi-bag"></i> تهيئة المشتريات</a>
-    <a class="sidebar-link d-block mb-2 <?= $current_page=='orders.php'?'active':'' ?>" href="<?= BASE_URL ?>/orders.php"><i class="bi bi-gear"></i> أوامر التشغيل</a>
-    <a class="sidebar-link d-block <?= $current_page=='custodies.php'?'active':'' ?>" href="<?= BASE_URL ?>/custodies.php"><i class="bi bi-wallet2"></i> العهد</a>
-    <a class="sidebar-link d-block mb-2 <?= $current_page=='assetes.php'?'active':'' ?>" href="<?= BASE_URL ?>/assetes.php"><i class="bi bi-building"></i> الأصول</a>
-    <!--<a class="sidebar-link d-block mb-2 <?= $current_page=='gov_fees.php'?'active':'' ?>" href="<?= BASE_URL ?>/gov_fees.php"><i class="bi bi-file-earmark-text"></i> الرسوم الحكومية</a>
-    <a class="sidebar-link d-block mb-2 <?= $current_page=='subscriptions.php'?'active':'' ?>" href="<?= BASE_URL ?>/subscriptions.php"><i class="bi bi-journal-bookmark"></i> الاشتراكات والخدمات</a>
-    <a class="sidebar-link d-block mb-2 <?= $current_page=='rentals.php'?'active':'' ?>" href="<?= BASE_URL ?>/rentals.php"><i class="bi bi-house-door"></i> الإيجارات</a>-->
-    <a class="sidebar-link d-block <?= $current_page=='expenses.php'?'active':'' ?>" href="<?= BASE_URL ?>/expenses.php"><i class="bi bi-cash-stack"></i> المصروفات</a>
-    <a class="sidebar-link d-block <?= $current_page=='reports.php'?'active':'' ?>" href="<?= BASE_URL ?>/reports.php"><i class="bi bi-graph-up"></i> التقارير</a>
+  <div class="offcanvas-body p-2">
+    <a class="sidebar-link <?= $current_page=='index.php'?'active':'' ?>" href="<?= BASE_URL ?>/index.php"><i class="bi bi-house"></i> الرئيسية</a>
+    <a class="sidebar-link <?= $current_page=='purchases.php'?'active':'' ?>" href="<?= BASE_URL ?>/purchases.php"><i class="bi bi-bag"></i> المشتريات</a>
+    <a class="sidebar-link <?= $current_page=='orders.php'?'active':'' ?>" href="<?= BASE_URL ?>/orders.php"><i class="bi bi-gear"></i> أوامر التشغيل</a>
+    <a class="sidebar-link <?= $current_page=='custodies.php'?'active':'' ?>" href="<?= BASE_URL ?>/custodies.php"><i class="bi bi-wallet2"></i> العهد</a>
+    <a class="sidebar-link <?= $current_page=='assetes.php'?'active':'' ?>" href="<?= BASE_URL ?>/assetes.php"><i class="bi bi-building"></i> الأصول</a>
+    <a class="sidebar-link <?= $current_page=='expenses.php'?'active':'' ?>" href="<?= BASE_URL ?>/expenses.php"><i class="bi bi-cash-stack"></i> المصروفات</a>
+    <a class="sidebar-link <?= $current_page=='reports.php'?'active':'' ?>" href="<?= BASE_URL ?>/reports.php"><i class="bi bi-graph-up"></i> التقارير</a>
   </div>
 </div>
-
-<div class="container-fluid">
-  <div class="row">
-    <!-- Sidebar في الديسكتوب -->
-    <aside class="col-lg-2 col-md-3 border-end min-vh-100 d-none d-md-block">
-      <div class="p-3">
-        <div class="text-muted small mb-2">القائمة</div>
-        <a class="sidebar-link d-block mb-2 <?= $current_page=='index.php'?'active':'' ?>" href="<?= BASE_URL ?>/index.php"><i class="bi bi-house"></i> الرئيسية</a>
-        <a class="sidebar-link d-block mb-2 <?= $current_page=='purchases.php'?'active':'' ?>" href="<?= BASE_URL ?>/purchases.php"><i class="bi bi-bag"></i> تهيئة المشتريات</a>
-        <a class="sidebar-link d-block mb-2 <?= $current_page=='orders.php'?'active':'' ?>" href="<?= BASE_URL ?>/orders.php"><i class="bi bi-gear"></i> أوامر التشغيل</a>
-        <a class="sidebar-link d-block mb-2 <?= $current_page=='custodies.php'?'active':'' ?>" href="<?= BASE_URL ?>/custodies.php"><i class="bi bi-wallet2"></i> العهد</a>
-        <a class="sidebar-link d-block mb-2 <?= $current_page=='assetes.php'?'active':'' ?>" href="<?= BASE_URL ?>/assetes.php"><i class="bi bi-building"></i> الأصول</a>
-        <!--<a class="sidebar-link d-block mb-2 <?= $current_page=='gov_fees.php'?'active':'' ?>" href="<?= BASE_URL ?>/gov_fees.php"><i class="bi bi-file-earmark-text"></i> الرسوم الحكومية</a>
-        <a class="sidebar-link d-block mb-2 <?= $current_page=='subscriptions.php'?'active':'' ?>" href="<?= BASE_URL ?>/subscriptions.php"><i class="bi bi-journal-bookmark"></i> الاشتراكات والخدمات</a>
-        <a class="sidebar-link d-block mb-2 <?= $current_page=='rentals.php'?'active':'' ?>" href="<?= BASE_URL ?>/rentals.php"><i class="bi bi-house-door"></i> الإيجارات</a>-->
-        <a class="sidebar-link d-block <?= $current_page=='expenses.php'?'active':'' ?>" href="<?= BASE_URL ?>/expenses.php"><i class="bi bi-cash-stack"></i> المصروفات</a>
-        <a class="sidebar-link d-block <?= $current_page=='reports.php'?'active':'' ?>" href="<?= BASE_URL ?>/reports.php"><i class="bi bi-graph-up"></i> التقارير</a>
-      </div>
-    </aside>
-
-    <!-- المحتوى -->
-    <main class="col-12 col-md-9 col-lg-10 p-4">
-      <?php if($m = flash('msg')): ?>
-        <div class="flash mb-3"><?= esc($m) ?></div>
-      <?php endif; ?>
