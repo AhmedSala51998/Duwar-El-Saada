@@ -17,6 +17,8 @@ if (!$r) {
 @media print {
   body {
     background: #fff;
+    margin: 0;
+    padding: 0;
   }
   body * {
     visibility: hidden;
@@ -25,13 +27,22 @@ if (!$r) {
     visibility: visible;
   }
   .print-area {
-    position: relative;      /* بدلاً من absolute */
-    max-width: 800px;        /* نفس العرض الظاهر في الصفحة */
-    margin: 0 auto;          /* توسيط الكارد */
-    box-shadow: none;        /* إزالة الظل عند الطباعة */
-    border: none;            /* إزالة الحدود لو وجدت */
+    position: relative;
+    max-width: 1200px;    /* نفس العرض اللي ظاهر في الشاشة */
+    margin: 0 auto;
+    box-shadow: none;
+    border: none;
+    padding: 30px;
+    transform: scale(1); /* منع أي تصغير تلقائي */
+  }
+
+  /* إزالة حدود الصفحة البيضاء الافتراضية */
+  @page {
+    size: A4 landscape;   /* لو محتاج العرض أكبر زي الصورة الثانية */
+    margin: 0;
   }
 }
+
 
 /* ------------------------- كارد احترافي ------------------------- */
 .print-area {
