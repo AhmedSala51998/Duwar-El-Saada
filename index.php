@@ -100,7 +100,7 @@ $rentalsByPayer = $pdo->query("SELECT payer, COUNT(*) c FROM rentals GROUP BY pa
         </div>
       </div>
 
-      <!-- الرسوم الحكومية -->
+      <!-- الرسوم الحكومية 
       <div class="col-md-4 col-lg-2">
         <div class="card p-3 text-center h-100"
              style="border:2px solid #ff6a00;border-radius:15px;box-shadow:0 4px 12px rgba(255,106,0,0.3);">
@@ -108,9 +108,9 @@ $rentalsByPayer = $pdo->query("SELECT payer, COUNT(*) c FROM rentals GROUP BY pa
           <div class="text-muted small">الرسوم</div>
           <div class="fw-bold fs-4"><?= $gf_count ?></div>
         </div>
-      </div>
+      </div>-->
 
-      <!-- الاشتراكات -->
+      <!-- الاشتراكات 
       <div class="col-md-4 col-lg-2">
         <div class="card p-3 text-center h-100"
              style="border:2px solid #ff6a00;border-radius:15px;box-shadow:0 4px 12px rgba(255,106,0,0.3);">
@@ -118,9 +118,9 @@ $rentalsByPayer = $pdo->query("SELECT payer, COUNT(*) c FROM rentals GROUP BY pa
           <div class="text-muted small">الاشتراكات</div>
           <div class="fw-bold fs-4"><?= $subs_count ?></div>
         </div>
-      </div>
+      </div>-->
 
-      <!-- الإيجارات -->
+      <!-- الإيجارات 
       <div class="col-md-4 col-lg-2">
         <div class="card p-3 text-center h-100"
              style="border:2px solid #ff6a00;border-radius:15px;box-shadow:0 4px 12px rgba(255,106,0,0.3);">
@@ -128,7 +128,7 @@ $rentalsByPayer = $pdo->query("SELECT payer, COUNT(*) c FROM rentals GROUP BY pa
           <div class="text-muted small">الإيجارات</div>
           <div class="fw-bold fs-4"><?= $rentals_count ?></div>
         </div>
-      </div>
+      </div>-->
 
       <!-- المصروفات -->
       <div class="col-md-4 col-lg-2">
@@ -187,7 +187,7 @@ $rentalsByPayer = $pdo->query("SELECT payer, COUNT(*) c FROM rentals GROUP BY pa
     </div>
   </div>
 
-  <div class="col-md-6">
+  <!--<div class="col-md-6">
     <div class="card p-3 shadow-sm">
       <h5 class="mb-3">الرسوم الحكومية حسب الدافع</h5>
       <canvas id="govFeesChart" height="200"></canvas>
@@ -206,7 +206,7 @@ $rentalsByPayer = $pdo->query("SELECT payer, COUNT(*) c FROM rentals GROUP BY pa
       <h5 class="mb-3">الإيجارات حسب الدافع</h5>
       <canvas id="rentalsChart" height="200"></canvas>
     </div>
-  </div>
+  </div>-->
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

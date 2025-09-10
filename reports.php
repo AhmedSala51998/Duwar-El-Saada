@@ -67,7 +67,7 @@ if (!empty($_GET['to_date'])) $filterParams .= '&to_date=' . $_GET['to_date'];
 </div>
 <!-- ✅ انتهى -->
 
-<div class="col-md-4">
+<!--<div class="col-md-4">
   <div class="card p-3 h-100">
     <h5>الرسوم الحكومية</h5>
     <p class="text-muted small">تصدير جميع الرسوم الحكومية.</p>
@@ -92,7 +92,7 @@ if (!empty($_GET['to_date'])) $filterParams .= '&to_date=' . $_GET['to_date'];
     <a style="margin-bottom:5px" class="btn btn-outline-dark" href="export_rentals_excel.php?1=1<?= $filterParams ?>"><i class="bi bi-file-earmark-spreadsheet"></i> Excel</a>
     <a class="btn btn-outline-dark" href="export_rentals_pdf.php?1=1<?= $filterParams ?>"><i class="bi bi-filetype-pdf"></i> PDF</a>
   </div>
-</div>
+</div>-->
 
 <div class="col-md-4">
   <div class="card p-3 h-100">
