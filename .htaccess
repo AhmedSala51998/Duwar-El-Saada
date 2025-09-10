@@ -1,16 +1,16 @@
-# اجعل home.php الصفحة الافتراضية
+# الصفحة الرئيسية
 DirectoryIndex home.php
 
 RewriteEngine On
 
-# تجاهل إعادة الكتابة لو الملف موجود
+# تجاهل إعادة الكتابة لو الملف أو المجلد موجود
 RewriteCond %{REQUEST_FILENAME} -f [OR]
 RewriteCond %{REQUEST_FILENAME} -d
 RewriteRule ^ - [L]
 
-# لو دخل المستخدم الرابط مع .php، حوله للرابط بدون .php
+# تحويل الروابط من /file.php إلى /file (Redirect)
 RewriteCond %{THE_REQUEST} \s([^.]+)\.php[?\s] [NC]
 RewriteRule ^ %1 [R=301,L]
 
-# روابط بدون .php تتحول لملفات .php
-RewriteRule ^([a-zA-Z0-9_-]+)$ $1.php [L,QSA]
+# تحويل الروابط بدون .php إلى ملفات .php الفعلية
+RewriteRule ^([a-zA-Z0-9_-]+)/?$ $1.php [L,QSA]
