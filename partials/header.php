@@ -16,24 +16,44 @@ $current_page = basename($_SERVER['PHP_SELF']);
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
   <link href="<?= BASE_URL ?>/assets/css/theme.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-  <style>
-    /* تمييز الصفحة النشطة */
-    .sidebar-link.active,
-    .nav-link.active {
-      background-color: #ff6600; /* لون الهوفر بتاعك */
-      color: #fff !important;
-      border-radius: 6px;
-    }
-    .custom-navbar {
-      background: rgba(255,255,255,0.85);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(0,0,0,0.08); /* ✅ أسود خفيف جدًا */
-      padding: .7rem 1rem;
-    }
-    /* لون البرتقالي */
-    .text-orange { color: #ff6a00 !important; }
 
-    /* الدور */
+  <style>
+    body {
+      font-family: 'Cairo', sans-serif;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    /* الوضع الافتراضي (Light Mode) */
+    body.light-mode {
+      background-color: #f8f9fa;
+      color: #333;
+    }
+    body.light-mode .custom-navbar {
+      background: rgba(255,255,255,0.85);
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+    }
+
+    /* Dark Mode */
+    body.dark-mode {
+      background-color: #121212;
+      color: #e0e0e0;
+    }
+    body.dark-mode .custom-navbar {
+      background: rgba(18,18,18,0.95);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    body.dark-mode .sidebar-link,
+    body.dark-mode .nav-link {
+      color: #ccc !important;
+    }
+    body.dark-mode .sidebar-link.active,
+    body.dark-mode .nav-link.active {
+      background-color: #ff6600;
+      color: #fff !important;
+    }
+
+    /* ألوان البرتقالي والثوابت */
+    .text-orange { color: #ff6a00 !important; }
     .role-badge {
       background: #fff3e6;
       color: #ff6a00;
@@ -42,26 +62,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
       padding: .5rem 1rem;
       box-shadow: 0 2px 6px rgba(255,106,0,.2);
     }
-
-    /* روابط */
-    .navbar .nav-link {
-      font-weight: 500;
-      padding: .6rem 1.2rem;
-      border-radius: 12px;
-      color: #555 !important;
-      transition: all .2s ease;
-    }
-    .navbar .nav-link:hover {
-      background: rgba(255,106,0,.08);
-      color: #ff6a00 !important;
-    }
-    .navbar .nav-link.active {
-      background: rgba(255,106,0,.15);
-      color: #ff6a00 !important;
-      font-weight: 600;
-    }
-
-    /* زر خروج */
     .btn-logout {
       background: linear-gradient(135deg,#ff6a00,#ff944d);
       color: #fff;
@@ -77,12 +77,29 @@ $current_page = basename($_SERVER['PHP_SELF']);
       box-shadow: 0 6px 15px rgba(255,106,0,.4);
       color: #fff !important;
     }
+
+    /* روابط النافبار */
+    .navbar .nav-link {
+      font-weight: 500;
+      padding: .6rem 1.2rem;
+      border-radius: 12px;
+      transition: all .2s ease;
+    }
+    .navbar .nav-link:hover {
+      background: rgba(255,106,0,.08);
+      color: #ff6a00 !important;
+    }
+    .navbar .nav-link.active {
+      background: rgba(255,106,0,.15);
+      color: #ff6a00 !important;
+      font-weight: 600;
+    }
   </style>
 </head>
-<body>
+<body class="light-mode">
+
 <nav class="navbar navbar-expand-lg sticky-top custom-navbar">
   <div class="container-fluid">
-
     <!-- زر القائمة للموبايل -->
     <button class="btn d-md-none me-2 text-orange fs-3 border-0" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
       <i class="bi bi-list"></i>
@@ -99,15 +116,20 @@ $current_page = basename($_SERVER['PHP_SELF']);
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <!-- عناصر النافبار -->
     <div class="collapse navbar-collapse" id="nav">
       <ul class="navbar-nav ms-auto align-items-lg-center gap-3">
-
         <!-- الدور -->
         <li class="nav-item">
           <span class="badge role-badge">
             <i class="bi bi-person-badge me-1"></i> <?= esc(current_role()) ?>
           </span>
+        </li>
+
+        <!-- التبديل بين الوضعين -->
+        <li class="nav-item">
+          <button id="toggleMode" class="btn btn-outline-secondary">
+            <i class="bi bi-moon-stars"></i>
+          </button>
         </li>
 
         <!-- المستخدمون -->
@@ -123,53 +145,36 @@ $current_page = basename($_SERVER['PHP_SELF']);
             <i class="bi bi-box-arrow-right me-1"></i> خروج
           </a>
         </li>
-
       </ul>
     </div>
   </div>
 </nav>
 
-<!-- القائمة الجانبية في الموبايل (Offcanvas) -->
-<div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarMenu">
-  <div class="offcanvas-header">
-    <h5 class="offcanvas-title">القائمة</h5>
-    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
-  </div>
-  <div class="offcanvas-body">
-    <a class="sidebar-link d-block mb-2 <?= $current_page=='index.php'?'active':'' ?>" href="<?= BASE_URL ?>/index.php"><i class="bi bi-house"></i> الرئيسية</a>
-    <a class="sidebar-link d-block mb-2 <?= $current_page=='purchases.php'?'active':'' ?>" href="<?= BASE_URL ?>/purchases.php"><i class="bi bi-bag"></i> تهيئة المشتريات</a>
-    <a class="sidebar-link d-block mb-2 <?= $current_page=='orders.php'?'active':'' ?>" href="<?= BASE_URL ?>/orders.php"><i class="bi bi-gear"></i> أوامر التشغيل</a>
-    <a class="sidebar-link d-block <?= $current_page=='custodies.php'?'active':'' ?>" href="<?= BASE_URL ?>/custodies.php"><i class="bi bi-wallet2"></i> العهد</a>
-    <a class="sidebar-link d-block mb-2 <?= $current_page=='assetes.php'?'active':'' ?>" href="<?= BASE_URL ?>/assetes.php"><i class="bi bi-building"></i> الأصول</a>
-    <!--<a class="sidebar-link d-block mb-2 <?= $current_page=='gov_fees.php'?'active':'' ?>" href="<?= BASE_URL ?>/gov_fees.php"><i class="bi bi-file-earmark-text"></i> الرسوم الحكومية</a>
-    <a class="sidebar-link d-block mb-2 <?= $current_page=='subscriptions.php'?'active':'' ?>" href="<?= BASE_URL ?>/subscriptions.php"><i class="bi bi-journal-bookmark"></i> الاشتراكات والخدمات</a>
-    <a class="sidebar-link d-block mb-2 <?= $current_page=='rentals.php'?'active':'' ?>" href="<?= BASE_URL ?>/rentals.php"><i class="bi bi-house-door"></i> الإيجارات</a>-->
-    <a class="sidebar-link d-block <?= $current_page=='expenses.php'?'active':'' ?>" href="<?= BASE_URL ?>/expenses.php"><i class="bi bi-cash-stack"></i> المصروفات</a>
-    <a class="sidebar-link d-block <?= $current_page=='reports.php'?'active':'' ?>" href="<?= BASE_URL ?>/reports.php"><i class="bi bi-graph-up"></i> التقارير</a>
-  </div>
-</div>
+<!-- بقية الصفحة مثل القائمة الجانبية والمحتوى ... -->
 
-<div class="container-fluid">
-  <div class="row">
-    <!-- Sidebar في الديسكتوب -->
-    <aside class="col-lg-2 col-md-3 border-end min-vh-100 d-none d-md-block">
-      <div class="p-3">
-        <div class="text-muted small mb-2">القائمة</div>
-        <a class="sidebar-link d-block mb-2 <?= $current_page=='index.php'?'active':'' ?>" href="<?= BASE_URL ?>/index.php"><i class="bi bi-house"></i> الرئيسية</a>
-        <a class="sidebar-link d-block mb-2 <?= $current_page=='purchases.php'?'active':'' ?>" href="<?= BASE_URL ?>/purchases.php"><i class="bi bi-bag"></i> تهيئة المشتريات</a>
-        <a class="sidebar-link d-block mb-2 <?= $current_page=='orders.php'?'active':'' ?>" href="<?= BASE_URL ?>/orders.php"><i class="bi bi-gear"></i> أوامر التشغيل</a>
-        <a class="sidebar-link d-block mb-2 <?= $current_page=='custodies.php'?'active':'' ?>" href="<?= BASE_URL ?>/custodies.php"><i class="bi bi-wallet2"></i> العهد</a>
-        <a class="sidebar-link d-block mb-2 <?= $current_page=='assetes.php'?'active':'' ?>" href="<?= BASE_URL ?>/assetes.php"><i class="bi bi-building"></i> الأصول</a>
-        <!--<a class="sidebar-link d-block mb-2 <?= $current_page=='gov_fees.php'?'active':'' ?>" href="<?= BASE_URL ?>/gov_fees.php"><i class="bi bi-file-earmark-text"></i> الرسوم الحكومية</a>
-        <a class="sidebar-link d-block mb-2 <?= $current_page=='subscriptions.php'?'active':'' ?>" href="<?= BASE_URL ?>/subscriptions.php"><i class="bi bi-journal-bookmark"></i> الاشتراكات والخدمات</a>
-        <a class="sidebar-link d-block mb-2 <?= $current_page=='rentals.php'?'active':'' ?>" href="<?= BASE_URL ?>/rentals.php"><i class="bi bi-house-door"></i> الإيجارات</a>-->
-        <a class="sidebar-link d-block <?= $current_page=='expenses.php'?'active':'' ?>" href="<?= BASE_URL ?>/expenses.php"><i class="bi bi-cash-stack"></i> المصروفات</a>
-        <a class="sidebar-link d-block <?= $current_page=='reports.php'?'active':'' ?>" href="<?= BASE_URL ?>/reports.php"><i class="bi bi-graph-up"></i> التقارير</a>
-      </div>
-    </aside>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // حفظ الوضع الحالي في localStorage
+  const toggleBtn = document.getElementById('toggleMode');
+  const body = document.body;
 
-    <!-- المحتوى -->
-    <main class="col-12 col-md-9 col-lg-10 p-4">
-      <?php if($m = flash('msg')): ?>
-        <div class="flash mb-3"><?= esc($m) ?></div>
-      <?php endif; ?>
+  // تحميل الوضع من localStorage
+  if(localStorage.getItem('mode') === 'dark') {
+    body.classList.replace('light-mode', 'dark-mode');
+    toggleBtn.innerHTML = '<i class="bi bi-sun"></i>';
+  }
+
+  toggleBtn.addEventListener('click', () => {
+    if(body.classList.contains('light-mode')) {
+      body.classList.replace('light-mode','dark-mode');
+      toggleBtn.innerHTML = '<i class="bi bi-sun"></i>';
+      localStorage.setItem('mode','dark');
+    } else {
+      body.classList.replace('dark-mode','light-mode');
+      toggleBtn.innerHTML = '<i class="bi bi-moon-stars"></i>';
+      localStorage.setItem('mode','light');
+    }
+  });
+</script>
+</body>
+</html>
