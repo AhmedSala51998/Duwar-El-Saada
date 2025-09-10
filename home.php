@@ -52,7 +52,7 @@ $rentalsByPayer = $pdo->query("SELECT payer, COUNT(*) c FROM rentals GROUP BY pa
     <div class="card p-4 border-0 shadow-lg h-100" 
          style="background:linear-gradient(135deg,#ff6a00,#ffb478);color:#fff;border-radius:15px;">
       <h4 class="mb-2">أهلًا <?= esc(current_user()) ?> 👋</h4>
-      <p class="mb-0">أدِر المشتريات، الأوامر، العُهد، الرسوم، الاشتراكات والإيجارات والمصروفات بسهولة.</p>
+      <p class="mb-0">أدِر المشتريات، الأوامر، العُهد، والمصروفات بسهولة.</p>
     </div>
   </div>
 
