@@ -166,6 +166,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
     <span>د</span>
     <span>ه</span>
   </div>
+<div id="page-wrapper" style="opacity:0; transition:opacity .8s ease;">
 <nav class="navbar navbar-expand-lg sticky-top custom-navbar">
   <div class="container-fluid">
 
@@ -258,13 +259,14 @@ $current_page = basename($_SERVER['PHP_SELF']);
     <main class="col-12 col-md-9 col-lg-10 p-4">
       <?php if($m = flash('msg')): ?>
         <div class="flash mb-3"><?= esc($m) ?></div>
-      <?php endif; ?>
+      <?php endif; ?></div>
 
-   <script>
-    // بعد 3 ثواني، يخفي اللودر ويظهر المحتوى
-    setTimeout(() => {
-      document.querySelector('.loader').classList.add('hidden');
-      document.querySelector('.content').classList.add('visible');
-      document.body.style.overflow = 'auto';
-    }, 3000);
+  <script>
+    // إخفاء اللودر بعد 3 ثواني وإظهار المحتوى
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.querySelector('.loader').classList.add('hidden');
+        document.getElementById('page-wrapper').style.opacity = '1';
+      }, 3000);
+    });
   </script>
