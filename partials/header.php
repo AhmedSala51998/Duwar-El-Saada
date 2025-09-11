@@ -17,7 +17,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
   <link href="<?= BASE_URL ?>/assets/css/theme.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <style>
-    /* اللودر */
     .loader {
       position:fixed;
       inset:0;
@@ -25,14 +24,11 @@ $current_page = basename($_SERVER['PHP_SELF']);
       display:flex;
       justify-content:center;
       align-items:center;
-      z-index:1000;
       flex-direction:column;
+      z-index:1000;
       transition:opacity .8s ease, visibility .8s ease;
     }
-    .loader.hidden {
-      opacity:0;
-      visibility:hidden;
-    }
+    .loader.hidden {opacity:0;visibility:hidden;}
 
     /* الدائرة */
     .circle {
@@ -54,28 +50,51 @@ $current_page = basename($_SERVER['PHP_SELF']);
       transform:translateX(-50%);
     }
 
+    /* الخطوط المتقاطعة */
+    .line {
+      position:absolute;
+      top:50%; left:50%;
+      width:100%; height:2px;
+      background:rgba(0,0,0,0.3);
+      transform-origin:center;
+      opacity:0;
+      animation: drawErase 2.5s infinite;
+    }
+    .line.diagonal {
+      transform:translate(-50%,-50%) rotate(45deg);
+      animation-delay:0.5s;
+    }
+    .line.cross {
+      transform:translate(-50%,-50%) rotate(-45deg);
+    }
+
     /* النص */
     .loader-text {
       font-size:28px;
       font-weight:bold;
       color:#ff7f32;
-      text-shadow:0 0 10px rgba(255,127,50,0.8), 
+      text-shadow:0 0 10px rgba(255,127,50,0.8),
                   0 0 20px rgba(255,127,50,0.6),
                   0 0 40px rgba(255,127,50,0.4);
       animation:pulseBlur 2s infinite ease-in-out;
     }
 
+    /* باقي الحركات */
     @keyframes spin {
       from {transform:rotate(0deg);}
       to   {transform:rotate(360deg);}
     }
-
     @keyframes pulseBlur {
       0%,100% {filter:blur(0px); transform:scale(1);}
       50%     {filter:blur(2px); transform:scale(1.2);}
     }
+    @keyframes drawErase {
+      0%,100% {opacity:0; transform:translate(-50%,-50%) scaleX(0);}
+      20%,50% {opacity:1; transform:translate(-50%,-50%) scaleX(1);}
+      80%     {opacity:0; transform:translate(-50%,-50%) scaleX(0);}
+    }
 
-    /* إخفاء باقي الصفحة أثناء التحميل */
+    /* إخفاء باقي الصفحة */
     body.loading > *:not(.loader) {
       opacity:0;
       pointer-events:none;
@@ -145,7 +164,10 @@ $current_page = basename($_SERVER['PHP_SELF']);
 </head>
 <body>
   <div class="loader">
-    <div class="circle"></div>
+    <div class="circle">
+      <div class="line cross"></div>
+      <div class="line diagonal"></div>
+    </div>
     <div class="loader-text">دوار السعادة</div>
   </div>
 <div id="page-wrapper" style="opacity:0; transition:opacity .8s ease;">
