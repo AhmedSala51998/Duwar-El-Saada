@@ -214,7 +214,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
       </ul>
     </div>
   </div>
-</nav>
+</nav></div>
 
 <!-- القائمة الجانبية في الموبايل (Offcanvas) -->
 <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarMenu">
@@ -259,7 +259,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
     <main class="col-12 col-md-9 col-lg-10 p-4">
       <?php if($m = flash('msg')): ?>
         <div class="flash mb-3"><?= esc($m) ?></div>
-      <?php endif; ?></div>
+      <?php endif; ?>
 
   <script>
     // إخفاء اللودر بعد 3 ثواني وإظهار المحتوى
