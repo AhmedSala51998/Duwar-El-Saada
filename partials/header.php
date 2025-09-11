@@ -18,79 +18,70 @@ $current_page = basename($_SERVER['PHP_SELF']);
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <style>
     .loader {
-      position:fixed;
-      inset:0;
-      background:#FFF;
+      position:relative;
+      width:150px;
+      height:150px;
       display:flex;
       justify-content:center;
       align-items:center;
       flex-direction:column;
       z-index:1000;
-      transition:opacity .8s ease, visibility .8s ease;
     }
-    .loader.hidden {opacity:0;visibility:hidden;}
 
+    /* الدائرة */
     .circle {
       position:relative;
-      width:150px; height:150px;
+      width:150px;
+      height:150px;
       border-radius:50%;
       border:3px solid rgba(255,127,50,0.2);
-      animation: spin 2s linear infinite;
-      margin-bottom:20px;
-    }
-    .circle::before {
-      content:"";
-      position:absolute;
-      top:-8px; left:50%;
-      width:16px; height:16px;
-      background:#ff7f32;
-      border-radius:50%;
-      box-shadow:0 0 15px #ff7f32, 0 0 30px rgba(255,127,50,0.6);
-      transform:translateX(-50%);
+      animation:spin 2s linear infinite;
+      display:flex;
+      justify-content:center;
+      align-items:center;
     }
 
-    /* ✅ الخطوط المتقاطعة */
+    /* الخطوط المتعامدة */
     .line {
       position:absolute;
-      top:50%; left:50%;
-      width:100%; height:2px;
-      background:rgba(0,0,0,0.3);
+      background:#CCC;
       transform-origin:center;
       opacity:0;
-      animation: drawErase 2.5s infinite;
+      animation:draw 2s ease-in-out infinite;
     }
-    .line.cross1 {transform:translate(-50%,-50%) rotate(45deg);}
-    .line.cross2 {transform:translate(-50%,-50%) rotate(-45deg);}
-    .line.cross2 {animation-delay:1.25s;} /* تأخير بسيط للخط الثاني */
+    .line.horizontal { width:80%; height:3px; transform:translate(-50%,-50%) rotate(0deg);}
+    .line.vertical   { width:3px; height:80%; transform:translate(-50%,-50%) rotate(0deg); animation-delay:1s;}
 
+    /* النص */
     .loader-text {
-      font-size:28px;
-      font-weight:bold;
+      position:absolute;
       color:#ff7f32;
-      text-shadow:0 0 10px rgba(255,127,50,0.8),
-                  0 0 20px rgba(255,127,50,0.6),
-                  0 0 40px rgba(255,127,50,0.4);
+      font-size:22px;
+      font-weight:bold;
+      text-align:center;
+      text-shadow:0 0 10px rgba(255,127,50,0.8), 0 0 20px rgba(255,127,50,0.6);
       animation:pulseBlur 2s infinite ease-in-out;
+      z-index:2;
     }
 
     @keyframes spin {
-      from {transform:rotate(0deg);}
-      to   {transform:rotate(360deg);}
-    }
-    @keyframes pulseBlur {
-      0%,100% {filter:blur(0px); transform:scale(1);}
-      50%     {filter:blur(2px); transform:scale(1.2);}
-    }
-    @keyframes drawErase {
-      0%,100% {opacity:0; transform:translate(-50%,-50%) scaleX(0);}
-      20%,50% {opacity:1; transform:translate(-50%,-50%) scaleX(1);}
-      80%     {opacity:0; transform:translate(-50%,-50%) scaleX(0);}
+      from{transform:rotate(0deg);}
+      to{transform:rotate(360deg);}
     }
 
-    body.loading > *:not(.loader) {
-      opacity:0;
-      pointer-events:none;
+    @keyframes draw {
+      0%,100% {opacity:0; transform:translate(-50%,-50%) scale(0);}
+      20%,50% {opacity:1; transform:translate(-50%,-50%) scale(1);}
+      80% {opacity:0; transform:translate(-50%,-50%) scale(0);}
     }
+
+    @keyframes pulseBlur {
+      0%,100% {filter:blur(0px); transform:scale(1);}
+      50% {filter:blur(2px); transform:scale(1.1);}
+    }
+
+    /* إخفاء باقي الصفحة أثناء اللودر */
+    body.loading > *:not(.loader) {opacity:0; pointer-events:none;}
 
     /* تمييز الصفحة النشطة */
     .sidebar-link.active,
@@ -157,10 +148,10 @@ $current_page = basename($_SERVER['PHP_SELF']);
 <body>
   <div class="loader">
     <div class="circle">
-      <div class="line cross1"></div>
-      <div class="line cross2"></div>
+      <div class="line horizontal"></div>
+      <div class="line vertical"></div>
+      <div class="loader-text">دوار السعادة</div>
     </div>
-    <div class="loader-text">دوار السعادة</div>
   </div>
 <div id="page-wrapper" style="opacity:0; transition:opacity .8s ease;">
 <nav class="navbar navbar-expand-lg sticky-top custom-navbar">
