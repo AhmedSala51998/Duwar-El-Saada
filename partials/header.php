@@ -17,7 +17,18 @@ $current_page = basename($_SERVER['PHP_SELF']);
   <link href="<?= BASE_URL ?>/assets/css/theme.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <style>
-    
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+    }
+    body {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #121212;
+      font-family: "Cairo", sans-serif;
+      overflow: hidden;
+    }
     /* اللودر */
     .loader {
       position: fixed;
