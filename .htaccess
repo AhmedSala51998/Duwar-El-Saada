@@ -1,16 +1,15 @@
-# الصفحة الرئيسية
 DirectoryIndex home.php
 
 RewriteEngine On
 
-# تجاهل إعادة الكتابة لو الملف أو المجلد موجود
+# تجاهل الملفات/المجلدات اللي موجودة فعلياً
 RewriteCond %{REQUEST_FILENAME} -f [OR]
 RewriteCond %{REQUEST_FILENAME} -d
 RewriteRule ^ - [L]
 
-# تحويل الروابط من /file.php إلى /file (Redirect)
-RewriteCond %{THE_REQUEST} \s([^.]+)\.php[?\s] [NC]
+# إزالة .php من الروابط (Redirect 301)
+RewriteCond %{THE_REQUEST} \s/([^\s?]+)\.php[^\s]* [NC]
 RewriteRule ^ %1 [R=301,L]
 
-# تحويل الروابط بدون .php إلى ملفات .php الفعلية
-RewriteRule ^([a-zA-Z0-9_-]+)/?$ $1.php [L,QSA]
+# تشغيل الملفات .php لما الرابط يكتب من غير الامتداد
+RewriteRule ^([^.]+)$ $1.php [L,QSA]
