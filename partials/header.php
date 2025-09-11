@@ -17,64 +17,79 @@ $current_page = basename($_SERVER['PHP_SELF']);
   <link href="<?= BASE_URL ?>/assets/css/theme.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <style>
-  .loader{
-    position:fixed;
-    inset:0;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    flex-direction:column;
-    z-index:9999;
-    background:#fff;
-    transition:opacity .8s ease, visibility .8s ease;
-  }
-  .loader.hidden{opacity:0;visibility:hidden;}
+    .loader{
+      position:fixed;
+      inset:0;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      flex-direction:column;
+      z-index:9999;
+      background:#fff;
+      transition:opacity .8s ease, visibility .8s ease;
+    }
+    .loader.hidden{opacity:0;visibility:hidden;}
 
-  /* الدائرة */
-  .circle{
-    position:relative;
-    width:160px;
-    height:160px;
-    border-radius:50%;
-    border:4px solid rgba(255,127,50,0.2);
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    animation:spin 3s linear infinite;
-  }
+    /* الدائرة */
+    .circle{
+      position:relative;
+      width:160px;
+      height:160px;
+      border-radius:50%;
+      border:4px solid rgba(255,127,50,0.2);
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      animation:spin 3s linear infinite;
+    }
 
-  /* نص اللودر */
-  .loader-text{
-    color:#ff7f32;
-    font-size:24px;
-    font-weight:bold;
-    text-align:center;
-    text-shadow:0 0 10px rgba(255,127,50,0.8),
-                0 0 20px rgba(255,127,50,0.6);
-    z-index:2;
-    animation:pulse 2s ease-in-out infinite;
-  }
+    /* النص */
+    .loader-text{
+      color:#ff7f32;
+      font-size:24px;
+      font-weight:bold;
+      text-align:center;
+      text-shadow:0 0 10px rgba(255,127,50,0.8),
+                  0 0 20px rgba(255,127,50,0.6);
+      animation:pulse 2s ease-in-out infinite;
+      z-index:2;
+    }
 
-  /* نبضات القلب حول الدائرة */
-  .heartbeat {
-    position:absolute;
-    width:100%; height:100%;
-    top:0; left:0;
-    pointer-events:none;
-  }
-  .point{
-    position:absolute;
-    width:6px; height:6px;
-    background:#ff7f32;
-    border-radius:50%;
-    transform-origin:center;
-  }
+    /* البولز (نبضات قلب) */
+    .pulse-dot{
+      position:absolute;
+      width:10px; height:10px;
+      border-radius:50%;
+      background:#ff7f32;
+      opacity:0.8;
+      transform:scale(0);
+      animation:dotPulse 1.5s infinite ease-in-out;
+    }
 
-  @keyframes spin{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
-  @keyframes pulse{
-    0%,100%{transform:scale(1); filter:blur(0);}
-    50%{transform:scale(1.1); filter:blur(1.5px);}
-  }
+    /* توزيع البولز حول حافة الدائرة */
+    .pulse-dot:nth-child(1){top:0; left:50%; animation-delay:0s;}
+    .pulse-dot:nth-child(2){top:15%; right:0; animation-delay:0.1s;}
+    .pulse-dot:nth-child(3){bottom:15%; right:0; animation-delay:0.2s;}
+    .pulse-dot:nth-child(4){bottom:0; left:50%; animation-delay:0.3s;}
+    .pulse-dot:nth-child(5){bottom:15%; left:0; animation-delay:0.4s;}
+    .pulse-dot:nth-child(6){top:15%; left:0; animation-delay:0.5s;}
+
+    /* الحركات */
+    @keyframes spin{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
+    @keyframes pulse{
+      0%,100%{transform:scale(1); filter:blur(0);}
+      50%{transform:scale(1.1); filter:blur(1.5px);}
+    }
+    @keyframes dotPulse{
+      0%{transform:scale(0); opacity:0;}
+      50%{transform:scale(1); opacity:1;}
+      100%{transform:scale(0); opacity:0;}
+    }
+
+    body.loading > *:not(.loader){
+      opacity:0;
+      pointer-events:none;
+    }
 
     /* تمييز الصفحة النشطة */
     .sidebar-link.active,
@@ -142,7 +157,14 @@ $current_page = basename($_SERVER['PHP_SELF']);
   <div class="loader">
     <div class="circle">
       <div class="loader-text">دوار السعادة</div>
-      <canvas class="heartbeat"></canvas>
+
+      <!-- البولز حول حافة الدائرة -->
+      <div class="pulse-dot"></div>
+      <div class="pulse-dot"></div>
+      <div class="pulse-dot"></div>
+      <div class="pulse-dot"></div>
+      <div class="pulse-dot"></div>
+      <div class="pulse-dot"></div>
     </div>
   </div>
 <div id="page-wrapper" style="opacity:0; transition:opacity .8s ease;">
