@@ -17,88 +17,79 @@ $current_page = basename($_SERVER['PHP_SELF']);
   <link href="<?= BASE_URL ?>/assets/css/theme.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <style>
-  .loader{
-    position:fixed;
-    inset:0;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    flex-direction:column;
-    z-index:9999;
-    background:#fff;
-    transition:opacity .8s ease, visibility .8s ease;
-  }
-  .loader.hidden{opacity:0;visibility:hidden;}
+    .loader{
+      position:fixed;
+      inset:0;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      flex-direction:column;
+      z-index:9999;
+      background:#fff;
+      transition:opacity .8s ease, visibility .8s ease;
+    }
+    .loader.hidden{opacity:0;visibility:hidden;}
 
-  /* النص */
-  .loader-text{
-    position:absolute;
-    color:#ff7f32;
-    font-size:26px;
-    font-weight:bold;
-    text-align:center;
-    text-shadow:0 0 10px rgba(255,127,50,0.8),
-                0 0 20px rgba(255,127,50,0.6),
-                0 0 40px rgba(255,127,50,0.4);
-    animation:pulse 2s ease-in-out infinite;
-    z-index:10;
-  }
+    /* الدائرة */
+    .circle{
+      position:relative;
+      width:160px;
+      height:160px;
+      border-radius:50%;
+      border:4px solid rgba(255,127,50,0.2);
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      animation:spin 3s linear infinite;
+    }
 
-  @keyframes pulse{
-    0%,100%{transform:scale(1); filter:blur(0);}
-    50%{transform:scale(1.1); filter:blur(1.5px);}
-  }
+    /* النص */
+    .loader-text{
+      color:#ff7f32;
+      font-size:24px;
+      font-weight:bold;
+      text-align:center;
+      text-shadow:0 0 10px rgba(255,127,50,0.8),
+                  0 0 20px rgba(255,127,50,0.6);
+      animation:pulse 2s ease-in-out infinite;
+      z-index:2;
+    }
 
-  /* الحلقات الدائرية */
-  .ring{
-    position:absolute;
-    border:3px solid rgba(255,127,50,0.3);
-    border-radius:50%;
-    animation:spin linear infinite;
-  }
-  .ring.one{width:150px; height:150px; animation-duration:2s;}
-  .ring.two{width:120px; height:120px; animation-duration:3s; border-color:rgba(255,127,50,0.5);}
-  .ring.three{width:90px; height:90px; animation-duration:1.5s; border-color:rgba(255,127,50,0.7);}
+    /* البولز (نبضات قلب) */
+    .pulse-dot{
+      position:absolute;
+      width:10px; height:10px;
+      border-radius:50%;
+      background:#ff7f32;
+      opacity:0.8;
+      transform:scale(0);
+      animation:dotPulse 1.5s infinite ease-in-out;
+    }
 
-  @keyframes spin{
-    0%{transform:rotate(0deg);}
-    100%{transform:rotate(360deg);}
-  }
+    /* توزيع البولز حول حافة الدائرة */
+    .pulse-dot:nth-child(1){top:0; left:50%; animation-delay:0s;}
+    .pulse-dot:nth-child(2){top:15%; right:0; animation-delay:0.1s;}
+    .pulse-dot:nth-child(3){bottom:15%; right:0; animation-delay:0.2s;}
+    .pulse-dot:nth-child(4){bottom:0; left:50%; animation-delay:0.3s;}
+    .pulse-dot:nth-child(5){bottom:15%; left:0; animation-delay:0.4s;}
+    .pulse-dot:nth-child(6){top:15%; left:0; animation-delay:0.5s;}
 
-  /* الأشعة الصغيرة */
-  .ray{
-    position:absolute;
-    width:3px;
-    height:15px;
-    background:#ff7f32;
-    top:50%;
-    left:50%;
-    transform-origin:bottom center;
-    border-radius:2px;
-    animation:rayAnim 1.5s linear infinite;
-  }
-  .ray:nth-child(1){transform:rotate(0deg) translateY(-70px); animation-delay:0s;}
-  .ray:nth-child(2){transform:rotate(30deg) translateY(-70px); animation-delay:0.1s;}
-  .ray:nth-child(3){transform:rotate(60deg) translateY(-70px); animation-delay:0.2s;}
-  .ray:nth-child(4){transform:rotate(90deg) translateY(-70px); animation-delay:0.3s;}
-  .ray:nth-child(5){transform:rotate(120deg) translateY(-70px); animation-delay:0.4s;}
-  .ray:nth-child(6){transform:rotate(150deg) translateY(-70px); animation-delay:0.5s;}
-  .ray:nth-child(7){transform:rotate(180deg) translateY(-70px); animation-delay:0.6s;}
-  .ray:nth-child(8){transform:rotate(210deg) translateY(-70px); animation-delay:0.7s;}
-  .ray:nth-child(9){transform:rotate(240deg) translateY(-70px); animation-delay:0.8s;}
-  .ray:nth-child(10){transform:rotate(270deg) translateY(-70px); animation-delay:0.9s;}
-  .ray:nth-child(11){transform:rotate(300deg) translateY(-70px); animation-delay:1s;}
-  .ray:nth-child(12){transform:rotate(330deg) translateY(-70px); animation-delay:1.1s;}
+    /* الحركات */
+    @keyframes spin{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
+    @keyframes pulse{
+      0%,100%{transform:scale(1); filter:blur(0);}
+      50%{transform:scale(1.1); filter:blur(1.5px);}
+    }
+    @keyframes dotPulse{
+      0%{transform:scale(0); opacity:0;}
+      50%{transform:scale(1); opacity:1;}
+      100%{transform:scale(0); opacity:0;}
+    }
 
-  @keyframes rayAnim{
-    0%,100%{opacity:0; transform:scaleY(0);}
-    50%{opacity:1; transform:scaleY(1);}
-  }
-
-  body.loading > *:not(.loader){
-    opacity:0;
-    pointer-events:none;
-  }
+    body.loading > *:not(.loader){
+      opacity:0;
+      pointer-events:none;
+    }
 
     /* تمييز الصفحة النشطة */
     .sidebar-link.active,
@@ -164,25 +155,17 @@ $current_page = basename($_SERVER['PHP_SELF']);
 </head>
 <body>
   <div class="loader">
-    <div class="ring one"></div>
-    <div class="ring two"></div>
-    <div class="ring three"></div>
+    <div class="circle">
+      <div class="loader-text">دوار السعادة</div>
 
-    <div class="loader-text">دوار السعادة</div>
-
-    <!-- الأشعة الصغيرة -->
-    <div class="ray"></div>
-    <div class="ray"></div>
-    <div class="ray"></div>
-    <div class="ray"></div>
-    <div class="ray"></div>
-    <div class="ray"></div>
-    <div class="ray"></div>
-    <div class="ray"></div>
-    <div class="ray"></div>
-    <div class="ray"></div>
-    <div class="ray"></div>
-    <div class="ray"></div>
+      <!-- البولز حول حافة الدائرة -->
+      <div class="pulse-dot"></div>
+      <div class="pulse-dot"></div>
+      <div class="pulse-dot"></div>
+      <div class="pulse-dot"></div>
+      <div class="pulse-dot"></div>
+      <div class="pulse-dot"></div>
+    </div>
   </div>
 <div id="page-wrapper" style="opacity:0; transition:opacity .8s ease;">
 <nav class="navbar navbar-expand-lg sticky-top custom-navbar">
