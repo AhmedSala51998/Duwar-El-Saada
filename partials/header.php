@@ -33,7 +33,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
     .loader {
       position: fixed;
       inset: 0;
-      background: #121212;
+      background: #FFF;
       display: flex;
       justify-content: center;
       align-items: center;
