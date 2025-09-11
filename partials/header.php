@@ -17,71 +17,77 @@ $current_page = basename($_SERVER['PHP_SELF']);
   <link href="<?= BASE_URL ?>/assets/css/theme.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <style>
+    /* اللودر */
     .loader {
-      position:relative;
-      width:150px;
-      height:150px;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      flex-direction:column;
-      z-index:1000;
+      position: fixed;
+      inset: 0;
+      background: #FFF;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      transition: opacity 1s ease, visibility 1s ease;
     }
 
-    /* الدائرة */
-    .circle {
-      position:relative;
-      width:150px;
-      height:150px;
-      border-radius:50%;
-      border:3px solid rgba(255,127,50,0.2);
-      animation:spin 2s linear infinite;
-      display:flex;
-      justify-content:center;
-      align-items:center;
+    .loader.hidden {
+      opacity: 0;
+      visibility: hidden;
     }
 
-    /* الخطوط المتعامدة */
-    .line {
-      position:absolute;
-      background:#CCC;
-      transform-origin:center;
-      opacity:0;
-      animation:draw 2s ease-in-out infinite;
-    }
-    .line.horizontal { width:80%; height:3px; transform:translate(-50%,-50%) rotate(0deg);}
-    .line.vertical   { width:3px; height:80%; transform:translate(-50%,-50%) rotate(0deg); animation-delay:1s;}
-
-    /* النص */
-    .loader-text {
-      position:absolute;
-      color:#ff7f32;
-      font-size:22px;
-      font-weight:bold;
-      text-align:center;
-      text-shadow:0 0 10px rgba(255,127,50,0.8), 0 0 20px rgba(255,127,50,0.6);
-      animation:pulseBlur 2s infinite ease-in-out;
-      z-index:2;
+    .loader span {
+      font-size: 42px;
+      font-weight: bold;
+      color: #ff7f32;
+      display: inline-block;
+      margin: 0 3px;
+      text-shadow: 0 0 10px rgba(255,127,50,0.8),
+                   0 0 20px rgba(255,127,50,0.6),
+                   0 0 40px rgba(255,127,50,0.4);
+      animation: waveBlur 1.6s infinite ease-in-out;
     }
 
-    @keyframes spin {
-      from{transform:rotate(0deg);}
-      to{transform:rotate(360deg);}
+    /* تأخير لكل حرف */
+    .loader span:nth-child(1)  { animation-delay: 0s; }
+    .loader span:nth-child(2)  { animation-delay: 0.1s; }
+    .loader span:nth-child(3)  { animation-delay: 0.2s; }
+    .loader span:nth-child(4)  { animation-delay: 0.3s; }
+    .loader span:nth-child(5)  { animation-delay: 0.4s; }
+    .loader span:nth-child(6)  { animation-delay: 0.5s; }
+    .loader span:nth-child(7)  { animation-delay: 0.6s; }
+    .loader span:nth-child(8)  { animation-delay: 0.7s; }
+    .loader span:nth-child(9)  { animation-delay: 0.8s; }
+    .loader span:nth-child(10) { animation-delay: 0.9s; }
+    .loader span:nth-child(11) { animation-delay: 1s; }
+    .loader span:nth-child(12) { animation-delay: 1.1s; }
+
+    @keyframes waveBlur {
+      0%, 100% {
+        transform: translateY(0) scale(1);
+        filter: blur(0px);
+        opacity: 1;
+      }
+      40% {
+        transform: translateY(-18px) scale(1.2);
+        filter: blur(2px);
+        opacity: 0.8;
+      }
+      70% {
+        transform: translateY(5px) scale(0.95);
+        filter: blur(1px);
+        opacity: 0.9;
+      }
     }
 
-    @keyframes draw {
-      0%,100% {opacity:0; transform:translate(-50%,-50%) scale(0);}
-      20%,50% {opacity:1; transform:translate(-50%,-50%) scale(1);}
-      80% {opacity:0; transform:translate(-50%,-50%) scale(0);}
+    /* المحتوى الرئيسي */
+    .content {
+      opacity: 0;
+      transition: opacity 1.5s ease;
+      text-align: center;
+      color: #fff;
     }
-
-    @keyframes pulseBlur {
-      0%,100% {filter:blur(0px); transform:scale(1);}
-      50% {filter:blur(2px); transform:scale(1.1);}
+    .content.visible {
+      opacity: 1;
     }
-
-    /* إخفاء باقي الصفحة أثناء اللودر */
-    body.loading > *:not(.loader) {opacity:0; pointer-events:none;}
 
     /* تمييز الصفحة النشطة */
     .sidebar-link.active,
@@ -147,11 +153,18 @@ $current_page = basename($_SERVER['PHP_SELF']);
 </head>
 <body>
   <div class="loader">
-    <div class="circle">
-      <div class="line horizontal"></div>
-      <div class="line vertical"></div>
-      <div class="loader-text">دوار السعادة</div>
-    </div>
+    <span>د</span>
+    <span>و</span>
+    <span>ا</span>
+    <span>ر</span>
+    <span> </span>
+    <span>ا</span>
+    <span>ل</span>
+    <span>س</span>
+    <span>ع</span>
+    <span>ا</span>
+    <span>د</span>
+    <span>ه</span>
   </div>
 <div id="page-wrapper" style="opacity:0; transition:opacity .8s ease;">
 <nav class="navbar navbar-expand-lg sticky-top custom-navbar">
