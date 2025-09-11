@@ -77,20 +77,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
       box-shadow: 0 6px 15px rgba(255,106,0,.4);
       color: #fff !important;
     }
-    
-
-        * {
-      margin: 0; padding: 0; box-sizing: border-box;
-    }
-    body {
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: #f9f9f9;
-      font-family: "Cairo", sans-serif;
-      overflow: hidden;
-    }
 
     /* اللودر */
     .loader {
