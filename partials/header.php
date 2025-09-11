@@ -18,75 +18,86 @@ $current_page = basename($_SERVER['PHP_SELF']);
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <style>
     /* اللودر */
-    .loader {
-      position: fixed;
-      inset: 0;
-      background: #FFF;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-      transition: opacity 1s ease, visibility 1s ease;
+    .loader{
+      position:fixed;
+      inset:0;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      z-index:9999;
+      flex-direction:column;
+      background:#111;
+      transition:opacity .8s ease, visibility .8s ease;
+    }
+    .loader.hidden{opacity:0;visibility:hidden;}
+
+    /* الدائرة الأساسية */
+    .circle{
+      position:relative;
+      width:160px;
+      height:160px;
+      border-radius:50%;
+      border:4px solid rgba(255,127,50,0.2);
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      animation:spin 2s linear infinite;
     }
 
-    .loader.hidden {
-      opacity: 0;
-      visibility: hidden;
+    /* الخطوط الشعاعية (rays) */
+    .ray{
+      position:absolute;
+      width:2px;
+      height:60px;
+      background:rgba(255,127,50,0.5);
+      top:50%; left:50%;
+      transform-origin:bottom center;
+      opacity:0;
+      animation:rayAnim 1.5s linear infinite;
+    }
+    /* توزيع الأشعة */
+    .ray:nth-child(1){transform:rotate(0deg) translateY(-50px); animation-delay:0s;}
+    .ray:nth-child(2){transform:rotate(30deg) translateY(-50px); animation-delay:0.1s;}
+    .ray:nth-child(3){transform:rotate(60deg) translateY(-50px); animation-delay:0.2s;}
+    .ray:nth-child(4){transform:rotate(90deg) translateY(-50px); animation-delay:0.3s;}
+    .ray:nth-child(5){transform:rotate(120deg) translateY(-50px); animation-delay:0.4s;}
+    .ray:nth-child(6){transform:rotate(150deg) translateY(-50px); animation-delay:0.5s;}
+    .ray:nth-child(7){transform:rotate(180deg) translateY(-50px); animation-delay:0.6s;}
+    .ray:nth-child(8){transform:rotate(210deg) translateY(-50px); animation-delay:0.7s;}
+    .ray:nth-child(9){transform:rotate(240deg) translateY(-50px); animation-delay:0.8s;}
+    .ray:nth-child(10){transform:rotate(270deg) translateY(-50px); animation-delay:0.9s;}
+    .ray:nth-child(11){transform:rotate(300deg) translateY(-50px); animation-delay:1s;}
+    .ray:nth-child(12){transform:rotate(330deg) translateY(-50px); animation-delay:1.1s;}
+
+    /* النص */
+    .loader-text{
+      color:#ff7f32;
+      font-size:24px;
+      font-weight:bold;
+      text-align:center;
+      text-shadow:0 0 10px rgba(255,127,50,0.8),
+                  0 0 20px rgba(255,127,50,0.6),
+                  0 0 40px rgba(255,127,50,0.4);
+      animation:pulse 2s ease-in-out infinite;
+      z-index:2;
     }
 
-    .loader span {
-      font-size: 42px;
-      font-weight: bold;
-      color: #ff7f32;
-      display: inline-block;
-      margin: 0 3px;
-      text-shadow: 0 0 10px rgba(255,127,50,0.8),
-                   0 0 20px rgba(255,127,50,0.6),
-                   0 0 40px rgba(255,127,50,0.4);
-      animation: waveBlur 1.6s infinite ease-in-out;
+    /* الحركات */
+    @keyframes spin{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
+    @keyframes pulse{
+      0%,100%{transform:scale(1); filter:blur(0);}
+      50%{transform:scale(1.1); filter:blur(2px);}
+    }
+    @keyframes rayAnim{
+      0%{opacity:0; transform:scaleY(0);}
+      50%{opacity:1; transform:scaleY(1);}
+      100%{opacity:0; transform:scaleY(0);}
     }
 
-    /* تأخير لكل حرف */
-    .loader span:nth-child(1)  { animation-delay: 0s; }
-    .loader span:nth-child(2)  { animation-delay: 0.1s; }
-    .loader span:nth-child(3)  { animation-delay: 0.2s; }
-    .loader span:nth-child(4)  { animation-delay: 0.3s; }
-    .loader span:nth-child(5)  { animation-delay: 0.4s; }
-    .loader span:nth-child(6)  { animation-delay: 0.5s; }
-    .loader span:nth-child(7)  { animation-delay: 0.6s; }
-    .loader span:nth-child(8)  { animation-delay: 0.7s; }
-    .loader span:nth-child(9)  { animation-delay: 0.8s; }
-    .loader span:nth-child(10) { animation-delay: 0.9s; }
-    .loader span:nth-child(11) { animation-delay: 1s; }
-    .loader span:nth-child(12) { animation-delay: 1.1s; }
-
-    @keyframes waveBlur {
-      0%, 100% {
-        transform: translateY(0) scale(1);
-        filter: blur(0px);
-        opacity: 1;
-      }
-      40% {
-        transform: translateY(-18px) scale(1.2);
-        filter: blur(2px);
-        opacity: 0.8;
-      }
-      70% {
-        transform: translateY(5px) scale(0.95);
-        filter: blur(1px);
-        opacity: 0.9;
-      }
-    }
-
-    /* المحتوى الرئيسي */
-    .content {
-      opacity: 0;
-      transition: opacity 1.5s ease;
-      text-align: center;
-      color: #fff;
-    }
-    .content.visible {
-      opacity: 1;
+    /* إخفاء باقي الصفحة أثناء اللودر */
+    body.loading > *:not(.loader){
+      opacity:0;
+      pointer-events:none;
     }
 
     /* تمييز الصفحة النشطة */
@@ -153,18 +164,21 @@ $current_page = basename($_SERVER['PHP_SELF']);
 </head>
 <body>
   <div class="loader">
-    <span>د</span>
-    <span>و</span>
-    <span>ا</span>
-    <span>ر</span>
-    <span> </span>
-    <span>ا</span>
-    <span>ل</span>
-    <span>س</span>
-    <span>ع</span>
-    <span>ا</span>
-    <span>د</span>
-    <span>ه</span>
+    <div class="circle">
+      <div class="ray"></div>
+      <div class="ray"></div>
+      <div class="ray"></div>
+      <div class="ray"></div>
+      <div class="ray"></div>
+      <div class="ray"></div>
+      <div class="ray"></div>
+      <div class="ray"></div>
+      <div class="ray"></div>
+      <div class="ray"></div>
+      <div class="ray"></div>
+      <div class="ray"></div>
+      <div class="loader-text">دوار السعادة</div>
+    </div>
   </div>
 <div id="page-wrapper" style="opacity:0; transition:opacity .8s ease;">
 <nav class="navbar navbar-expand-lg sticky-top custom-navbar">
