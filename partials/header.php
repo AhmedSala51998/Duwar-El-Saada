@@ -77,29 +77,48 @@ $current_page = basename($_SERVER['PHP_SELF']);
       box-shadow: 0 6px 15px rgba(255,106,0,.4);
       color: #fff !important;
     }
-        body {
+    
+
+        * {
+      margin: 0; padding: 0; box-sizing: border-box;
+    }
+    body {
+      height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
       background: #f9f9f9;
       font-family: "Cairo", sans-serif;
+      overflow: hidden;
     }
 
+    /* اللودر */
     .loader {
-      font-size: 32px;
-      font-weight: bold;
-      color: #ff7f32; /* برتقالي */
-      letter-spacing: 2px;
+      position: fixed;
+      inset: 0;
+      background: #f9f9f9;
       display: flex;
-      gap: 6px;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      transition: opacity 0.8s ease, visibility 0.8s ease;
+    }
+
+    .loader.hidden {
+      opacity: 0;
+      visibility: hidden;
     }
 
     .loader span {
+      font-size: 40px;
+      font-weight: bold;
+      color: #ff7f32;
       display: inline-block;
-      animation: bounce 1.2s infinite;
+      margin: 0 2px;
+      animation: blurPulse 1.5s infinite ease-in-out;
     }
 
+    /* تأخير مختلف لكل حرف */
     .loader span:nth-child(1) { animation-delay: 0s; }
     .loader span:nth-child(2) { animation-delay: 0.1s; }
     .loader span:nth-child(3) { animation-delay: 0.2s; }
@@ -109,14 +128,31 @@ $current_page = basename($_SERVER['PHP_SELF']);
     .loader span:nth-child(7) { animation-delay: 0.6s; }
     .loader span:nth-child(8) { animation-delay: 0.7s; }
     .loader span:nth-child(9) { animation-delay: 0.8s; }
+    .loader span:nth-child(10){ animation-delay: 0.9s; }
+    .loader span:nth-child(11){ animation-delay: 1s; }
+    .loader span:nth-child(12){ animation-delay: 1.1s; }
 
-    @keyframes bounce {
-      0%, 80%, 100% {
-        transform: translateY(0);
+    @keyframes blurPulse {
+      0%, 100% {
+        filter: blur(0px);
+        transform: scale(1);
+        opacity: 1;
       }
-      40% {
-        transform: translateY(-12px);
+      50% {
+        filter: blur(4px);
+        transform: scale(1.2);
+        opacity: 0.7;
       }
+    }
+
+    /* المحتوى الرئيسي */
+    .content {
+      opacity: 0;
+      transition: opacity 1s ease;
+      text-align: center;
+    }
+    .content.visible {
+      opacity: 1;
     }
   </style>
 </head>
@@ -229,4 +265,11 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <div class="flash mb-3"><?= esc($m) ?></div>
       <?php endif; ?>
 
-      
+   <script>
+    // بعد 3 ثواني، يخفي اللودر ويظهر المحتوى
+    setTimeout(() => {
+      document.querySelector('.loader').classList.add('hidden');
+      document.querySelector('.content').classList.add('visible');
+      document.body.style.overflow = 'auto';
+    }, 3000);
+  </script>
