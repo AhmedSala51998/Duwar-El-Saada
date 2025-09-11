@@ -17,68 +17,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
   <link href="<?= BASE_URL ?>/assets/css/theme.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <style>
-    /* تمييز الصفحة النشطة */
-    .sidebar-link.active,
-    .nav-link.active {
-      background-color: #ff6600; /* لون الهوفر بتاعك */
-      color: #fff !important;
-      border-radius: 6px;
-    }
-    .custom-navbar {
-      background: rgba(255,255,255,0.85);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(0,0,0,0.08); /* ✅ أسود خفيف جدًا */
-      padding: .7rem 1rem;
-    }
-    /* لون البرتقالي */
-    .text-orange { color: #ff6a00 !important; }
-
-    /* الدور */
-    .role-badge {
-      background: #fff3e6;
-      color: #ff6a00;
-      font-weight: 600;
-      border-radius: 50px;
-      padding: .5rem 1rem;
-      box-shadow: 0 2px 6px rgba(255,106,0,.2);
-    }
-
-    /* روابط */
-    .navbar .nav-link {
-      font-weight: 500;
-      padding: .6rem 1.2rem;
-      border-radius: 12px;
-      color: #555 !important;
-      transition: all .2s ease;
-    }
-    .navbar .nav-link:hover {
-      background: rgba(255,106,0,.08);
-      color: #ff6a00 !important;
-    }
-    .navbar .nav-link.active {
-      background: rgba(255,106,0,.15);
-      color: #ff6a00 !important;
-      font-weight: 600;
-    }
-
-    /* زر خروج */
-    .btn-logout {
-      background: linear-gradient(135deg,#ff6a00,#ff944d);
-      color: #fff;
-      font-weight: 600;
-      padding: .6rem 1.4rem;
-      border-radius: 50px;
-      box-shadow: 0 4px 12px rgba(255,106,0,.3);
-      transition: all .3s ease;
-    }
-    .btn-logout:hover {
-      background: linear-gradient(135deg,#e65a00,#ff7a1f);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 15px rgba(255,106,0,.4);
-      color: #fff !important;
-    }
-
-    /* اللودر */
+        /* اللودر */
     .loader {
       position: fixed;
       inset: 0;
@@ -139,6 +78,67 @@ $current_page = basename($_SERVER['PHP_SELF']);
     }
     .content.visible {
       opacity: 1;
+    }
+    
+    /* تمييز الصفحة النشطة */
+    .sidebar-link.active,
+    .nav-link.active {
+      background-color: #ff6600; /* لون الهوفر بتاعك */
+      color: #fff !important;
+      border-radius: 6px;
+    }
+    .custom-navbar {
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(0,0,0,0.08); /* ✅ أسود خفيف جدًا */
+      padding: .7rem 1rem;
+    }
+    /* لون البرتقالي */
+    .text-orange { color: #ff6a00 !important; }
+
+    /* الدور */
+    .role-badge {
+      background: #fff3e6;
+      color: #ff6a00;
+      font-weight: 600;
+      border-radius: 50px;
+      padding: .5rem 1rem;
+      box-shadow: 0 2px 6px rgba(255,106,0,.2);
+    }
+
+    /* روابط */
+    .navbar .nav-link {
+      font-weight: 500;
+      padding: .6rem 1.2rem;
+      border-radius: 12px;
+      color: #555 !important;
+      transition: all .2s ease;
+    }
+    .navbar .nav-link:hover {
+      background: rgba(255,106,0,.08);
+      color: #ff6a00 !important;
+    }
+    .navbar .nav-link.active {
+      background: rgba(255,106,0,.15);
+      color: #ff6a00 !important;
+      font-weight: 600;
+    }
+
+    /* زر خروج */
+    .btn-logout {
+      background: linear-gradient(135deg,#ff6a00,#ff944d);
+      color: #fff;
+      font-weight: 600;
+      padding: .6rem 1.4rem;
+      border-radius: 50px;
+      box-shadow: 0 4px 12px rgba(255,106,0,.3);
+      transition: all .3s ease;
+    }
+    .btn-logout:hover {
+      background: linear-gradient(135deg,#e65a00,#ff7a1f);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(255,106,0,.4);
+      color: #fff !important;
     }
   </style>
 </head>
