@@ -30,7 +30,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
     }
     .loader.hidden {opacity:0;visibility:hidden;}
 
-    /* الدائرة */
     .circle {
       position:relative;
       width:150px; height:150px;
@@ -50,7 +49,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
       transform:translateX(-50%);
     }
 
-    /* الخطوط المتقاطعة */
+    /* ✅ الخطوط المتقاطعة */
     .line {
       position:absolute;
       top:50%; left:50%;
@@ -60,15 +59,10 @@ $current_page = basename($_SERVER['PHP_SELF']);
       opacity:0;
       animation: drawErase 2.5s infinite;
     }
-    .line.diagonal {
-      transform:translate(-50%,-50%) rotate(45deg);
-      animation-delay:0.5s;
-    }
-    .line.cross {
-      transform:translate(-50%,-50%) rotate(-45deg);
-    }
+    .line.cross1 {transform:translate(-50%,-50%) rotate(45deg);}
+    .line.cross2 {transform:translate(-50%,-50%) rotate(-45deg);}
+    .line.cross2 {animation-delay:1.25s;} /* تأخير بسيط للخط الثاني */
 
-    /* النص */
     .loader-text {
       font-size:28px;
       font-weight:bold;
@@ -79,7 +73,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
       animation:pulseBlur 2s infinite ease-in-out;
     }
 
-    /* باقي الحركات */
     @keyframes spin {
       from {transform:rotate(0deg);}
       to   {transform:rotate(360deg);}
@@ -94,7 +87,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
       80%     {opacity:0; transform:translate(-50%,-50%) scaleX(0);}
     }
 
-    /* إخفاء باقي الصفحة */
     body.loading > *:not(.loader) {
       opacity:0;
       pointer-events:none;
@@ -165,8 +157,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
 <body>
   <div class="loader">
     <div class="circle">
-      <div class="line cross"></div>
-      <div class="line diagonal"></div>
+      <div class="line cross1"></div>
+      <div class="line cross2"></div>
     </div>
     <div class="loader-text">دوار السعادة</div>
   </div>
