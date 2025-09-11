@@ -77,9 +77,64 @@ $current_page = basename($_SERVER['PHP_SELF']);
       box-shadow: 0 6px 15px rgba(255,106,0,.4);
       color: #fff !important;
     }
+        body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: #f9f9f9;
+      font-family: "Cairo", sans-serif;
+    }
+
+    .loader {
+      font-size: 32px;
+      font-weight: bold;
+      color: #ff7f32; /* برتقالي */
+      letter-spacing: 2px;
+      display: flex;
+      gap: 6px;
+    }
+
+    .loader span {
+      display: inline-block;
+      animation: bounce 1.2s infinite;
+    }
+
+    .loader span:nth-child(1) { animation-delay: 0s; }
+    .loader span:nth-child(2) { animation-delay: 0.1s; }
+    .loader span:nth-child(3) { animation-delay: 0.2s; }
+    .loader span:nth-child(4) { animation-delay: 0.3s; }
+    .loader span:nth-child(5) { animation-delay: 0.4s; }
+    .loader span:nth-child(6) { animation-delay: 0.5s; }
+    .loader span:nth-child(7) { animation-delay: 0.6s; }
+    .loader span:nth-child(8) { animation-delay: 0.7s; }
+    .loader span:nth-child(9) { animation-delay: 0.8s; }
+
+    @keyframes bounce {
+      0%, 80%, 100% {
+        transform: translateY(0);
+      }
+      40% {
+        transform: translateY(-12px);
+      }
+    }
   </style>
 </head>
 <body>
+  <div class="loader">
+    <span>د</span>
+    <span>و</span>
+    <span>ا</span>
+    <span>ر</span>
+    <span> </span>
+    <span>ا</span>
+    <span>ل</span>
+    <span>س</span>
+    <span>ع</span>
+    <span>ا</span>
+    <span>د</span>
+    <span>ه</span>
+  </div>
 <nav class="navbar navbar-expand-lg sticky-top custom-navbar">
   <div class="container-fluid">
 
