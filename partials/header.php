@@ -17,21 +17,20 @@ $current_page = basename($_SERVER['PHP_SELF']);
   <link href="<?= BASE_URL ?>/assets/css/theme.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <style>
-    /* اللودر */
     .loader{
       position:fixed;
       inset:0;
       display:flex;
       justify-content:center;
       align-items:center;
-      z-index:9999;
       flex-direction:column;
-      background:#111;
+      z-index:9999;
+      background:#fff;
       transition:opacity .8s ease, visibility .8s ease;
     }
     .loader.hidden{opacity:0;visibility:hidden;}
 
-    /* الدائرة الأساسية */
+    /* الدائرة */
     .circle{
       position:relative;
       width:160px;
@@ -41,33 +40,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
       display:flex;
       justify-content:center;
       align-items:center;
-      animation:spin 2s linear infinite;
+      animation:spin 3s linear infinite;
     }
-
-    /* الخطوط الشعاعية (rays) */
-    .ray{
-      position:absolute;
-      width:2px;
-      height:60px;
-      background:rgba(255,127,50,0.5);
-      top:50%; left:50%;
-      transform-origin:bottom center;
-      opacity:0;
-      animation:rayAnim 1.5s linear infinite;
-    }
-    /* توزيع الأشعة */
-    .ray:nth-child(1){transform:rotate(0deg) translateY(-50px); animation-delay:0s;}
-    .ray:nth-child(2){transform:rotate(30deg) translateY(-50px); animation-delay:0.1s;}
-    .ray:nth-child(3){transform:rotate(60deg) translateY(-50px); animation-delay:0.2s;}
-    .ray:nth-child(4){transform:rotate(90deg) translateY(-50px); animation-delay:0.3s;}
-    .ray:nth-child(5){transform:rotate(120deg) translateY(-50px); animation-delay:0.4s;}
-    .ray:nth-child(6){transform:rotate(150deg) translateY(-50px); animation-delay:0.5s;}
-    .ray:nth-child(7){transform:rotate(180deg) translateY(-50px); animation-delay:0.6s;}
-    .ray:nth-child(8){transform:rotate(210deg) translateY(-50px); animation-delay:0.7s;}
-    .ray:nth-child(9){transform:rotate(240deg) translateY(-50px); animation-delay:0.8s;}
-    .ray:nth-child(10){transform:rotate(270deg) translateY(-50px); animation-delay:0.9s;}
-    .ray:nth-child(11){transform:rotate(300deg) translateY(-50px); animation-delay:1s;}
-    .ray:nth-child(12){transform:rotate(330deg) translateY(-50px); animation-delay:1.1s;}
 
     /* النص */
     .loader-text{
@@ -76,25 +50,42 @@ $current_page = basename($_SERVER['PHP_SELF']);
       font-weight:bold;
       text-align:center;
       text-shadow:0 0 10px rgba(255,127,50,0.8),
-                  0 0 20px rgba(255,127,50,0.6),
-                  0 0 40px rgba(255,127,50,0.4);
+                  0 0 20px rgba(255,127,50,0.6);
       animation:pulse 2s ease-in-out infinite;
       z-index:2;
     }
+
+    /* البولز (نبضات قلب) */
+    .pulse-dot{
+      position:absolute;
+      width:10px; height:10px;
+      border-radius:50%;
+      background:#ff7f32;
+      opacity:0.8;
+      transform:scale(0);
+      animation:dotPulse 1.5s infinite ease-in-out;
+    }
+
+    /* توزيع البولز حول حافة الدائرة */
+    .pulse-dot:nth-child(1){top:0; left:50%; animation-delay:0s;}
+    .pulse-dot:nth-child(2){top:15%; right:0; animation-delay:0.1s;}
+    .pulse-dot:nth-child(3){bottom:15%; right:0; animation-delay:0.2s;}
+    .pulse-dot:nth-child(4){bottom:0; left:50%; animation-delay:0.3s;}
+    .pulse-dot:nth-child(5){bottom:15%; left:0; animation-delay:0.4s;}
+    .pulse-dot:nth-child(6){top:15%; left:0; animation-delay:0.5s;}
 
     /* الحركات */
     @keyframes spin{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
     @keyframes pulse{
       0%,100%{transform:scale(1); filter:blur(0);}
-      50%{transform:scale(1.1); filter:blur(2px);}
+      50%{transform:scale(1.1); filter:blur(1.5px);}
     }
-    @keyframes rayAnim{
-      0%{opacity:0; transform:scaleY(0);}
-      50%{opacity:1; transform:scaleY(1);}
-      100%{opacity:0; transform:scaleY(0);}
+    @keyframes dotPulse{
+      0%{transform:scale(0); opacity:0;}
+      50%{transform:scale(1); opacity:1;}
+      100%{transform:scale(0); opacity:0;}
     }
 
-    /* إخفاء باقي الصفحة أثناء اللودر */
     body.loading > *:not(.loader){
       opacity:0;
       pointer-events:none;
@@ -165,19 +156,15 @@ $current_page = basename($_SERVER['PHP_SELF']);
 <body>
   <div class="loader">
     <div class="circle">
-      <div class="ray"></div>
-      <div class="ray"></div>
-      <div class="ray"></div>
-      <div class="ray"></div>
-      <div class="ray"></div>
-      <div class="ray"></div>
-      <div class="ray"></div>
-      <div class="ray"></div>
-      <div class="ray"></div>
-      <div class="ray"></div>
-      <div class="ray"></div>
-      <div class="ray"></div>
       <div class="loader-text">دوار السعادة</div>
+
+      <!-- البولز حول حافة الدائرة -->
+      <div class="pulse-dot"></div>
+      <div class="pulse-dot"></div>
+      <div class="pulse-dot"></div>
+      <div class="pulse-dot"></div>
+      <div class="pulse-dot"></div>
+      <div class="pulse-dot"></div>
     </div>
   </div>
 <div id="page-wrapper" style="opacity:0; transition:opacity .8s ease;">
