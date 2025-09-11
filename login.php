@@ -1,6 +1,6 @@
 <?php
 require __DIR__.'/config/config.php';
-if(is_auth()){ header('Location: '.BASE_URL.'/index.php'); exit; }
+if(is_auth()){ header('Location: '.BASE_URL.'/home.php'); exit; }
 $error='';
 if($_SERVER['REQUEST_METHOD']==='POST'){
   if(!csrf_validate($_POST['_csrf'] ?? '')){ $error='طلب غير صالح.'; }
@@ -9,7 +9,7 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
     $s = $pdo->prepare("SELECT * FROM users WHERE username=? LIMIT 1"); $s->execute([$u]); $user=$s->fetch();
     if($user && password_verify($p,$user['password_hash'])){
       $_SESSION['user_id']=$user['id']; $_SESSION['username']=$user['username']; $_SESSION['role']=$user['role'];
-      header('Location: '.BASE_URL.'/index.php'); exit;
+      header('Location: '.BASE_URL.'/home.php'); exit;
     } else $error='بيانات الدخول غير صحيحة.';
   }
 }
