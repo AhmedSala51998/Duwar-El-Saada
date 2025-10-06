@@ -1,7 +1,6 @@
 <?php 
 require __DIR__.'/partials/header.php'; 
 
-// جلب الـ purchase من الرابط
 $purchaseId = (int)($_GET['id'] ?? 0);
 $purchaseStmt = $pdo->prepare("SELECT * FROM purchases WHERE id=?");
 $purchaseStmt->execute([$purchaseId]);
@@ -13,24 +12,21 @@ if (!$purchase) {
     exit; 
 }
 
-// التحقق من وجود فاتورة مرتبطة
 $orderId = $purchase['order_id'] ?? null;
 if ($orderId) {
     $orderStmt = $pdo->prepare("SELECT * FROM orders_purchases WHERE id=?");
     $orderStmt->execute([$orderId]);
     $order = $orderStmt->fetch();
 
-    // جلب كل المشتريات المرتبطة بنفس الفاتورة
     $itemsStmt = $pdo->prepare("SELECT * FROM purchases WHERE order_id=?");
     $itemsStmt->execute([$orderId]);
     $items = $itemsStmt->fetchAll();
 } else {
-     echo "<div class='alert alert-warning'>الفاتورة غير موجودة</div>"; 
+    echo "<div class='alert alert-warning'>الفاتورة غير موجودة</div>"; 
     require __DIR__.'/partials/footer.php'; 
     exit; 
 }
 ?>
-
 
 <style>
 @media print {
@@ -51,12 +47,23 @@ if ($orderId) {
   text-align: right;
 }
 
-.print-area h2 { margin-bottom: 10px; }
-.print-area table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-.print-area table th, .print-area table td { border: 1px solid #ccc; padding: 8px; text-align: center; }
-.print-area table th { background-color: #f2f2f2; }
-.print-area img.logo { width: 80px; }
-.text-muted { color: #888; }
+.print-area table {
+  width: 100%; 
+  border-collapse: collapse; 
+  margin-top: 15px;
+}
+
+.print-area table th, .print-area table td {
+  border: 1px solid #ccc; 
+  padding: 8px; 
+  text-align: center;
+}
+
+.print-area table th {
+  background-color: #f2f2f2;
+}
+
+.logo { width: 80px; }
 
 .invoice-info {
   text-align: right;
@@ -69,6 +76,14 @@ if ($orderId) {
   text-align: right;
   line-height: 1.8;
 }
+
+select#vatRate {
+  display: inline-block;
+  width: auto;
+  margin-right: 10px;
+  border-radius: 4px;
+  padding: 4px 8px;
+}
 </style>
 
 <div class="d-print-none mb-3">
@@ -80,6 +95,8 @@ if ($orderId) {
     <div class="text-end invoice-info">
       <div><strong>المورد:</strong> <?= esc($order['supplier_name']) ?></div>
       <div><strong>رقم الفاتورة:</strong> <?= esc($order['invoice_number']) ?></div>
+      <div><strong>الدافع:</strong> <?= esc($purchase['payer_name']) ?></div>
+      <div><strong>مصدر الدفع:</strong> <?= esc($purchase['payment_source']) ?></div>
       <div><strong>التاريخ:</strong> <?= esc($order['created_at']) ?></div>
     </div>
     <div class="d-flex align-items-center gap-2">
@@ -90,27 +107,35 @@ if ($orderId) {
 
   <hr>
 
-  <table>
+  <table id="invoiceTable">
     <thead>
       <tr>
         <th>الصنف</th>
         <th>الكمية</th>
         <th>الوحدة</th>
         <th>السعر</th>
-        <th>صورة المنتج</th>
-        <th>فاتورة المنتج</th>
-        <th>الدافع</th>
-        <th>مصدر الدفع</th>
+        <th>المجموع الفرعي</th>
+        <th>الضريبة 15%</th>
+        <th>الإجمالي بعد الضريبة</th>
+        <!--<th>صورة المنتج</th>
+        <th>فاتورة المنتج</th>-->
       </tr>
     </thead>
     <tbody>
-      <?php foreach($items as $item): ?>
-      <tr>
+      <?php foreach($items as $item): 
+        $subtotal = $item['quantity'] * $item['price'];
+        $vat = $subtotal * 0.15;
+        $total = $subtotal + $vat;
+      ?>
+      <tr data-qty="<?= $item['quantity'] ?>" data-price="<?= $item['price'] ?>">
         <td><?= esc($item['name']) ?></td>
         <td><?= esc($item['quantity']) ?></td>
         <td><?= esc($item['unit']) ?></td>
-        <td><?= number_format((float)$item['price'],2) ?> ريال</td>
-        <td>
+        <td><?= number_format($item['price'],2) ?> ريال</td>
+        <td class="subtotal"><?= number_format($subtotal,2) ?> ريال</td>
+        <td class="vat"><?= number_format($vat,2) ?> ريال</td>
+        <td class="total"><?= number_format($total,2) ?> ريال</td>
+        <!--<td>
           <?php if($item['product_image']): ?>
             <img src="uploads/<?= esc($item['product_image']) ?>" style="width:60px; height:60px; object-fit:cover; border-radius:4px;">
           <?php endif; ?>
@@ -119,25 +144,53 @@ if ($orderId) {
           <?php if($item['invoice_image']): ?>
             <img src="uploads/<?= esc($item['invoice_image']) ?>" style="width:60px; height:60px; object-fit:cover; border-radius:4px;">
           <?php endif; ?>
-        </td>
-        <td><?= esc($item['payer_name']) ?></td>
-        <td><?= esc($item['payment_source']) ?></td>
+        </td>-->
       </tr>
       <?php endforeach; ?>
     </tbody>
   </table>
 
-  <?php 
-    $total = array_sum(array_map(fn($i) => $i['quantity']*$i['price'], $items));
-    $vat = $total * 0.15;
-    $allTotal = $total + $vat;
-  ?>
-  
   <div class="invoice-summary">
-    <div><strong>المجموع:</strong> <?= number_format($total,2) ?> ريال</div>
-    <div><strong>الضريبة 15%:</strong> <?= number_format($vat,2) ?> ريال</div>
-    <div><strong>الإجمالي بعد الضريبة:</strong> <?= number_format($allTotal,2) ?> ريال</div>
+    <div>
+      <strong>نسبة الضريبة:</strong>
+      <select id="vatRate">
+        <option value="0">0%</option>
+        <option value="0.15" selected>15%</option>
+      </select>
+    </div>
+    <div><strong>المجموع:</strong> <span id="totalNoVat">0.00</span> ريال</div>
+    <div id="vatRow"><strong>الضريبة:</strong> <span id="vatValue">0.00</span> ريال</div>
+    <div><strong>الإجمالي بعد الضريبة:</strong> <span id="grandTotal">0.00</span> ريال</div>
   </div>
 </div>
+
+<script>
+function recalcTotals() {
+  const vatRate = parseFloat(document.getElementById('vatRate').value);
+  let total = 0;
+  document.querySelectorAll('#invoiceTable tbody tr').forEach(tr => {
+    const qty = parseFloat(tr.dataset.qty);
+    const price = parseFloat(tr.dataset.price);
+    const subtotal = qty * price;
+    const vat = subtotal * vatRate;
+    const totalWithVat = subtotal + vat;
+
+    tr.querySelector('.subtotal').textContent = subtotal.toLocaleString(undefined, {minimumFractionDigits:2}) + ' ريال';
+    tr.querySelector('.vat').textContent = vat.toLocaleString(undefined, {minimumFractionDigits:2}) + ' ريال';
+    tr.querySelector('.total').textContent = totalWithVat.toLocaleString(undefined, {minimumFractionDigits:2}) + ' ريال';
+    total += subtotal;
+  });
+
+  const vatValue = total * vatRate;
+  const grand = total + vatValue;
+  document.getElementById('totalNoVat').textContent = total.toLocaleString(undefined, {minimumFractionDigits:2});
+  document.getElementById('vatValue').textContent = vatValue.toLocaleString(undefined, {minimumFractionDigits:2});
+  document.getElementById('grandTotal').textContent = grand.toLocaleString(undefined, {minimumFractionDigits:2});
+  document.getElementById('vatRow').style.display = vatRate === 0 ? 'none' : 'block';
+}
+
+document.getElementById('vatRate').addEventListener('change', recalcTotals);
+window.addEventListener('DOMContentLoaded', recalcTotals);
+</script>
 
 <?php require __DIR__.'/partials/footer.php'; ?>
