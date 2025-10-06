@@ -121,24 +121,19 @@ select#vatRate {
         <th>الكمية</th>
         <th>الوحدة</th>
         <th>السعر</th>
-        <!--<th>المجموع الفرعي</th>-->
-        <th>الضريبة 15%</th>
-        <th>الإجمالي بعد الضريبة</th>
+        <th>الإجمالي</th>
       </tr>
     </thead>
     <tbody>
       <?php foreach($items as $item): 
         $subtotal = $item['quantity'] * $item['price'];
-        $vat = $subtotal * 0.15;
-        $total = $subtotal + $vat;
+        $total = $subtotal + ($subtotal * 0.15);
       ?>
       <tr data-qty="<?= $item['quantity'] ?>" data-price="<?= $item['price'] ?>">
         <td><?= esc($item['name']) ?></td>
         <td><?= esc($item['quantity']) ?></td>
         <td><?= esc($item['unit']) ?></td>
         <td><?= number_format($item['price'],2) ?> ريال</td>
-        <!--<td class="subtotal"><?= number_format($subtotal,2) ?> ريال</td>-->
-        <td class="vat"><?= number_format($vat,2) ?> ريال</td>
         <td class="total"><?= number_format($total,2) ?> ريال</td>
       </tr>
       <?php endforeach; ?>
@@ -167,28 +162,26 @@ function recalcTotals() {
   const vatRate = parseFloat(vatRateEl.value);
   vatTextEl.textContent = vatRate === 0 ? '0%' : '15%';
 
-  let total = 0;
+  let subtotalAll = 0;
+  let grandTotal = 0;
+
   document.querySelectorAll('#invoiceTable tbody tr').forEach(tr => {
     const qty = parseFloat(tr.dataset.qty);
     const price = parseFloat(tr.dataset.price);
     const subtotal = qty * price;
-    const vat = subtotal * vatRate;
-    const totalWithVat = subtotal + vat;
-
-    tr.querySelector('.subtotal').textContent = subtotal.toLocaleString(undefined, {minimumFractionDigits:2}) + ' ريال';
-    tr.querySelector('.vat').textContent = vat.toLocaleString(undefined, {minimumFractionDigits:2}) + ' ريال';
-    tr.querySelector('.total').textContent = totalWithVat.toLocaleString(undefined, {minimumFractionDigits:2}) + ' ريال';
-    total += subtotal;
+    const total = subtotal + (subtotal * vatRate);
+    tr.querySelector('.total').textContent = total.toLocaleString(undefined, {minimumFractionDigits:2}) + ' ريال';
+    subtotalAll += subtotal;
+    grandTotal += total;
   });
 
-  const vatValue = total * vatRate;
-  const grand = total + vatValue;
-  
-  document.getElementById('totalNoVat').textContent = total.toLocaleString(undefined, {minimumFractionDigits:2});
-  document.getElementById('vatValue').textContent = vatValue.toLocaleString(undefined, {minimumFractionDigits:2});
-  document.getElementById('grandTotal').textContent = grand.toLocaleString(undefined, {minimumFractionDigits:2});
+  const vatValue = grandTotal - subtotalAll;
 
-  // إخفاء أو إظهار الصفوف حسب الضريبة
+  document.getElementById('totalNoVat').textContent = subtotalAll.toLocaleString(undefined, {minimumFractionDigits:2});
+  document.getElementById('vatValue').textContent = vatValue.toLocaleString(undefined, {minimumFractionDigits:2});
+  document.getElementById('grandTotal').textContent = grandTotal.toLocaleString(undefined, {minimumFractionDigits:2});
+
+  // إخفاء الصفوف حسب الضريبة
   document.getElementById('vatRow').style.display = vatRate === 0 ? 'none' : 'block';
   document.getElementById('grandRow').style.display = vatRate === 0 ? 'none' : 'block';
 }
