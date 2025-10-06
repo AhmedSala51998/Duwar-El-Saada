@@ -78,36 +78,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
 }
 
 function upload_image($field, $index = null) {
-    // لو مفيش ملفات أصلاً
-    if (empty($_FILES[$field]) || !isset($_FILES[$field]['name'])) {
-        return null;
-    }
-
-    // لو index موجود (في صفوف متعددة)
     if ($index !== null) {
         if (!isset($_FILES[$field]['name'][$index]) || $_FILES[$field]['error'][$index] !== UPLOAD_ERR_OK) {
-            return null; // مفيش صورة للصف ده
+            return null;
         }
         $fileTmp = $_FILES[$field]['tmp_name'][$index];
-        $fileName = uniqid() . "_" . basename($_FILES[$field]['name'][$index]);
+        $fileName = time() . "_" . basename($_FILES[$field]['name'][$index]);
     } else {
-        if ($_FILES[$field]['error'] !== UPLOAD_ERR_OK) {
+        if (empty($_FILES[$field]['name']) || $_FILES[$field]['error'] !== UPLOAD_ERR_OK) {
             return null;
         }
         $fileTmp = $_FILES[$field]['tmp_name'];
-        $fileName = uniqid() . "_" . basename($_FILES[$field]['name']);
+        $fileName = time() . "_" . basename($_FILES[$field]['name']);
     }
 
-    $uploadDir = __DIR__ . "/uploads/";
-    if (!is_dir($uploadDir)) {
-        mkdir($uploadDir, 0777, true);
-    }
-
-    $target = $uploadDir . $fileName;
-    if (move_uploaded_file($fileTmp, $target)) {
-        return $fileName;
-    }
-    return null;
+    $target = __DIR__ . "/uploads/" . $fileName;
+    move_uploaded_file($fileTmp, $target);
+    return $fileName;
 }
 
 
