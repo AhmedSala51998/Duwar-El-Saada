@@ -298,13 +298,26 @@ $can_edit = in_array(current_role(), ['admin','manager']);
                   </select>
                 </td>
                 <td><input type="number" step="0.01" name="price[]" class="form-control"></td>
-                <td> <input type="file" name="product_image[]" id="purchase_product_image" accept="image/*"
-                  onchange="previewFile(this,'file-text-prod','preview-prod')">
-                   <img id="preview-prod" style="display:none"/></td>
-                <td><input type="file" name="invoice_image[]" id="purchase_invoice_image" accept="image/*"
-                  onchange="previewFile(this,'file-text-inv','preview-inv')">
-                        <img id="preview-inv" style="display:none"/></td>
                 <td>
+                    <label class="custom-file-upload w-100">
+                      <i class="bi bi-cloud-arrow-up"></i>
+                      <span id="file-text-prod-0">اختر صورة للمنتج</span>
+                      <input type="file" name="product_image[]" accept="image/*"
+                            onchange="previewFile(this,'file-text-prod-0','preview-prod-0')">
+                      <img id="preview-prod-0" style="display:none; max-width:80px; margin-top:5px"/>
+                    </label>
+                  </td>
+
+                  <!-- صورة الفاتورة -->
+                  <td>
+                    <label class="custom-file-upload w-100">
+                      <i class="bi bi-receipt"></i>
+                      <span id="file-text-inv-0">اختر صورة للفاتورة</span>
+                      <input type="file" name="invoice_image[]" accept="image/*"
+                            onchange="previewFile(this,'file-text-inv-0','preview-inv-0')">
+                      <img id="preview-inv-0" style="display:none; max-width:80px; margin-top:5px"/>
+                    </label>
+                  </td>
                   <select name="payer_name[]" class="form-select payer-select">
                     <option hidden>اختر</option>
                     <option>شركة</option><option>مؤسسة</option>
