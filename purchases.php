@@ -34,6 +34,36 @@
   input[type="file"] {
     display: none;
   }
+  /* لجعل الصور ثابتة الحجم في الجدول */
+.table img {
+  display: block;
+  width: 80px;          /* عرض ثابت */
+  height: 80px;         /* ارتفاع ثابت */
+  object-fit: cover;    /* يجعل الصورة تغطي المساحة مع القص إذا كانت كبيرة */
+  border-radius: 4px;   /* اختياري: حواف مدورة */
+  margin-top: 5px;
+  cursor: pointer;      /* يجعل الماوس يظهر كأنه قابل للنقر */
+}
+
+/* لمنع تمدد الخانات */
+.table td {
+  vertical-align: middle;
+  white-space: nowrap;   /* يمنع التفاف النصوص */
+}
+
+/* لجعل label كامل الحجم متجاوب */
+.custom-file-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed #ccc;
+  padding: 5px;
+  cursor: pointer;
+  height: 100px; /* نفس ارتفاع الصورة */
+  overflow: hidden;
+}
+
 </style>
 
 <?php require __DIR__.'/partials/header.php'; ?>
