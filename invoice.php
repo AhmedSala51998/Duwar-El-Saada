@@ -40,8 +40,15 @@ if ($orderId) {
 }
 
 .print-area {
-  max-width: 900px; margin: auto; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  border: 1px solid #ccc; padding: 20px; border-radius: 8px; background: #fff;
+  max-width: 900px; 
+  margin: auto; 
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  border: 1px solid #ccc; 
+  padding: 20px; 
+  border-radius: 8px; 
+  background: #fff;
+  direction: rtl;
+  text-align: right;
 }
 
 .print-area h2 { margin-bottom: 10px; }
@@ -50,6 +57,18 @@ if ($orderId) {
 .print-area table th { background-color: #f2f2f2; }
 .print-area img.logo { width: 80px; }
 .text-muted { color: #888; }
+
+.invoice-info {
+  text-align: right;
+  line-height: 1.8;
+  margin-top: 10px;
+}
+
+.invoice-summary {
+  margin-top: 20px;
+  text-align: right;
+  line-height: 1.8;
+}
 </style>
 
 <div class="d-print-none mb-3">
@@ -57,15 +76,15 @@ if ($orderId) {
 </div>
 
 <div class="print-area">
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <div class="d-flex align-items-center gap-2">
-      <img src="assets/logo.svg" class="logo" alt="Logo">
-      <h2>فاتورة مشتريات</h2>
-    </div>
-    <div class="text-end">
+  <div class="d-flex justify-content-between align-items-center mb-3" style="flex-direction: row-reverse;">
+    <div class="text-end invoice-info">
       <div><strong>المورد:</strong> <?= esc($order['supplier_name']) ?></div>
       <div><strong>رقم الفاتورة:</strong> <?= esc($order['invoice_number']) ?></div>
       <div><strong>التاريخ:</strong> <?= esc($order['created_at']) ?></div>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+      <h2>فاتورة مشتريات</h2>
+      <img src="assets/logo.svg" class="logo" alt="Logo">
     </div>
   </div>
 
@@ -108,12 +127,13 @@ if ($orderId) {
     </tbody>
   </table>
 
-  <div class="mt-3 text-end">
-    <?php 
-      $total = array_sum(array_map(fn($i) => $i['quantity']*$i['price'], $items));
-      $vat = $total * 0.15;
-      $allTotal = $total + $vat;
-    ?>
+  <?php 
+    $total = array_sum(array_map(fn($i) => $i['quantity']*$i['price'], $items));
+    $vat = $total * 0.15;
+    $allTotal = $total + $vat;
+  ?>
+  
+  <div class="invoice-summary">
     <div><strong>المجموع:</strong> <?= number_format($total,2) ?> ريال</div>
     <div><strong>الضريبة 15%:</strong> <?= number_format($vat,2) ?> ريال</div>
     <div><strong>الإجمالي بعد الضريبة:</strong> <?= number_format($allTotal,2) ?> ريال</div>
