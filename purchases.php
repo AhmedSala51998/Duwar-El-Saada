@@ -261,66 +261,73 @@ $can_edit = in_array(current_role(), ['admin','manager']);
 </div>
 
 <?php if($can_edit): ?>
-<div class="modal fade" id="addM"><div class="modal-dialog modal-lg"><div class="modal-content">
-  <form method="post" action="purchase_add" enctype="multipart/form-data">
-    <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
-    <div class="modal-header"><h5 class="modal-title">إضافة صنف</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
-    <div class="modal-body">
-      <div class="row g-3">
-        <div class="col-md-6"><label class="form-label">الاسم</label><input name="name" class="form-control" required></div>
-        <div class="col-md-3"><label class="form-label">الكمية</label><input type="number" step="0.001" name="quantity" class="form-control" required></div>
-        <div class="col-md-3"><label class="form-label">الوحدة</label><select name="unit" class="form-select"><option>عدد</option><option>جرام</option><option>كيلو</option><option>لتر</option></select></div>
-        <div class="col-md-4"><label class="form-label">السعر</label><input type="number" step="0.01" name="price" class="form-control"></div>
+<div class="modal fade" id="addM">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <form method="post" action="purchase_add" enctype="multipart/form-data">
+        <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
 
-        <!-- صورة المنتج -->
-        <div class="col-md-6">
-          <label class="form-label">صورة المنتج</label>
-          <label class="custom-file-upload w-100">
-            <i class="bi bi-cloud-arrow-up"></i>
-            <span id="file-text-prod">اختر صورة للمنتج</span>
-            <input type="file" name="product_image" id="purchase_product_image" accept="image/*"
-                  onchange="previewFile(this,'file-text-prod','preview-prod')">
-            <img id="preview-prod" style="display:none"/>
-          </label>
+        <div class="modal-header">
+          <h5 class="modal-title">إضافة أصناف متعددة</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
 
-        <!-- صورة الفاتورة -->
-        <div class="col-md-6">
-          <label class="form-label">صورة الفاتورة</label>
-          <label class="custom-file-upload w-100">
-            <i class="bi bi-receipt"></i>
-            <span id="file-text-inv">اختر صورة للفاتورة</span>
-            <input type="file" name="invoice_image" id="purchase_invoice_image" accept="image/*"
-                  onchange="previewFile(this,'file-text-inv','preview-inv')">
-            <img id="preview-inv" style="display:none"/>
-          </label>
+        <div class="modal-body">
+          <table class="table table-bordered" id="itemsTable">
+            <thead>
+              <tr>
+                <th>الاسم</th>
+                <th>الكمية</th>
+                <th>الوحدة</th>
+                <th>السعر</th>
+                <th>صورة المنتج</th>
+                <th>صورة الفاتورة</th>
+                <th>اسم الدافع</th>
+                <th>مصدر الدفع</th>
+                <th>إزالة</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><input name="name[]" class="form-control" required></td>
+                <td><input type="number" step="0.001" name="quantity[]" class="form-control" required></td>
+                <td>
+                  <select name="unit[]" class="form-select">
+                    <option>عدد</option><option>جرام</option>
+                    <option>كيلو</option><option>لتر</option>
+                  </select>
+                </td>
+                <td><input type="number" step="0.01" name="price[]" class="form-control"></td>
+                <td><input type="file" name="product_image[]" accept="image/*" class="form-control"></td>
+                <td><input type="file" name="invoice_image[]" accept="image/*" class="form-control"></td>
+                <td>
+                  <select name="payer_name[]" class="form-select">
+                    <option hidden>اختر</option>
+                    <option>شركة</option><option>مؤسسة</option>
+                    <option>فيصل المطيري</option><option>بسام</option>
+                  </select>
+                </td>
+                <td>
+                  <select name="payment_source[]" class="form-select">
+                    <option hidden>اختر</option>
+                    <option>مالك</option><option>كاش</option><option>بنك</option>
+                  </select>
+                </td>
+                <td><button type="button" class="btn btn-danger btn-sm remove-row">✖</button></td>
+              </tr>
+            </tbody>
+          </table>
+          <button type="button" id="addRow" class="btn btn-secondary">+ إضافة صنف جديد</button>
         </div>
 
-        <div class="col-md-6"><label class="form-label">اسم الدافع</label>
-          <select name="payer_name" class="form-control payer-select">
-            <option hidden>اختر الدافع</option>
-            <option>شركة</option>
-            <option>مؤسسة</option>
-            <option>فيصل المطيري</option>
-            <option>بسام</option>
-          </select>
+        <div class="modal-footer">
+          <button class="btn btn-orange">حفظ</button>
         </div>
-
-        <div class="col-md-6">
-          <label class="form-label">مصدر الدفع</label>
-          <select name="payment_source" class="form-control payment-source-select">
-            <option hidden>اختر مصدر الدفع</option>
-            <option>مالك</option>
-            <option>كاش</option>
-            <option>بنك</option>
-          </select>
-        </div>
-
-      </div>
+      </form>
     </div>
-    <div class="modal-footer"><button class="btn btn-orange">حفظ</button></div>
-  </form>
-</div></div></div>
+  </div>
+</div>
+
 <?php endif; ?>
 
 <?php if($can_edit): ?>
@@ -422,4 +429,29 @@ document.addEventListener('shown.bs.modal', function(event) {
   });
 });
 
+</script>
+<script>
+document.getElementById('addRow').addEventListener('click', function(){
+  const table = document.querySelector('#itemsTable tbody');
+  const newRow = table.rows[0].cloneNode(true);
+
+  // امسح القيم من الصف الجديد
+  newRow.querySelectorAll('input, select').forEach(el => {
+    if(el.type === 'file') el.value = "";
+    else el.value = "";
+  });
+
+  table.appendChild(newRow);
+});
+
+// زر الحذف
+document.addEventListener('click', function(e){
+  if(e.target.classList.contains('remove-row')){
+    const row = e.target.closest('tr');
+    const table = document.querySelector('#itemsTable tbody');
+    if(table.rows.length > 1){ // ما تمسحش الصف الأخير
+      row.remove();
+    }
+  }
+});
 </script>

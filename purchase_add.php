@@ -4,26 +4,37 @@ require_role(['admin','manager']);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? '')) {
 
-    $name = trim($_POST['name']);
-    $unit = $_POST['unit'];
-    $payer = trim($_POST['payer_name'] ?? '');
-    $payment_source = $_POST['payment_source'] ?? 'كاش';
-    $quantity = (float)($_POST['quantity'] ?? 0);
-    $price = (float)($_POST['price'] ?? 0);
+    $names = $_POST['name'] ?? [];
+    $units = $_POST['unit'] ?? [];
+    $payers = $_POST['payer_name'] ?? [];
+    $sources = $_POST['payment_source'] ?? [];
+    $quantities = $_POST['quantity'] ?? [];
+    $prices = $_POST['price'] ?? [];
 
-    // تحقق من التكرار
-    $check = $pdo->prepare("SELECT COUNT(*) FROM purchases WHERE name=? AND unit=? AND payer_name=?");
-    $check->execute([$name, $unit, $payer]);
-    $exists = $check->fetchColumn();
+    foreach ($names as $i => $name) {
+        $name = trim($name);
+        $unit = $units[$i] ?? '';
+        $payer = trim($payers[$i] ?? '');
+        $payment_source = $sources[$i] ?? 'كاش';
+        $quantity = (float)($quantities[$i] ?? 0);
+        $price = (float)($prices[$i] ?? 0);
 
-    if ($exists > 0) {
-        $_SESSION['toast'] = [
-            'type' => 'warning',
-            'msg'  => 'هناك عملية شراء بنفس الاسم، الوحدة والدافع موجودة بالفعل'
-        ];
-    } else {
+        if (!$name || !$unit) continue; // تجاهل أي صف فاضي
 
-        // خصم العهدة إذا مصدر الدفع "عهدة"
+        // تحقق من التكرار
+        $check = $pdo->prepare("SELECT COUNT(*) FROM purchases WHERE name=? AND unit=? AND payer_name=?");
+        $check->execute([$name, $unit, $payer]);
+        $exists = $check->fetchColumn();
+
+        if ($exists > 0) {
+            $_SESSION['toast'] = [
+                'type' => 'warning',
+                'msg'  => "⚠️ الصنف ($name) موجود بالفعل"
+            ];
+            continue;
+        }
+
+        // خصم العهدة لو مصدر الدفع "عهدة"
         if($payment_source === 'عهدة'){
             $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? ORDER BY taken_at DESC LIMIT 1");
             $stmtC->execute([$payer]);
@@ -34,11 +45,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
             } else {
                 $_SESSION['toast'] = [
                     'type' => 'danger',
-                    'msg'  => 'رصيد العهدة غير كافي'
+                    'msg'  => "❌ رصيد العهدة غير كافي للصنف ($name)"
                 ];
-                header('Location: ' . BASE_URL . '/purchases.php'); exit;
+                continue;
             }
         }
+
+        // رفع الصور (لو في ملف لكل صنف)
+        $productImage = upload_image('product_image', $i);
+        $invoiceImage = upload_image('invoice_image', $i);
 
         $stmt = $pdo->prepare("
             INSERT INTO purchases (name, quantity, unit, price, product_image, invoice_image, payer_name, payment_source) 
@@ -49,18 +64,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
             $quantity,
             $unit,
             $price,
-            upload_image('product_image'),
-            upload_image('invoice_image'),
+            $productImage,
+            $invoiceImage,
             $payer,
             $payment_source
         ]);
-
-        $_SESSION['toast'] = [
-            'type' => 'success',
-            'msg'  => 'تمت العملية بنجاح'
-        ];
     }
+
+    $_SESSION['toast'] = [
+        'type' => 'success',
+        'msg'  => '✅ تم حفظ جميع الأصناف'
+    ];
 }
+
+function upload_image($field, $index = null) {
+    if ($index !== null) {
+        if (!isset($_FILES[$field]['name'][$index]) || $_FILES[$field]['error'][$index] !== UPLOAD_ERR_OK) {
+            return null;
+        }
+        $fileTmp = $_FILES[$field]['tmp_name'][$index];
+        $fileName = time() . "_" . basename($_FILES[$field]['name'][$index]);
+    } else {
+        if (empty($_FILES[$field]['name']) || $_FILES[$field]['error'] !== UPLOAD_ERR_OK) {
+            return null;
+        }
+        $fileTmp = $_FILES[$field]['tmp_name'];
+        $fileName = time() . "_" . basename($_FILES[$field]['name']);
+    }
+
+    $target = __DIR__ . "uploads/" . $fileName;
+    move_uploaded_file($fileTmp, $target);
+    return $fileName;
+}
+
 
 header('Location: ' . BASE_URL . '/purchases.php');
 exit;
