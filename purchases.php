@@ -264,7 +264,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
 <div class="modal fade" id="addM">
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
-      <form method="post" action="purchase_add" enctype="multipart/form-data">
+      <form method="post" action="purchase_add_multi.php" enctype="multipart/form-data">
         <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
 
         <div class="modal-header">
@@ -298,17 +298,21 @@ $can_edit = in_array(current_role(), ['admin','manager']);
                   </select>
                 </td>
                 <td><input type="number" step="0.01" name="price[]" class="form-control"></td>
-                <td><input type="file" name="product_image[]" accept="image/*" class="form-control"></td>
-                <td><input type="file" name="invoice_image[]" accept="image/*" class="form-control"></td>
+                <td> <input type="file" name="product_image[]" id="purchase_product_image" accept="image/*"
+                  onchange="previewFile(this,'file-text-prod','preview-prod')">
+                   <img id="preview-prod" style="display:none"/></td>
+                <td><input type="file" name="invoice_image[]" id="purchase_invoice_image" accept="image/*"
+                  onchange="previewFile(this,'file-text-inv','preview-inv')">
+                        <img id="preview-inv" style="display:none"/></td>
                 <td>
-                  <select name="payer_name[]" class="form-select">
+                  <select name="payer_name[]" class="form-select payer-select">
                     <option hidden>اختر</option>
                     <option>شركة</option><option>مؤسسة</option>
                     <option>فيصل المطيري</option><option>بسام</option>
                   </select>
                 </td>
                 <td>
-                  <select name="payment_source[]" class="form-select">
+                  <select name="payment_source[]" class="form-select payment-source-select">
                     <option hidden>اختر</option>
                     <option>مالك</option><option>كاش</option><option>بنك</option>
                   </select>
@@ -317,7 +321,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
               </tr>
             </tbody>
           </table>
-          <button type="button" id="addRow" class="btn btn-secondary">+ إضافة صنف جديد</button>
+          <button type="button" id="addRow" class="btn btn-secondary">+ إضافة صف جديد</button>
         </div>
 
         <div class="modal-footer">
@@ -327,7 +331,6 @@ $can_edit = in_array(current_role(), ['admin','manager']);
     </div>
   </div>
 </div>
-
 <?php endif; ?>
 
 <?php if($can_edit): ?>
