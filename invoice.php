@@ -78,7 +78,8 @@ if ($orderId) {
         <th>الكمية</th>
         <th>الوحدة</th>
         <th>السعر</th>
-        <th>الصورة</th>
+        <th>صورة المنتج</th>
+        <th>فاتورة المنتج</th>
         <th>الدافع</th>
         <th>مصدر الدفع</th>
       </tr>
@@ -93,6 +94,11 @@ if ($orderId) {
         <td>
           <?php if($item['product_image']): ?>
             <img src="uploads/<?= esc($item['product_image']) ?>" style="width:60px; height:60px; object-fit:cover; border-radius:4px;">
+          <?php endif; ?>
+        </td>
+        <td>
+          <?php if($item['invoice_image']): ?>
+            <img src="uploads/<?= esc($item['invoice_image']) ?>" style="width:60px; height:60px; object-fit:cover; border-radius:4px;">
           <?php endif; ?>
         </td>
         <td><?= esc($item['payer_name']) ?></td>
