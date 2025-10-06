@@ -121,7 +121,7 @@ select#vatRate {
         <th>الكمية</th>
         <th>الوحدة</th>
         <th>السعر</th>
-        <th>المجموع الفرعي</th>
+        <!--<th>المجموع الفرعي</th>-->
         <th>الضريبة 15%</th>
         <th>الإجمالي بعد الضريبة</th>
       </tr>
@@ -137,7 +137,7 @@ select#vatRate {
         <td><?= esc($item['quantity']) ?></td>
         <td><?= esc($item['unit']) ?></td>
         <td><?= number_format($item['price'],2) ?> ريال</td>
-        <td class="subtotal"><?= number_format($subtotal,2) ?> ريال</td>
+        <!--<td class="subtotal"><?= number_format($subtotal,2) ?> ريال</td>-->
         <td class="vat"><?= number_format($vat,2) ?> ريال</td>
         <td class="total"><?= number_format($total,2) ?> ريال</td>
       </tr>
