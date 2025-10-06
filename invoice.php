@@ -121,19 +121,22 @@ select#vatRate {
         <th>الكمية</th>
         <th>الوحدة</th>
         <th>السعر</th>
+        <th>الضريبة</th>
         <th>الإجمالي</th>
       </tr>
     </thead>
     <tbody>
       <?php foreach($items as $item): 
         $subtotal = $item['quantity'] * $item['price'];
-        $total = $subtotal + ($subtotal * 0.15);
+        $vat = $subtotal * 0.15;
+        $total = $subtotal + $vat;
       ?>
       <tr data-qty="<?= $item['quantity'] ?>" data-price="<?= $item['price'] ?>">
         <td><?= esc($item['name']) ?></td>
         <td><?= esc($item['quantity']) ?></td>
         <td><?= esc($item['unit']) ?></td>
         <td><?= number_format($item['price'],2) ?> ريال</td>
+        <td class="vat"><?= number_format($vat,2) ?> ريال</td>
         <td class="total"><?= number_format($total,2) ?> ريال</td>
       </tr>
       <?php endforeach; ?>
@@ -169,8 +172,12 @@ function recalcTotals() {
     const qty = parseFloat(tr.dataset.qty);
     const price = parseFloat(tr.dataset.price);
     const subtotal = qty * price;
-    const total = subtotal + (subtotal * vatRate);
+    const vat = subtotal * vatRate;
+    const total = subtotal + vat;
+
+    tr.querySelector('.vat').textContent = vat.toLocaleString(undefined, {minimumFractionDigits:2}) + ' ريال';
     tr.querySelector('.total').textContent = total.toLocaleString(undefined, {minimumFractionDigits:2}) + ' ريال';
+
     subtotalAll += subtotal;
     grandTotal += total;
   });
@@ -181,7 +188,6 @@ function recalcTotals() {
   document.getElementById('vatValue').textContent = vatValue.toLocaleString(undefined, {minimumFractionDigits:2});
   document.getElementById('grandTotal').textContent = grandTotal.toLocaleString(undefined, {minimumFractionDigits:2});
 
-  // إخفاء الصفوف حسب الضريبة
   document.getElementById('vatRow').style.display = vatRate === 0 ? 'none' : 'block';
   document.getElementById('grandRow').style.display = vatRate === 0 ? 'none' : 'block';
 }
