@@ -35,34 +35,44 @@
     display: none;
   }
   /* لجعل الصور ثابتة الحجم في الجدول */
-.table img {
-  display: block;
-  width: 80px;          /* عرض ثابت */
-  height: 80px;         /* ارتفاع ثابت */
-  object-fit: cover;    /* يجعل الصورة تغطي المساحة مع القص إذا كانت كبيرة */
-  border-radius: 4px;   /* اختياري: حواف مدورة */
-  margin-top: 5px;
-  cursor: pointer;      /* يجعل الماوس يظهر كأنه قابل للنقر */
-}
-
-/* لمنع تمدد الخانات */
-.table td {
-  vertical-align: middle;
-  white-space: nowrap;   /* يمنع التفاف النصوص */
-}
-
-/* لجعل label كامل الحجم متجاوب */
-.custom-file-upload {
+/* لجعل الصور في الجدول بحجم ثابت وصندوق موحد */
+.table td label.custom-file-upload {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  width: 100px;        /* عرض الصندوق */
+  height: 100px;       /* ارتفاع الصندوق */
   border: 1px dashed #ccc;
   padding: 5px;
   cursor: pointer;
-  height: 100px; /* نفس ارتفاع الصورة */
   overflow: hidden;
+  box-sizing: border-box;
+  border-radius: 8px;  /* اختياري: حواف مدورة */
+  background-color: #f9f9f9;
 }
+
+/* الصورة نفسها */
+.table td label.custom-file-upload img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* يجعل الصورة تظهر كاملة داخل الصندوق بدون قص */
+  border-radius: 4px;
+}
+
+/* أيقونة ونص قبل رفع الصورة */
+.table td label.custom-file-upload i,
+.table td label.custom-file-upload span {
+  position: absolute;   /* تظهر فوق الصورة قبل الاختيار */
+  pointer-events: none; /* لا تمنع النقر على input */
+}
+
+/* إخفاء النص والأيقونة بعد رفع الصورة */
+.table td label.custom-file-upload img[src] ~ i,
+.table td label.custom-file-upload img[src] ~ span {
+  display: none;
+}
+
 
 </style>
 
