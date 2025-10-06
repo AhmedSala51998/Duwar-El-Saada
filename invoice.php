@@ -1,24 +1,36 @@
 <?php 
 require __DIR__.'/partials/header.php'; 
 
-$id = (int)($_GET['id'] ?? 0);
+// جلب الـ purchase من الرابط
+$purchaseId = (int)($_GET['id'] ?? 0);
+$purchaseStmt = $pdo->prepare("SELECT * FROM purchases WHERE id=?");
+$purchaseStmt->execute([$purchaseId]);
+$purchase = $purchaseStmt->fetch();
 
-// بيانات الفاتورة الرئيسية
-$orderStmt = $pdo->prepare("SELECT * FROM orders_purchases WHERE id=?");
-$orderStmt->execute([$id]);
-$order = $orderStmt->fetch();
-
-if (!$order) { 
-    echo "<div class='alert alert-warning'>الفاتورة غير موجودة</div>"; 
+if (!$purchase) { 
+    echo "<div class='alert alert-warning'>المشتريات غير موجودة</div>"; 
     require __DIR__.'/partials/footer.php'; 
     exit; 
 }
 
-// بيانات الأصناف المرتبطة بالفاتورة
-$itemsStmt = $pdo->prepare("SELECT * FROM purchases WHERE order_id=?");
-$itemsStmt->execute([$id]);
-$items = $itemsStmt->fetchAll();
+// التحقق من وجود فاتورة مرتبطة
+$orderId = $purchase['order_id'] ?? null;
+if ($orderId) {
+    $orderStmt = $pdo->prepare("SELECT * FROM orders_purchases WHERE id=?");
+    $orderStmt->execute([$orderId]);
+    $order = $orderStmt->fetch();
+
+    // جلب كل المشتريات المرتبطة بنفس الفاتورة
+    $itemsStmt = $pdo->prepare("SELECT * FROM purchases WHERE order_id=?");
+    $itemsStmt->execute([$orderId]);
+    $items = $itemsStmt->fetchAll();
+} else {
+     echo "<div class='alert alert-warning'>الفاتورة غير موجودة</div>"; 
+    require __DIR__.'/partials/footer.php'; 
+    exit; 
+}
 ?>
+
 
 <style>
 @media print {
