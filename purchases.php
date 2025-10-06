@@ -522,7 +522,7 @@ document.getElementById('addRow').addEventListener('click', function() {
     <td>
       <label class="custom-file-upload w-100">
         <i class="bi bi-cloud-arrow-up"></i>
-        <span id="file-text-prod-${rowIndex}">اختر صورة للمنتج</span>
+        <span id="file-text-prod-${rowIndex}"></span>
         <input type="file" name="product_image[]" accept="image/*"
                onchange="previewFile(this,'file-text-prod-${rowIndex}','preview-prod-${rowIndex}')">
         <img id="preview-prod-${rowIndex}" style="display:none; max-width:80px; margin-top:5px"/>
@@ -531,7 +531,7 @@ document.getElementById('addRow').addEventListener('click', function() {
     <td>
       <label class="custom-file-upload w-100">
         <i class="bi bi-receipt"></i>
-        <span id="file-text-inv-${rowIndex}">اختر صورة للفاتورة</span>
+        <span id="file-text-inv-${rowIndex}"></span>
         <input type="file" name="invoice_image[]" accept="image/*"
                onchange="previewFile(this,'file-text-inv-${rowIndex}','preview-inv-${rowIndex}')">
         <img id="preview-inv-${rowIndex}" style="display:none; max-width:80px; margin-top:5px"/>
