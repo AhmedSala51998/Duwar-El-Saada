@@ -66,9 +66,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
                 }
             }
 
-            // التحديث في قاعدة البيانات
+            // التحديث في purchases
             $pdo->prepare("
-                UPDATE purchases SET name=?, quantity=?, unit=?, price=?, product_image=?, invoice_image=?, payer_name=?, payment_source=? 
+                UPDATE purchases 
+                SET name=?, quantity=?, unit=?, price=?, product_image=?, invoice_image=?, payer_name=?, payment_source=? 
                 WHERE id=?
             ")->execute([
                 $newData['name'],
@@ -82,7 +83,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
                 $id
             ]);
 
-            $_SESSION['toast'] = ['type'=>'success','msg'=>'تم تعديل العملية بنجاح'];
+            // ✅ إعادة حساب إجمالي الفاتورة
+            if (!empty($oldData['order_id'])) {
+                $orderId = $oldData['order_id'];
+
+                // جمع كل الأصناف المرتبطة بالفاتورة
+                $stmtItems = $pdo->prepare("SELECT quantity, price FROM purchases WHERE order_id=?");
+                $stmtItems->execute([$orderId]);
+                $items = $stmtItems->fetchAll(PDO::FETCH_ASSOC);
+
+                $total = 0;
+                foreach ($items as $item) {
+                    $total += $item['quantity'] * $item['price'];
+                }
+
+                // افترض أن الضريبة ثابتة 15%
+                $vat = $total * 0.15;
+                $allTotal = $total + $vat;
+
+                // تحديث جدول orders_purchases
+                $pdo->prepare("UPDATE orders_purchases SET total=?, vat=?, all_total=? WHERE id=?")
+                    ->execute([$total, $vat, $allTotal, $orderId]);
+            }
+
+            $_SESSION['toast'] = ['type'=>'success','msg'=>'تم تعديل العملية وحساب الفاتورة بنجاح'];
 
         } else {
             $_SESSION['toast'] = ['type'=>'info','msg'=>'لا توجد تغييرات للحفظ'];
