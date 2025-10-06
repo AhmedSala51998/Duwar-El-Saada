@@ -1,3 +1,4 @@
+```php
 <?php 
 require __DIR__.'/partials/header.php'; 
 
@@ -33,6 +34,8 @@ if ($orderId) {
   body * { visibility: hidden; }
   .print-area, .print-area * { visibility: visible; }
   .print-area { position: absolute; left: 0; top: 0; width: 100%; }
+  select#vatRate { display: none !important; }
+  #vatRateText { display: inline !important; }
 }
 
 .print-area {
@@ -84,6 +87,11 @@ select#vatRate {
   border-radius: 4px;
   padding: 4px 8px;
 }
+
+#vatRateText { 
+  display: none; 
+  font-weight: bold;
+}
 </style>
 
 <div class="d-print-none mb-3">
@@ -117,8 +125,6 @@ select#vatRate {
         <th>المجموع الفرعي</th>
         <th>الضريبة 15%</th>
         <th>الإجمالي بعد الضريبة</th>
-        <!--<th>صورة المنتج</th>
-        <th>فاتورة المنتج</th>-->
       </tr>
     </thead>
     <tbody>
@@ -135,16 +141,6 @@ select#vatRate {
         <td class="subtotal"><?= number_format($subtotal,2) ?> ريال</td>
         <td class="vat"><?= number_format($vat,2) ?> ريال</td>
         <td class="total"><?= number_format($total,2) ?> ريال</td>
-        <!--<td>
-          <?php if($item['product_image']): ?>
-            <img src="uploads/<?= esc($item['product_image']) ?>" style="width:60px; height:60px; object-fit:cover; border-radius:4px;">
-          <?php endif; ?>
-        </td>
-        <td>
-          <?php if($item['invoice_image']): ?>
-            <img src="uploads/<?= esc($item['invoice_image']) ?>" style="width:60px; height:60px; object-fit:cover; border-radius:4px;">
-          <?php endif; ?>
-        </td>-->
       </tr>
       <?php endforeach; ?>
     </tbody>
@@ -157,16 +153,21 @@ select#vatRate {
         <option value="0">0%</option>
         <option value="0.15" selected>15%</option>
       </select>
+      <span id="vatRateText">15%</span>
     </div>
     <div><strong>المجموع:</strong> <span id="totalNoVat">0.00</span> ريال</div>
     <div id="vatRow"><strong>الضريبة:</strong> <span id="vatValue">0.00</span> ريال</div>
-    <div><strong>الإجمالي بعد الضريبة:</strong> <span id="grandTotal">0.00</span> ريال</div>
+    <div id="grandRow"><strong>الإجمالي بعد الضريبة:</strong> <span id="grandTotal">0.00</span> ريال</div>
   </div>
 </div>
 
 <script>
 function recalcTotals() {
-  const vatRate = parseFloat(document.getElementById('vatRate').value);
+  const vatRateEl = document.getElementById('vatRate');
+  const vatTextEl = document.getElementById('vatRateText');
+  const vatRate = parseFloat(vatRateEl.value);
+  vatTextEl.textContent = vatRate === 0 ? '0%' : '15%';
+
   let total = 0;
   document.querySelectorAll('#invoiceTable tbody tr').forEach(tr => {
     const qty = parseFloat(tr.dataset.qty);
@@ -183,10 +184,14 @@ function recalcTotals() {
 
   const vatValue = total * vatRate;
   const grand = total + vatValue;
+  
   document.getElementById('totalNoVat').textContent = total.toLocaleString(undefined, {minimumFractionDigits:2});
   document.getElementById('vatValue').textContent = vatValue.toLocaleString(undefined, {minimumFractionDigits:2});
   document.getElementById('grandTotal').textContent = grand.toLocaleString(undefined, {minimumFractionDigits:2});
+
+  // إخفاء أو إظهار الصفوف حسب الضريبة
   document.getElementById('vatRow').style.display = vatRate === 0 ? 'none' : 'block';
+  document.getElementById('grandRow').style.display = vatRate === 0 ? 'none' : 'block';
 }
 
 document.getElementById('vatRate').addEventListener('change', recalcTotals);
@@ -194,3 +199,4 @@ window.addEventListener('DOMContentLoaded', recalcTotals);
 </script>
 
 <?php require __DIR__.'/partials/footer.php'; ?>
+```
