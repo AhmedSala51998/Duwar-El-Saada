@@ -26,6 +26,9 @@ if ($orderId) {
     require __DIR__.'/partials/footer.php'; 
     exit; 
 }
+
+// نسبة الضريبة حسب قاعدة البيانات
+$vatRate = ($order['vat'] > 0) ? 0.15 : 0.00;
 ?>
 
 <style>
@@ -128,7 +131,7 @@ select#vatRate {
     <tbody>
       <?php foreach($items as $item): 
         $subtotal = $item['quantity'] * $item['price'];
-        $vat = $subtotal * 0.15;
+        $vat = $subtotal * $vatRate;
         $total = $subtotal + $vat;
       ?>
       <tr data-qty="<?= $item['quantity'] ?>" data-price="<?= $item['price'] ?>">
@@ -146,11 +149,11 @@ select#vatRate {
   <div class="invoice-summary">
     <div>
       <strong>نسبة الضريبة:</strong>
-      <select id="vatRate">
-        <option value="0">0%</option>
-        <option value="0.15" selected>15%</option>
+      <select id="vatRate" data-order-id="<?= $orderId ?>">
+        <option value="0" <?= $vatRate == 0 ? 'selected' : '' ?>>0%</option>
+        <option value="0.15" <?= $vatRate == 0.15 ? 'selected' : '' ?>>15%</option>
       </select>
-      <span id="vatRateText">15%</span>
+      <span id="vatRateText"><?= $vatRate == 0 ? '0%' : '15%' ?></span>
     </div>
     <div><strong>المجموع:</strong> <span id="totalNoVat">0.00</span> ريال</div>
     <div id="vatRow"><strong>الضريبة:</strong> <span id="vatValue">0.00</span> ريال</div>
@@ -159,10 +162,12 @@ select#vatRate {
 </div>
 
 <script>
-function recalcTotals() {
+function recalcTotals(saveToDB = false) {
   const vatRateEl = document.getElementById('vatRate');
   const vatTextEl = document.getElementById('vatRateText');
   const vatRate = parseFloat(vatRateEl.value);
+  const orderId = vatRateEl.dataset.orderId;
+
   vatTextEl.textContent = vatRate === 0 ? '0%' : '15%';
 
   let subtotalAll = 0;
@@ -190,10 +195,22 @@ function recalcTotals() {
 
   document.getElementById('vatRow').style.display = vatRate === 0 ? 'none' : 'block';
   document.getElementById('grandRow').style.display = vatRate === 0 ? 'none' : 'block';
+
+  // حفظ التغيير في قاعدة البيانات
+  if (saveToDB) {
+    fetch('update_vat.php', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: `order_id=${orderId}&vat=${vatValue}&all_total=${grandTotal}`
+    })
+    .then(res => res.text())
+    .then(console.log)
+    .catch(console.error);
+  }
 }
 
-document.getElementById('vatRate').addEventListener('change', recalcTotals);
-window.addEventListener('DOMContentLoaded', recalcTotals);
+document.getElementById('vatRate').addEventListener('change', () => recalcTotals(true));
+window.addEventListener('DOMContentLoaded', () => recalcTotals(false));
 </script>
 
 <?php require __DIR__.'/partials/footer.php'; ?>
