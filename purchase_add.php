@@ -79,24 +79,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
 
 function upload_image($field, $index = null) {
     if ($index !== null) {
-        if (!isset($_FILES[$field]['name'][$index]) || $_FILES[$field]['error'][$index] !== UPLOAD_ERR_OK) {
-            return null;
+        // إذا الملف موجود وتم رفعه بنجاح
+        if (isset($_FILES[$field]['name'][$index]) && $_FILES[$field]['error'][$index] === UPLOAD_ERR_OK) {
+            $fileTmp = $_FILES[$field]['tmp_name'][$index];
+            $fileName = time() . "_" . basename($_FILES[$field]['name'][$index]);
+            $target = __DIR__ . "/uploads/" . $fileName;
+            move_uploaded_file($fileTmp, $target);
+            return $fileName;
+        } else {
+            return null; // لو مفيش صورة، نرجع null بدون أي مشكلة
         }
-        $fileTmp = $_FILES[$field]['tmp_name'][$index];
-        $fileName = time() . "_" . basename($_FILES[$field]['name'][$index]);
     } else {
-        if (empty($_FILES[$field]['name']) || $_FILES[$field]['error'] !== UPLOAD_ERR_OK) {
+        if (!empty($_FILES[$field]['name']) && $_FILES[$field]['error'] === UPLOAD_ERR_OK) {
+            $fileTmp = $_FILES[$field]['tmp_name'];
+            $fileName = time() . "_" . basename($_FILES[$field]['name']);
+            $target = __DIR__ . "/uploads/" . $fileName;
+            move_uploaded_file($fileTmp, $target);
+            return $fileName;
+        } else {
             return null;
         }
-        $fileTmp = $_FILES[$field]['tmp_name'];
-        $fileName = time() . "_" . basename($_FILES[$field]['name']);
     }
-
-    $target = __DIR__ . "/uploads/" . $fileName;
-    move_uploaded_file($fileTmp, $target);
-    return $fileName;
 }
-
 
 header('Location: ' . BASE_URL . '/purchases.php');
 exit;
