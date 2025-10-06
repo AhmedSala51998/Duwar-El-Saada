@@ -264,7 +264,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
 <div class="modal fade" id="addM">
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
-      <form method="post" action="purchase_add_multi.php" enctype="multipart/form-data">
+      <form method="post" action="purchase_add" enctype="multipart/form-data">
         <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
 
         <div class="modal-header">
@@ -299,25 +299,24 @@ $can_edit = in_array(current_role(), ['admin','manager']);
                 </td>
                 <td><input type="number" step="0.01" name="price[]" class="form-control"></td>
                 <td>
-                    <label class="custom-file-upload w-100">
-                      <i class="bi bi-cloud-arrow-up"></i>
-                      <span id="file-text-prod-0">اختر صورة للمنتج</span>
-                      <input type="file" name="product_image[]" accept="image/*"
-                            onchange="previewFile(this,'file-text-prod-0','preview-prod-0')">
-                      <img id="preview-prod-0" style="display:none; max-width:80px; margin-top:5px"/>
-                    </label>
-                  </td>
-
-                  <!-- صورة الفاتورة -->
-                  <td>
-                    <label class="custom-file-upload w-100">
-                      <i class="bi bi-receipt"></i>
-                      <span id="file-text-inv-0">اختر صورة للفاتورة</span>
-                      <input type="file" name="invoice_image[]" accept="image/*"
-                            onchange="previewFile(this,'file-text-inv-0','preview-inv-0')">
-                      <img id="preview-inv-0" style="display:none; max-width:80px; margin-top:5px"/>
-                    </label>
-                  </td>
+                  <label class="custom-file-upload w-100">
+                    <i class="bi bi-cloud-arrow-up"></i>
+                    <span id="file-text-prod-0">اختر صورة للمنتج</span>
+                    <input type="file" name="product_image[]" accept="image/*"
+                           onchange="previewFile(this,'file-text-prod-0','preview-prod-0')">
+                    <img id="preview-prod-0" style="display:none; max-width:80px; margin-top:5px"/>
+                  </label>
+                </td>
+                <td>
+                  <label class="custom-file-upload w-100">
+                    <i class="bi bi-receipt"></i>
+                    <span id="file-text-inv-0">اختر صورة للفاتورة</span>
+                    <input type="file" name="invoice_image[]" accept="image/*"
+                           onchange="previewFile(this,'file-text-inv-0','preview-inv-0')">
+                    <img id="preview-inv-0" style="display:none; max-width:80px; margin-top:5px"/>
+                  </label>
+                </td>
+                <td>
                   <select name="payer_name[]" class="form-select payer-select">
                     <option hidden>اختر</option>
                     <option>شركة</option><option>مؤسسة</option>
@@ -447,27 +446,79 @@ document.addEventListener('shown.bs.modal', function(event) {
 
 </script>
 <script>
-document.getElementById('addRow').addEventListener('click', function(){
-  const table = document.querySelector('#itemsTable tbody');
-  const newRow = table.rows[0].cloneNode(true);
+// preview image
+function previewFile(input, textId, previewId) {
+  const file = input.files[0];
+  if (file) {
+    document.getElementById(textId).textContent = file.name;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const preview = document.getElementById(previewId);
+      preview.src = e.target.result;
+      preview.style.display = "block";
+    };
+    reader.readAsDataURL(file);
+  }
+}
 
-  // امسح القيم من الصف الجديد
-  newRow.querySelectorAll('input, select').forEach(el => {
-    if(el.type === 'file') el.value = "";
-    else el.value = "";
-  });
+// add new row
+let rowIndex = 1;
+document.getElementById('addRow').addEventListener('click', function() {
+  const tbody = document.querySelector('#itemsTable tbody');
+  const newRow = document.createElement('tr');
 
-  table.appendChild(newRow);
+  newRow.innerHTML = `
+    <td><input name="name[]" class="form-control" required></td>
+    <td><input type="number" step="0.001" name="quantity[]" class="form-control" required></td>
+    <td>
+      <select name="unit[]" class="form-select">
+        <option>عدد</option><option>جرام</option>
+        <option>كيلو</option><option>لتر</option>
+      </select>
+    </td>
+    <td><input type="number" step="0.01" name="price[]" class="form-control"></td>
+    <td>
+      <label class="custom-file-upload w-100">
+        <i class="bi bi-cloud-arrow-up"></i>
+        <span id="file-text-prod-${rowIndex}">اختر صورة للمنتج</span>
+        <input type="file" name="product_image[]" accept="image/*"
+               onchange="previewFile(this,'file-text-prod-${rowIndex}','preview-prod-${rowIndex}')">
+        <img id="preview-prod-${rowIndex}" style="display:none; max-width:80px; margin-top:5px"/>
+      </label>
+    </td>
+    <td>
+      <label class="custom-file-upload w-100">
+        <i class="bi bi-receipt"></i>
+        <span id="file-text-inv-${rowIndex}">اختر صورة للفاتورة</span>
+        <input type="file" name="invoice_image[]" accept="image/*"
+               onchange="previewFile(this,'file-text-inv-${rowIndex}','preview-inv-${rowIndex}')">
+        <img id="preview-inv-${rowIndex}" style="display:none; max-width:80px; margin-top:5px"/>
+      </label>
+    </td>
+    <td>
+      <select name="payer_name[]" class="form-select payer-select">
+        <option hidden>اختر</option>
+        <option>شركة</option><option>مؤسسة</option>
+        <option>فيصل المطيري</option><option>بسام</option>
+      </select>
+    </td>
+    <td>
+      <select name="payment_source[]" class="form-select payment-source-select">
+        <option hidden>اختر</option>
+        <option>مالك</option><option>كاش</option><option>بنك</option>
+      </select>
+    </td>
+    <td><button type="button" class="btn btn-danger btn-sm remove-row">✖</button></td>
+  `;
+
+  tbody.appendChild(newRow);
+  rowIndex++;
 });
 
-// زر الحذف
-document.addEventListener('click', function(e){
-  if(e.target.classList.contains('remove-row')){
-    const row = e.target.closest('tr');
-    const table = document.querySelector('#itemsTable tbody');
-    if(table.rows.length > 1){ // ما تمسحش الصف الأخير
-      row.remove();
-    }
+// remove row
+document.addEventListener('click', function(e) {
+  if (e.target.classList.contains('remove-row')) {
+    e.target.closest('tr').remove();
   }
 });
 </script>
