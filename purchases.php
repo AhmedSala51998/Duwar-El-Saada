@@ -413,34 +413,36 @@ document.querySelector('#importExcel form').addEventListener('submit', function(
 </script>
 <script>
 // استمع لظهور المودال
-document.addEventListener('shown.bs.modal', function(event) {
+document.addEventListener('shown.bs.modal', function (event) {
   const modal = event.target;
 
-  const payerSelect = modal.querySelector('.payer-select');
-  const paymentSelect = modal.querySelector('.payment-source-select');
+  // نسمع لأي تغيير في أي payer-select داخل المودال
+  modal.addEventListener('change', function (e) {
+    if (e.target && e.target.classList.contains('payer-select')) {
+      const payerSelect = e.target;
+      const row = payerSelect.closest('tr'); // الصف الحالي
+      const paymentSelect = row.querySelector('.payment-source-select');
+      const payer = payerSelect.value;
 
-  if(!payerSelect || !paymentSelect) return;
+      if (!payer || !paymentSelect) return;
 
-  payerSelect.addEventListener('change', function() {
-    const payer = this.value;
-    if(!payer) return;
+      fetch('get_custody_amount.php?person_name=' + encodeURIComponent(payer))
+        .then(res => res.json())
+        .then(data => {
+          // إزالة أي خيار عهدة قديم
+          const existing = paymentSelect.querySelector('option[data-custody]');
+          if (existing) existing.remove();
 
-    fetch('get_custody_amount.php?person_name=' + encodeURIComponent(payer))
-      .then(res => res.json())
-      .then(data => {
-        // إزالة أي خيار عهدة قديم
-        const existing = paymentSelect.querySelector('option[data-custody]');
-        if(existing) existing.remove();
-
-        if(data.amount && data.amount > 0){
-          const option = document.createElement('option');
-          option.value = 'عهدة';
-          option.textContent = 'عهدة (الرصيد: ' + parseFloat(data.amount).toFixed(2) + ')';
-          option.setAttribute('data-custody','1');
-          paymentSelect.appendChild(option);
-        }
-      })
-      .catch(err => console.error(err));
+          if (data.amount && data.amount > 0) {
+            const option = document.createElement('option');
+            option.value = 'عهدة';
+            option.textContent = 'عهدة (الرصيد: ' + parseFloat(data.amount).toFixed(2) + ')';
+            option.setAttribute('data-custody', '1');
+            paymentSelect.appendChild(option);
+          }
+        })
+        .catch(err => console.error(err));
+    }
   });
 });
 

@@ -92,7 +92,7 @@ function upload_image($field, $index = null) {
         $fileName = time() . "_" . basename($_FILES[$field]['name']);
     }
 
-    $target = __DIR__ . "uploads/" . $fileName;
+    $target = __DIR__ . "/uploads/" . $fileName;
     move_uploaded_file($fileTmp, $target);
     return $fileName;
 }
