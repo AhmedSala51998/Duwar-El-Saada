@@ -198,7 +198,7 @@ function recalcTotals(saveToDB = false) {
 
   // حفظ التغيير في قاعدة البيانات
   if (saveToDB) {
-    fetch('update_vat.php', {
+    fetch('update_vat', {
       method: 'POST',
       headers: {'Content-Type': 'application/x-www-form-urlencoded'},
       body: `order_id=${orderId}&vat=${vatValue}&all_total=${grandTotal}`
