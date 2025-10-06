@@ -313,6 +313,10 @@ $can_edit = in_array(current_role(), ['admin','manager']);
         </div>
 
         <div class="modal-body">
+          <div class="mb-3">
+            <label>اسم المورد</label>
+            <input type="text" name="supplier_name" class="form-control" id="supplier_name" required>
+          </div>
           <table class="table table-bordered" id="itemsTable">
             <thead>
               <tr>

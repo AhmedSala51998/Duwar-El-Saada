@@ -10,7 +10,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
     $sources = $_POST['payment_source'] ?? [];
     $quantities = $_POST['quantity'] ?? [];
     $prices = $_POST['price'] ?? [];
+    $supplier_name = trim($_POST['supplier_name'] ?? ''); // من حقل الإدخال للفاتورة
 
+    // حساب المجموع الكلي قبل إدخال الصفوف
+    $total = 0;
+    foreach ($names as $i => $name) {
+        $q = (float)($quantities[$i] ?? 0);
+        $p = (float)($prices[$i] ?? 0);
+        $total += $q * $p;
+    }
+
+    $vat = $total * 0.15; // 15%
+    $all_total = $total + $vat;
+    $created_at = date('Y-m-d H:i:s');
+
+    // إنشاء رقم فاتورة فريد
+    do {
+        $invoice_number = rand(100000, 999999);
+        $checkInvoice = $pdo->prepare("SELECT COUNT(*) FROM orders_purchases WHERE invoice_number=?");
+        $checkInvoice->execute([$invoice_number]);
+        $exists = $checkInvoice->fetchColumn();
+    } while($exists > 0);
+
+    // إدخال الفاتورة في orders_purchases
+    $stmtOrder = $pdo->prepare("
+        INSERT INTO orders_purchases (invoice_number, supplier_name, total, vat, all_total, created_at)
+        VALUES (?, ?, ?, ?, ?, ?)
+    ");
+    $stmtOrder->execute([$invoice_number, $supplier_name, $total, $vat, $all_total, $created_at]);
+
+    // الحصول على id الفاتورة الجديدة
+    $order_id = $pdo->lastInsertId();
+
+    // إدخال كل المشتريات وربطها بالـ order_id
     foreach ($names as $i => $name) {
         $name = trim($name);
         $unit = $units[$i] ?? '';
@@ -19,45 +51,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
         $quantity = (float)($quantities[$i] ?? 0);
         $price = (float)($prices[$i] ?? 0);
 
-        if (!$name || !$unit) continue; // تجاهل أي صف فاضي
+        if (!$name || !$unit) continue; // تجاهل الصفوف الفارغة
 
-        // تحقق من التكرار
-        $check = $pdo->prepare("SELECT COUNT(*) FROM purchases WHERE name=? AND unit=? AND payer_name=?");
-        $check->execute([$name, $unit, $payer]);
-        $exists = $check->fetchColumn();
-
-        if ($exists > 0) {
-            $_SESSION['toast'] = [
-                'type' => 'warning',
-                'msg'  => "⚠️ الصنف ($name) موجود بالفعل"
-            ];
-            continue;
-        }
-
-        // خصم العهدة لو مصدر الدفع "عهدة"
-        if($payment_source === 'عهدة'){
-            $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? ORDER BY taken_at DESC LIMIT 1");
-            $stmtC->execute([$payer]);
-            $custody = $stmtC->fetch();
-            if($custody && $custody['amount'] >= $price){
-                $newAmount = $custody['amount'] - $price;
-                $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
-            } else {
-                $_SESSION['toast'] = [
-                    'type' => 'danger',
-                    'msg'  => "❌ رصيد العهدة غير كافي للصنف ($name)"
-                ];
-                continue;
-            }
-        }
-
-        // رفع الصور (لو في ملف لكل صنف)
+        // رفع الصور
         $productImage = upload_image('product_image', $i);
         $invoiceImage = upload_image('invoice_image', $i);
 
         $stmt = $pdo->prepare("
-            INSERT INTO purchases (name, quantity, unit, price, product_image, invoice_image, payer_name, payment_source) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO purchases 
+            (name, quantity, unit, price, product_image, invoice_image, payer_name, payment_source, order_id) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         ");
         $stmt->execute([
             $name,
@@ -67,28 +70,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
             $productImage,
             $invoiceImage,
             $payer,
-            $payment_source
+            $payment_source,
+            $order_id
         ]);
     }
 
     $_SESSION['toast'] = [
         'type' => 'success',
-        'msg'  => '✅ تم حفظ جميع الأصناف'
+        'msg'  => "✅ تم حفظ الفاتورة ورصد جميع الأصناف"
     ];
+    header('Location: ' . BASE_URL . '/purchases.php');
+    exit;
 }
 
+// دالة رفع الصور كما لديك
 function upload_image($field, $index = null) {
     if ($index !== null) {
-        // إذا الملف موجود وتم رفعه بنجاح
         if (isset($_FILES[$field]['name'][$index]) && $_FILES[$field]['error'][$index] === UPLOAD_ERR_OK) {
             $fileTmp = $_FILES[$field]['tmp_name'][$index];
             $fileName = time() . "_" . basename($_FILES[$field]['name'][$index]);
             $target = __DIR__ . "/uploads/" . $fileName;
             move_uploaded_file($fileTmp, $target);
             return $fileName;
-        } else {
-            return null; // لو مفيش صورة، نرجع null بدون أي مشكلة
         }
+        return null;
     } else {
         if (!empty($_FILES[$field]['name']) && $_FILES[$field]['error'] === UPLOAD_ERR_OK) {
             $fileTmp = $_FILES[$field]['tmp_name'];
@@ -96,11 +101,7 @@ function upload_image($field, $index = null) {
             $target = __DIR__ . "/uploads/" . $fileName;
             move_uploaded_file($fileTmp, $target);
             return $fileName;
-        } else {
-            return null;
         }
+        return null;
     }
 }
-
-header('Location: ' . BASE_URL . '/purchases.php');
-exit;
