@@ -1,4 +1,3 @@
-```php
 <?php 
 require __DIR__.'/partials/header.php'; 
 
@@ -199,4 +198,3 @@ window.addEventListener('DOMContentLoaded', recalcTotals);
 </script>
 
 <?php require __DIR__.'/partials/footer.php'; ?>
-```
