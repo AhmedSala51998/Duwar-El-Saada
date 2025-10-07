@@ -10,10 +10,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
     $old->execute([$id]);
     $oldData = $old->fetch(PDO::FETCH_ASSOC);
 
+    $quantity = (float)($_POST['quantity'] ?? 0);
     $price = (float)($_POST['price'] ?? 0);
+    $total_price = $price * $quantity; // السعر × الكمية
+
     $has_vat = isset($_POST['has_vat']) ? (int)$_POST['has_vat'] : 0;
-    $vat_value = $has_vat ? $price*0.15 : 0;
-    $total_amount = $price + $vat_value;
+    $vat_value = $has_vat ? $total_price * 0.15 : 0;
+    $total_amount = $total_price + $vat_value;
+
 
     $newData = [
         'name' => trim($_POST['name']),
