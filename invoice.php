@@ -29,6 +29,9 @@ if ($orderId) {
 
 // نسبة الضريبة حسب قاعدة البيانات
 $vatRate = ($order['vat'] > 0) ? 0.15 : 0.00;
+
+// صورة الفاتورة العامة (إن وجدت)
+$invoiceImage = $items[0]['invoice_image'] ?? null;
 ?>
 
 <style>
@@ -72,16 +75,38 @@ $vatRate = ($order['vat'] > 0) ? 0.15 : 0.00;
 
 .logo { width: 80px; }
 
+.invoice-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row-reverse;
+  margin-bottom: 15px;
+}
+
 .invoice-info {
   text-align: right;
   line-height: 1.8;
-  margin-top: 10px;
 }
 
 .invoice-summary {
   margin-top: 20px;
   text-align: right;
   line-height: 1.8;
+}
+
+.invoice-serial {
+  font-weight: bold;
+  color: #000;
+  font-size: 1.1em;
+  margin-top: 5px;
+}
+
+.invoice-image {
+  max-width: 100%;
+  margin: 15px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 1px 1px 5px rgba(0,0,0,0.1);
 }
 
 select#vatRate {
@@ -103,7 +128,14 @@ select#vatRate {
 </div>
 
 <div class="print-area">
-  <div class="d-flex justify-content-between align-items-center mb-3" style="flex-direction: row-reverse;">
+  <!-- شعار + عنوان + رقم تسلسلي -->
+  <div class="d-flex flex-column align-items-center mb-3">
+    <img src="assets/logo.svg" class="logo mb-1" alt="Logo">
+    <h2 style="font-weight:bold; color:#000; margin:0;">فاتورة مشتريات</h2>
+    <div class="invoice-serial">Serial: <?= esc($order['invoice_serial'] ?? $order['invoice_number']) ?></div>
+  </div>
+
+  <div class="invoice-header">
     <div class="text-end invoice-info">
       <div><strong>المورد:</strong> <?= esc($order['supplier_name']) ?></div>
       <div><strong>رقم الفاتورة:</strong> <?= esc($order['invoice_number']) ?></div>
@@ -117,14 +149,14 @@ select#vatRate {
         </span>
       </div>
     </div>
-    <div class="d-flex align-items-center gap-2">
-      <h2>فاتورة مشتريات</h2>
-      <img src="assets/logo.svg" class="logo" alt="Logo">
-    </div>
   </div>
 
-  <hr>
+  <!-- صورة الفاتورة -->
+  <?php if($invoiceImage): ?>
+    <img src="uploads/<?= esc($invoiceImage) ?>" alt="Invoice Image" class="invoice-image">
+  <?php endif; ?>
 
+  <!-- جدول الأصناف -->
   <table id="invoiceTable">
     <thead>
       <tr>
@@ -154,6 +186,7 @@ select#vatRate {
     </tbody>
   </table>
 
+  <!-- الملخص -->
   <div class="invoice-summary">
     <div>
       <strong>نسبة الضريبة:</strong>
@@ -204,39 +237,29 @@ function recalcTotals(saveToDB = false) {
   document.getElementById('vatRow').style.display = vatRate === 0 ? 'none' : 'block';
   document.getElementById('grandRow').style.display = vatRate === 0 ? 'none' : 'block';
 
-  // حفظ التغيير في قاعدة البيانات
   if (saveToDB) {
     fetch('update_vat', {
       method: 'POST',
       headers: {'Content-Type': 'application/x-www-form-urlencoded'},
       body: `order_id=${orderId}&vat=${vatValue}&all_total=${grandTotal}`
-    })
-    .then(res => res.text())
-    .then(console.log)
-    .catch(console.error);
+    }).then(res => res.text()).then(console.log).catch(console.error);
   }
 }
 
 document.getElementById('vatRate').addEventListener('change', () => recalcTotals(true));
 window.addEventListener('DOMContentLoaded', () => recalcTotals(false));
-</script>
-<script>
-  const dateInput = document.getElementById('invoiceDate');
-  const dateText = document.getElementById('invoiceDateText');
 
-  dateInput.addEventListener('change', function() {
+const dateInput = document.getElementById('invoiceDate');
+const dateText = document.getElementById('invoiceDateText');
+dateInput.addEventListener('change', function() {
     const newDate = this.value;
     dateText.textContent = newDate;
-
-    // حفظ التعديل في قاعدة البيانات
     fetch('update_invoice_date', {
       method: 'POST',
       headers: {'Content-Type': 'application/x-www-form-urlencoded'},
       body: `order_id=${this.dataset.orderId}&date=${newDate}`
-    })
-    .then(res => res.text())
-    .then(console.log)
-    .catch(console.error);
-  });
+    }).then(res => res.text()).then(console.log).catch(console.error);
+});
 </script>
+
 <?php require __DIR__.'/partials/footer.php'; ?>
