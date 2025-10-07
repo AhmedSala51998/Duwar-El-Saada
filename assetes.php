@@ -354,13 +354,13 @@ document.addEventListener('shown.bs.modal', function(event){
 });
 </script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  const hasVat = document.getElementById('asset_has_vat');
-  const price = document.querySelector('input[name="price"]');
-  const quantity = document.querySelector('input[name="quantity"]');
-  const vatSection = document.getElementById('asset_vat_section');
-  const vatPercent = document.getElementById('asset_vat_percent');
-  const totalWithVat = document.getElementById('asset_total_with_vat');
+function setupAssetVAT(modal) {
+  const hasVat = modal.querySelector('#asset_has_vat');
+  const price = modal.querySelector('input[name="price"]');
+  const quantity = modal.querySelector('input[name="quantity"]');
+  const vatSection = modal.querySelector('#asset_vat_section');
+  const vatPercent = modal.querySelector('#asset_vat_percent');
+  const totalWithVat = modal.querySelector('#asset_total_with_vat');
 
   function updateTotal() {
     const amt = parseFloat(price.value) || 0;
@@ -382,5 +382,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
   price.addEventListener('input', updateTotal);
   quantity.addEventListener('input', updateTotal);
+
+  // حدث أولي لتحديث المجموع عند فتح المودال
+  updateTotal();
+}
+
+// استمع لظهور المودال
+document.addEventListener('shown.bs.modal', function(event) {
+  if(event.target.id === 'add'){ // تأكد ان ده مودال الأصول
+    setupAssetVAT(event.target);
+  }
 });
 </script>
+
