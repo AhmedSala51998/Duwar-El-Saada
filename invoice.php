@@ -31,7 +31,7 @@ if ($orderId) {
 $vatRate = ($order['vat'] > 0) ? 0.15 : 0.00;
 
 // صورة الفاتورة العامة (إن وجدت)
-$invoiceImage = $items[0]['invoice_image'] ?? null;
+$invoiceImage = $order['invoice_image'] ?? null;
 ?>
 
 <style>
