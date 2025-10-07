@@ -121,6 +121,22 @@ select#vatRate {
   display: none; 
   font-weight: bold;
 }
+.invoice-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-direction: row-reverse; /* RTL */
+}
+.invoice-image {
+    max-width: 150px; /* حجم أصغر مناسب */
+    cursor: pointer;   /* يظهر أنها قابلة للنقر */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 1px 1px 5px rgba(0,0,0,0.1);
+    float: left; /* تجعلها على اليمين في الاتجاه RTL */
+    margin-left: 15px;
+}
+
 </style>
 
 <div class="d-print-none mb-3">
@@ -149,12 +165,13 @@ select#vatRate {
         </span>
       </div>
     </div>
+    <?php if($invoiceImage): ?>
+    <a href="uploads/<?= esc($invoiceImage) ?>" target="_blank">
+      <img src="uploads/<?= esc($invoiceImage) ?>" alt="Invoice Image" class="invoice-image">
+    </a>
+    <?php endif; ?>
   </div>
 
-  <!-- صورة الفاتورة -->
-  <?php if($invoiceImage): ?>
-    <img src="uploads/<?= esc($invoiceImage) ?>" alt="Invoice Image" class="invoice-image">
-  <?php endif; ?>
 
   <!-- جدول الأصناف -->
   <table id="invoiceTable">
