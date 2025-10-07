@@ -127,15 +127,18 @@ select#vatRate {
   align-items: flex-start;
   flex-direction: row-reverse; /* RTL */
 }
+
 .invoice-image {
-    max-width: 250px; /* حجم أصغر مناسب */
-    cursor: pointer;   /* يظهر أنها قابلة للنقر */
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-shadow: 1px 1px 5px rgba(0,0,0,0.1);
-    float: left; /* تجعلها على اليمين في الاتجاه RTL */
-    margin-left: 15px;
+  width: 250px;           /* عرض ثابت */
+  height: auto;           /* يحافظ على النسبة */
+  cursor: pointer;        /* يظهر أنها قابلة للنقر */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 1px 1px 5px rgba(0,0,0,0.1);
+  margin-left: 15px;      /* مسافة بين البيانات والصورة */
+  flex-shrink: 0;         /* لا يتقلص */
 }
+
 
 </style>
 
@@ -151,26 +154,25 @@ select#vatRate {
     <div class="invoice-serial">الرقم التسلسلي: <?= esc($order['invoice_serial'] ?? $order['invoice_number']) ?></div>
   </div>
 
-  <div class="invoice-header">
-    <div class="text-end invoice-info">
-      <div><strong>المورد:</strong> <?= esc($order['supplier_name']) ?></div>
-      <div><strong>رقم الفاتورة:</strong> <?= esc($order['invoice_number']) ?></div>
-      <div><strong>الدافع:</strong> <?= esc($purchase['payer_name']) ?></div>
-      <div><strong>مصدر الدفع:</strong> <?= esc($purchase['payment_source']) ?></div>
-      <div>
-        <strong>التاريخ:</strong>
-        <input type="date" id="invoiceDate" value="<?= date('Y-m-d', strtotime($order['created_at'])) ?>" data-order-id="<?= $orderId ?>" style="border:1px solid #ccc; border-radius:4px; padding:2px 6px;">
-        <span id="invoiceDateText" style="display:none; font-weight:bold;">
-          <?= date('Y-m-d', strtotime($order['created_at'])) ?>
-        </span>
-      </div>
+<div class="invoice-header">
+  <div class="text-end invoice-info" style="flex:1">
+    <div><strong>المورد:</strong> <?= esc($order['supplier_name']) ?></div>
+    <div><strong>رقم الفاتورة:</strong> <?= esc($order['invoice_number']) ?></div>
+    <div><strong>الدافع:</strong> <?= esc($purchase['payer_name']) ?></div>
+    <div><strong>مصدر الدفع:</strong> <?= esc($purchase['payment_source']) ?></div>
+    <div>
+      <strong>التاريخ:</strong>
+      <input type="date" id="invoiceDate" value="<?= date('Y-m-d', strtotime($order['created_at'])) ?>" data-order-id="<?= $orderId ?>" style="border:1px solid #ccc; border-radius:4px; padding:2px 6px;">
+      <span id="invoiceDateText" style="display:none; font-weight:bold;"><?= date('Y-m-d', strtotime($order['created_at'])) ?></span>
     </div>
-    <?php if($invoiceImage): ?>
+  </div>
+
+  <?php if($invoiceImage): ?>
     <a href="uploads/<?= esc($invoiceImage) ?>" target="_blank">
       <img src="uploads/<?= esc($invoiceImage) ?>" alt="Invoice Image" class="invoice-image">
     </a>
-    <?php endif; ?>
-  </div>
+  <?php endif; ?>
+</div>
 
 
   <!-- جدول الأصناف -->
