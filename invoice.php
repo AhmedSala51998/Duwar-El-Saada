@@ -132,7 +132,7 @@ select#vatRate {
   <div class="d-flex flex-column align-items-center mb-3">
     <img src="assets/logo.svg" class="logo mb-1" alt="Logo">
     <h2 style="font-weight:bold; color:#000; margin:0;">فاتورة مشتريات</h2>
-    <div class="invoice-serial">Serial: <?= esc($order['invoice_serial'] ?? $order['invoice_number']) ?></div>
+    <div class="invoice-serial">الرقم التسلسلي: <?= esc($order['invoice_serial'] ?? $order['invoice_number']) ?></div>
   </div>
 
   <div class="invoice-header">
