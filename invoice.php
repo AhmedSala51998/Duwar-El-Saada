@@ -138,7 +138,11 @@ select#vatRate {
   margin-left: 15px;      /* مسافة بين البيانات والصورة */
   flex-shrink: 0;         /* لا يتقلص */
 }
-
+.invoice-summary {
+    margin-top: 20px;
+    text-align: left; /* بدل right */
+    line-height: 1.8;
+}
 
 </style>
 
@@ -183,8 +187,9 @@ select#vatRate {
         <th>الكمية</th>
         <th>الوحدة</th>
         <th>السعر</th>
+        <th>الاجمالي</th>
         <th>الضريبة</th>
-        <th>الإجمالي</th>
+        <th>الاجمالي بعد الضريبه</th>
       </tr>
     </thead>
     <tbody>
@@ -198,6 +203,7 @@ select#vatRate {
         <td><?= esc($item['quantity']) ?></td>
         <td><?= esc($item['unit']) ?></td>
         <td><?= number_format($item['price'],2) ?> ريال</td>
+        <td><?= number_format($item['total'],2) ?> ريال</td>
         <td class="vat"><?= number_format($vat,2) ?> ريال</td>
         <td class="total"><?= number_format($total,2) ?> ريال</td>
       </tr>
