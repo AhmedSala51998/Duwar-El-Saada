@@ -532,24 +532,6 @@ document.getElementById('addRow').addEventListener('click', function() {
     </td>
     <td><input type="number" step="0.01" name="price[]" class="form-control"></td>
     <td>
-      <label class="custom-file-upload w-100">
-        <i class="bi bi-cloud-arrow-up"></i>
-        <span id="file-text-prod-${rowIndex}"></span>
-        <input type="file" name="product_image[]" accept="image/*"
-               onchange="previewFile(this,'file-text-prod-${rowIndex}','preview-prod-${rowIndex}')">
-        <img id="preview-prod-${rowIndex}" style="display:none; max-width:80px; margin-top:5px"/>
-      </label>
-    </td>
-    <td>
-      <label class="custom-file-upload w-100">
-        <i class="bi bi-receipt"></i>
-        <span id="file-text-inv-${rowIndex}"></span>
-        <input type="file" name="invoice_image[]" accept="image/*"
-               onchange="previewFile(this,'file-text-inv-${rowIndex}','preview-inv-${rowIndex}')">
-        <img id="preview-inv-${rowIndex}" style="display:none; max-width:80px; margin-top:5px"/>
-      </label>
-    </td>
-    <td>
       <select name="payer_name[]" class="form-select payer-select">
         <option hidden>اختر</option>
         <option>شركة</option><option>مؤسسة</option>
