@@ -317,6 +317,10 @@ $can_edit = in_array(current_role(), ['admin','manager']);
             <label>اسم المورد</label>
             <input type="text" name="supplier_name" class="form-control" id="supplier_name" required>
           </div>
+          <div class="mb-3">
+            <label>تاريخ الفاتورة</label>
+            <input type="date" name="invoice_date" class="form-control" id="invoice_date" required>
+          </div>
           <table class="table table-bordered" id="itemsTable">
             <thead>
               <tr>

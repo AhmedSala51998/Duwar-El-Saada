@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
 
     $vat = $total * 0.15; // 15%
     $all_total = $total + $vat;
-    $created_at = date('Y-m-d H:i:s');
+    $created_at = $_POST['invoice_date'] ? $_POST['invoice_date'] . ' ' . date('H:i:s') : date('Y-m-d H:i:s');
 
     // إنشاء رقم فاتورة فريد
     do {
