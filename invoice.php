@@ -129,7 +129,7 @@ select#vatRate {
 }
 
 .invoice-image {
-  width: 250px;           /* عرض ثابت */
+  width: 350px;           /* عرض ثابت */
   height: auto;           /* يحافظ على النسبة */
   cursor: pointer;        /* يظهر أنها قابلة للنقر */
   border: 1px solid #ccc;
