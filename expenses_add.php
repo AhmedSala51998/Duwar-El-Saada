@@ -8,6 +8,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
     $sub_expense  = trim($_POST['sub_expense']);
     $expense_desc = trim($_POST['expense_desc']);
     $expense_amount = (float)($_POST['expense_amount'] ?? 0);
+    $has_vat = isset($_POST['has_vat']) ? (int)$_POST['has_vat'] : 0;
+    $vat_value = 0;
+    $total_amount = $expense_amount;
+
+    if ($has_vat) {
+        $vat_value = $expense_amount * 0.15;
+        $total_amount = $expense_amount + $vat_value;
+    }
+
     $payment_source = $_POST['payment_source'] ?? 'كاش';
     $payer_name = $_POST['payer_name'] ?? null;
 
@@ -25,12 +34,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
         }
     }
 
-    $pdo->prepare("INSERT INTO expenses(main_expense, sub_expense, expense_desc, expense_amount, expense_file,payer_name, payment_source) VALUES(?,?,?,?,?,? , ?)")
+    $pdo->prepare("INSERT INTO expenses(main_expense, sub_expense, expense_desc, expense_amount, vat_value, total_amount, has_vat, expense_file, payer_name, payment_source)
+                VALUES(?,?,?,?,?,?,?,?,?,?)")
         ->execute([
             $main_expense,
             $sub_expense,
             $expense_desc,
             $expense_amount,
+            $vat_value,
+            $total_amount,
+            $has_vat,
             upload_image('expense_file'),
             $payer_name,
             $payment_source

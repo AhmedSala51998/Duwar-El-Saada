@@ -70,6 +70,8 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 <th>نوع المصروف</th>
 <th>بيان المصروف</th>
 <th>قيمة المصروف</th>
+<th>الضريبة (15%)</th>
+<th>الإجمالي بعد الضريبة</th>
 <th>الدافع</th>
 <th>مصدر الدفع</th>
 <th>المرفق</th>
@@ -83,7 +85,23 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 <td><?= esc($r['main_expense']) ?></td>
 <td><?= esc($r['sub_expense']) ?></td>
 <td><?= esc($r['expense_desc']) ?></td>
-<td><?= number_format((float)$r['expense_amount'],2) ?></td>
+<td><?= number_format((float)$r['expense_amount'], 2) ?></td>
+
+<td>
+  <?php if (!empty($r['has_vat']) && $r['has_vat'] == 1): ?>
+    <?= number_format((float)$r['vat_value'], 2) ?>
+  <?php else: ?>
+    <span class="text-muted small">بدون</span>
+  <?php endif; ?>
+</td>
+
+<td>
+  <?php if (!empty($r['has_vat']) && $r['has_vat'] == 1): ?>
+    <?= number_format((float)$r['total_amount'], 2) ?>
+  <?php else: ?>
+    <?= number_format((float)$r['expense_amount'], 2) ?>
+  <?php endif; ?>
+</td>
 <td><?= esc($r['payer_name'] ?? '') ?></td>
 <td><?= esc($r['payment_source'] ?? '') ?></td>
 <td><?php if($r['expense_file']): ?><img src="uploads/<?= esc($r['expense_file']) ?>" width="50"><?php endif; ?></td>
@@ -230,6 +248,24 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
             <option value="بنك">بنك</option>
             <option value="كاش">كاش</option>
           </select>
+
+          <label>هل المصروف عليه ضريبة؟</label>
+          <select id="has_vat" name="has_vat" class="form-select">
+            <option value="0" selected>لا</option>
+            <option value="1">نعم</option>
+          </select>
+
+          <label>قيمة المصروف</label>
+          <input type="number" step="0.01" id="expense_amount" name="expense_amount" class="form-control" placeholder="المبلغ" required>
+
+          <div id="vat_section" style="display:none;">
+            <label>نسبة الضريبة (٪)</label>
+            <input type="number" step="0.01" id="vat_percent" name="vat_percent" value="15" class="form-control" readonly>
+
+            <label>إجمالي بعد الضريبة</label>
+            <input type="text" id="total_with_vat" class="form-control" readonly>
+          </div>
+
 
           <label>المرفق</label>
           <label class="custom-file-upload w-100">
@@ -411,6 +447,34 @@ if(mainAdd){
                  'hidden_sub_expense_add');
 }
 
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const hasVatSelect = document.getElementById('has_vat');
+  const expenseAmount = document.getElementById('expense_amount');
+  const vatSection = document.getElementById('vat_section');
+  const vatPercent = document.getElementById('vat_percent');
+  const totalWithVat = document.getElementById('total_with_vat');
+
+  function updateTotal() {
+    const amount = parseFloat(expenseAmount.value) || 0;
+    const vatRate = parseFloat(vatPercent.value) || 0;
+    if (hasVatSelect.value === '1') {
+      const total = amount + (amount * vatRate / 100);
+      totalWithVat.value = total.toFixed(2);
+    } else {
+      totalWithVat.value = amount.toFixed(2);
+    }
+  }
+
+  hasVatSelect.addEventListener('change', () => {
+    if (hasVatSelect.value === '1') vatSection.style.display = 'block';
+    else vatSection.style.display = 'none';
+    updateTotal();
+  });
+
+  expenseAmount.addEventListener('input', updateTotal);
+});
 </script>
 
 <?php require __DIR__.'/partials/footer.php'; ?>
