@@ -51,31 +51,35 @@ function renderSection($title, $rows, $columns, &$totalBefore, &$totalVat, &$tot
 // ---------------------------- المشتريات (تفصيل المنتجات) ----------------------------
 $stmt = $pdo->prepare("SELECT 
                           name,
-                          (price * quantity) AS before,
-                          (price * quantity * 0.15) AS vat,
-                          (price * quantity * 1.15) AS after
+                          (price * quantity) AS `before`,
+                          (price * quantity * 0.15) AS `vat`,
+                          (price * quantity * 1.15) AS `after`
                        FROM purchases
                        WHERE 1=1 $dateFilter");
+
 $stmt->execute($params);
 $purchases = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // ---------------------------- المصروفات ----------------------------
 // ---------------------------- المصروفات ----------------------------
 $stmt = $pdo->prepare("SELECT 
-                              CONCAT(main_expense, ' - ', sub_expense) AS name, 
-                              expense_amount AS before, 
-                              (CASE WHEN has_vat=1 THEN expense_amount*0.15 ELSE 0 END) AS vat, 
-                              (CASE WHEN has_vat=1 THEN expense_amount*1.15 ELSE expense_amount END) AS after 
-                       FROM expenses 
-                       WHERE 1=1 $dateFilter");
+    CONCAT(main_expense, ' - ', sub_expense) AS name, 
+    expense_amount AS `before`, 
+    (CASE WHEN has_vat=1 THEN expense_amount*0.15 ELSE 0 END) AS `vat`, 
+    (CASE WHEN has_vat=1 THEN expense_amount*1.15 ELSE expense_amount END) AS `after` 
+    FROM expenses WHERE 1=1 $dateFilter
+    ");
 $stmt->execute($params);
 $expenses = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // ---------------------------- الأصول ----------------------------
-$stmt = $pdo->prepare("SELECT name, (price*quantity) AS before, 
-                              (CASE WHEN has_vat=1 THEN price*quantity*0.15 ELSE 0 END) AS vat, 
-                              (CASE WHEN has_vat=1 THEN price*quantity*1.15 ELSE price*quantity END) AS after 
-                       FROM assets WHERE 1=1 $dateFilter");
+$stmt = $pdo->prepare("SELECT 
+  name, 
+  (price*quantity) AS `before`, 
+  (CASE WHEN has_vat=1 THEN price*quantity*0.15 ELSE 0 END) AS `vat`, 
+  (CASE WHEN has_vat=1 THEN price*quantity*1.15 ELSE price*quantity END) AS `after`
+FROM assets WHERE 1=1 $dateFilter
+");
 $stmt->execute($params);
 $assets = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
