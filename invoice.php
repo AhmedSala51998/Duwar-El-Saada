@@ -38,6 +38,8 @@ $vatRate = ($order['vat'] > 0) ? 0.15 : 0.00;
   .print-area { position: absolute; left: 0; top: 0; width: 100%; }
   select#vatRate { display: none !important; }
   #vatRateText { display: inline !important; }
+  #invoiceDate { display: none !important; }
+  #invoiceDateText { display: inline !important; }
 }
 
 .print-area {
@@ -107,7 +109,13 @@ select#vatRate {
       <div><strong>رقم الفاتورة:</strong> <?= esc($order['invoice_number']) ?></div>
       <div><strong>الدافع:</strong> <?= esc($purchase['payer_name']) ?></div>
       <div><strong>مصدر الدفع:</strong> <?= esc($purchase['payment_source']) ?></div>
-      <div><strong>التاريخ:</strong> <?= esc($order['created_at']) ?></div>
+      <div>
+        <strong>التاريخ:</strong>
+        <input type="date" id="invoiceDate" value="<?= date('Y-m-d', strtotime($order['created_at'])) ?>" data-order-id="<?= $orderId ?>" style="border:1px solid #ccc; border-radius:4px; padding:2px 6px;">
+        <span id="invoiceDateText" style="display:none; font-weight:bold;">
+          <?= date('Y-m-d', strtotime($order['created_at'])) ?>
+        </span>
+      </div>
     </div>
     <div class="d-flex align-items-center gap-2">
       <h2>فاتورة مشتريات</h2>
@@ -212,5 +220,23 @@ function recalcTotals(saveToDB = false) {
 document.getElementById('vatRate').addEventListener('change', () => recalcTotals(true));
 window.addEventListener('DOMContentLoaded', () => recalcTotals(false));
 </script>
+<script>
+  const dateInput = document.getElementById('invoiceDate');
+  const dateText = document.getElementById('invoiceDateText');
 
+  dateInput.addEventListener('change', function() {
+    const newDate = this.value;
+    dateText.textContent = newDate;
+
+    // حفظ التعديل في قاعدة البيانات
+    fetch('update_invoice_date', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: `order_id=${this.dataset.orderId}&date=${newDate}`
+    })
+    .then(res => res.text())
+    .then(console.log)
+    .catch(console.error);
+  });
+</script>
 <?php require __DIR__.'/partials/footer.php'; ?>
