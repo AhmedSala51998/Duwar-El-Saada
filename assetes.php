@@ -147,59 +147,70 @@ $can_edit = in_array(current_role(), ['admin','manager']);
             </div>
 
             <div class="modal-body vstack gap-3">
-              <div><label class="form-label">الاسم</label>
-                <input name="name" class="form-control" value="<?= esc($r['name']) ?>" required>
-              </div>
-              <div><label class="form-label">النوع</label>
-                <input name="type" class="form-control" value="<?= esc($r['type']) ?>">
-              </div>
-              <div><label class="form-label">العدد</label>
-                <input type="number" name="quantity" class="form-control" value="<?= (int)$r['quantity'] ?>" min="1">
-              </div>
-              <div><label class="form-label">السعر</label>
-                <input type="number" step="0.01" name="price" class="form-control" value="<?= esc($r['price']) ?>">
+              <label>الاسم</label>
+              <input name="name" class="form-control" value="<?= esc($r['name']) ?>" required>
+
+              <label>النوع</label>
+              <input name="type" class="form-control" value="<?= esc($r['type']) ?>">
+
+              <label>العدد</label>
+              <input type="number" name="quantity" class="form-control" value="<?= (int)$r['quantity'] ?>" min="1">
+
+              <label>السعر</label>
+              <input type="number" step="0.01" name="price" id="price_edit_<?= $r['id'] ?>" class="form-control" 
+                    value="<?= esc($r['price']) ?>" oninput="updateAssetVat('<?= $r['id'] ?>')">
+
+              <label>هل الأصل عليه ضريبة؟</label>
+              <select name="has_vat" id="has_vat_edit_<?= $r['id'] ?>" class="form-select" onchange="updateAssetVat('<?= $r['id'] ?>')">
+                <option value="0" <?= ($r['has_vat']==0)?'selected':'' ?>>لا</option>
+                <option value="1" <?= ($r['has_vat']==1)?'selected':'' ?>>نعم</option>
+              </select>
+
+              <div id="vat_section_edit_<?= $r['id'] ?>" style="<?= $r['has_vat'] ? '' : 'display:none;' ?>">
+                <label>نسبة الضريبة (٪)</label>
+                <input type="number" step="0.01" name="vat_percent" id="vat_percent_edit_<?= $r['id'] ?>" value="15" class="form-control" readonly>
+
+                <label>إجمالي بعد الضريبة</label>
+                <input type="text" id="total_with_vat_edit_<?= $r['id'] ?>" class="form-control" readonly
+                      value="<?= $r['has_vat'] ? number_format($r['total_amount'],2) : number_format($r['price'],2) ?>">
               </div>
 
-              <div><label class="form-label">اسم الدافع</label>
-                <select name="payer_name" class="form-control payer-select" data-id="<?= $r['id'] ?>">
-                  <option hidden>اختر الدافع</option>
-                  <?php foreach(['شركة','مؤسسة','فيصل المطيري','بسام'] as $payer): ?>
-                    <option <?= $r['payer_name']===$payer?'selected':'' ?>><?= $payer ?></option>
-                  <?php endforeach; ?>
-                </select>
-              </div>
+              <label>اسم الدافع</label>
+              <select name="payer_name" class="form-control payer-select" data-id="<?= $r['id'] ?>">
+                <option hidden>اختر الدافع</option>
+                <?php foreach(['شركة','مؤسسة','فيصل المطيري','بسام'] as $payer): ?>
+                  <option <?= $r['payer_name']===$payer?'selected':'' ?>><?= $payer ?></option>
+                <?php endforeach; ?>
+              </select>
 
-              <div><label class="form-label">مصدر الدفع</label>
-                <select name="payment_source" class="form-control payment-source-select" id="payment_source_<?= $r['id'] ?>">
-                  <option hidden>اختر مصدر الدفع</option>
-                  <option value="مالك" <?= $r['payment_source']=='مالك'?'selected':'' ?>>مالك</option>
-                  <option value="كاش" <?= $r['payment_source']=='كاش'?'selected':'' ?>>كاش</option>
-                  <option value="بنك" <?= $r['payment_source']=='بنك'?'selected':'' ?>>بنك</option>
-                  <?php
-                    $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? ORDER BY taken_at DESC LIMIT 1");
-                    $stmtC->execute([$r['payer_name']]);
-                    $custody = $stmtC->fetch();
-                    if($custody && $custody['amount']>0){
-                      echo '<option value="عهدة" '.($r['payment_source']=='عهدة'?'selected':'').'>عهدة ('.$custody['amount'].' ريال)</option>';
-                    }
-                  ?>
-                </select>
-              </div>
+              <label>مصدر الدفع</label>
+              <select name="payment_source" class="form-control payment-source-select" id="payment_source_<?= $r['id'] ?>">
+                <option hidden>اختر مصدر الدفع</option>
+                <option value="مالك" <?= $r['payment_source']=='مالك'?'selected':'' ?>>مالك</option>
+                <option value="كاش" <?= $r['payment_source']=='كاش'?'selected':'' ?>>كاش</option>
+                <option value="بنك" <?= $r['payment_source']=='بنك'?'selected':'' ?>>بنك</option>
+                <?php
+                  $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? ORDER BY taken_at DESC LIMIT 1");
+                  $stmtC->execute([$r['payer_name']]);
+                  $custody = $stmtC->fetch();
+                  if($custody && $custody['amount']>0){
+                    echo '<option value="عهدة" '.($r['payment_source']=='عهدة'?'selected':'').'>عهدة ('.$custody['amount'].' ريال)</option>';
+                  }
+                ?>
+              </select>
 
-              <div>
-                <label class="form-label">صورة</label>
-                <label class="custom-file-upload w-100">
-                  <i class="bi bi-image"></i>
-                  <span id="file-text-edit-<?= $r['id'] ?>">اختر صورة</span>
-                  <input type="file" name="image" id="asset_image_edit_<?= $r['id'] ?>" accept="image/*"
-                        onchange="previewFile(this,'file-text-edit-<?= $r['id'] ?>','preview-edit-<?= $r['id'] ?>')">
-                  <?php if(!empty($r['image'])): ?>
-                    <img id="preview-edit-<?= $r['id'] ?>" src="<?= 'uploads/'.esc($r['image']) ?>" style="max-width:100px;margin-top:8px;"/>
-                  <?php else: ?>
-                    <img id="preview-edit-<?= $r['id'] ?>" style="display:none;max-width:100px;margin-top:8px;"/>
-                  <?php endif; ?>
-                </label>
-              </div>
+              <label>صورة</label>
+              <label class="custom-file-upload w-100">
+                <i class="bi bi-image"></i>
+                <span id="file-text-edit-<?= $r['id'] ?>">اختر صورة</span>
+                <input type="file" name="image" id="asset_image_edit_<?= $r['id'] ?>" accept="image/*"
+                      onchange="previewFile(this,'file-text-edit-<?= $r['id'] ?>','preview-edit-<?= $r['id'] ?>')">
+                <?php if(!empty($r['image'])): ?>
+                  <img id="preview-edit-<?= $r['id'] ?>" src="<?= 'uploads/'.esc($r['image']) ?>" style="max-width:100px;margin-top:8px;"/>
+                <?php else: ?>
+                  <img id="preview-edit-<?= $r['id'] ?>" style="display:none;max-width:100px;margin-top:8px;"/>
+                <?php endif; ?>
+              </label>
             </div>
 
             <div class="modal-footer">
@@ -393,5 +404,17 @@ document.addEventListener('shown.bs.modal', function(event) {
     setupAssetVAT(event.target);
   }
 });
+</script>
+<script>
+function updateAssetVat(id){
+  const price = parseFloat(document.getElementById('price_edit_'+id).value) || 0;
+  const hasVat = document.getElementById('has_vat_edit_'+id).value == '1';
+  const vatSection = document.getElementById('vat_section_edit_'+id);
+  const totalField = document.getElementById('total_with_vat_edit_'+id);
+  const vatPercent = 15;
+
+  vatSection.style.display = hasVat ? 'block' : 'none';
+  totalField.value = hasVat ? (price + price*vatPercent/100).toFixed(2) : price.toFixed(2);
+}
 </script>
 
