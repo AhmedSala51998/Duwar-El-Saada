@@ -6,29 +6,32 @@ $kw = trim($_GET['kw'] ?? '');
 $from_date = $_GET['from_date'] ?? '';
 $to_date = $_GET['to_date'] ?? '';
 
-$q = "SELECT id, name, quantity, unit, price, payer_name, payment_source, created_at 
-      FROM purchases WHERE 1";
-$params = [];
+$q = "SELECT p.*, o.invoice_serial 
+      FROM purchases p
+      LEFT JOIN orders_purchases o ON p.order_id = o.id
+      WHERE 1";
 
+$params = [];
 if($kw !== '') { 
-    $q .= " AND name LIKE ?"; 
+    $q .= " AND p.name LIKE ?"; 
     $params[] = "%$kw%"; 
 }
 
 if($from_date !== '') {
-    $q .= " AND DATE(created_at) >= ?";
+    $q .= " AND DATE(p.created_at) >= ?";
     $params[] = $from_date;
 }
 if($to_date !== '') {
-    $q .= " AND DATE(created_at) <= ?";
+    $q .= " AND DATE(p.created_at) <= ?";
     $params[] = $to_date;
 }
 
-$q .= " ORDER BY id DESC";
+$q .= " ORDER BY p.id DESC";
 
 $s = $pdo->prepare($q); 
 $s->execute($params);
 $rows = $s->fetchAll();
+
 ?>
 <!doctype html>
 <html lang="ar" dir="rtl">
@@ -57,6 +60,7 @@ h3{margin:0}
 <thead>
 <tr>
 <th>#</th>
+<th>رقم تسلسلي</th>
 <th>الاسم</th>
 <th>الكمية</th>
 <th>الوحدة</th>
@@ -70,6 +74,7 @@ h3{margin:0}
 <?php foreach($rows as $r): ?>
 <tr>
   <td><?= $r['id'] ?></td>
+  <td><?= esc($r['invoice_serial'] ?? '-') ?></td>
   <td><?= esc($r['name']) ?></td>
   <td><?= $r['quantity'] ?></td>
   <td><?= esc($r['unit']) ?></td>

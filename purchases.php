@@ -105,14 +105,26 @@
 
 <?php
 $kw = trim($_GET['kw'] ?? '');
-$q = "SELECT * FROM purchases WHERE 1";
+
+$q = "SELECT p.*, o.invoice_serial 
+      FROM purchases p 
+      LEFT JOIN orders_purchases o ON p.order_id = o.id
+      WHERE 1";
+
 $params = [];
-if($kw!==''){ $q .= " AND name LIKE ?"; $params[] = "%$kw%"; }
-$q .= " ORDER BY id DESC";
+if($kw !== '') { 
+    $q .= " AND p.name LIKE ?"; 
+    $params[] = "%$kw%"; 
+}
+
+$q .= " ORDER BY p.id DESC";
+
 $stmt = $pdo->prepare($q); 
 $stmt->execute($params); 
 $rows = $stmt->fetchAll();
+
 $can_edit = in_array(current_role(), ['admin','manager']);
+
 ?>
 
 <div class="d-flex flex-wrap gap-2 justify-content-between align-items-center mb-3">
@@ -140,7 +152,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
 <table class="table table-hover align-middle">
   <thead class="table-light">
     <tr>
-      <th>#</th><th>صورة</th><th>الاسم</th><th>الكمية</th><th>الوحدة</th><th>السعر</th><th>التاريخ</th><th>فاتورة</th><th>الدافع</th><th>مصدر الدفع</th>
+      <th>#</th><th>رقم تسلسلي</th><th>صورة</th><th>الاسم</th><th>الكمية</th><th>الوحدة</th><th>السعر</th><th>التاريخ</th><th>فاتورة</th><th>الدافع</th><th>مصدر الدفع</th>
       <?php if($can_edit): ?><th>عمليات</th><?php endif; ?>
     </tr>
   </thead>
@@ -148,6 +160,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
     <?php foreach($rows as $r): ?>
     <tr>
       <td><?= $r['id'] ?></td>
+      <td><?= esc($r['invoice_serial'] ?? '-') ?></td>
       <td><?php if($r['product_image']): ?><img src="uploads/<?= esc($r['product_image']) ?>" width="44" class="rounded"><?php endif; ?></td>
       <td><?= esc($r['name']) ?></td>
       <td><span class="badge badge-unit"><?= $r['quantity'] ?></span></td>
