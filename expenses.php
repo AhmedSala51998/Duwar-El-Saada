@@ -502,3 +502,24 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 <script> function toggleVatSection(id){ const hasVat = document.getElementById('has_vat_edit'+id).value; document.getElementById('vat_section_edit'+id).style.display = hasVat == '1' ? 'block' : 'none'; updateVatTotal(id); } function updateVatTotal(id){ const amount = parseFloat(document.getElementById('expense_amount_edit'+id).value) || 0; const vatPercent = 15; const hasVat = document.getElementById('has_vat_edit'+id).value == '1'; const totalField = document.getElementById('total_with_vat_edit'+id); if(hasVat) totalField.value = (amount + (amount * vatPercent / 100)).toFixed(2); else totalField.value = amount.toFixed(2); } </script>
 <?php require __DIR__.'/partials/footer.php'; ?>
+<script>
+  document.querySelectorAll('.modal').forEach(modal=>{
+  modal.addEventListener('show.bs.modal', function(){
+    const id = modal.querySelector('input[name="id"]')?.value;
+    if(!id) return;
+    const mainId = "main_expense_edit"+id;
+    const wrapperId = "sub_expense_edit_wrapper"+id;
+    const hiddenId = "hidden_sub_expense_"+id;
+    const currentSub = editRows.find(x=>x.id==id)?.sub || '';
+    renderSubField(mainId, wrapperId, currentSub, hiddenId);
+
+    // listener لتغيير main_expense داخل المودال
+    document.getElementById(mainId)?.addEventListener("change", function(){
+      const wrapper = document.getElementById(wrapperId);
+      const cur = getCurrentSubVal(wrapper);
+      renderSubField(mainId, wrapperId, cur, hiddenId);
+    });
+  });
+});
+
+</script>
