@@ -18,9 +18,9 @@ if($to_date)   { $dateFilter .= " AND DATE(created_at) <= ?"; $params[] = $to_da
 // ---------------------------- المشتريات ----------------------------
 $stmt = $pdo->prepare("SELECT 
     name,
-    ROUND(price * quantity, 2) AS before,
-    ROUND(price * quantity * 0.15, 2) AS vat,
-    ROUND(price * quantity * 1.15, 2) AS after
+    ROUND(price * quantity, 2) AS `before`,
+    ROUND(price * quantity * 0.15, 2) AS `vat`,
+    ROUND(price * quantity * 1.15, 2) AS `after`
 FROM purchases
 WHERE 1=1 $dateFilter");
 $stmt->execute($params);
@@ -29,9 +29,9 @@ $purchases = $stmt->fetchAll(PDO::FETCH_ASSOC);
 // ---------------------------- المصروفات ----------------------------
 $stmt = $pdo->prepare("SELECT 
     CONCAT(main_expense, ' - ', sub_expense) AS name,
-    ROUND(expense_amount, 2) AS before,
-    ROUND(CASE WHEN has_vat=1 THEN expense_amount * 0.15 ELSE 0 END, 2) AS vat,
-    ROUND(CASE WHEN has_vat=1 THEN expense_amount * 1.15 ELSE expense_amount END, 2) AS after
+    ROUND(expense_amount, 2) AS `before`,
+    ROUND(CASE WHEN has_vat=1 THEN expense_amount * 0.15 ELSE 0 END, 2) AS `vat`,
+    ROUND(CASE WHEN has_vat=1 THEN expense_amount * 1.15 ELSE expense_amount END, 2) AS `after`
 FROM expenses
 WHERE 1=1 $dateFilter");
 $stmt->execute($params);
@@ -40,9 +40,9 @@ $expenses = $stmt->fetchAll(PDO::FETCH_ASSOC);
 // ---------------------------- الأصول ----------------------------
 $stmt = $pdo->prepare("SELECT 
     name,
-    ROUND(price * quantity, 2) AS before,
-    ROUND(CASE WHEN has_vat=1 THEN price * quantity * 0.15 ELSE 0 END, 2) AS vat,
-    ROUND(CASE WHEN has_vat=1 THEN price * quantity * 1.15 ELSE price * quantity END, 2) AS after
+    ROUND(price * quantity, 2) AS `before`,
+    ROUND(CASE WHEN has_vat=1 THEN price * quantity * 0.15 ELSE 0 END, 2) AS `vat`,
+    ROUND(CASE WHEN has_vat=1 THEN price * quantity * 1.15 ELSE price * quantity END, 2) AS `after`
 FROM assets
 WHERE 1=1 $dateFilter");
 $stmt->execute($params);
