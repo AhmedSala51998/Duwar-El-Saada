@@ -95,7 +95,9 @@ $can_edit = in_array(current_role(), ['admin','manager']);
 <table class="table table-hover align-middle">
   <thead class="table-light">
     <tr>
-      <th>#</th><th>صورة</th><th>الاسم</th><th>النوع</th><th>العدد</th><th>السعر</th><th>الدافع</th><th>مصدر الدفع</th>
+      <th>#</th><th>صورة</th><th>الاسم</th><th>النوع</th><th>العدد</th><th>السعر</th><th>الضريبة (15%)</th>
+      <th>الإجمالي بعد الضريبة</th>
+      <th>الدافع</th><th>مصدر الدفع</th>
       <?php if($can_edit): ?><th>عمليات</th><?php endif; ?>
     </tr>
   </thead>
@@ -108,6 +110,18 @@ $can_edit = in_array(current_role(), ['admin','manager']);
       <td><?= esc($r['type']) ?></td>
       <td><?= (int)$r['quantity'] ?></td>
       <td><?= number_format((float)$r['price'],2) ?></td>
+      <td>
+          <?php if (!empty($r['has_vat']) && $r['has_vat'] == 1): ?>
+            <?= number_format((float)$r['vat_value'],2) ?>
+          <?php else: ?>
+            <span class="text-muted small">بدون</span>
+          <?php endif; ?>
+        </td>
+
+        <td>
+          <?= number_format((float)$r['total_amount'],2) ?>
+        </td>
+
       <td><?= esc($r['payer_name']) ?></td>
       <td><?= esc($r['payment_source'] ?? '-') ?></td>
       <?php if($can_edit): ?>
