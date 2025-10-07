@@ -500,5 +500,5 @@ document.addEventListener('DOMContentLoaded', function() {
   expenseAmount.addEventListener('input', updateTotal);
 });
 </script>
-
+<script> function toggleVatSection(id){ const hasVat = document.getElementById('has_vat_edit'+id).value; document.getElementById('vat_section_edit'+id).style.display = hasVat == '1' ? 'block' : 'none'; updateVatTotal(id); } function updateVatTotal(id){ const amount = parseFloat(document.getElementById('expense_amount_edit'+id).value) || 0; const vatPercent = 15; const hasVat = document.getElementById('has_vat_edit'+id).value == '1'; const totalField = document.getElementById('total_with_vat_edit'+id); if(hasVat) totalField.value = (amount + (amount * vatPercent / 100)).toFixed(2); else totalField.value = amount.toFixed(2); } </script>
 <?php require __DIR__.'/partials/footer.php'; ?>
