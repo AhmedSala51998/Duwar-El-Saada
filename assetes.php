@@ -408,13 +408,16 @@ document.addEventListener('shown.bs.modal', function(event) {
 <script>
 function updateAssetVat(id){
   const price = parseFloat(document.getElementById('price_edit_'+id).value) || 0;
+  const quantity = parseFloat(document.getElementById('quantity_edit_'+id).value) || 0; // الكمية
+  const totalPrice = price * quantity; // السعر × الكمية
+
   const hasVat = document.getElementById('has_vat_edit_'+id).value == '1';
   const vatSection = document.getElementById('vat_section_edit_'+id);
   const totalField = document.getElementById('total_with_vat_edit_'+id);
   const vatPercent = 15;
 
   vatSection.style.display = hasVat ? 'block' : 'none';
-  totalField.value = hasVat ? (price + price*vatPercent/100).toFixed(2) : price.toFixed(2);
+  totalField.value = hasVat ? (totalPrice + totalPrice * vatPercent / 100).toFixed(2) : totalPrice.toFixed(2);
 }
 </script>
 
