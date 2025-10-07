@@ -144,8 +144,8 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
         <label>بيان المصروف</label>
         <input name="expense_desc" class="form-control" value="<?= esc($r['expense_desc']) ?>" placeholder="شرح المصروف">
 
-        <!--<label>قيمة المصروف</label>
-        <input type="number" step="0.01" name="expense_amount" class="form-control" value="<?= esc($r['expense_amount']) ?>">-->
+        <label>قيمة المصروف</label>
+        <input type="number" step="0.01" name="expense_amount" class="form-control" value="<?= esc($r['expense_amount']) ?>">
 
         <label>الدافع</label>
         <select name="payer_name" class="form-select payer-select" data-target="payment_source_edit<?= $r['id'] ?>">
@@ -165,8 +165,6 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
             <option value="عهدة" <?= ($r['payment_source']=='عهدة')?'selected':'' ?>>عهدة (رصيد: <?= $custodies[$r['payer_name']] ?>)</option>
           <?php endif; ?>
         </select>
-
-        <label>هل المصروف عليه ضريبة؟</label> <select id="has_vat_edit<?= $r['id'] ?>" name="has_vat" class="form-select" onchange="toggleVatSection('<?= $r['id'] ?>')"> <option value="0" <?= ($r['has_vat']==0)?'selected':'' ?>>لا</option> <option value="1" <?= ($r['has_vat']==1)?'selected':'' ?>>نعم</option> </select> <label>قيمة المصروف</label> <input type="number" step="0.01" id="expense_amount_edit<?= $r['id'] ?>" name="expense_amount" class="form-control" value="<?= esc($r['expense_amount']) ?>" placeholder="المبلغ" required oninput="updateVatTotal('<?= $r['id'] ?>')"> <div id="vat_section_edit<?= $r['id'] ?>" style="<?= $r['has_vat'] ? '' : 'display:none;' ?>"> <label>نسبة الضريبة (٪)</label> <input type="number" step="0.01" id="vat_percent_edit<?= $r['id'] ?>" name="vat_percent" value="15" class="form-control" readonly> <label>إجمالي بعد الضريبة</label> <input type="text" id="total_with_vat_edit<?= $r['id'] ?>" class="form-control" readonly value="<?= $r['has_vat'] ? number_format($r['total_amount'],2) : number_format($r['expense_amount'],2) ?>"> </div>
 
         <label>المرفق</label>
         <label class="custom-file-upload w-100">
