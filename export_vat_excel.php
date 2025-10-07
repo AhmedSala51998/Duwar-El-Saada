@@ -2,6 +2,8 @@
 require __DIR__.'/config/config.php';
 require_auth();
 
+require_once __DIR__.'/libs/SimpleXLSXGen.php';
+
 $from_date = $_GET['from_date'] ?? '';
 $to_date   = $_GET['to_date'] ?? '';
 
@@ -10,32 +12,78 @@ $params = [];
 if($from_date) { $dateFilter .= " AND DATE(created_at) >= ?"; $params[] = $from_date; }
 if($to_date)   { $dateFilter .= " AND DATE(created_at) <= ?"; $params[] = $to_date; }
 
-// ضريبة المشتريات
-$stmt = $pdo->prepare("SELECT SUM(vat) as total_vat FROM orders_purchases WHERE 1=1 $dateFilter");
+// ---------------------------- المشتريات ----------------------------
+$stmt = $pdo->prepare("SELECT 
+    name,
+    ROUND(price * quantity, 2) AS before,
+    ROUND(price * quantity * 0.15, 2) AS vat,
+    ROUND(price * quantity * 1.15, 2) AS after
+FROM purchases
+WHERE 1=1 $dateFilter");
 $stmt->execute($params);
-$purchase_vat = $stmt->fetchColumn() ?: 0;
+$purchases = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// ضريبة المصروفات
-$stmt = $pdo->prepare("SELECT SUM(expense_amount*0.15) as total_vat FROM expenses WHERE 1=1 $dateFilter AND has_vat=1");
+// ---------------------------- المصروفات ----------------------------
+$stmt = $pdo->prepare("SELECT 
+    CONCAT(main_expense, ' - ', sub_expense) AS name,
+    ROUND(expense_amount, 2) AS before,
+    ROUND(CASE WHEN has_vat=1 THEN expense_amount * 0.15 ELSE 0 END, 2) AS vat,
+    ROUND(CASE WHEN has_vat=1 THEN expense_amount * 1.15 ELSE expense_amount END, 2) AS after
+FROM expenses
+WHERE 1=1 $dateFilter");
 $stmt->execute($params);
-$expenses_vat = $stmt->fetchColumn() ?: 0;
+$expenses = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// ضريبة الأصول
-$stmt = $pdo->prepare("SELECT SUM(price*quantity*0.15) as total_vat FROM assets WHERE 1=1 $dateFilter AND has_vat=1");
+// ---------------------------- الأصول ----------------------------
+$stmt = $pdo->prepare("SELECT 
+    name,
+    ROUND(price * quantity, 2) AS before,
+    ROUND(CASE WHEN has_vat=1 THEN price * quantity * 0.15 ELSE 0 END, 2) AS vat,
+    ROUND(CASE WHEN has_vat=1 THEN price * quantity * 1.15 ELSE price * quantity END, 2) AS after
+FROM assets
+WHERE 1=1 $dateFilter");
 $stmt->execute($params);
-$assets_vat = $stmt->fetchColumn() ?: 0;
+$assets = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-$total_vat = $purchase_vat + $expenses_vat + $assets_vat;
+// ---------------------------- تجميع البيانات في ملف Excel ----------------------------
+$data = [];
+$data[] = ["المصدر", "الاسم", "الإجمالي قبل الضريبة", "الضريبة", "الإجمالي بعد"];
 
-require_once __DIR__.'/libs/SimpleXLSXGen.php';
+$totalBefore = $totalVat = $totalAfter = 0;
 
-$data = [
-    ["المصدر", "مجموع الضريبة"],
-    ["المشتريات", $purchase_vat],
-    ["المصروفات", $expenses_vat],
-    ["الأصول", $assets_vat],
-    ["المجموع الكلي", $total_vat]
-];
+// المشتريات
+foreach ($purchases as $r) {
+    $data[] = ["المشتريات", $r['name'], $r['before'], $r['vat'], $r['after']];
+    $totalBefore += $r['before'];
+    $totalVat += $r['vat'];
+    $totalAfter += $r['after'];
+}
 
+// المصروفات
+foreach ($expenses as $r) {
+    $data[] = ["المصروفات", $r['name'], $r['before'], $r['vat'], $r['after']];
+    $totalBefore += $r['before'];
+    $totalVat += $r['vat'];
+    $totalAfter += $r['after'];
+}
+
+// الأصول
+foreach ($assets as $r) {
+    $data[] = ["الأصول", $r['name'], $r['before'], $r['vat'], $r['after']];
+    $totalBefore += $r['before'];
+    $totalVat += $r['vat'];
+    $totalAfter += $r['after'];
+}
+
+// الإجماليات النهائية
+$data[] = [];
+$data[] = ["الإجماليات الكلية", "", 
+            round($totalBefore,2), 
+            round($totalVat,2), 
+            round($totalAfter,2)
+          ];
+
+// إنشاء الملف وتحميله
 $xlsx = Shuchkin\SimpleXLSXGen::fromArray($data);
 $xlsx->downloadAs('vat_report.xlsx');
+?>
