@@ -317,10 +317,12 @@ $can_edit = in_array(current_role(), ['admin','manager']);
             <label>اسم المورد</label>
             <input type="text" name="supplier_name" class="form-control" id="supplier_name" required>
           </div>
+
           <div class="mb-3">
             <label>تاريخ الفاتورة</label>
             <input type="date" name="invoice_date" class="form-control" id="invoice_date" required>
           </div>
+
           <table class="table table-bordered" id="itemsTable">
             <thead>
               <tr>
@@ -328,8 +330,6 @@ $can_edit = in_array(current_role(), ['admin','manager']);
                 <th>الكمية</th>
                 <th>الوحدة</th>
                 <th>السعر</th>
-                <th>صورة المنتج</th>
-                <th>صورة الفاتورة</th>
                 <th>اسم الدافع</th>
                 <th>مصدر الدفع</th>
                 <th>إزالة</th>
@@ -341,47 +341,51 @@ $can_edit = in_array(current_role(), ['admin','manager']);
                 <td><input type="number" step="0.001" name="quantity[]" class="form-control" required></td>
                 <td>
                   <select name="unit[]" class="form-select">
-                    <option>عدد</option><option>جرام</option>
-                    <option>كيلو</option><option>لتر</option>
+                    <option>عدد</option>
+                    <option>جرام</option>
+                    <option>كيلو</option>
+                    <option>لتر</option>
                   </select>
                 </td>
                 <td><input type="number" step="0.01" name="price[]" class="form-control"></td>
                 <td>
-                  <label class="custom-file-upload w-100">
-                    <i class="bi bi-cloud-arrow-up"></i>
-                    <span id="file-text-prod-0"></span>
-                    <input type="file" name="product_image[]" accept="image/*"
-                           onchange="previewFile(this,'file-text-prod-0','preview-prod-0')">
-                    <img id="preview-prod-0" style="display:none; max-width:80px; margin-top:5px"/>
-                  </label>
-                </td>
-                <td>
-                  <label class="custom-file-upload w-100">
-                    <i class="bi bi-receipt"></i>
-                    <span id="file-text-inv-0"></span>
-                    <input type="file" name="invoice_image[]" accept="image/*"
-                           onchange="previewFile(this,'file-text-inv-0','preview-inv-0')">
-                    <img id="preview-inv-0" style="display:none; max-width:80px; margin-top:5px"/>
-                  </label>
-                </td>
-                <td>
                   <select name="payer_name[]" class="form-select payer-select">
                     <option hidden>اختر</option>
-                    <option>شركة</option><option>مؤسسة</option>
-                    <option>فيصل المطيري</option><option>بسام</option>
+                    <option>شركة</option>
+                    <option>مؤسسة</option>
+                    <option>فيصل المطيري</option>
+                    <option>بسام</option>
                   </select>
                 </td>
                 <td>
                   <select name="payment_source[]" class="form-select payment-source-select">
                     <option hidden>اختر</option>
-                    <option>مالك</option><option>كاش</option><option>بنك</option>
+                    <option>مالك</option>
+                    <option>كاش</option>
+                    <option>بنك</option>
                   </select>
                 </td>
-                <td><button type="button" class="btn btn-danger btn-sm remove-row">✖</button></td>
+                <td>
+                  <button type="button" class="btn btn-danger btn-sm remove-row">✖</button>
+                </td>
               </tr>
             </tbody>
           </table>
+
           <button type="button" id="addRow" class="btn btn-secondary">+ إضافة صف جديد</button>
+
+          <hr>
+
+          <div class="mt-4">
+            <label>صورة الفاتورة العامة</label>
+            <label class="custom-file-upload w-100">
+              <i class="bi bi-receipt"></i>
+              <span id="file-text-inv-main"></span>
+              <input type="file" name="invoice_image" accept="image/*"
+                     onchange="previewFile(this,'file-text-inv-main','preview-inv-main')">
+              <img id="preview-inv-main" style="display:none; max-width:150px; margin-top:10px"/>
+            </label>
+          </div>
         </div>
 
         <div class="modal-footer">
