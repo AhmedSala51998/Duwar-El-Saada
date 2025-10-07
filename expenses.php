@@ -255,9 +255,6 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
             <option value="1">نعم</option>
           </select>
 
-          <label>قيمة المصروف</label>
-          <input type="number" step="0.01" id="expense_amount" name="expense_amount" class="form-control" placeholder="المبلغ" required>
-
           <div id="vat_section" style="display:none;">
             <label>نسبة الضريبة (٪)</label>
             <input type="number" step="0.01" id="vat_percent" name="vat_percent" value="15" class="form-control" readonly>
