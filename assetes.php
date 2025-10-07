@@ -259,6 +259,19 @@ $can_edit = in_array(current_role(), ['admin','manager']);
           <div><label class="form-label">السعر</label>
             <input type="number" step="0.01" name="price" class="form-control">
           </div>
+          <label>هل الأصل عليه ضريبة؟</label>
+          <select id="asset_has_vat" name="has_vat" class="form-select">
+            <option value="0" selected>لا</option>
+            <option value="1">نعم</option>
+          </select>
+
+          <div id="asset_vat_section" style="display:none;">
+            <label>نسبة الضريبة (٪)</label>
+            <input type="number" step="0.01" id="asset_vat_percent" name="vat_percent" value="15" class="form-control" readonly>
+
+            <label>إجمالي بعد الضريبة</label>
+            <input type="text" id="asset_total_with_vat" class="form-control" readonly>
+          </div>
           <div><label class="form-label">اسم الدافع</label>
             <select name="payer_name" class="form-control payer-select">
               <option hidden>اختر الدافع</option>
@@ -275,19 +288,6 @@ $can_edit = in_array(current_role(), ['admin','manager']);
               <option>كاش</option>
               <option>بنك</option>
             </select>
-          </div>
-          <label>هل الأصل عليه ضريبة؟</label>
-          <select id="asset_has_vat" name="has_vat" class="form-select">
-            <option value="0" selected>لا</option>
-            <option value="1">نعم</option>
-          </select>
-
-          <div id="asset_vat_section" style="display:none;">
-            <label>نسبة الضريبة (٪)</label>
-            <input type="number" step="0.01" id="asset_vat_percent" name="vat_percent" value="15" class="form-control" readonly>
-
-            <label>إجمالي بعد الضريبة</label>
-            <input type="text" id="asset_total_with_vat" class="form-control" readonly>
           </div>
 
           <div><label class="form-label">صورة</label>
