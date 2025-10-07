@@ -1,4 +1,3 @@
-```php
 <?php
 require __DIR__.'/config/config.php';
 require_auth();
@@ -96,8 +95,8 @@ $totalBefore = 0; $totalVat = 0; $totalAfter = 0;
 <h3>تقرير تفصيلي للضريبة</h3>
 
 <?php
-renderSection("المشتريات", $purchases, ['المورد','الإجمالي قبل الضريبة','الضريبة','الإجمالي بعد'], $totalBefore,$totalVat,$totalAfter);
-renderSection("المصروفات", $expenses, ['الدافع','الإجمالي قبل الضريبة','الضريبة','الإجمالي بعد'], $totalBefore,$totalVat,$totalAfter);
+renderSection("المشتريات", $purchases, ['الاسم','الإجمالي قبل الضريبة','الضريبة','الإجمالي بعد'], $totalBefore,$totalVat,$totalAfter);
+renderSection("المصروفات", $expenses, ['الاسم','الإجمالي قبل الضريبة','الضريبة','الإجمالي بعد'], $totalBefore,$totalVat,$totalAfter);
 renderSection("الأصول", $assets, ['الأصل','الإجمالي قبل الضريبة','الضريبة','الإجمالي بعد'], $totalBefore,$totalVat,$totalAfter);
 ?>
 
@@ -122,4 +121,3 @@ renderSection("الأصول", $assets, ['الأصل','الإجمالي قبل ا
 </script>
 </body>
 </html>
-```
