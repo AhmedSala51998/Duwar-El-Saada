@@ -128,7 +128,7 @@ select#vatRate {
   flex-direction: row-reverse; /* RTL */
 }
 .invoice-image {
-    max-width: 150px; /* حجم أصغر مناسب */
+    max-width: 250px; /* حجم أصغر مناسب */
     cursor: pointer;   /* يظهر أنها قابلة للنقر */
     border: 1px solid #ccc;
     border-radius: 4px;
