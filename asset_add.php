@@ -10,6 +10,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
     $payment_source = $_POST['payment_source'] ?? 'كاش';
     $quantity = (float)($_POST['quantity'] ?? 0);
     $price = (float)($_POST['price'] ?? 0);
+    $has_vat = isset($_POST['has_vat']) ? (int)$_POST['has_vat'] : 0;
+    $vat_value = 0;
+    $total_amount = $price * $quantity;
+
+    if ($has_vat) {
+        $vat_value = $total_amount * 0.15;
+        $total_amount += $vat_value;
+    }
+
     $image = upload_image('image');
 
     // تحقق من التكرار
@@ -35,8 +44,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
             }
         }
 
-        $pdo->prepare("INSERT INTO assets (name, type, quantity, price, payer_name, payment_source, image) VALUES (?, ?, ?, ?, ?, ?, ?)")
-            ->execute([$name, $type, $quantity, $price, $payer, $payment_source, $image]);
+        $pdo->prepare("INSERT INTO assets (name, type, quantity, price, has_vat, vat_value, total_amount, payer_name, payment_source, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+        ->execute([
+            $name,
+            $type,
+            $quantity,
+            $price,
+            $has_vat,
+            $vat_value,
+            $total_amount,
+            $payer,
+            $payment_source,
+            $image
+        ]);
 
         $_SESSION['toast'] = ['type'=>'success','msg'=>'تمت العملية بنجاح'];
     }

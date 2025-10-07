@@ -262,6 +262,20 @@ $can_edit = in_array(current_role(), ['admin','manager']);
               <option>بنك</option>
             </select>
           </div>
+          <label>هل الأصل عليه ضريبة؟</label>
+          <select id="asset_has_vat" name="has_vat" class="form-select">
+            <option value="0" selected>لا</option>
+            <option value="1">نعم</option>
+          </select>
+
+          <div id="asset_vat_section" style="display:none;">
+            <label>نسبة الضريبة (٪)</label>
+            <input type="number" step="0.01" id="asset_vat_percent" name="vat_percent" value="15" class="form-control" readonly>
+
+            <label>إجمالي بعد الضريبة</label>
+            <input type="text" id="asset_total_with_vat" class="form-control" readonly>
+          </div>
+
           <div><label class="form-label">صورة</label>
             <label class="custom-file-upload w-100">
               <i class="bi bi-image"></i>
@@ -323,5 +337,36 @@ document.addEventListener('shown.bs.modal', function(event){
         })
         .catch(err => console.error(err));
     });
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const hasVat = document.getElementById('asset_has_vat');
+  const price = document.querySelector('input[name="price"]');
+  const quantity = document.querySelector('input[name="quantity"]');
+  const vatSection = document.getElementById('asset_vat_section');
+  const vatPercent = document.getElementById('asset_vat_percent');
+  const totalWithVat = document.getElementById('asset_total_with_vat');
+
+  function updateTotal() {
+    const amt = parseFloat(price.value) || 0;
+    const qty = parseFloat(quantity.value) || 1;
+    const vatRate = parseFloat(vatPercent.value) || 0;
+    const base = amt * qty;
+    if (hasVat.value === '1') {
+      const total = base + (base * vatRate / 100);
+      totalWithVat.value = total.toFixed(2);
+    } else {
+      totalWithVat.value = base.toFixed(2);
+    }
+  }
+
+  hasVat.addEventListener('change', () => {
+    vatSection.style.display = hasVat.value === '1' ? 'block' : 'none';
+    updateTotal();
+  });
+
+  price.addEventListener('input', updateTotal);
+  quantity.addEventListener('input', updateTotal);
 });
 </script>
