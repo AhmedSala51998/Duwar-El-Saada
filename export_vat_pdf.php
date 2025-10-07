@@ -50,7 +50,7 @@ $stmt = $pdo->prepare("SELECT
                           (price * quantity) AS before,
                           (price * quantity * 0.15) AS vat,
                           (price * quantity * 1.15) AS after
-                       FROM orders_purchases
+                       FROM purchases
                        WHERE 1=1 $dateFilter");
 $stmt->execute($params);
 $purchases = $stmt->fetchAll(PDO::FETCH_ASSOC);
