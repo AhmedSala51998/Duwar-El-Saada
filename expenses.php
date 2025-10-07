@@ -116,97 +116,72 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 <!-- مودال التعديل -->
 <?php if($can_edit): ?>
 <div class="modal fade" id="edit<?= $r['id'] ?>">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <form method="post" action="expenses_edit" enctype="multipart/form-data">
-        <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
-        <input type="hidden" name="id" value="<?= $r['id'] ?>">
+  <div class="modal-dialog"><div class="modal-content">
+    <form method="post" action="expenses_edit" enctype="multipart/form-data">
+      <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
+      <input type="hidden" name="id" value="<?= $r['id'] ?>">
+      <div class="modal-header"><h5 class="modal-title">تعديل مصروف</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
+      <div class="modal-body vstack gap-3">
+        <label>المصروفات</label>
+        <select id="main_expense_edit<?= $r['id'] ?>" name="main_expense" class="form-select" required>
+          <option value="">اختر</option>
+          <option <?= $r['main_expense']=="ايجارات"?"selected":"" ?>>ايجارات</option>
+          <option <?= $r['main_expense']=="حكومية"?"selected":"" ?>>حكومية</option>
+          <option <?= $r['main_expense']=="مرافق وخدمات"?"selected":"" ?>>مرافق وخدمات</option>
+          <option <?= $r['main_expense']=="رواتب"?"selected":"" ?>>رواتب</option>
+          <option <?= $r['main_expense']=="سكن"?"selected":"" ?>>سكن</option>
+          <option <?= $r['main_expense']=="مصروفات اخرى"?"selected":"" ?>>مصروفات اخرى</option>
+        </select>
 
-        <div class="modal-header">
-          <h5 class="modal-title">تعديل مصروف</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
+        <label>نوع المصروف</label>
+        <div id="sub_expense_edit_wrapper<?= $r['id'] ?>"></div>
+        <!-- بعد wrapper الخاص بـ sub_expense -->
+        <input type="hidden" name="sub_expense" 
+              id="hidden_sub_expense_<?= $r['id'] ?>" 
+              value="<?= esc($r['sub_expense']) ?>">
 
-        <div class="modal-body vstack gap-3">
-          <label>المصروفات</label>
-          <select id="main_expense_edit<?= $r['id'] ?>" name="main_expense" class="form-select" required>
-            <option value="">اختر</option>
-            <option <?= $r['main_expense']=="ايجارات"?"selected":"" ?>>ايجارات</option>
-            <option <?= $r['main_expense']=="حكومية"?"selected":"" ?>>حكومية</option>
-            <option <?= $r['main_expense']=="مرافق وخدمات"?"selected":"" ?>>مرافق وخدمات</option>
-            <option <?= $r['main_expense']=="رواتب"?"selected":"" ?>>رواتب</option>
-            <option <?= $r['main_expense']=="سكن"?"selected":"" ?>>سكن</option>
-            <option <?= $r['main_expense']=="مصروفات اخرى"?"selected":"" ?>>مصروفات اخرى</option>
-          </select>
 
-          <label>نوع المصروف</label>
-          <div id="sub_expense_edit_wrapper<?= $r['id'] ?>"></div>
-          <input type="hidden" name="sub_expense" id="hidden_sub_expense_<?= $r['id'] ?>" value="<?= esc($r['sub_expense']) ?>">
+        <label>بيان المصروف</label>
+        <input name="expense_desc" class="form-control" value="<?= esc($r['expense_desc']) ?>" placeholder="شرح المصروف">
 
-          <label>بيان المصروف</label>
-          <input type="text" name="expense_desc" class="form-control" value="<?= esc($r['expense_desc']) ?>">
+        <label>قيمة المصروف</label>
+        <input type="number" step="0.01" name="expense_amount" class="form-control" value="<?= esc($r['expense_amount']) ?>">
 
-          <label>الدافع</label>
-          <select name="payer_name" class="form-select payer-select" data-target="payment_source_edit<?= $r['id'] ?>">
-            <option value="">اختر الدافع</option>
-            <?php foreach(["شركة","مؤسسة","فيصل المطيري","بسام"] as $p): ?>
-              <option value="<?= $p ?>" <?= ($r['payer_name']==$p)?"selected":"" ?>><?= $p ?></option>
-            <?php endforeach; ?>
-          </select>
+        <label>الدافع</label>
+        <select name="payer_name" class="form-select payer-select" data-target="payment_source_edit<?= $r['id'] ?>">
+          <option value="">اختر الدافع</option>
+          <?php foreach(["شركة","مؤسسة","فيصل المطيري","بسام"] as $p): ?>
+            <option value="<?= $p ?>" <?= ($r['payer_name']==$p)?"selected":"" ?>><?= $p ?></option>
+          <?php endforeach; ?>
+        </select>
 
-          <label>مصدر الدفع</label>
-          <select name="payment_source" id="payment_source_edit<?= $r['id'] ?>" class="form-select">
-            <option value="">اختر مصدر الدفع</option>
-            <option value="مالك" <?= ($r['payment_source']=='مالك')?'selected':'' ?>>مالك</option>
-            <option value="بنك" <?= ($r['payment_source']=='بنك')?'selected':'' ?>>بنك</option>
-            <option value="كاش" <?= ($r['payment_source']=='كاش')?'selected':'' ?>>كاش</option>
-            <?php if(isset($custodies[$r['payer_name']])): ?>
-              <option value="عهدة" <?= ($r['payment_source']=='عهدة')?'selected':'' ?>>عهدة (رصيد: <?= $custodies[$r['payer_name']] ?>)</option>
-            <?php endif; ?>
-          </select>
+        <label>مصدر الدفع</label>
+        <select name="payment_source" id="payment_source_edit<?= $r['id'] ?>" class="form-select">
+          <option value="">اختر مصدر الدفع</option>
+          <option value="مالك" <?= ($r['payment_source']=='مالك')?'selected':'' ?>>مالك</option>
+          <option value="بنك" <?= ($r['payment_source']=='بنك')?'selected':'' ?>>بنك</option>
+          <option value="كاش" <?= ($r['payment_source']=='كاش')?'selected':'' ?>>كاش</option>
+          <?php if(isset($custodies[$r['payer_name']])): ?>
+            <option value="عهدة" <?= ($r['payment_source']=='عهدة')?'selected':'' ?>>عهدة (رصيد: <?= $custodies[$r['payer_name']] ?>)</option>
+          <?php endif; ?>
+        </select>
 
-          <label>هل المصروف عليه ضريبة؟</label>
-          <select id="has_vat_edit<?= $r['id'] ?>" name="has_vat" class="form-select" onchange="toggleVatSection('<?= $r['id'] ?>')">
-            <option value="0" <?= ($r['has_vat']==0)?'selected':'' ?>>لا</option>
-            <option value="1" <?= ($r['has_vat']==1)?'selected':'' ?>>نعم</option>
-          </select>
-
-          <label>قيمة المصروف</label>
-          <input type="number" step="0.01" id="expense_amount_edit<?= $r['id'] ?>" name="expense_amount" class="form-control"
-                 value="<?= esc($r['expense_amount']) ?>" placeholder="المبلغ" required
-                 oninput="updateVatTotal('<?= $r['id'] ?>')">
-
-          <div id="vat_section_edit<?= $r['id'] ?>" style="<?= $r['has_vat'] ? '' : 'display:none;' ?>">
-            <label>نسبة الضريبة (٪)</label>
-            <input type="number" step="0.01" id="vat_percent_edit<?= $r['id'] ?>" name="vat_percent" value="15" class="form-control" readonly>
-
-            <label>إجمالي بعد الضريبة</label>
-            <input type="text" id="total_with_vat_edit<?= $r['id'] ?>" class="form-control" readonly
-                   value="<?= $r['has_vat'] ? number_format($r['total_amount'],2) : number_format($r['expense_amount'],2) ?>">
-          </div>
-
-          <label>المرفق</label>
-          <label class="custom-file-upload w-100">
-            <i class="bi bi-image"></i>
-            <span id="file-text-edit-<?= $r['id'] ?>">اختر مرفق</span>
-            <input type="file" name="expense_file" accept="image/*"
-                   onchange="previewFile(this,'file-text-edit-<?= $r['id'] ?>','preview-edit-<?= $r['id'] ?>')">
-            <?php if(!empty($r['expense_file'])): ?>
-              <img id="preview-edit-<?= $r['id'] ?>" src="uploads/<?= esc($r['expense_file']) ?>" style="max-width:100px;margin-top:8px"/>
-            <?php else: ?>
-              <img id="preview-edit-<?= $r['id'] ?>" style="display:none;max-width:100px;margin-top:8px"/>
-            <?php endif; ?>
-          </label>
-        </div>
-
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-orange">حفظ</button>
-        </div>
-      </form>
-    </div>
-  </div>
+        <label>المرفق</label>
+        <label class="custom-file-upload w-100">
+          <i class="bi bi-image"></i>
+          <span id="file-text-edit-<?= $r['id'] ?>">اختر مرفق</span>
+          <input type="file" name="expense_file" accept="image/*" onchange="previewFile(this,'file-text-edit-<?= $r['id'] ?>','preview-edit-<?= $r['id'] ?>')">
+          <?php if(!empty($r['expense_file'])): ?>
+            <img id="preview-edit-<?= $r['id'] ?>" src="uploads/<?= esc($r['expense_file']) ?>" style="max-width:100px;margin-top:8px"/>
+          <?php else: ?>
+            <img id="preview-edit-<?= $r['id'] ?>" style="display:none;max-width:100px;margin-top:8px"/>
+          <?php endif; ?>
+        </label>
+      </div>
+      <div class="modal-footer"><button class="btn btn-orange">حفظ</button></div>
+    </form>
+  </div></div>
 </div>
-
 <?php endif; ?>
 
 <?php endforeach; ?>
@@ -501,19 +476,5 @@ document.addEventListener('DOMContentLoaded', function() {
   expenseAmount.addEventListener('input', updateTotal);
 });
 </script>
-<script>
-function toggleVatSection(id){
-  const hasVat = document.getElementById('has_vat_edit'+id).value;
-  document.getElementById('vat_section_edit'+id).style.display = hasVat == '1' ? 'block' : 'none';
-  updateVatTotal(id);
-}
-function updateVatTotal(id){
-  const amount = parseFloat(document.getElementById('expense_amount_edit'+id).value) || 0;
-  const vatPercent = 15;
-  const hasVat = document.getElementById('has_vat_edit'+id).value == '1';
-  const totalField = document.getElementById('total_with_vat_edit'+id);
-  if(hasVat) totalField.value = (amount + (amount * vatPercent / 100)).toFixed(2);
-  else totalField.value = amount.toFixed(2);
-}
-</script>
+
 <?php require __DIR__.'/partials/footer.php'; ?>
