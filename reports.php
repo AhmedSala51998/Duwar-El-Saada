@@ -102,6 +102,14 @@ if (!empty($_GET['to_date'])) $filterParams .= '&to_date=' . $_GET['to_date'];
     <a class="btn btn-outline-dark" href="export_expenses_pdf.php?1=1<?= $filterParams ?>"><i class="bi bi-filetype-pdf"></i> PDF</a>
   </div>
 </div>
+<div class="col-md-4">
+  <div class="card p-3 h-100">
+    <h5>تقريب الضريبة</h5>
+    <p class="text-muted small">حساب ضريبة المشتريات، المصروفات، والأصول.</p>
+    <a style="margin-bottom:5px" class="btn btn-outline-dark" href="export_vat_excel.php?1=1<?= $filterParams ?>"><i class="bi bi-file-earmark-spreadsheet"></i> Excel</a>
+    <a class="btn btn-outline-dark" href="export_vat_pdf.php?1=1<?= $filterParams ?>"><i class="bi bi-filetype-pdf"></i> PDF</a>
+  </div>
+</div>
 
 </div>
 <?php require __DIR__.'/partials/footer.php'; ?>
