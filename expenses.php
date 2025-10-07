@@ -229,8 +229,8 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
           <label>بيان المصروف</label>
           <input type="text" name="expense_desc" class="form-control" placeholder="ادخال شرح المصروف">
 
-          <label>قيمة المصروف</label>
-          <input type="number" step="0.01" name="expense_amount" class="form-control" placeholder="المبلغ" required>
+          <!--<label>قيمة المصروف</label>
+          <input type="number" step="0.01" name="expense_amount" class="form-control" placeholder="المبلغ" required>-->
 
            <label>الدافع</label>
           <select name="payer_name" class="form-select payer-select" data-target="payment_source_add">
@@ -254,6 +254,9 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
             <option value="0" selected>لا</option>
             <option value="1">نعم</option>
           </select>
+
+          <label>قيمة المصروف</label>
+          <input type="number" step="0.01" id="expense_amount" name="expense_amount" class="form-control" placeholder="المبلغ" required>
 
           <div id="vat_section" style="display:none;">
             <label>نسبة الضريبة (٪)</label>
