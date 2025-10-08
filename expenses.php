@@ -215,16 +215,27 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 </div>
 <!-- مودال الحذف -->
 <?php if($can_edit): ?>
-<div class="modal fade" id="del<?= $r['id'] ?>">
-  <div class="modal-dialog"><div class="modal-content">
-    <div class="modal-header"><h5 class="modal-title">تأكيد الحذف</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
-    <div class="modal-body">هل أنت متأكد أنك تريد حذف المصروف <b><?= esc($r['expense_desc']) ?></b> ؟</div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
-      <a href="expenses_delete?id=<?= $r['id'] ?>" class="btn btn-danger">حذف</a>
+<div class="modal fade" id="del<?= $r['id'] ?>" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">تأكيد الحذف</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        هل تريد حذف المصروف <strong><?= esc($r['main_expense']) ?></strong>؟
+      </div>
+      <div class="modal-footer">
+        <form method="post" action="delete_expense.php">
+          <input type="hidden" name="id" value="<?= $r['id'] ?>">
+          <button type="submit" class="btn btn-danger">حذف</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+        </form>
+      </div>
     </div>
-  </div></div>
+  </div>
 </div>
+
 <?php endif; ?>
 
 <!-- مودال الإضافة -->
