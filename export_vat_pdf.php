@@ -26,21 +26,38 @@ function renderSection($title, $rows, $columns, &$totalBefore, &$totalVat, &$tot
         echo "<tr>";
         foreach ($columns as $col) {
             switch($col) {
-                case 'الاسم': echo "<td>".htmlspecialchars($r['name'])."</td>"; break;
-                case 'المورد': echo "<td>".htmlspecialchars($r['supplier_name'] ?? '')."</td>"; break;
-                case 'الكمية': echo "<td>".htmlspecialchars($r['quantity'] ?? '')."</td>"; break;
-                case 'النوع': echo "<td>".htmlspecialchars($r['type'] ?? '')."</td>"; break;
-                case 'الإجمالي قبل الضريبة': echo "<td>".number_format($r['before'],2)."</td>"; break;
-                case 'الضريبة': echo "<td>".number_format($r['vat'],2)."</td>"; break;
-                case 'الإجمالي بعد': echo "<td>".number_format($r['after'],2)."</td>"; break;
-                default: echo "<td>-</td>"; break;
+                case 'الاسم':
+                case 'الأصل':  // دعم الأصول
+                    echo "<td>".htmlspecialchars($r['name'] ?? '-')."</td>";
+                    break;
+                case 'المورد':
+                    echo "<td>".htmlspecialchars($r['supplier_name'] ?? '-')."</td>";
+                    break;
+                case 'الكمية':
+                    echo "<td>".htmlspecialchars($r['quantity'] ?? '-')."</td>";
+                    break;
+                case 'النوع':
+                    echo "<td>".htmlspecialchars($r['type'] ?? '-')."</td>";
+                    break;
+                case 'الإجمالي قبل الضريبة':
+                    echo "<td>".number_format($r['before'] ?? 0,2)."</td>";
+                    break;
+                case 'الضريبة':
+                    echo "<td>".number_format($r['vat'] ?? 0,2)."</td>";
+                    break;
+                case 'الإجمالي بعد':
+                    echo "<td>".number_format($r['after'] ?? 0,2)."</td>";
+                    break;
+                default:
+                    echo "<td>-</td>";
+                    break;
             }
         }
         echo "</tr>";
 
-        $sectionBefore += $r['before'];
-        $sectionVat    += $r['vat'];
-        $sectionAfter  += $r['after'];
+        $sectionBefore += $r['before'] ?? 0;
+        $sectionVat    += $r['vat'] ?? 0;
+        $sectionAfter  += $r['after'] ?? 0;
     }
 
     echo "<tr style='font-weight:bold;background:#f1f1f1'>
@@ -130,7 +147,7 @@ renderSection("المشتريات", $purchases, ['الاسم','المورد','ا
 renderSection("المصروفات", $expenses, ['الاسم','الإجمالي قبل الضريبة','الضريبة','الإجمالي بعد'], $totalBefore,$totalVat,$totalAfter);
 
 // الأصول: ['الأصل','الكمية','النوع','الإجمالي قبل الضريبة','الضريبة','الإجمالي بعد']
-renderSection("الأصول", $assets, ['الأسم','الكمية','النوع','الإجمالي قبل الضريبة','الضريبة','الإجمالي بعد'], $totalBefore,$totalVat,$totalAfter);
+renderSection("الأصول", $assets, ['الأصل','الكمية','النوع','الإجمالي قبل الضريبة','الضريبة','الإجمالي بعد'], $totalBefore,$totalVat,$totalAfter);
 ?>
 
 <table style="margin-top:30px;font-weight:bold;background:#d4edda">
