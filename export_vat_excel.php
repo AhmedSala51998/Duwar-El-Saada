@@ -31,9 +31,9 @@ $stmt = $pdo->prepare("
     SELECT 
         p.name,
         o.supplier_name,
-        ROUND(p.price * p.quantity, 2) AS before,
-        ROUND(p.price * p.quantity * 0.15, 2) AS vat,
-        ROUND(p.price * p.quantity * 1.15, 2) AS after
+        ROUND(p.price * p.quantity, 2) AS `before`,
+        ROUND(p.price * p.quantity * 0.15, 2) AS `vat`,
+        ROUND(p.price * p.quantity * 1.15, 2) AS `after`
     FROM purchases p
     LEFT JOIN orders_purchases o ON p.order_id = o.id
     WHERE 1=1 $dateFilter
@@ -49,9 +49,9 @@ $stmt = $pdo->prepare("
             THEN CONCAT(main_expense, ' - ', expense_desc)
             ELSE CONCAT(main_expense, ' - ', sub_expense)
         END AS name,
-        ROUND(expense_amount, 2) AS before,
-        ROUND(CASE WHEN has_vat=1 THEN expense_amount * 0.15 ELSE 0 END, 2) AS vat,
-        ROUND(CASE WHEN has_vat=1 THEN expense_amount * 1.15 ELSE expense_amount END, 2) AS after
+        ROUND(expense_amount, 2) AS `before`,
+        ROUND(CASE WHEN has_vat=1 THEN expense_amount * 0.15 ELSE 0 END, 2) AS `vat`,
+        ROUND(CASE WHEN has_vat=1 THEN expense_amount * 1.15 ELSE expense_amount END, 2) AS `after`
     FROM expenses
     WHERE 1=1 $dateFilter
 ");
@@ -65,9 +65,9 @@ $stmt = $pdo->prepare("
         quantity,
         unit,
         type,
-        ROUND(price * quantity, 2) AS before,
-        ROUND(CASE WHEN has_vat=1 THEN price * quantity * 0.15 ELSE 0 END, 2) AS vat,
-        ROUND(CASE WHEN has_vat=1 THEN price * quantity * 1.15 ELSE price * quantity END, 2) AS after
+        ROUND(price * quantity, 2) AS `before`,
+        ROUND(CASE WHEN has_vat=1 THEN price * quantity * 0.15 ELSE 0 END, 2) AS `vat`,
+        ROUND(CASE WHEN has_vat=1 THEN price * quantity * 1.15 ELSE price * quantity END, 2) AS `after`
     FROM assets
     WHERE 1=1 $dateFilter
 ");
