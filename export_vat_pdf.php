@@ -24,10 +24,18 @@ function renderSection($title, $rows, $columns, &$totalBefore, &$totalVat, &$tot
 
     foreach($rows as $r){
         echo "<tr>";
-        echo "<td>".htmlspecialchars($r['name'])."</td>";
-        echo "<td>".number_format($r['before'],2)."</td>";
-        echo "<td>".number_format($r['vat'],2)."</td>";
-        echo "<td>".number_format($r['after'],2)."</td>";
+        foreach ($columns as $col) {
+            switch($col) {
+                case 'الاسم': echo "<td>".htmlspecialchars($r['name'])."</td>"; break;
+                case 'المورد': echo "<td>".htmlspecialchars($r['supplier_name'] ?? '')."</td>"; break;
+                case 'الكمية': echo "<td>".htmlspecialchars($r['quantity'] ?? '')."</td>"; break;
+                case 'النوع': echo "<td>".htmlspecialchars($r['type'] ?? '')."</td>"; break;
+                case 'الإجمالي قبل الضريبة': echo "<td>".number_format($r['before'],2)."</td>"; break;
+                case 'الضريبة': echo "<td>".number_format($r['vat'],2)."</td>"; break;
+                case 'الإجمالي بعد': echo "<td>".number_format($r['after'],2)."</td>"; break;
+                default: echo "<td>-</td>"; break;
+            }
+        }
         echo "</tr>";
 
         $sectionBefore += $r['before'];
@@ -36,7 +44,7 @@ function renderSection($title, $rows, $columns, &$totalBefore, &$totalVat, &$tot
     }
 
     echo "<tr style='font-weight:bold;background:#f1f1f1'>
-            <td>الإجمالي الفرعي</td>
+            <td colspan='".(count($columns)-3)."'>الإجمالي الفرعي</td>
             <td>".number_format($sectionBefore,2)."</td>
             <td>".number_format($sectionVat,2)."</td>
             <td>".number_format($sectionAfter,2)."</td>
@@ -49,14 +57,17 @@ function renderSection($title, $rows, $columns, &$totalBefore, &$totalVat, &$tot
 
 // ---------------------------- المشتريات ----------------------------
 // ---------------------------- المشتريات (تفصيل المنتجات) ----------------------------
-$stmt = $pdo->prepare("SELECT 
-                          name,
-                          (price * quantity) AS `before`,
-                          (price * quantity * 0.15) AS `vat`,
-                          (price * quantity * 1.15) AS `after`
-                       FROM purchases
-                       WHERE 1=1 $dateFilter");
-
+$stmt = $pdo->prepare("
+    SELECT 
+        p.name,
+        op.supplier_name,
+        (p.price * p.quantity) AS `before`,
+        (p.price * p.quantity * 0.15) AS `vat`,
+        (p.price * p.quantity * 1.15) AS `after`
+    FROM purchases p
+    LEFT JOIN orders_purchases op ON p.order_id = op.id
+    WHERE 1=1 $dateFilter
+");
 $stmt->execute($params);
 $purchases = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -78,12 +89,16 @@ $stmt->execute($params);
 $expenses = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // ---------------------------- الأصول ----------------------------
-$stmt = $pdo->prepare("SELECT 
-  name, 
-  (price*quantity) AS `before`, 
-  (CASE WHEN has_vat=1 THEN price*quantity*0.15 ELSE 0 END) AS `vat`, 
-  (CASE WHEN has_vat=1 THEN price*quantity*1.15 ELSE price*quantity END) AS `after`
-FROM assets WHERE 1=1 $dateFilter
+$stmt = $pdo->prepare("
+    SELECT 
+        a.name,
+        a.quantity,
+        a.type,
+        (a.price * a.quantity) AS `before`,
+        (CASE WHEN a.has_vat=1 THEN a.price * a.quantity * 0.15 ELSE 0 END) AS `vat`,
+        (CASE WHEN a.has_vat=1 THEN a.price * a.quantity * 1.15 ELSE a.price * a.quantity END) AS `after`
+    FROM assets a
+    WHERE 1=1 $dateFilter
 ");
 $stmt->execute($params);
 $assets = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -108,9 +123,14 @@ $totalBefore = 0; $totalVat = 0; $totalAfter = 0;
 <h3>تقرير تفصيلي للضريبة</h3>
 
 <?php
-renderSection("المشتريات", $purchases, ['الاسم','الإجمالي قبل الضريبة','الضريبة','الإجمالي بعد'], $totalBefore,$totalVat,$totalAfter);
+// المشتريات: ['الاسم','المورد','الإجمالي قبل الضريبة','الضريبة','الإجمالي بعد']
+renderSection("المشتريات", $purchases, ['الاسم','المورد','الإجمالي قبل الضريبة','الضريبة','الإجمالي بعد'], $totalBefore,$totalVat,$totalAfter);
+
+// المصروفات تبقى زي ما هي
 renderSection("المصروفات", $expenses, ['الاسم','الإجمالي قبل الضريبة','الضريبة','الإجمالي بعد'], $totalBefore,$totalVat,$totalAfter);
-renderSection("الأصول", $assets, ['الأصل','الإجمالي قبل الضريبة','الضريبة','الإجمالي بعد'], $totalBefore,$totalVat,$totalAfter);
+
+// الأصول: ['الأصل','الكمية','النوع','الإجمالي قبل الضريبة','الضريبة','الإجمالي بعد']
+renderSection("الأصول", $assets, ['الأصل','الكمية','النوع','الإجمالي قبل الضريبة','الضريبة','الإجمالي بعد'], $totalBefore,$totalVat,$totalAfter);
 ?>
 
 <table style="margin-top:30px;font-weight:bold;background:#d4edda">

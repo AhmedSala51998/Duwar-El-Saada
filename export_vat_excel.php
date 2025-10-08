@@ -16,13 +16,17 @@ if($from_date) { $dateFilter .= " AND DATE(created_at) >= ?"; $params[] = $from_
 if($to_date)   { $dateFilter .= " AND DATE(created_at) <= ?"; $params[] = $to_date; }
 
 // ---------------------------- المشتريات ----------------------------
-$stmt = $pdo->prepare("SELECT 
-    name,
-    ROUND(price * quantity, 2) AS `before`,
-    ROUND(price * quantity * 0.15, 2) AS `vat`,
-    ROUND(price * quantity * 1.15, 2) AS `after`
-FROM purchases
-WHERE 1=1 $dateFilter");
+$stmt = $pdo->prepare("
+    SELECT 
+        p.name,
+        o.supplier_name,
+        ROUND(p.price * p.quantity, 2) AS `before`,
+        ROUND(p.price * p.quantity * 0.15, 2) AS `vat`,
+        ROUND(p.price * p.quantity * 1.15, 2) AS `after`
+    FROM purchases p
+    LEFT JOIN orders_purchases o ON p.order_id = o.id
+    WHERE 1=1 $dateFilter
+");
 $stmt->execute($params);
 $purchases = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -42,25 +46,30 @@ $stmt->execute($params);
 $expenses = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // ---------------------------- الأصول ----------------------------
-$stmt = $pdo->prepare("SELECT 
-    name,
-    ROUND(price * quantity, 2) AS `before`,
-    ROUND(CASE WHEN has_vat=1 THEN price * quantity * 0.15 ELSE 0 END, 2) AS `vat`,
-    ROUND(CASE WHEN has_vat=1 THEN price * quantity * 1.15 ELSE price * quantity END, 2) AS `after`
-FROM assets
-WHERE 1=1 $dateFilter");
+$stmt = $pdo->prepare("
+    SELECT 
+        name,
+        quantity,
+        unit,
+        ROUND(price * quantity, 2) AS `before`,
+        ROUND(CASE WHEN has_vat=1 THEN price * quantity * 0.15 ELSE 0 END, 2) AS `vat`,
+        ROUND(CASE WHEN has_vat=1 THEN price * quantity * 1.15 ELSE price * quantity END, 2) AS `after`
+    FROM assets
+    WHERE 1=1 $dateFilter
+");
 $stmt->execute($params);
 $assets = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // ---------------------------- تجميع البيانات في ملف Excel ----------------------------
 $data = [];
-$data[] = ["المصدر", "الاسم", "الإجمالي قبل الضريبة", "الضريبة", "الإجمالي بعد"];
+$data[] = ["المصدر", "الاسم", "اسم المورد/العدد والنوع", "الإجمالي قبل الضريبة", "الضريبة", "الإجمالي بعد"];
 
 $totalBefore = $totalVat = $totalAfter = 0;
 
 // المشتريات
+// المشتريات
 foreach ($purchases as $r) {
-    $data[] = ["المشتريات", $r['name'], $r['before'], $r['vat'], $r['after']];
+    $data[] = ["المشتريات", $r['name'], $r['supplier_name'], $r['before'], $r['vat'], $r['after']];
     $totalBefore += $r['before'];
     $totalVat += $r['vat'];
     $totalAfter += $r['after'];
@@ -68,7 +77,7 @@ foreach ($purchases as $r) {
 
 // المصروفات
 foreach ($expenses as $r) {
-    $data[] = ["المصروفات", $r['name'], $r['before'], $r['vat'], $r['after']];
+    $data[] = ["المصروفات", $r['name'], "", $r['before'], $r['vat'], $r['after']];
     $totalBefore += $r['before'];
     $totalVat += $r['vat'];
     $totalAfter += $r['after'];
@@ -76,7 +85,8 @@ foreach ($expenses as $r) {
 
 // الأصول
 foreach ($assets as $r) {
-    $data[] = ["الأصول", $r['name'], $r['before'], $r['vat'], $r['after']];
+    $typeInfo = $r['quantity'] . ' ' . $r['unit'];
+    $data[] = ["الأصول", $r['name'], $typeInfo, $r['before'], $r['vat'], $r['after']];
     $totalBefore += $r['before'];
     $totalVat += $r['vat'];
     $totalAfter += $r['after'];
@@ -84,11 +94,7 @@ foreach ($assets as $r) {
 
 // الإجماليات النهائية
 $data[] = [];
-$data[] = ["الإجماليات الكلية", "", 
-            round($totalBefore,2), 
-            round($totalVat,2), 
-            round($totalAfter,2)
-          ];
+$data[] = ["الإجماليات الكلية", "", "", round($totalBefore,2), round($totalVat,2), round($totalAfter,2)];
 
 // إنشاء الملف وتحميله
 $xlsx = Shuchkin\SimpleXLSXGen::fromArray($data);
