@@ -109,7 +109,7 @@ foreach ($expenses as $r) {
 
 // الأصول
 foreach ($assets as $r) {
-    $typeInfo = trim(($r['quantity'] ?? '') . ' ' . ($r['unit'] ?? '') . ' ' . ($r['type'] ?? ''));
+    $typeInfo = trim(($r['quantity'] ?? '') . ' ' . ($r['type'] ?? ''));
     $data[] = ["الأصول", $r['name'], $typeInfo, $r['before'], $r['vat'], $r['after']];
     $totalBefore += $r['before'];
     $totalVat += $r['vat'];
