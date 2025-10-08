@@ -327,6 +327,12 @@ $can_edit = in_array(current_role(), ['admin','manager']);
 
         <div class="modal-body">
           <div class="mb-3">
+            <label>الرقم الضريبي</label>
+            <input type="text" name="tax_number" id="tax_number" class="form-control" maxlength="15" pattern="\d{15}" required
+                  placeholder="أدخل الرقم الضريبي المكون من 15 رقم">
+            <div class="invalid-feedback">الرقم الضريبي يجب أن يكون 15 رقم بالضبط.</div>
+          </div>
+          <div class="mb-3">
             <label>اسم المورد</label>
             <input type="text" name="supplier_name" class="form-control" id="supplier_name" required>
           </div>
@@ -569,5 +575,34 @@ document.addEventListener('click', function(e) {
   if (e.target.classList.contains('remove-row')) {
     e.target.closest('tr').remove();
   }
+});
+</script>
+<script>
+document.querySelector('form[action="purchase_add"]').addEventListener('submit', function(e) {
+  const taxInput = document.getElementById('tax_number');
+  const taxValue = taxInput.value.trim();
+
+  // تحقق من الطول وعدد الأرقام
+  if (!/^\d{15}$/.test(taxValue)) {
+    e.preventDefault();
+    alert('الرقم الضريبي يجب أن يكون 15 رقم بالضبط.');
+    taxInput.focus();
+    return;
+  }
+
+  // تحقق من التكرار (AJAX)
+  e.preventDefault(); // نوقف الإرسال مؤقتاً
+  fetch('check_tax_number.php?tax=' + encodeURIComponent(taxValue))
+    .then(res => res.json())
+    .then(data => {
+      if (data.exists) {
+        alert('هذا الرقم الضريبي مستخدم بالفعل!');
+      } else {
+        e.target.submit(); // أرسل النموذج فعلياً
+      }
+    })
+    .catch(() => {
+      alert('حدث خطأ أثناء التحقق من الرقم الضريبي.');
+    });
 });
 </script>

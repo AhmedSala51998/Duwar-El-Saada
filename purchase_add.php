@@ -11,6 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
     $quantities = $_POST['quantity'] ?? [];
     $prices = $_POST['price'] ?? [];
     $supplier_name = trim($_POST['supplier_name'] ?? '');
+    $tax_number = trim($_POST['tax_number'] ?? '');
 
     // حساب الإجمالي
     $total = 0;
@@ -46,10 +47,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
 
     // إدخال بيانات الفاتورة
     $stmtOrder = $pdo->prepare("
-        INSERT INTO orders_purchases (invoice_number, invoice_serial, supplier_name, total, vat, all_total, created_at, invoice_image)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO orders_purchases (tax_number , invoice_number, invoice_serial, supplier_name, total, vat, all_total, created_at, invoice_image)
+        VALUES (? , ?, ?, ?, ?, ?, ?, ?, ?)
     ");
-    $stmtOrder->execute([$invoice_number, $serial_invoice, $supplier_name, $total, $vat, $all_total, $created_at, $invoiceImage]);
+    $stmtOrder->execute([$tax_number , $invoice_number, $serial_invoice, $supplier_name, $total, $vat, $all_total, $created_at, $invoiceImage]);
 
     $order_id = $pdo->lastInsertId();
 
