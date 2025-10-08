@@ -140,6 +140,15 @@ $totalBefore = 0; $totalVat = 0; $totalAfter = 0;
 <h3>تقرير تفصيلي للضريبة</h3>
 
 <?php
+// عرض الفترة الزمنية
+if ($from_date || $to_date) {
+    $fromText = $from_date ? date('Y-m-d', strtotime($from_date)) : 'بداية';
+    $toText   = $to_date   ? date('Y-m-d', strtotime($to_date))   : 'اليوم';
+    echo "<p style='text-align:center;font-weight:bold'>الفترة من $fromText إلى $toText</p>";
+} else {
+    echo "<p style='text-align:center;font-weight:bold'>كل التقرير</p>";
+}
+
 // المشتريات: ['الاسم','المورد','الإجمالي قبل الضريبة','الضريبة','الإجمالي بعد']
 renderSection("المشتريات", $purchases, ['الاسم','المورد','الإجمالي قبل الضريبة','الضريبة','الإجمالي بعد'], $totalBefore,$totalVat,$totalAfter);
 
