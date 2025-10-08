@@ -134,8 +134,6 @@ if ($date_type === 'today') {
 }
 
 // ---------------------------- إنشاء وتحميل الملف ----------------------------
-$xlsx = Shuchkin\SimpleXLSXGen::fromArray($data);
-$xlsx->setDefaultFont('Cairo');
-$xlsx->setSheetName($title);
+$xlsx = Shuchkin\SimpleXLSXGen::fromArray($data, $title);
 $xlsx->downloadAs('vat_report.xlsx');
 ?>
