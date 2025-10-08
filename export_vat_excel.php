@@ -50,7 +50,7 @@ $stmt = $pdo->prepare("
     SELECT 
         name,
         quantity,
-        unit,
+        type,
         ROUND(price * quantity, 2) AS `before`,
         ROUND(CASE WHEN has_vat=1 THEN price * quantity * 0.15 ELSE 0 END, 2) AS `vat`,
         ROUND(CASE WHEN has_vat=1 THEN price * quantity * 1.15 ELSE price * quantity END, 2) AS `after`
