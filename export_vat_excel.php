@@ -28,7 +28,11 @@ $purchases = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // ---------------------------- المصروفات ----------------------------
 $stmt = $pdo->prepare("SELECT 
-    CONCAT(main_expense, ' - ', sub_expense) AS name,
+    CASE 
+        WHEN sub_expense = 'أخرى' 
+        THEN CONCAT(main_expense, ' - ', expense_desc)
+        ELSE CONCAT(main_expense, ' - ', sub_expense)
+    END AS name,
     ROUND(expense_amount, 2) AS `before`,
     ROUND(CASE WHEN has_vat=1 THEN expense_amount * 0.15 ELSE 0 END, 2) AS `vat`,
     ROUND(CASE WHEN has_vat=1 THEN expense_amount * 1.15 ELSE expense_amount END, 2) AS `after`
