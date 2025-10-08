@@ -6,6 +6,7 @@ error_reporting(E_ALL);
 
 require_auth();
 
+$date_type = $_GET['date_type'] ?? '';
 $from_date = $_GET['from_date'] ?? '';
 $to_date   = $_GET['to_date'] ?? '';
 
@@ -16,6 +17,14 @@ $paramsExpenses  = [];
 $dateFilterPurchases = '';
 $dateFilterAssets    = '';
 $dateFilterExpenses  = '';
+
+if ($date_type === 'today') {
+    $today = date('Y-m-d');
+    $from_date = $to_date = $today;
+} elseif ($date_type === 'yesterday') {
+    $yesterday = date('Y-m-d', strtotime('-1 day'));
+    $from_date = $to_date = $yesterday;
+}
 
 // فلترة المشتريات (p.created_at)
 if($from_date) { 
@@ -37,7 +46,7 @@ if($to_date) {
     $paramsAssets[] = $to_date; 
 }
 
-// فلترة المصروفات (expenses.created_at)
+// فلترة المصروفات (e.created_at)
 if($from_date) { 
     $dateFilterExpenses .= " AND DATE(e.created_at) >= ?"; 
     $paramsExpenses[] = $from_date; 
@@ -73,13 +82,13 @@ function renderSection($title, $rows, $columns, &$totalBefore, &$totalVat, &$tot
                     echo "<td>".htmlspecialchars($r['type'] ?? '-')."</td>";
                     break;
                 case 'الإجمالي قبل الضريبة':
-                    echo "<td>".number_format($r['before'] ?? 0,2)."</td>";
+                    echo "<td>".number_format($r['before'] ?? 0,3)."</td>";
                     break;
                 case 'الضريبة':
-                    echo "<td>".number_format($r['vat'] ?? 0,2)."</td>";
+                    echo "<td>".number_format($r['vat'] ?? 0,3)."</td>";
                     break;
                 case 'الإجمالي بعد':
-                    echo "<td>".number_format($r['after'] ?? 0,2)."</td>";
+                    echo "<td>".number_format($r['after'] ?? 0,3)."</td>";
                     break;
                 default:
                     echo "<td>-</td>";
@@ -95,9 +104,9 @@ function renderSection($title, $rows, $columns, &$totalBefore, &$totalVat, &$tot
 
     echo "<tr style='font-weight:bold;background:#f1f1f1'>
             <td colspan='".(count($columns)-3)."'>الإجمالي الفرعي</td>
-            <td>".number_format($sectionBefore,2)."</td>
-            <td>".number_format($sectionVat,2)."</td>
-            <td>".number_format($sectionAfter,2)."</td>
+            <td>".number_format($sectionBefore,3)."</td>
+            <td>".number_format($sectionVat,3)."</td>
+            <td>".number_format($sectionAfter,3)."</td>
           </tr></tbody></table>";
 
     $totalBefore += $sectionBefore;
@@ -105,7 +114,6 @@ function renderSection($title, $rows, $columns, &$totalBefore, &$totalVat, &$tot
     $totalAfter  += $sectionAfter;
 }
 
-// ---------------------------- المشتريات ----------------------------
 $stmt = $pdo->prepare("
     SELECT 
         p.name,
@@ -120,7 +128,6 @@ $stmt = $pdo->prepare("
 $stmt->execute($paramsPurchases);
 $purchases = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// ---------------------------- المصروفات ----------------------------
 $stmt = $pdo->prepare("
     SELECT 
         CASE 
@@ -137,7 +144,6 @@ $stmt = $pdo->prepare("
 $stmt->execute($paramsExpenses);
 $expenses = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// ---------------------------- الأصول ----------------------------
 $stmt = $pdo->prepare("
     SELECT 
         a.name,
@@ -152,7 +158,6 @@ $stmt = $pdo->prepare("
 $stmt->execute($paramsAssets);
 $assets = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// ---------------------------- تجميع الكل ----------------------------
 $totalBefore = 0; $totalVat = 0; $totalAfter = 0;
 ?>
 <!doctype html>
@@ -172,37 +177,35 @@ $totalBefore = 0; $totalVat = 0; $totalAfter = 0;
 <h3>تقرير تفصيلي للضريبة</h3>
 
 <?php
-// عرض الفترة الزمنية
-if ($from_date || $to_date) {
-    $fromText = $from_date ? date('Y-m-d', strtotime($from_date)) : 'بداية';
-    $toText   = $to_date   ? date('Y-m-d', strtotime($to_date))   : 'اليوم';
+if ($date_type === 'today') {
+    echo "<p style='text-align:center;font-weight:bold'>تقرير اليوم (" . date('Y-m-d') . ")</p>";
+} elseif ($date_type === 'yesterday') {
+    echo "<p style='text-align:center;font-weight:bold'>تقرير أمس (" . date('Y-m-d', strtotime('-1 day')) . ")</p>";
+} elseif ($from_date || $to_date) {
+    $fromText = $from_date ?: 'بداية';
+    $toText   = $to_date   ?: 'اليوم';
     echo "<p style='text-align:center;font-weight:bold'>الفترة من $fromText إلى $toText</p>";
 } else {
     echo "<p style='text-align:center;font-weight:bold'>كل التقرير</p>";
 }
 
-// المشتريات
 renderSection("المشتريات", $purchases, ['الاسم','المورد','الإجمالي قبل الضريبة','الضريبة','الإجمالي بعد'], $totalBefore,$totalVat,$totalAfter);
-
-// المصروفات
 renderSection("المصروفات", $expenses, ['الاسم','الإجمالي قبل الضريبة','الضريبة','الإجمالي بعد'], $totalBefore,$totalVat,$totalAfter);
-
-// الأصول
 renderSection("الأصول", $assets, ['الأصل','الكمية','النوع','الإجمالي قبل الضريبة','الضريبة','الإجمالي بعد'], $totalBefore,$totalVat,$totalAfter);
 ?>
 
 <table style="margin-top:30px;font-weight:bold;background:#d4edda">
   <tr>
     <td>الإجمالي الكلي قبل الضريبة</td>
-    <td><?= number_format($totalBefore,2) ?></td>
+    <td><?= number_format($totalBefore,3) ?></td>
   </tr>
   <tr>
     <td>إجمالي الضريبة</td>
-    <td><?= number_format($totalVat,2) ?></td>
+    <td><?= number_format($totalVat,3) ?></td>
   </tr>
   <tr>
     <td>الإجمالي الكلي بعد الضريبة</td>
-    <td><?= number_format($totalAfter,2) ?></td>
+    <td><?= number_format($totalAfter,3) ?></td>
   </tr>
 </table>
 
