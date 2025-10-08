@@ -202,10 +202,10 @@ select#vatRate {
         <td><?= esc($item['name']) ?></td>
         <td><?= esc($item['quantity']) ?></td>
         <td><?= esc($item['unit']) ?></td>
-        <td><?= number_format($item['price'],2) ?> ريال</td>
-        <td><?= number_format($subtotal,2) ?> ريال</td>
-        <td class="vat"><?= number_format($vat,2) ?> ريال</td>
-        <td class="total"><?= number_format($total,2) ?> ريال</td>
+        <td><?= number_format($item['price'],3) ?> ريال</td>
+        <td><?= number_format($subtotal,3) ?> ريال</td>
+        <td class="vat"><?= number_format($vat,3) ?> ريال</td>
+        <td class="total"><?= number_format($total,3) ?> ريال</td>
       </tr>
       <?php endforeach; ?>
     </tbody>
