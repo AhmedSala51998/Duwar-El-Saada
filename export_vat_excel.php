@@ -13,7 +13,9 @@ $from_date = $_GET['from_date'] ?? '';
 $to_date   = $_GET['to_date'] ?? '';
 
 $params = [];
-$dateFilter = '';
+$dateFilterPurchases = '';
+$dateFilterExpenses  = '';
+$dateFilterAssets    = '';
 
 if ($date_type === 'today') {
     $today = date('Y-m-d');
@@ -23,8 +25,18 @@ if ($date_type === 'today') {
     $from_date = $to_date = $yesterday;
 }
 
-if($from_date) { $dateFilter .= " AND DATE(created_at) >= ?"; $params[] = $from_date; }
-if($to_date)   { $dateFilter .= " AND DATE(created_at) <= ?"; $params[] = $to_date; }
+if($from_date) { 
+    $dateFilterPurchases .= " AND DATE(p.created_at) >= ?"; 
+    $dateFilterExpenses  .= " AND DATE(created_at) >= ?"; 
+    $dateFilterAssets    .= " AND DATE(created_at) >= ?"; 
+    $params[] = $from_date; 
+}
+if($to_date) { 
+    $dateFilterPurchases .= " AND DATE(p.created_at) <= ?"; 
+    $dateFilterExpenses  .= " AND DATE(created_at) <= ?"; 
+    $dateFilterAssets    .= " AND DATE(created_at) <= ?"; 
+    $params[] = $to_date; 
+}
 
 // =============== المشتريات ===============
 $stmt = $pdo->prepare("
@@ -36,7 +48,7 @@ $stmt = $pdo->prepare("
         ROUND(p.price * p.quantity * 1.15, 2) AS `after`
     FROM purchases p
     LEFT JOIN orders_purchases o ON p.order_id = o.id
-    WHERE 1=1 $dateFilter
+    WHERE 1=1 $dateFilterPurchases
 ");
 $stmt->execute($params);
 $purchases = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -53,7 +65,7 @@ $stmt = $pdo->prepare("
         ROUND(CASE WHEN has_vat=1 THEN expense_amount * 0.15 ELSE 0 END, 2) AS `vat`,
         ROUND(CASE WHEN has_vat=1 THEN expense_amount * 1.15 ELSE expense_amount END, 2) AS `after`
     FROM expenses
-    WHERE 1=1 $dateFilter
+    WHERE 1=1 $dateFilterExpenses
 ");
 $stmt->execute($params);
 $expenses = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -69,7 +81,7 @@ $stmt = $pdo->prepare("
         ROUND(CASE WHEN has_vat=1 THEN price * quantity * 0.15 ELSE 0 END, 2) AS `vat`,
         ROUND(CASE WHEN has_vat=1 THEN price * quantity * 1.15 ELSE price * quantity END, 2) AS `after`
     FROM assets
-    WHERE 1=1 $dateFilter
+    WHERE 1=1 $dateFilterAssets
 ");
 $stmt->execute($params);
 $assets = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -82,18 +94,24 @@ $totalBefore = $totalVat = $totalAfter = 0;
 
 foreach ($purchases as $r) {
     $data[] = ["المشتريات", $r['name'], $r['supplier_name'], $r['before'], $r['vat'], $r['after']];
-    $totalBefore += $r['before']; $totalVat += $r['vat']; $totalAfter += $r['after'];
+    $totalBefore += $r['before']; 
+    $totalVat    += $r['vat']; 
+    $totalAfter  += $r['after'];
 }
 
 foreach ($expenses as $r) {
     $data[] = ["المصروفات", $r['name'], "", $r['before'], $r['vat'], $r['after']];
-    $totalBefore += $r['before']; $totalVat += $r['vat']; $totalAfter += $r['after'];
+    $totalBefore += $r['before']; 
+    $totalVat    += $r['vat']; 
+    $totalAfter  += $r['after'];
 }
 
 foreach ($assets as $r) {
     $info = trim(($r['quantity'] ?? '') . ' ' . ($r['unit'] ?? '') . ' ' . ($r['type'] ?? ''));
     $data[] = ["الأصول", $r['name'], $info, $r['before'], $r['vat'], $r['after']];
-    $totalBefore += $r['before']; $totalVat += $r['vat']; $totalAfter += $r['after'];
+    $totalBefore += $r['before']; 
+    $totalVat    += $r['vat']; 
+    $totalAfter  += $r['after'];
 }
 
 $data[] = [];
