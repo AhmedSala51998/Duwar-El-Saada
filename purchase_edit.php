@@ -18,7 +18,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
         'product_image' => upload_image('product_image') ?: ($oldData['product_image'] ?? null),
         'invoice_image' => upload_image('invoice_image') ?: ($oldData['invoice_image'] ?? null),
         'payer_name'    => trim($_POST['payer_name'] ?? ''),
-        'payment_source'=> $_POST['payment_source'] ?? 'كاش'
+        'payment_source'=> $_POST['payment_source'] ?? 'كاش',
+        'package' => trim($_POST['package'] ?? '')
     ];
 
     // تحقق من التكرار
@@ -32,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
 
         // التحقق إذا كان هناك أي تغيير فعلي
         $changed = false;
-        foreach(['name','quantity','unit','price','product_image','invoice_image','payer_name','payment_source'] as $key){
+        foreach(['name','quantity','unit','package','price','product_image','invoice_image','payer_name','payment_source'] as $key){
             if(!isset($oldData[$key]) || $oldData[$key] != $newData[$key]){
                 $changed = true;
                 break;
@@ -69,12 +70,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
             // التحديث في purchases
             $pdo->prepare("
                 UPDATE purchases 
-                SET name=?, quantity=?, unit=?, price=?, product_image=?, invoice_image=?, payer_name=?, payment_source=? 
+                SET name=?, quantity=?, unit=?, package=?, price=?, product_image=?, invoice_image=?, payer_name=?, payment_source=? 
                 WHERE id=?
             ")->execute([
                 $newData['name'],
                 $newData['quantity'],
                 $newData['unit'],
+                $newData['package'],     // هنا
                 $newData['price'],
                 $newData['product_image'],
                 $newData['invoice_image'],
@@ -82,6 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
                 $newData['payment_source'],
                 $id
             ]);
+
 
             // ✅ إعادة حساب إجمالي الفاتورة
             if (!empty($oldData['order_id'])) {

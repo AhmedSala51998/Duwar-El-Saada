@@ -185,6 +185,7 @@ select#vatRate {
     <thead>
       <tr>
         <th>الصنف</th>
+        <th>العبوة</th>
         <th>الكمية</th>
         <th>الوحدة</th>
         <th>السعر</th>
@@ -201,6 +202,7 @@ select#vatRate {
       ?>
       <tr data-qty="<?= $item['quantity'] ?>" data-price="<?= $item['price'] ?>">
         <td><?= esc($item['name']) ?></td>
+        <td><?= esc($item['package']) ?></td>
         <td><?= esc($item['quantity'] . ' ' . $item['unit']) ?></td>
         <td><?= esc($item['unit']) ?></td>
         <td><?= number_format($item['price'],3) ?> ريال</td>

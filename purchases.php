@@ -218,6 +218,10 @@ $can_edit = in_array(current_role(), ['admin','manager']);
                       <?php endforeach; ?>
                     </select>
                   </div>
+                  <div class="col-md-3">
+                    <label class="form-label">العبوة</label>
+                    <input type="text" name="package" class="form-control" value="<?= esc($r['package'] ?? '') ?>" placeholder="أدخل العبوة">
+                  </div>
                   <div class="col-md-4">
                     <label class="form-label">السعر</label>
                     <input type="number" step="0.00000001" name="price" class="form-control" value="<?= esc($r['price']) ?>">
@@ -348,6 +352,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
                 <th>الاسم</th>
                 <th>الكمية</th>
                 <th>الوحدة</th>
+                <th>العبوة</th> <!-- العمود الجديد -->
                 <th>السعر</th>
                 <th>اسم الدافع</th>
                 <th>مصدر الدفع</th>
@@ -366,6 +371,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
                     <option>لتر</option>
                   </select>
                 </td>
+                <td><input name="package[]" class="form-control" placeholder="أدخل العبوة"></td> <!-- حقل العبوة -->
                 <td><input type="number" step="0.00000001" name="price[]" class="form-control"></td>
                 <td>
                   <select name="payer_name[]" class="form-select payer-select">
@@ -390,6 +396,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
               </tr>
             </tbody>
           </table>
+
 
           <button type="button" id="addRow" class="btn btn-secondary">+ إضافة صف جديد</button>
 

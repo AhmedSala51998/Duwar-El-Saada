@@ -12,6 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
     $prices = $_POST['price'] ?? [];
     $supplier_name = trim($_POST['supplier_name'] ?? '');
     $tax_number = trim($_POST['tax_number'] ?? '');
+    $packages = $_POST['package'] ?? [];
 
     // ✅ تحقق من الرقم الضريبي (15 رقم بالضبط) 
     if (!preg_match('/^\d{15}$/', $tax_number)) {
@@ -72,16 +73,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
         if (!$name) continue;
 
         $unit = $units[$i] ?? '';
+        $package = trim($packages[$i] ?? '');
         $payer = trim($payers[$i] ?? '');
         $payment_source = $sources[$i] ?? 'كاش';
         $quantity = (float)($quantities[$i] ?? 0);
         $price = (float)($prices[$i] ?? 0);
 
         $stmt = $pdo->prepare("
-            INSERT INTO purchases (name, quantity, unit, price, payer_name, payment_source, order_id)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO purchases (name, quantity, unit, package, price, payer_name, payment_source, order_id)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         ");
-        $stmt->execute([$name, $quantity, $unit, $price, $payer, $payment_source, $order_id]);
+        $stmt->execute([$name, $quantity, $unit, $package, $price, $payer, $payment_source, $order_id]);
 
         // خصم من العهدة لو كانت وسيلة الدفع "عهدة"
         if ($payment_source === 'عهدة') {
