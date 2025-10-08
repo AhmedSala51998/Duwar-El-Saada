@@ -9,10 +9,43 @@ require_auth();
 $from_date = $_GET['from_date'] ?? '';
 $to_date   = $_GET['to_date'] ?? '';
 
-$dateFilter = '';
-$params = [];
-if($from_date) { $dateFilter .= " AND DATE(created_at) >= ?"; $params[] = $from_date; }
-if($to_date)   { $dateFilter .= " AND DATE(created_at) <= ?"; $params[] = $to_date; }
+$paramsPurchases = [];
+$paramsAssets    = [];
+$paramsExpenses  = [];
+
+$dateFilterPurchases = '';
+$dateFilterAssets    = '';
+$dateFilterExpenses  = '';
+
+// فلترة المشتريات (p.created_at)
+if($from_date) { 
+    $dateFilterPurchases .= " AND DATE(p.created_at) >= ?"; 
+    $paramsPurchases[] = $from_date; 
+}
+if($to_date) { 
+    $dateFilterPurchases .= " AND DATE(p.created_at) <= ?"; 
+    $paramsPurchases[] = $to_date; 
+}
+
+// فلترة الأصول (a.created_at)
+if($from_date) { 
+    $dateFilterAssets .= " AND DATE(a.created_at) >= ?"; 
+    $paramsAssets[] = $from_date; 
+}
+if($to_date) { 
+    $dateFilterAssets .= " AND DATE(a.created_at) <= ?"; 
+    $paramsAssets[] = $to_date; 
+}
+
+// فلترة المصروفات (expenses.created_at)
+if($from_date) { 
+    $dateFilterExpenses .= " AND DATE(e.created_at) >= ?"; 
+    $paramsExpenses[] = $from_date; 
+}
+if($to_date) { 
+    $dateFilterExpenses .= " AND DATE(e.created_at) <= ?"; 
+    $paramsExpenses[] = $to_date; 
+}
 
 function renderSection($title, $rows, $columns, &$totalBefore, &$totalVat, &$totalAfter) {
     echo "<h4 style='margin-top:20px'>$title</h4>";
@@ -27,7 +60,7 @@ function renderSection($title, $rows, $columns, &$totalBefore, &$totalVat, &$tot
         foreach ($columns as $col) {
             switch($col) {
                 case 'الاسم':
-                case 'الأصل':  // دعم الأصول
+                case 'الأصل':
                     echo "<td>".htmlspecialchars($r['name'] ?? '-')."</td>";
                     break;
                 case 'المورد':
@@ -73,7 +106,6 @@ function renderSection($title, $rows, $columns, &$totalBefore, &$totalVat, &$tot
 }
 
 // ---------------------------- المشتريات ----------------------------
-// ---------------------------- المشتريات (تفصيل المنتجات) ----------------------------
 $stmt = $pdo->prepare("
     SELECT 
         p.name,
@@ -83,26 +115,26 @@ $stmt = $pdo->prepare("
         (p.price * p.quantity * 1.15) AS `after`
     FROM purchases p
     LEFT JOIN orders_purchases op ON p.order_id = op.id
-    WHERE 1=1 $dateFilter
+    WHERE 1=1 $dateFilterPurchases
 ");
-$stmt->execute($params);
+$stmt->execute($paramsPurchases);
 $purchases = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // ---------------------------- المصروفات ----------------------------
-// ---------------------------- المصروفات ----------------------------
-$stmt = $pdo->prepare("SELECT 
-    CASE 
-        WHEN sub_expense = 'أخرى' OR sub_expense IS NULL OR sub_expense = '' 
-        THEN CONCAT(main_expense, ' - ', expense_desc)
-        ELSE CONCAT(main_expense, ' - ', sub_expense)
-    END AS name, 
-    expense_amount AS `before`, 
-    (CASE WHEN has_vat=1 THEN expense_amount * 0.15 ELSE 0 END) AS `vat`, 
-    (CASE WHEN has_vat=1 THEN expense_amount * 1.15 ELSE expense_amount END) AS `after` 
-FROM expenses 
-WHERE 1=1 $dateFilter
+$stmt = $pdo->prepare("
+    SELECT 
+        CASE 
+            WHEN sub_expense = 'أخرى' OR sub_expense IS NULL OR sub_expense = '' 
+            THEN CONCAT(main_expense, ' - ', expense_desc)
+            ELSE CONCAT(main_expense, ' - ', sub_expense)
+        END AS name, 
+        expense_amount AS `before`, 
+        (CASE WHEN has_vat=1 THEN expense_amount * 0.15 ELSE 0 END) AS `vat`, 
+        (CASE WHEN has_vat=1 THEN expense_amount * 1.15 ELSE expense_amount END) AS `after` 
+    FROM expenses e
+    WHERE 1=1 $dateFilterExpenses
 ");
-$stmt->execute($params);
+$stmt->execute($paramsExpenses);
 $expenses = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // ---------------------------- الأصول ----------------------------
@@ -115,9 +147,9 @@ $stmt = $pdo->prepare("
         (CASE WHEN a.has_vat=1 THEN a.price * a.quantity * 0.15 ELSE 0 END) AS `vat`,
         (CASE WHEN a.has_vat=1 THEN a.price * a.quantity * 1.15 ELSE a.price * a.quantity END) AS `after`
     FROM assets a
-    WHERE 1=1 $dateFilter
+    WHERE 1=1 $dateFilterAssets
 ");
-$stmt->execute($params);
+$stmt->execute($paramsAssets);
 $assets = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // ---------------------------- تجميع الكل ----------------------------
@@ -149,13 +181,13 @@ if ($from_date || $to_date) {
     echo "<p style='text-align:center;font-weight:bold'>كل التقرير</p>";
 }
 
-// المشتريات: ['الاسم','المورد','الإجمالي قبل الضريبة','الضريبة','الإجمالي بعد']
+// المشتريات
 renderSection("المشتريات", $purchases, ['الاسم','المورد','الإجمالي قبل الضريبة','الضريبة','الإجمالي بعد'], $totalBefore,$totalVat,$totalAfter);
 
-// المصروفات تبقى زي ما هي
+// المصروفات
 renderSection("المصروفات", $expenses, ['الاسم','الإجمالي قبل الضريبة','الضريبة','الإجمالي بعد'], $totalBefore,$totalVat,$totalAfter);
 
-// الأصول: ['الأصل','الكمية','النوع','الإجمالي قبل الضريبة','الضريبة','الإجمالي بعد']
+// الأصول
 renderSection("الأصول", $assets, ['الأصل','الكمية','النوع','الإجمالي قبل الضريبة','الضريبة','الإجمالي بعد'], $totalBefore,$totalVat,$totalAfter);
 ?>
 
