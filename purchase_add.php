@@ -13,6 +13,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
     $supplier_name = trim($_POST['supplier_name'] ?? '');
     $tax_number = trim($_POST['tax_number'] ?? '');
 
+    // ✅ تحقق من الرقم الضريبي (15 رقم بالضبط) 
+    if (!preg_match('/^\d{15}$/', $tax_number)) {
+         $_SESSION['toast'] = ['type'=>'danger','msg'=>'❌ الرقم الضريبي يجب أن يكون 15 رقم بالضبط.'];
+          header('Location: ' . BASE_URL . '/purchases.php'); exit; 
+        } // ✅ تحقق من التكرار في قاعدة البيانات 
+        $checkTax = $pdo->prepare("SELECT COUNT(*) FROM orders_purchases WHERE tax_number = ?");
+         $checkTax->execute([$tax_number]);
+          if ($checkTax->fetchColumn() > 0) { 
+            $_SESSION['toast'] = ['type'=>'danger','msg'=>'❌ هذا الرقم الضريبي مستخدم بالفعل في فاتورة سابقة.'];
+             header('Location: ' . BASE_URL . '/purchases.php'); exit; 
+          }
+
     // حساب الإجمالي
     $total = 0;
     foreach ($names as $i => $name) {
