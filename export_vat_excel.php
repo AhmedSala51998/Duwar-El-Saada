@@ -29,7 +29,7 @@ $purchases = $stmt->fetchAll(PDO::FETCH_ASSOC);
 // ---------------------------- المصروفات ----------------------------
 $stmt = $pdo->prepare("SELECT 
     CASE 
-        WHEN sub_expense = 'أخرى' 
+        WHEN sub_expense = 'أخرى' OR sub_expense IS NULL OR sub_expense = '' 
         THEN CONCAT(main_expense, ' - ', expense_desc)
         ELSE CONCAT(main_expense, ' - ', sub_expense)
     END AS name,
