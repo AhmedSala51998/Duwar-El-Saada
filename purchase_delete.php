@@ -20,7 +20,10 @@ if ($id) {
             $custody = $stmtC->fetch();
 
             if ($custody) {
-                $newAmount = $custody['amount'] + $oldData['price'];
+                // قيمة المنتج بالكامل (الكمية × السعر)
+                $refund = $oldData['quantity'] * $oldData['price'];
+                $newAmount = $custody['amount'] + $refund;
+
                 $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
             }
         }
