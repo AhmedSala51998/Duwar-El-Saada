@@ -108,11 +108,15 @@ if ($date_type === 'today') {
   <th>التاريخ</th>
 </tr>
 </thead>
+<?php 
+$totalBefore = $totalVat = $totalAfter = 0;
+?>
 <tbody>
 <?php foreach($rows as $r): 
     $quantity = (float)$r['quantity'];
     $price = (float)$r['price'];
     $total = $quantity * $price;
+
     if(!empty($r['has_vat']) && $r['has_vat'] == 1){
         $vat = $total * 0.15;
         $total_with_vat = $total + $vat;
@@ -120,6 +124,10 @@ if ($date_type === 'today') {
         $vat = 0;
         $total_with_vat = $total;
     }
+
+    $totalBefore += $total;
+    $totalVat += $vat;
+    $totalAfter += $total_with_vat;
 ?>
 <tr>
   <td><?= $r['id'] ?></td>
@@ -136,6 +144,16 @@ if ($date_type === 'today') {
 </tr>
 <?php endforeach; ?>
 </tbody>
+
+<tfoot>
+<tr style="font-weight:bold;background:#f1f1f1">
+  <td colspan="5">الإجماليات الكلية</td>
+  <td><?= number_format($totalBefore, 7) ?></td>
+  <td><?= number_format($totalVat, 7) ?></td>
+  <td><?= number_format($totalAfter, 7) ?></td>
+  <td colspan="3"></td>
+</tr>
+</tfoot>
 </table>
 
 <script>
