@@ -69,6 +69,25 @@ th{background:#f7f7f7}
 .head{display:flex;justify-content:space-between;align-items:center}
 h3{margin:0}
 tfoot td{font-weight:bold;background:#f1f1f1}
+@media print {
+  body { font-size: 10px; }
+  table { page-break-inside: auto; }
+  tr    { page-break-inside: avoid; page-break-after: auto; }
+  th, td { padding: 3px; }
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed; /* مهم */
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 4px;
+  text-align: center;
+  word-wrap: break-word; /* لتقسيم النصوص الطويلة */
+}
+
 </style>
 </head>
 <body>
@@ -139,10 +158,10 @@ foreach($rows as $r):
   <td><?= esc($r['supplier_name']) ?></td>
   <td><?= $r['quantity'] ?></td>
   <td><?= esc($r['unit']) ?></td>
-  <td><?= number_format((float)$r['price'], 2) ?></td>
-  <td><?= number_format($before, 2) ?></td>
-  <td><?= number_format($vat, 2) ?></td>
-  <td><?= number_format($after, 2) ?></td>
+  <td><?= number_format((float)$r['price'], 7) ?></td>
+  <td><?= number_format($before, 7) ?></td>
+  <td><?= number_format($vat, 7) ?></td>
+  <td><?= number_format($after, 7) ?></td>
   <td><?= esc($r['payer_name']) ?></td>
   <td><?= esc($r['payment_source']) ?></td>
   <td><?= esc($r['created_at']) ?></td>
