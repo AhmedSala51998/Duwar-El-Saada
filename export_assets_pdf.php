@@ -53,6 +53,25 @@ $rows = $s->fetchAll();
   table{width:100%;border-collapse:collapse}
   th,td{border:1px solid #ddd;padding:6px;text-align:center}
   th{background:#f7f7f7}
+  @media print {
+  body { font-size: 10px; }
+  table { page-break-inside: auto; }
+  tr    { page-break-inside: avoid; page-break-after: auto; }
+  th, td { padding: 3px; }
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed; /* مهم */
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 4px;
+  text-align: center;
+  word-wrap: break-word; /* لتقسيم النصوص الطويلة */
+}
+
 </style>
 </head>
 <body>
