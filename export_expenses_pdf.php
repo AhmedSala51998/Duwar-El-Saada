@@ -137,9 +137,9 @@ foreach($rows as $r):
 <tfoot>
 <tr>
 <td colspan="4">الإجماليات الكلية</td>
-<td><?= $totalBefore ?></td>
-<td><?= $totalVat ?></td>
-<td><?= $totalAfter ?></td>
+ <td><?= number_format($totalBefore, 4) ?></td>
+ <td><?= number_format($totalVat, 4) ?></td>
+ <td><?= number_format($totalAfter, 4) ?></td>
 <td colspan="4"></td>
 </tr>
 </tfoot>
