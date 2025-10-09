@@ -165,7 +165,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
       <td><?= esc($r['name']) ?></td>
       <td><span class="badge badge-unit"><?= $r['quantity'] ?></span></td>
       <td><?= esc($r['unit']) ?></td>
-      <td><?= number_format((float)$r['price'],2) ?></td>
+      <td><?= number_format((float)$r['price'],7) ?></td>
       <td><?= esc($r['created_at']) ?></td>
       <td>
       <?php if($r['invoice_image']): ?>

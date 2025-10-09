@@ -2,33 +2,43 @@
 require __DIR__.'/config/config.php'; 
 require_auth();
 
-$kw = trim($_GET['kw'] ?? '');
+$date_type = $_GET['date_type'] ?? '';
 $from_date = $_GET['from_date'] ?? '';
-$to_date = $_GET['to_date'] ?? '';
+$to_date   = $_GET['to_date'] ?? '';
+$kw        = trim($_GET['kw'] ?? '');
 
-$q = "SELECT * FROM expenses WHERE 1"; 
-$ps = [];
+$params = [];
+$dateFilter = '';
+
+if ($date_type === 'today') {
+    $today = date('Y-m-d');
+    $from_date = $to_date = $today;
+} elseif ($date_type === 'yesterday') {
+    $yesterday = date('Y-m-d', strtotime('-1 day'));
+    $from_date = $to_date = $yesterday;
+}
 
 // فلترة بالكلمة المفتاحية
-if($kw !== ''){ 
-    $q .= " AND main_expense LIKE ?"; 
-    $ps[] = "%$kw%"; 
+$q = "SELECT * FROM expenses WHERE 1";
+if ($kw !== '') {
+    $q .= " AND main_expense LIKE ?";
+    $params[] = "%$kw%";
 }
 
-// فلترة بالتواريخ
-if($from_date !== '') {
+// فلترة بالتاريخ
+if ($from_date) {
     $q .= " AND DATE(created_at) >= ?";
-    $ps[] = $from_date;
+    $params[] = $from_date;
 }
-if($to_date !== '') {
+if ($to_date) {
     $q .= " AND DATE(created_at) <= ?";
-    $ps[] = $to_date;
+    $params[] = $to_date;
 }
 
 $q .= " ORDER BY id DESC";
 
 $s = $pdo->prepare($q); 
-$s->execute($ps); 
+$s->execute($params); 
 $rows = $s->fetchAll();
 ?>
 <!doctype html>
@@ -41,11 +51,27 @@ table{width:100%;border-collapse:collapse;margin-top:15px}
 th,td{border:1px solid #ddd;padding:6px;text-align:center}
 th{background:#f7f7f7}
 h2{text-align:center;margin-bottom:10px}
+tfoot td{font-weight:bold;background:#f1f1f1}
 </style>
 <title>تقرير المصروفات</title>
 </head>
 <body>
 <h2>تقرير المصروفات</h2>
+
+<?php
+if ($date_type === 'today') {
+    echo "<p style='text-align:center;font-weight:bold'>تقرير اليوم (" . date('Y-m-d') . ")</p>";
+} elseif ($date_type === 'yesterday') {
+    echo "<p style='text-align:center;font-weight:bold'>تقرير أمس (" . date('Y-m-d', strtotime('-1 day')) . ")</p>";
+} elseif ($from_date || $to_date) {
+    $fromText = $from_date ?: 'بداية';
+    $toText   = $to_date   ?: 'اليوم';
+    echo "<p style='text-align:center;font-weight:bold'>الفترة من $fromText إلى $toText</p>";
+} else {
+    echo "<p style='text-align:center;font-weight:bold'>كل المصروفات</p>";
+}
+?>
+
 <table>
 <thead>
 <tr>
@@ -53,7 +79,9 @@ h2{text-align:center;margin-bottom:10px}
 <th>المصروفات</th>
 <th>نوع المصروف</th>
 <th>بيان المصروف</th>
-<th>قيمة المصروف</th>
+<th>الإجمالي الطبيعي</th>
+<th>الضريبة (15%)</th>
+<th>الإجمالي بعد الضريبة</th>
 <th>المرفق</th>
 <th>الدافع</th>
 <th>مصدر الدفع</th>
@@ -61,13 +89,25 @@ h2{text-align:center;margin-bottom:10px}
 </tr>
 </thead>
 <tbody>
-<?php foreach($rows as $r): ?>
+<?php 
+$totalBefore = $totalVat = $totalAfter = 0;
+foreach($rows as $r): 
+    $before = (float)$r['expense_amount'];
+    $vat = (!empty($r['has_vat']) && $r['has_vat'] == 1) ? (float)$r['vat_value'] : 0;
+    $after = (!empty($r['has_vat']) && $r['has_vat'] == 1) ? (float)$r['total_amount'] : $before;
+
+    $totalBefore += $before;
+    $totalVat += $vat;
+    $totalAfter += $after;
+?>
 <tr>
 <td><?= $r['id'] ?></td>
 <td><?= esc($r['main_expense']) ?></td>
 <td><?= esc($r['sub_expense']) ?></td>
 <td><?= esc($r['expense_desc']) ?></td>
-<td><?= number_format((float)$r['expense_amount'],2) ?></td>
+<td><?= $before ?></td>
+<td><?= $vat ?></td>
+<td><?= $after ?></td>
 <td><?= $r['expense_file'] ? esc($r['expense_file']) : '-' ?></td>
 <td><?= esc($r['payer_name'] ?? '-') ?></td>
 <td><?= esc($r['payment_source'] ?? '-') ?></td>
@@ -75,12 +115,22 @@ h2{text-align:center;margin-bottom:10px}
 </tr>
 <?php endforeach; ?>
 </tbody>
+<tfoot>
+<tr>
+<td colspan="4">الإجماليات الكلية</td>
+<td><?= $totalBefore ?></td>
+<td><?= $totalVat ?></td>
+<td><?= $totalAfter ?></td>
+<td colspan="4"></td>
+</tr>
+</tfoot>
 </table>
+
 <script>
-  window.print();
-  window.onafterprint = function () {
+window.print();
+window.onafterprint = function () {
     window.history.back();
-  };
+};
 </script>
 </body>
 </html>

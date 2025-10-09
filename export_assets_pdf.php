@@ -2,38 +2,52 @@
 require __DIR__.'/config/config.php'; 
 require_auth();
 
-$kw = trim($_GET['kw'] ?? ''); 
-$from_date = $_GET['from_date'] ?? '';
-$to_date = $_GET['to_date'] ?? '';
+$kw         = trim($_GET['kw'] ?? ''); 
+$date_type  = $_GET['date_type'] ?? '';
+$from_date  = $_GET['from_date'] ?? '';
+$to_date    = $_GET['to_date'] ?? '';
 
-$q = "SELECT id,name,type,quantity,price,payer_name,payment_source,created_at FROM assets WHERE 1"; 
-$ps = []; 
+$params = [];
+$dateFilter = '';
 
-// فلترة بالكلمة المفتاحية
+// تطبيق منطق الفلترة حسب نوع التاريخ
+if ($date_type === 'today') {
+    $today = date('Y-m-d');
+    $from_date = $to_date = $today;
+} elseif ($date_type === 'yesterday') {
+    $yesterday = date('Y-m-d', strtotime('-1 day'));
+    $from_date = $to_date = $yesterday;
+}
+
+// فلترة بالبحث بالكلمة
+$q = "SELECT id,name,type,quantity,price,has_vat,payer_name,payment_source,created_at FROM assets WHERE 1";
+
 if ($kw !== '') { 
   $q .= " AND name LIKE ?"; 
-  $ps[] = "%$kw%"; 
-} 
+  $params[] = "%$kw%"; 
+}
 
 // فلترة بالتواريخ
-if ($from_date !== '') {
-  $q .= " AND DATE(created_at) >= ?";
-  $ps[] = $from_date;
+if ($from_date) { 
+  $q .= " AND DATE(created_at) >= ?"; 
+  $params[] = $from_date; 
 }
-if ($to_date !== '') {
-  $q .= " AND DATE(created_at) <= ?";
-  $ps[] = $to_date;
+if ($to_date) { 
+  $q .= " AND DATE(created_at) <= ?"; 
+  $params[] = $to_date; 
 }
 
 $q .= " ORDER BY id DESC";
+
 $s = $pdo->prepare($q); 
-$s->execute($ps); 
+$s->execute($params); 
 $rows = $s->fetchAll();
 ?>
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
+<title>تقرير الأصول</title>
 <style>
   body{font-family:Cairo,Arial}
   table{width:100%;border-collapse:collapse}
@@ -42,9 +56,23 @@ $rows = $s->fetchAll();
 </style>
 </head>
 <body>
-<title>تقرير الأصول</title>
 <img src="assets/logo.svg" width="60" style="float:left">
 <h2 style="text-align:center;margin:0">تقرير الأصول</h2>
+
+<?php
+if ($date_type === 'today') {
+    echo "<p style='text-align:center;font-weight:bold'>تقرير اليوم (" . date('Y-m-d') . ")</p>";
+} elseif ($date_type === 'yesterday') {
+    echo "<p style='text-align:center;font-weight:bold'>تقرير أمس (" . date('Y-m-d', strtotime('-1 day')) . ")</p>";
+} elseif ($from_date || $to_date) {
+    $fromText = $from_date ?: 'بداية';
+    $toText   = $to_date   ?: 'اليوم';
+    echo "<p style='text-align:center;font-weight:bold'>الفترة من $fromText إلى $toText</p>";
+} else {
+    echo "<p style='text-align:center;font-weight:bold'>كل التقرير</p>";
+}
+?>
+
 <table>
 <thead>
 <tr>
@@ -53,32 +81,49 @@ $rows = $s->fetchAll();
   <th>النوع</th>
   <th>العدد</th>
   <th>السعر</th>
+  <th>الإجمالي الطبيعي</th>
+  <th>الضريبة (15%)</th>
+  <th>الإجمالي بعد الضريبة</th>
   <th>الدافع</th>
   <th>مصدر الدفع</th>
   <th>التاريخ</th>
 </tr>
 </thead>
 <tbody>
-<?php foreach($rows as $r): ?>
+<?php foreach($rows as $r): 
+    $quantity = (float)$r['quantity'];
+    $price = (float)$r['price'];
+    $total = $quantity * $price;
+    if(!empty($r['has_vat']) && $r['has_vat'] == 1){
+        $vat = $total * 0.15;
+        $total_with_vat = $total + $vat;
+    } else {
+        $vat = 0;
+        $total_with_vat = $total;
+    }
+?>
 <tr>
   <td><?= $r['id'] ?></td>
-  <td><?= esc($r['name']) ?></td>
-  <td><?= esc($r['type']) ?></td>
-  <td><?= (int)$r['quantity'] ?></td>
-  <td><?= number_format((float)$r['price'],2) ?></td>
-  <td><?= esc($r['payer_name']) ?></td>
-  <td><?= esc($r['payment_source'] ?? '-') ?></td>
-  <td><?= esc($r['created_at']) ?></td>
+  <td><?= htmlspecialchars($r['name']) ?></td>
+  <td><?= htmlspecialchars($r['type']) ?></td>
+  <td><?= $quantity ?></td>
+  <td><?= number_format($price, 7) ?></td>
+  <td><?= number_format($total, 7) ?></td>
+  <td><?= number_format($vat, 7) ?></td>
+  <td><?= number_format($total_with_vat, 7) ?></td>
+  <td><?= htmlspecialchars($r['payer_name']) ?></td>
+  <td><?= htmlspecialchars($r['payment_source'] ?? '-') ?></td>
+  <td><?= htmlspecialchars($r['created_at']) ?></td>
 </tr>
 <?php endforeach; ?>
 </tbody>
 </table>
+
 <script>
   window.print();
   window.onafterprint = function () {
     window.history.back();
   };
 </script>
-
 </body>
 </html>
