@@ -75,6 +75,7 @@ th, td {
 <title>تقرير المصروفات</title>
 </head>
 <body>
+<img src="assets/logo.svg" width="60" style="float:left">
 <h2>تقرير المصروفات</h2>
 
 <?php
@@ -87,7 +88,7 @@ if ($date_type === 'today') {
     $toText   = $to_date   ?: 'اليوم';
     echo "<p style='text-align:center;font-weight:bold'>الفترة من $fromText إلى $toText</p>";
 } else {
-    echo "<p style='text-align:center;font-weight:bold'>كل المصروفات</p>";
+    echo "<p style='text-align:center;font-weight:bold'>كل التقرير</p>";
 }
 ?>
 
