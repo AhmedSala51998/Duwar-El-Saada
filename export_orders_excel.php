@@ -1,18 +1,29 @@
 <?php
 require __DIR__.'/config/config.php';
 require_auth();
-
 require_once __DIR__.'/libs/SimpleXLSXGen.php';
 
-$kw = trim($_GET['kw'] ?? '');
+$kw        = trim($_GET['kw'] ?? '');
+$date_type = $_GET['date_type'] ?? '';
 $from_date = $_GET['from_date'] ?? '';
-$to_date = $_GET['to_date'] ?? '';
+$to_date   = $_GET['to_date'] ?? '';
 
+$params = [];
+
+// تطبيق منطق الفلترة حسب نوع التاريخ
+if ($date_type === 'today') {
+    $today = date('Y-m-d');
+    $from_date = $to_date = $today;
+} elseif ($date_type === 'yesterday') {
+    $yesterday = date('Y-m-d', strtotime('-1 day'));
+    $from_date = $to_date = $yesterday;
+}
+
+// بناء الاستعلام
 $q = "SELECT o.id, p.name pname, o.qty, o.unit, o.note, o.created_at
-      FROM orders o 
+      FROM orders o
       JOIN purchases p ON p.id = o.purchase_id
       WHERE 1";
-$params = [];
 
 // فلترة بالكلمة المفتاحية
 if ($kw !== '') {
@@ -32,6 +43,7 @@ if ($to_date !== '') {
 
 $q .= " ORDER BY o.id DESC";
 
+// تنفيذ الاستعلام
 $s = $pdo->prepare($q);
 $s->execute($params);
 $rows = $s->fetchAll(PDO::FETCH_ASSOC);
