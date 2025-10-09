@@ -119,6 +119,7 @@ th, td {
 <th>رقم تسلسلي</th>
 <th>الاسم</th>
 <th>المورد</th>
+<th>العبوة</th>
 <th>الكمية</th>
 <th>الوحدة</th>
 <th>السعر</th>
@@ -156,6 +157,7 @@ foreach($rows as $r):
   <td><?= esc($r['invoice_serial'] ?? '-') ?></td>
   <td><?= esc($r['name']) ?></td>
   <td><?= esc($r['supplier_name']) ?></td>
+  <td><?= esc($r['package']) ?></td>
   <td><?= $r['quantity'] ?></td>
   <td><?= esc($r['unit']) ?></td>
   <td><?= number_format((float)$r['price'], 7) ?></td>
