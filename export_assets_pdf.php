@@ -148,9 +148,9 @@ $totalBefore = $totalVat = $totalAfter = 0;
 <tfoot>
 <tr style="font-weight:bold;background:#f1f1f1">
   <td colspan="5">الإجماليات الكلية</td>
-  <td><?= number_format($totalBefore, 7) ?></td>
-  <td><?= number_format($totalVat, 7) ?></td>
-  <td><?= number_format($totalAfter, 7) ?></td>
+  <td><?= number_format($totalBefore, 4) ?></td>
+  <td><?= number_format($totalVat, 4) ?></td>
+  <td><?= number_format($totalAfter, 4) ?></td>
   <td colspan="3"></td>
 </tr>
 </tfoot>
