@@ -176,7 +176,7 @@ foreach($rows as $r):
   <td><?= number_format($totalBefore, 4) ?></td>
   <td><?= number_format($totalVat, 4) ?></td>
   <td><?= number_format($totalAfter, 4) ?></td>
-  <td colspan="3"></td>
+  <td colspan="4"></td>
 </tr>
 </tfoot>
 </table>
