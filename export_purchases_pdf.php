@@ -172,11 +172,11 @@ foreach($rows as $r):
 </tbody>
 <tfoot>
 <tr>
-  <td colspan="7">الإجماليات الكلية</td>
+  <td colspan="8">الإجماليات الكلية</td>
   <td><?= number_format($totalBefore, 4) ?></td>
   <td><?= number_format($totalVat, 4) ?></td>
   <td><?= number_format($totalAfter, 4) ?></td>
-  <td colspan="4"></td>
+  <td colspan="3"></td>
 </tr>
 </tfoot>
 </table>
