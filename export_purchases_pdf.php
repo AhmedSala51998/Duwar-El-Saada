@@ -109,7 +109,7 @@ th, td {
     }
     ?>
   </div>
-  <img src="assets/logo.svg" width="60">
+  <img src="assets/logo.png" width="60">
 </div>
 
 <table>

@@ -144,7 +144,7 @@ select#vatRate {
     line-height: 1.8;
 }
 
-</style>
+</style>2
 
 <div class="d-print-none mb-3">
   <button onclick="window.print()" class="btn btn-orange"><i class="bi bi-printer"></i> طباعة</button>

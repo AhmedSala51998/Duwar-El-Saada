@@ -75,7 +75,7 @@ th, td {
 <title>تقرير المصروفات</title>
 </head>
 <body>
-<img src="assets/logo.svg" width="60" style="float:left">
+<img src="assets/logo.png" width="60" style="float:left">
 <h2>تقرير المصروفات</h2>
 
 <?php

@@ -75,7 +75,7 @@ th, td {
 </style>
 </head>
 <body>
-<img src="assets/logo.svg" width="60" style="float:left">
+<img src="assets/logo.png" width="60" style="float:left">
 <h2 style="text-align:center;margin:0">تقرير الأصول</h2>
 
 <?php
