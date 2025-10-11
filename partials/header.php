@@ -178,7 +178,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
     <!-- اللوجو -->
     <a class="navbar-brand d-flex align-items-center gap-2 fw-bold text-orange" href="<?= BASE_URL ?>/home.php">
-      <img src="<?= BASE_URL ?>/assets/logo.png" width="52" height="52" alt="logo" class="rounded shadow-sm">
+      <img src="<?= BASE_URL ?>/assets/logo.png" width="72" height="72" alt="logo" class="rounded shadow-sm">
       <span class="fs-5"><?= esc(APP_NAME) ?></span>
     </a>
 
