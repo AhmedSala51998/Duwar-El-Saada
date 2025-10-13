@@ -12,6 +12,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
     $vat_value = 0;
     $total_amount = $expense_amount;
 
+    // إنشاء رقم تسلسلي للفواتير بصيغة DAEL00001
+    $lastSerial = $pdo->query("SELECT invoice_serial FROM expenses ORDER BY id DESC LIMIT 1")->fetchColumn();
+    if ($lastSerial && preg_match('/DAELE(\d+)/', $lastSerial, $m)) {
+        $nextNumber = (int)$m[1] + 1;
+    } else {
+        $nextNumber = 1;
+    }
+    $serial_invoice = "DAELE" . str_pad($nextNumber, 5, "0", STR_PAD_LEFT);
+
     if ($has_vat) {
         $vat_value = $expense_amount * 0.15;
         $total_amount = $expense_amount + $vat_value;
@@ -34,9 +43,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
         }
     }
 
-    $pdo->prepare("INSERT INTO expenses(main_expense, sub_expense, expense_desc, expense_amount, vat_value, total_amount, has_vat, expense_file, payer_name, payment_source)
-                VALUES(?,?,?,?,?,?,?,?,?,?)")
+    $pdo->prepare("INSERT INTO expenses(invoice_serial, main_expense, sub_expense, expense_desc, expense_amount, vat_value, total_amount, has_vat, expense_file, payer_name, payment_source)
+                VALUES(?,?,?,?,?,?,?,?,?,?,?)")
         ->execute([
+            $serial_invoice,
             $main_expense,
             $sub_expense,
             $expense_desc,

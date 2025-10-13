@@ -66,6 +66,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 <thead class="table-light">
 <tr>
 <th>#</th>
+<th>الرقم التسلسلي</th>
 <th>المصروفات</th>
 <th>نوع المصروف</th>
 <th>بيان المصروف</th>
@@ -82,6 +83,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 <?php foreach($rows as $r): ?>
 <tr>
 <td><?= $r['id'] ?></td>
+<td><?= esc($r['invoice_serial']) ?></td>
 <td><?= esc($r['main_expense']) ?></td>
 <td><?= esc($r['sub_expense']) ?></td>
 <td><?= esc($r['expense_desc']) ?></td>
@@ -107,6 +109,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 <td><?php if($r['expense_file']): ?><img src="uploads/<?= esc($r['expense_file']) ?>" width="50"><?php endif; ?></td>
 <?php if($can_edit): ?>
 <td>
+<a class="btn btn-sm btn-outline-primary" href="invoice_expense?id=<?= $r['id'] ?>"><i class="bi bi-printer"></i></a>
 <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#edit<?= $r['id'] ?>"><i class="bi bi-pencil"></i></button>
 <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#del<?= $r['id'] ?>"><i class="bi bi-trash"></i></button>
 </td>
@@ -226,7 +229,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
         هل تريد حذف المصروف <strong><?= esc($r['main_expense']) ?></strong>؟
       </div>
       <div class="modal-footer">
-        <form method="post" action="delete_expense.php">
+        <form method="post" action="delete_expense">
           <input type="hidden" name="id" value="<?= $r['id'] ?>">
           <button type="submit" class="btn btn-danger">حذف</button>
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
