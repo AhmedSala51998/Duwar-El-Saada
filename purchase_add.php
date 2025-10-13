@@ -48,12 +48,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
 
     // إنشاء رقم تسلسلي للفواتير بصيغة DAEL00001
     $lastSerial = $pdo->query("SELECT invoice_serial FROM orders_purchases ORDER BY id DESC LIMIT 1")->fetchColumn();
-    if ($lastSerial && preg_match('/DAEL(\d+)/', $lastSerial, $m)) {
+    if ($lastSerial && preg_match('/DAELP(\d+)/', $lastSerial, $m)) {
         $nextNumber = (int)$m[1] + 1;
     } else {
         $nextNumber = 1;
     }
-    $serial_invoice = "DAEL" . str_pad($nextNumber, 5, "0", STR_PAD_LEFT);
+    $serial_invoice = "DAELP" . str_pad($nextNumber, 5, "0", STR_PAD_LEFT);
 
     // رفع صورة الفاتورة العامة (مش لكل صف)
     $invoiceImage = upload_image('invoice_image');

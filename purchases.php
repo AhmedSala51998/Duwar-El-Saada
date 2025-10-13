@@ -600,7 +600,7 @@ document.querySelector('form[action="purchase_add"]').addEventListener('submit',
 
   // تحقق من التكرار (AJAX)
   e.preventDefault(); // نوقف الإرسال مؤقتاً
-  fetch('check_tax_number.php?tax=' + encodeURIComponent(taxValue))
+  fetch('check_tax_number?tax=' + encodeURIComponent(taxValue))
     .then(res => res.json())
     .then(data => {
       if (data.exists) {
