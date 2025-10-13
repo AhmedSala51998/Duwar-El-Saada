@@ -69,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
                         INSERT INTO custody_transactions (type, type_id, custody_id, amount, created_at)
                         VALUES (?, ?, ?, ?, NOW())
                     ");
-                    $stmtTx->execute(['refund', $oldData['id'], $custody['id'], $add]);
+                    $stmtTx->execute(['refund_asset', $oldData['id'], $custody['id'], $add]);
 
                     $amountToReturn -= $add;
                 }
@@ -94,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
                         INSERT INTO custody_transactions (type, type_id, custody_id, amount, created_at)
                         VALUES (?, ?, ?, ?, NOW())
                     ");
-                    $stmtTx->execute(['deduct', $oldData['id'], $custody['id'], $deduct]);
+                    $stmtTx->execute(['deduct_asset', $oldData['id'], $custody['id'], $deduct]);
 
                     $amountToDeduct -= $deduct;
                 }

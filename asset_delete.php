@@ -32,7 +32,7 @@ if($id){
                 INSERT INTO custody_transactions (type, type_id, custody_id, amount, created_at)
                 VALUES (?, ?, ?, ?, NOW())
             ");
-            $stmtTx->execute(['refund', $oldData['id'], $custody['id'], $deductedBefore]);
+            $stmtTx->execute(['refund_asset', $oldData['id'], $custody['id'], $deductedBefore]);
 
             $amountToReturn -= $deductedBefore;
         }
