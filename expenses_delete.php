@@ -11,12 +11,22 @@ if($id){
 
     // استرجاع العهدة إذا كانت مدفوعة من العهدة
     if($oldData['payment_source'] === 'عهدة'){
-        $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? ORDER BY taken_at DESC LIMIT 1");
+        $amountToRefund = $oldData['expense_amount'];
+
+        // جلب كل العهد المتاحة للشخص، الأقدم أولاً
+        $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? ORDER BY taken_at ASC");
         $stmtC->execute([$oldData['payer_name']]);
-        $custody = $stmtC->fetch();
-        if($custody){
-            $newAmount = $custody['amount'] + $oldData['expense_amount'];
+        $custodies = $stmtC->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach($custodies as $custody){
+            if($amountToRefund <= 0) break;
+
+            // كم نقدر نضيف للعهدة الحالية
+            $add = $amountToRefund; // لأن استرجاع، نضيف كامل المبلغ المتبقي
+            $newAmount = $custody['amount'] + $add;
+
             $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
+            $amountToRefund -= $add; // الآن الصفر غالباً بعد أول تحديث
         }
     }
 

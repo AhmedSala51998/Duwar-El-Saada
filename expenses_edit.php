@@ -41,28 +41,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
     }
 
     if($changed){
+        // استرجاع العهدة القديمة إذا كانت مدفوعة من العهدة
         if($oldData['payment_source'] === 'عهدة'){
-            $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? ORDER BY taken_at DESC LIMIT 1");
+            $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? ORDER BY taken_at ASC");
             $stmtC->execute([$oldData['payer_name']]);
-            $custody = $stmtC->fetch();
-            if($custody){
-                $newAmount = $custody['amount'] + $oldData['expense_amount'];
+            $custodies = $stmtC->fetchAll(PDO::FETCH_ASSOC);
+
+            $amountToReturn = $oldData['expense_amount'];
+            foreach($custodies as $custody){
+                if($amountToReturn <= 0) break;
+
+                $newAmount = $custody['amount'] + $amountToReturn;
                 $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
+                $amountToReturn = 0; // ارجع كل المبلغ مرة واحدة للعهدة الموجودة
             }
         }
 
+        // خصم العهدة الجديدة إذا مصدر الدفع "عهدة"
         if($newData['payment_source'] === 'عهدة'){
-            $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? ORDER BY taken_at DESC LIMIT 1");
+            $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? AND amount > 0 ORDER BY taken_at ASC");
             $stmtC->execute([$newData['payer_name']]);
-            $custody = $stmtC->fetch();
-            if($custody && $custody['amount'] >= $newData['expense_amount']){
-                $newAmount = $custody['amount'] - $newData['expense_amount'];
+            $custodies = $stmtC->fetchAll(PDO::FETCH_ASSOC);
+
+            $amountToDeduct = $newData['expense_amount'];
+            foreach($custodies as $custody){
+                if($amountToDeduct <= 0) break;
+
+                $deduct = min($custody['amount'], $amountToDeduct);
+                $newAmount = $custody['amount'] - $deduct;
                 $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
-            } else {
+
+                $amountToDeduct -= $deduct;
+            }
+
+            if($amountToDeduct > 0){
                 $_SESSION['toast'] = ['type'=>'danger','msg'=>'رصيد العهدة غير كافي'];
-                header('Location: ' . BASE_URL . '/expenses.php'); exit;
+                header('Location: ' . BASE_URL . '/expenses.php');
+                exit;
             }
         }
+
 
         $pdo->prepare("UPDATE expenses SET main_expense=?, sub_expense=?, expense_desc=?, expense_amount=?, has_vat=?, vat_value=?, total_amount=?, expense_file=?, payment_source=?, payer_name=? WHERE id=?")
             ->execute([

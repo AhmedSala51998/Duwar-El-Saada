@@ -50,29 +50,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
 
         if($changed){
             // استرجاع العهدة القديمة إذا كانت مدفوعة من العهدة
+            // إعادة العهدة القديمة
             if($oldData['payment_source'] === 'عهدة'){
-                $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? ORDER BY taken_at DESC LIMIT 1");
+                $amountToReturn = $oldData['price'] * $oldData['quantity'];
+                $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? ORDER BY taken_at ASC");
                 $stmtC->execute([$oldData['payer_name']]);
-                $custody = $stmtC->fetch();
-                if($custody){
-                    $newAmount = $custody['amount'] + ($oldData['price'] * $oldData['quantity']);
+                $custodies = $stmtC->fetchAll(PDO::FETCH_ASSOC);
+
+                foreach($custodies as $custody){
+                    if($amountToReturn <= 0) break;
+                    $newAmount = $custody['amount'] + $amountToReturn;
                     $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
+                    $amountToReturn = 0; // المبلغ تمت إضافته بالكامل
                 }
             }
 
-            // خصم العهدة الجديدة إذا مصدر الدفع "عهدة"
+            // خصم العهدة الجديدة
             if($newData['payment_source'] === 'عهدة'){
-                $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? ORDER BY taken_at DESC LIMIT 1");
+                $amountToDeduct = $price * $quantity;
+                $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? AND amount > 0 ORDER BY taken_at ASC");
                 $stmtC->execute([$newData['payer_name']]);
-                $custody = $stmtC->fetch();
-                if($custody && $custody['amount'] >= ($price * $quantity)){
-                    $newAmount = $custody['amount'] - ($price * $quantity);
-                    $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
-                } else {
+                $custodies = $stmtC->fetchAll(PDO::FETCH_ASSOC);
+
+                foreach($custodies as $custody){
+                    if($amountToDeduct <= 0) break;
+
+                    if($custody['amount'] >= $amountToDeduct){
+                        $newAmount = $custody['amount'] - $amountToDeduct;
+                        $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
+                        $amountToDeduct = 0;
+                    } else {
+                        $amountToDeduct -= $custody['amount'];
+                        $pdo->prepare("UPDATE custodies SET amount=0 WHERE id=?")->execute([$custody['id']]);
+                    }
+                }
+
+                if($amountToDeduct > 0){
                     $_SESSION['toast'] = ['type'=>'danger','msg'=>'رصيد العهدة غير كافي'];
-                    header('Location: ' . BASE_URL . '/assetes.php'); exit;
+                    header('Location: ' . BASE_URL . '/assetes.php'); 
+                    exit;
                 }
             }
+
 
             // تحديث قاعدة البيانات
             $pdo->prepare("UPDATE assets SET name=?, type=?, quantity=?, price=?, has_vat=?, vat_value=?, total_amount=?, payer_name=?, payment_source=?, image=? WHERE id=?")

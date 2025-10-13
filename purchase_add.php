@@ -87,20 +87,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
 
         // خصم من العهدة لو كانت وسيلة الدفع "عهدة"
         if ($payment_source === 'عهدة') {
-            $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? ORDER BY taken_at DESC LIMIT 1");
-            $stmtC->execute([$payer]);
-            $custody = $stmtC->fetch();
-
             $amountNeeded = $price * $quantity;
-            if ($custody && $custody['amount'] >= $amountNeeded) {
-                $newAmount = $custody['amount'] - $amountNeeded;
-                $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
-            } else {
+            $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? AND amount > 0 ORDER BY taken_at ASC");
+            $stmtC->execute([$payer]);
+            $custodies = $stmtC->fetchAll(PDO::FETCH_ASSOC);
+
+            foreach ($custodies as $custody) {
+                if ($amountNeeded <= 0) break;
+
+                if ($custody['amount'] >= $amountNeeded) {
+                    $newAmount = $custody['amount'] - $amountNeeded;
+                    $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
+                    $amountNeeded = 0;
+                } else {
+                    $amountNeeded -= $custody['amount'];
+                    $pdo->prepare("UPDATE custodies SET amount=0 WHERE id=?")->execute([$custody['id']]);
+                }
+            }
+
+            if ($amountNeeded > 0) {
                 $_SESSION['toast'] = ['type'=>'danger','msg'=>'رصيد العهدة غير كافي للشخص: ' . htmlspecialchars($payer)];
                 header('Location: ' . BASE_URL . '/purchases.php');
                 exit;
             }
         }
+
     }
 
     $_SESSION['toast'] = [

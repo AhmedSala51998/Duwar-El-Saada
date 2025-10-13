@@ -31,15 +31,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
 
     // خصم العهدة إذا مصدر الدفع "عهدة"
     if($payment_source === 'عهدة'){
-        $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? ORDER BY taken_at DESC LIMIT 1");
+        // جلب كل العهد المتاحة للشخص
+        $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? AND amount > 0 ORDER BY taken_at ASC");
         $stmtC->execute([$payer_name]);
-        $custody = $stmtC->fetch();
-        if($custody && $custody['amount'] >= $expense_amount){
-            $newAmount = $custody['amount'] - $expense_amount;
+        $custodies = $stmtC->fetchAll(PDO::FETCH_ASSOC);
+
+        $amountToDeduct = $expense_amount;
+        foreach($custodies as $custody){
+            if($amountToDeduct <= 0) break;
+
+            $deduct = min($custody['amount'], $amountToDeduct);
+            $newAmount = $custody['amount'] - $deduct;
             $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
-        } else {
+
+            $amountToDeduct -= $deduct;
+        }
+
+        if($amountToDeduct > 0){
             $_SESSION['toast'] = ['type'=>'danger','msg'=>'رصيد العهدة غير كافي'];
-            header('Location: ' . BASE_URL . '/expenses.php'); exit;
+            header('Location: ' . BASE_URL . '/expenses.php');
+            exit;
         }
     }
 

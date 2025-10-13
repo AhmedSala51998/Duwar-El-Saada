@@ -40,17 +40,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
 
         // خصم العهدة إذا مصدر الدفع "عهدة"
         if($payment_source === 'عهدة'){
-            $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? ORDER BY taken_at DESC LIMIT 1");
+            $amountToDeduct = $price * $quantity;
+
+            // جلب كل العهد للشخص، الأقدم أولاً
+            $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? ORDER BY taken_at ASC");
             $stmtC->execute([$payer]);
-            $custody = $stmtC->fetch();
-            if($custody && $custody['amount'] >= ($price * $quantity)){
-                $newAmount = $custody['amount'] - ($price * $quantity);
-                $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
-            } else {
+            $custodies = $stmtC->fetchAll(PDO::FETCH_ASSOC);
+
+            $totalAvailable = array_sum(array_column($custodies, 'amount'));
+            if($totalAvailable < $amountToDeduct){
                 $_SESSION['toast'] = ['type'=>'danger','msg'=>'رصيد العهدة غير كافي'];
-                header('Location: ' . BASE_URL . '/assetes.php'); exit;
+                header('Location: ' . BASE_URL . '/assetes.php'); 
+                exit;
+            }
+
+            foreach($custodies as $custody){
+                if($amountToDeduct <= 0) break;
+
+                $deduct = min($custody['amount'], $amountToDeduct);
+                $newAmount = $custody['amount'] - $deduct;
+                $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
+                $amountToDeduct -= $deduct;
             }
         }
+
 
         $pdo->prepare("INSERT INTO assets (invoice_serial, name, type, quantity, price, has_vat, vat_value, total_amount, payer_name, payment_source, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
         ->execute([

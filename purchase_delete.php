@@ -15,16 +15,18 @@ if ($id) {
 
         // استرجاع العهدة إذا كانت مدفوعة من العهدة
         if ($oldData['payment_source'] === 'عهدة') {
-            $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? ORDER BY taken_at DESC LIMIT 1");
+            $refund = $oldData['quantity'] * $oldData['price'];
+            
+            $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? ORDER BY taken_at ASC");
             $stmtC->execute([$oldData['payer_name']]);
-            $custody = $stmtC->fetch();
+            $custodies = $stmtC->fetchAll(PDO::FETCH_ASSOC);
 
-            if ($custody) {
-                // قيمة المنتج بالكامل (الكمية × السعر)
-                $refund = $oldData['quantity'] * $oldData['price'];
+            foreach ($custodies as $custody) {
+                if ($refund <= 0) break;
+
                 $newAmount = $custody['amount'] + $refund;
-
                 $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
+                $refund = 0; // بعد الإضافة الأولى يمكننا التوقف أو توزيع حسب رغبتك
             }
         }
 
