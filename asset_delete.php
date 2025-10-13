@@ -11,33 +11,27 @@ if($id){
 
     // استرجاع العهدة إذا كانت مدفوعة من العهدة
     if($oldData['payment_source'] === 'عهدة'){
-        $amountToReturn = $oldData['price'] * $oldData['quantity'];
+        // جلب كل المعاملات المرتبطة بالمشتريات/الأصول/المصاريف
+        $stmtTx = $pdo->prepare("SELECT * FROM custody_transactions WHERE type=? AND type_id=?");
+        $stmtTx->execute(['asset', $oldData['id']]); // استبدل 'asset' بالنوع المناسب: purchase/expense/asset حسب السياق
+        $transactions = $stmtTx->fetchAll(PDO::FETCH_ASSOC);
 
-        // جلب كل العهد للشخص، الأقدم أولاً
-        $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? ORDER BY taken_at ASC");
-        $stmtC->execute([$oldData['payer_name']]);
-        $custodies = $stmtC->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($transactions as $tx) {
+            // جلب العهدة الأصلية
+            $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE id=?");
+            $stmtC->execute([$tx['custody_id']]);
+            $custody = $stmtC->fetch();
 
-        foreach($custodies as $custody){
-            if($amountToReturn <= 0) break;
-
-            // المبلغ الذي تم خصمه فعلياً من هذه العهدة
-            $deductedBefore = ($custody['amount'] < $oldData['price'] * $oldData['quantity']) ? $custody['amount'] : $amountToReturn;
-
-            $newAmount = $custody['amount'] + $deductedBefore;
-            $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
-
-            // سجل العملية في custody_transactions كإرجاع
-            $stmtTx = $pdo->prepare("
-                INSERT INTO custody_transactions (type, type_id, custody_id, amount, created_at)
-                VALUES (?, ?, ?, ?, NOW())
-            ");
-            $stmtTx->execute(['refund_asset', $oldData['id'], $custody['id'], $deductedBefore]);
-
-            $amountToReturn -= $deductedBefore;
+            if ($custody) {
+                // إضافة المبلغ المسترد إلى العهدة الأصلية
+                $newAmount = $custody['amount'] + $tx['amount'];
+                $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
+            }
         }
-    }
 
+        // حذف المعاملات بعد الإرجاع
+        $pdo->prepare("DELETE FROM custody_transactions WHERE type=? AND type_id=?")->execute(['asset', $oldData['id']]);
+    }
 
     $pdo->prepare("DELETE FROM assets WHERE id=?")->execute([$id]);
     $_SESSION['toast'] = ['type' => 'success', 'msg' => 'تم الحذف بنجاح'];

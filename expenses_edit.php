@@ -42,56 +42,56 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
 
     if($changed){
         // استرجاع العهدة القديمة إذا كانت مدفوعة من العهدة
-        if($oldData['payment_source'] === 'عهدة'){
-            $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? ORDER BY taken_at ASC");
-            $stmtC->execute([$oldData['payer_name']]);
-            $custodies = $stmtC->fetchAll(PDO::FETCH_ASSOC);
+        // استرجاع العهدة القديمة إذا كانت مدفوعة من العهدة
+        if ($oldData['payment_source'] === 'عهدة') {
+            // جلب كل المعاملات السابقة المرتبطة بهذه العملية
+            $stmtTx = $pdo->prepare("SELECT * FROM custody_transactions WHERE type='expense' AND type_id=?");
+            $stmtTx->execute([$oldData['id']]);
+            $transactions = $stmtTx->fetchAll(PDO::FETCH_ASSOC);
 
-            $amountToReturn = $oldData['expense_amount'];
-            foreach($custodies as $custody){
-                if($amountToReturn <= 0) break;
+            foreach ($transactions as $tx) {
+                // جلب العهدة الأصلية
+                $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE id=?");
+                $stmtC->execute([$tx['custody_id']]);
+                $custody = $stmtC->fetch();
 
-                $newAmount = $custody['amount'] + $amountToReturn;
-                $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
-
-                // سجل العملية في custody_transactions
-                $stmtTx = $pdo->prepare("
-                    INSERT INTO custody_transactions (type, type_id, custody_id, amount, created_at)
-                    VALUES (?, ?, ?, ?, NOW())
-                ");
-                $stmtTx->execute(['refund', $oldData['id'], $custody['id'], $amountToReturn]);
-
-                $amountToReturn = 0; // بعد الإضافة يمكن التوقف
+                if ($custody) {
+                    $newAmount = $custody['amount'] + $tx['amount'];
+                    $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
+                }
             }
+
+            // حذف المعاملات بعد الإرجاع
+            $pdo->prepare("DELETE FROM custody_transactions WHERE type='expense' AND type_id=?")->execute([$oldData['id']]);
         }
 
         // خصم العهدة الجديدة إذا مصدر الدفع "عهدة"
-        if($newData['payment_source'] === 'عهدة'){
+        if ($newData['payment_source'] === 'عهدة') {
+            $amountNeeded = $newData['expense_amount'];
             $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? AND amount > 0 ORDER BY taken_at ASC");
             $stmtC->execute([$newData['payer_name']]);
             $custodies = $stmtC->fetchAll(PDO::FETCH_ASSOC);
 
-            $amountToDeduct = $newData['expense_amount'];
-            foreach($custodies as $custody){
-                if($amountToDeduct <= 0) break;
+            foreach ($custodies as $custody) {
+                if ($amountNeeded <= 0) break;
 
-                $deduct = min($custody['amount'], $amountToDeduct);
+                $deduct = min($custody['amount'], $amountNeeded);
                 $newAmount = $custody['amount'] - $deduct;
                 $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
 
-                // سجل العملية في custody_transactions
+                // سجل المعاملة
                 $stmtTx = $pdo->prepare("
                     INSERT INTO custody_transactions (type, type_id, custody_id, amount, created_at)
                     VALUES (?, ?, ?, ?, NOW())
                 ");
-                $stmtTx->execute(['deduct', $oldData['id'], $custody['id'], $deduct]);
+                $stmtTx->execute(['expense', $oldData['id'], $custody['id'], $deduct]);
 
-                $amountToDeduct -= $deduct;
+                $amountNeeded -= $deduct;
             }
 
-            if($amountToDeduct > 0){
+            if ($amountNeeded > 0) {
                 $_SESSION['toast'] = ['type'=>'danger','msg'=>'رصيد العهدة غير كافي'];
-                header('Location: ' . BASE_URL . '/expenses.php');
+                header('Location: ' . BASE_URL . '/expenses.php'); 
                 exit;
             }
         }

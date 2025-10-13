@@ -51,55 +51,58 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
         if($changed){
             // استرجاع العهدة القديمة إذا كانت مدفوعة من العهدة
             // إعادة العهدة القديمة
-            if($oldData['payment_source'] === 'عهدة'){
+            // إعادة العهدة القديمة إذا كان مصدر الدفع عهدة
+            if ($oldData['payment_source'] === 'عهدة') {
                 $amountToReturn = $oldData['price'] * $oldData['quantity'];
-                $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? ORDER BY taken_at ASC");
-                $stmtC->execute([$oldData['payer_name']]);
-                $custodies = $stmtC->fetchAll(PDO::FETCH_ASSOC);
 
-                foreach($custodies as $custody){
-                    if($amountToReturn <= 0) break;
+                // جلب كل المعاملات السابقة الخاصة بهذا الصنف
+                $stmtTx = $pdo->prepare("SELECT * FROM custody_transactions WHERE type='asset' AND type_id=?");
+                $stmtTx->execute([$oldData['id']]);
+                $transactions = $stmtTx->fetchAll(PDO::FETCH_ASSOC);
 
-                    $add = $amountToReturn; // نعيد كامل المبلغ المتبقي
-                    $newAmount = $custody['amount'] + $add;
-                    $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
+                foreach ($transactions as $tx) {
+                    // جلب العهدة الأصلية
+                    $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE id=?");
+                    $stmtC->execute([$tx['custody_id']]);
+                    $custody = $stmtC->fetch();
 
-                    // سجل عملية الإرجاع
-                    $stmtTx = $pdo->prepare("
-                        INSERT INTO custody_transactions (type, type_id, custody_id, amount, created_at)
-                        VALUES (?, ?, ?, ?, NOW())
-                    ");
-                    $stmtTx->execute(['refund_asset', $oldData['id'], $custody['id'], $add]);
-
-                    $amountToReturn -= $add;
+                    if ($custody) {
+                        $newAmount = $custody['amount'] + $tx['amount'];
+                        $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
+                    }
                 }
+
+                // حذف المعاملات بعد الإرجاع
+                $pdo->prepare("DELETE FROM custody_transactions WHERE type='asset' AND type_id=?")->execute([$oldData['id']]);
             }
 
-            // خصم العهدة الجديدة
-            if($newData['payment_source'] === 'عهدة'){
-                $amountToDeduct = $price * $quantity;
+            // خصم العهدة الجديدة إذا كان مصدر الدفع عهدة
+            if ($newData['payment_source'] === 'عهدة') {
+                $amountNeeded = $price * $quantity;
+
+                // جلب كل العهد المتاحة للشخص بالترتيب من الأقدم للأحدث
                 $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? AND amount > 0 ORDER BY taken_at ASC");
                 $stmtC->execute([$newData['payer_name']]);
                 $custodies = $stmtC->fetchAll(PDO::FETCH_ASSOC);
 
-                foreach($custodies as $custody){
-                    if($amountToDeduct <= 0) break;
+                foreach ($custodies as $custody) {
+                    if ($amountNeeded <= 0) break;
 
-                    $deduct = min($custody['amount'], $amountToDeduct);
+                    $deduct = min($custody['amount'], $amountNeeded);
                     $newAmount = $custody['amount'] - $deduct;
                     $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
 
-                    // سجل عملية الخصم
+                    // سجل المعاملة
                     $stmtTx = $pdo->prepare("
                         INSERT INTO custody_transactions (type, type_id, custody_id, amount, created_at)
                         VALUES (?, ?, ?, ?, NOW())
                     ");
-                    $stmtTx->execute(['deduct_asset', $oldData['id'], $custody['id'], $deduct]);
+                    $stmtTx->execute(['asset', $oldData['id'], $custody['id'], $deduct]);
 
-                    $amountToDeduct -= $deduct;
+                    $amountNeeded -= $deduct;
                 }
 
-                if($amountToDeduct > 0){
+                if ($amountNeeded > 0) {
                     $_SESSION['toast'] = ['type'=>'danger','msg'=>'رصيد العهدة غير كافي'];
                     header('Location: ' . BASE_URL . '/assetes.php'); 
                     exit;
