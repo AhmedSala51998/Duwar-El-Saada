@@ -43,8 +43,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
             $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? ORDER BY taken_at DESC LIMIT 1");
             $stmtC->execute([$payer]);
             $custody = $stmtC->fetch();
-            if($custody && $custody['amount'] >= $price){
-                $newAmount = $custody['amount'] - $price;
+            if($custody && $custody['amount'] >= ($price * $quantity)){
+                $newAmount = $custody['amount'] - ($price * $quantity);
                 $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
             } else {
                 $_SESSION['toast'] = ['type'=>'danger','msg'=>'رصيد العهدة غير كافي'];

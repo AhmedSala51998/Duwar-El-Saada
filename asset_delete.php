@@ -15,7 +15,7 @@ if($id){
         $stmtC->execute([$oldData['payer_name']]);
         $custody = $stmtC->fetch();
         if($custody){
-            $newAmount = $custody['amount'] + $oldData['price'];
+            $newAmount = $custody['amount'] + ($oldData['price'] * $oldData['quantity']);
             $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
         }
     }
