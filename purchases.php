@@ -271,14 +271,18 @@ $can_edit = in_array(current_role(), ['admin','manager']);
                       <option value="كاش" <?= $r['payment_source']=='كاش'?'selected':'' ?>>كاش</option>
                       <option value="بنك" <?= $r['payment_source']=='بنك'?'selected':'' ?>>بنك</option>
                       <?php
-                        // جلب رصيد العهدة إذا موجودة
-                        $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? ORDER BY taken_at DESC LIMIT 1");
-                        $stmtC->execute([$r['payer_name']]);
-                        $custody = $stmtC->fetch();
-                        if($custody && $custody['amount']>0){
-                          echo '<option value="عهدة" '.($r['payment_source']=='عهدة'?'selected':'').'>عهدة ('.$custody['amount'].' ريال)</option>';
-                        }
+                      // جلب مجموع العهدة للشخص
+                      $stmtC = $pdo->prepare("SELECT SUM(amount) AS total_amount FROM custodies WHERE person_name=?");
+                      $stmtC->execute([$r['payer_name']]);
+                      $custody = $stmtC->fetch();
+
+                      $totalCustody = $custody['total_amount'] ?? 0;
+
+                      if($totalCustody > 0){
+                          echo '<option value="عهدة" '.($r['payment_source']=='عهدة'?'selected':'').'>عهدة ('.$totalCustody.' ريال)</option>';
+                      }
                       ?>
+
                     </select>
                   </div>
 
