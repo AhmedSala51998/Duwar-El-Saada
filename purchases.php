@@ -557,7 +557,7 @@ document.getElementById('addRow').addEventListener('click', function() {
       </select>
     </td>
     <td><input name="package[]" class="form-control" placeholder="أدخل العبوة"></td>
-    <td><input type="number" step="0.01" name="price[]" class="form-control"></td>
+    <td><input type="number" step="0.00000001" min="0" name="price[]" class="form-control"></td>
     <td>
       <select name="payer_name[]" class="form-select payer-select">
         <option hidden>اختر</option>
