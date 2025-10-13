@@ -52,8 +52,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
             }
         }
 
-        $pdo->prepare("INSERT INTO assets (name, type, quantity, price, has_vat, vat_value, total_amount, payer_name, payment_source, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+        $pdo->prepare("INSERT INTO assets (invoice_serial, name, type, quantity, price, has_vat, vat_value, total_amount, payer_name, payment_source, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
         ->execute([
+            $serial_invoice,
             $name,
             $type,
             $quantity,

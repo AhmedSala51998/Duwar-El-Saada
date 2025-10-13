@@ -9,8 +9,16 @@ if($_SERVER['REQUEST_METHOD']==='POST' && csrf_validate($_POST['_csrf'] ?? '')){
     $taken_at    = trim($_POST['taken_at']);
     $notes       = trim($_POST['notes'] ?? '');
 
-    $pdo->prepare("INSERT INTO custodies(person_name,amount,taken_at,notes) VALUES(?,?,?,?)")
-        ->execute([$person_name,$amount,$taken_at,$notes]);
+    $lastSerial = $pdo->query("SELECT invoice_serial FROM custodies ORDER BY id DESC LIMIT 1")->fetchColumn();
+    if ($lastSerial && preg_match('/DAELC(\d+)/', $lastSerial, $m)) {
+        $nextNumber = (int)$m[1] + 1;
+    } else {
+        $nextNumber = 1;
+    }
+    $serial_invoice = "DAELC" . str_pad($nextNumber, 5, "0", STR_PAD_LEFT);
+
+    $pdo->prepare("INSERT INTO custodies(invoice_serial , person_name,amount,taken_at,notes) VALUES(?,?,?,?,?)")
+        ->execute([$serial_invoice,$person_name,$amount,$taken_at,$notes]);
 
     $_SESSION['toast'] = ['type'=>'success','msg'=>'تمت الإضافة بنجاح'];
 }
