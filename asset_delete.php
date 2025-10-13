@@ -21,9 +21,19 @@ if($id){
         foreach($custodies as $custody){
             if($amountToReturn <= 0) break;
 
-            $deductedBefore = ($custody['amount'] < $oldData['price'] * $oldData['quantity']) ? $custody['amount'] : $oldData['price'] * $oldData['quantity'];
+            // المبلغ الذي تم خصمه فعلياً من هذه العهدة
+            $deductedBefore = ($custody['amount'] < $oldData['price'] * $oldData['quantity']) ? $custody['amount'] : $amountToReturn;
+
             $newAmount = $custody['amount'] + $deductedBefore;
             $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
+
+            // سجل العملية في custody_transactions كإرجاع
+            $stmtTx = $pdo->prepare("
+                INSERT INTO custody_transactions (type, type_id, custody_id, amount, created_at)
+                VALUES (?, ?, ?, ?, NOW())
+            ");
+            $stmtTx->execute(['refund', $oldData['id'], $custody['id'], $deductedBefore]);
+
             $amountToReturn -= $deductedBefore;
         }
     }

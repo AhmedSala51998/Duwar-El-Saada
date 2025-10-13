@@ -60,6 +60,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
                 $deduct = min($custody['amount'], $amountToDeduct);
                 $newAmount = $custody['amount'] - $deduct;
                 $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
+
+                // سجل العملية في custody_transactions
+                $stmtTx = $pdo->prepare("
+                    INSERT INTO custody_transactions (type, type_id, custody_id, amount, created_at)
+                    VALUES (?, ?, ?, ?, NOW())
+                ");
+                $stmtTx->execute(['deduct', $operation_id, $custody['id'], $deduct]);
+
                 $amountToDeduct -= $deduct;
             }
         }

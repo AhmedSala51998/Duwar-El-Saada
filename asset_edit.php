@@ -59,9 +59,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
 
                 foreach($custodies as $custody){
                     if($amountToReturn <= 0) break;
-                    $newAmount = $custody['amount'] + $amountToReturn;
+
+                    $add = $amountToReturn; // نعيد كامل المبلغ المتبقي
+                    $newAmount = $custody['amount'] + $add;
                     $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
-                    $amountToReturn = 0; // المبلغ تمت إضافته بالكامل
+
+                    // سجل عملية الإرجاع
+                    $stmtTx = $pdo->prepare("
+                        INSERT INTO custody_transactions (type, type_id, custody_id, amount, created_at)
+                        VALUES (?, ?, ?, ?, NOW())
+                    ");
+                    $stmtTx->execute(['refund', $oldData['id'], $custody['id'], $add]);
+
+                    $amountToReturn -= $add;
                 }
             }
 
@@ -75,14 +85,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
                 foreach($custodies as $custody){
                     if($amountToDeduct <= 0) break;
 
-                    if($custody['amount'] >= $amountToDeduct){
-                        $newAmount = $custody['amount'] - $amountToDeduct;
-                        $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
-                        $amountToDeduct = 0;
-                    } else {
-                        $amountToDeduct -= $custody['amount'];
-                        $pdo->prepare("UPDATE custodies SET amount=0 WHERE id=?")->execute([$custody['id']]);
-                    }
+                    $deduct = min($custody['amount'], $amountToDeduct);
+                    $newAmount = $custody['amount'] - $deduct;
+                    $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
+
+                    // سجل عملية الخصم
+                    $stmtTx = $pdo->prepare("
+                        INSERT INTO custody_transactions (type, type_id, custody_id, amount, created_at)
+                        VALUES (?, ?, ?, ?, NOW())
+                    ");
+                    $stmtTx->execute(['deduct', $newData['id'], $custody['id'], $deduct]);
+
+                    $amountToDeduct -= $deduct;
                 }
 
                 if($amountToDeduct > 0){

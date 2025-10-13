@@ -88,6 +88,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
         // خصم من العهدة لو كانت وسيلة الدفع "عهدة"
         if ($payment_source === 'عهدة') {
             $amountNeeded = $price * $quantity;
+
+            // جلب كل العهد المتاحة للشخص بالترتيب من الأقدم للأحدث
             $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? AND amount > 0 ORDER BY taken_at ASC");
             $stmtC->execute([$payer]);
             $custodies = $stmtC->fetchAll(PDO::FETCH_ASSOC);
@@ -98,10 +100,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
                 if ($custody['amount'] >= $amountNeeded) {
                     $newAmount = $custody['amount'] - $amountNeeded;
                     $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
+
+                    // سجل المعاملة
+                    $stmtTx = $pdo->prepare("INSERT INTO custody_transactions (type, type_id, custody_id, amount, created_at) VALUES (?, ?, ?, ?, NOW())");
+                    $stmtTx->execute(['purchase', $purchase_id ?? 0, $custody['id'], $amountNeeded]);
+
                     $amountNeeded = 0;
                 } else {
-                    $amountNeeded -= $custody['amount'];
+                    $amountToUse = $custody['amount'];
                     $pdo->prepare("UPDATE custodies SET amount=0 WHERE id=?")->execute([$custody['id']]);
+
+                    // سجل المعاملة
+                    $stmtTx = $pdo->prepare("INSERT INTO custody_transactions (type, type_id, custody_id, amount, created_at) VALUES (?, ?, ?, ?, NOW())");
+                    $stmtTx->execute(['purchase', $purchase_id ?? 0, $custody['id'], $amountToUse]);
+
+                    $amountNeeded -= $amountToUse;
                 }
             }
 

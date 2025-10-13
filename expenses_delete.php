@@ -9,7 +9,6 @@ if($id){
     $old->execute([$id]);
     $oldData = $old->fetch(PDO::FETCH_ASSOC);
 
-    // استرجاع العهدة إذا كانت مدفوعة من العهدة
     if($oldData['payment_source'] === 'عهدة'){
         $amountToRefund = $oldData['expense_amount'];
 
@@ -24,9 +23,16 @@ if($id){
             // كم نقدر نضيف للعهدة الحالية
             $add = $amountToRefund; // لأن استرجاع، نضيف كامل المبلغ المتبقي
             $newAmount = $custody['amount'] + $add;
-
             $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
-            $amountToRefund -= $add; // الآن الصفر غالباً بعد أول تحديث
+
+            // تسجيل عملية الاسترجاع في الجدول الوسيط
+            $stmtTx = $pdo->prepare("
+                INSERT INTO custody_transactions (type, type_id, custody_id, amount, created_at)
+                VALUES (?, ?, ?, ?, NOW())
+            ");
+            $stmtTx->execute(['refund', $oldData['id'], $custody['id'], $add]);
+
+            $amountToRefund -= $add; // غالبًا يصبح 0 بعد أول تحديث
         }
     }
 

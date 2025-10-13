@@ -15,19 +15,25 @@ if ($id) {
 
         // استرجاع العهدة إذا كانت مدفوعة من العهدة
         if ($oldData['payment_source'] === 'عهدة') {
-            $refund = $oldData['quantity'] * $oldData['price'];
-            
-            $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? ORDER BY taken_at ASC");
-            $stmtC->execute([$oldData['payer_name']]);
-            $custodies = $stmtC->fetchAll(PDO::FETCH_ASSOC);
+            // جلب كل المعاملات المرتبطة بالعملية
+            $stmtTx = $pdo->prepare("SELECT * FROM custody_transactions WHERE type=? AND type_id=?");
+            $stmtTx->execute(['purchase', $oldData['id']]); // استبدل 'purchase' بالنوع المناسب إذا كان خصم آخر
+            $transactions = $stmtTx->fetchAll(PDO::FETCH_ASSOC);
 
-            foreach ($custodies as $custody) {
-                if ($refund <= 0) break;
+            foreach ($transactions as $tx) {
+                // جلب العهدة الأصلية
+                $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE id=?");
+                $stmtC->execute([$tx['custody_id']]);
+                $custody = $stmtC->fetch();
 
-                $newAmount = $custody['amount'] + $refund;
-                $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
-                $refund = 0; // بعد الإضافة الأولى يمكننا التوقف أو توزيع حسب رغبتك
+                if ($custody) {
+                    $newAmount = $custody['amount'] + $tx['amount'];
+                    $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
+                }
             }
+
+            // حذف المعاملات بعد الإرجاع
+            $pdo->prepare("DELETE FROM custody_transactions WHERE type=? AND type_id=?")->execute(['purchase', $oldData['id']]);
         }
 
         // حذف المنتج نفسه

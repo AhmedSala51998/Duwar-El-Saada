@@ -44,6 +44,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
             $newAmount = $custody['amount'] - $deduct;
             $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
 
+            // تسجيل المعاملة في الجدول الوسيط
+            $stmtTx = $pdo->prepare("
+                INSERT INTO custody_transactions (type, type_id, custody_id, amount, created_at)
+                VALUES (?, ?, ?, ?, NOW())
+            ");
+            $stmtTx->execute(['expense', $id, $custody['id'], $deduct]);
+
             $amountToDeduct -= $deduct;
         }
 

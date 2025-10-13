@@ -45,38 +45,56 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
             // استرجاع العهدة القديمة إذا كانت مدفوعة من العهدة
             // استرجاع العهدة القديمة
             if ($oldData['payment_source'] === 'عهدة') {
-                $refund = $oldData['price'] * $oldData['quantity'];
+                $stmtTx = $pdo->prepare("SELECT * FROM custody_transactions WHERE type='purchase' AND type_id=?");
+                $stmtTx->execute([$oldData['id']]);
+                $transactions = $stmtTx->fetchAll(PDO::FETCH_ASSOC);
 
-                $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? ORDER BY taken_at ASC");
-                $stmtC->execute([$oldData['payer_name']]);
-                $custodies = $stmtC->fetchAll(PDO::FETCH_ASSOC);
-
-                foreach ($custodies as $custody) {
-                    $newAmount = $custody['amount'] + $refund;
-                    $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
-                    $refund = 0; // بعد الإضافة يمكننا التوقف أو نكمل التوزيع حسب السياسات
+                foreach ($transactions as $tx) {
+                    $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE id=?");
+                    $stmtC->execute([$tx['custody_id']]);
+                    $custody = $stmtC->fetch();
+                    if ($custody) {
+                        $newAmount = $custody['amount'] + $tx['amount'];
+                        $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
+                    }
                 }
+
+                // حذف المعاملات بعد الإرجاع
+                $pdo->prepare("DELETE FROM custody_transactions WHERE type='purchase' AND type_id=?")->execute([$oldData['id']]);
             }
 
             // خصم العهدة الجديدة
             if ($newData['payment_source'] === 'عهدة') {
                 $amountNeeded = $newData['price'] * $newData['quantity'];
-
-                $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? ORDER BY taken_at ASC");
+                $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? AND amount > 0 ORDER BY taken_at ASC");
                 $stmtC->execute([$newData['payer_name']]);
                 $custodies = $stmtC->fetchAll(PDO::FETCH_ASSOC);
 
-                $deducted = false;
                 foreach ($custodies as $custody) {
+                    if ($amountNeeded <= 0) break;
+
                     if ($custody['amount'] >= $amountNeeded) {
                         $newAmount = $custody['amount'] - $amountNeeded;
                         $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
-                        $deducted = true;
-                        break;
+
+                        // سجل المعاملة
+                        $stmtTx = $pdo->prepare("INSERT INTO custody_transactions (type, type_id, custody_id, amount, created_at) VALUES (?, ?, ?, ?, NOW())");
+                        $stmtTx->execute(['purchase', $oldData['id'], $custody['id'], $amountNeeded]);
+
+                        $amountNeeded = 0;
+                    } else {
+                        $amountDeducted = $custody['amount'];
+                        $pdo->prepare("UPDATE custodies SET amount=0 WHERE id=?")->execute([$custody['id']]);
+
+                        // سجل المعاملة
+                        $stmtTx = $pdo->prepare("INSERT INTO custody_transactions (type, type_id, custody_id, amount, created_at) VALUES (?, ?, ?, ?, NOW())");
+                        $stmtTx->execute(['purchase', $oldData['id'], $custody['id'], $amountDeducted]);
+
+                        $amountNeeded -= $amountDeducted;
                     }
                 }
 
-                if (!$deducted) {
+                if ($amountNeeded > 0) {
                     $_SESSION['toast'] = ['type'=>'danger','msg'=>'رصيد العهدة غير كافي'];
                     header('Location: ' . BASE_URL . '/purchases.php'); 
                     exit;
