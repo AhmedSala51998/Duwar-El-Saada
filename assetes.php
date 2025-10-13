@@ -95,7 +95,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
 <table class="table table-hover align-middle">
   <thead class="table-light">
     <tr>
-      <th>#</th><th>صورة</th><th>الاسم</th><th>النوع</th><th>العدد</th><th>السعر</th><th>الضريبة (15%)</th>
+      <th>#</th><th>الرقم التسلسلي</th><th>صورة</th><th>الاسم</th><th>النوع</th><th>العدد</th><th>السعر</th><th>الضريبة (15%)</th>
       <th>الإجمالي بعد الضريبة</th>
       <th>الدافع</th><th>مصدر الدفع</th>
       <?php if($can_edit): ?><th>عمليات</th><?php endif; ?>
@@ -105,6 +105,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
   <?php foreach($rows as $r): ?>
     <tr>
       <td><?= $r['id'] ?></td>
+      <td><?= $r['invoice_serial'] ?></td>
       <td><?php if($r['image']): ?><img src="uploads/<?= esc($r['image']) ?>" width="44" class="rounded"><?php endif; ?></td>
       <td><?= esc($r['name']) ?></td>
       <td><?= esc($r['type']) ?></td>
@@ -126,6 +127,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
       <td><?= esc($r['payment_source'] ?? '-') ?></td>
       <?php if($can_edit): ?>
       <td class="table-actions">
+        <a class="btn btn-sm btn-outline-primary" href="invoice_assest?id=<?= $r['id'] ?>"><i class="bi bi-printer"></i></a>
         <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#e<?= $r['id'] ?>"><i class="bi bi-pencil"></i></button>
         <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#del<?= $r['id'] ?>"><i class="bi bi-trash"></i></button>
       </td>
@@ -157,7 +159,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
               <input type="number" name="quantity" id="quantity_edit_<?= $r['id'] ?>" class="form-control" value="<?= (int)$r['quantity'] ?>" min="1">
 
               <label>السعر</label>
-              <input type="number" step="0.01" name="price" id="price_edit_<?= $r['id'] ?>" class="form-control" 
+              <input type="number" step="0.01" min="0" name="price" id="price_edit_<?= $r['id'] ?>" class="form-control" 
                     value="<?= esc($r['price']) ?>" oninput="updateAssetVat('<?= $r['id'] ?>')">
 
               <label>هل الأصل عليه ضريبة؟</label>
@@ -268,7 +270,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
             <input type="number" name="quantity" class="form-control" value="1" min="1">
           </div>
           <div><label class="form-label">السعر</label>
-            <input type="number" step="0.01" name="price" class="form-control">
+            <input type="number" step="0.01" min="0" name="price" class="form-control">
           </div>
           <label>هل الأصل عليه ضريبة؟</label>
           <select id="asset_has_vat" name="has_vat" class="form-select">

@@ -14,6 +14,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
     $vat_value = 0;
     $total_amount = $price * $quantity;
 
+    $lastSerial = $pdo->query("SELECT invoice_serial FROM assets ORDER BY id DESC LIMIT 1")->fetchColumn();
+    if ($lastSerial && preg_match('/DAELA(\d+)/', $lastSerial, $m)) {
+        $nextNumber = (int)$m[1] + 1;
+    } else {
+        $nextNumber = 1;
+    }
+    $serial_invoice = "DAELA" . str_pad($nextNumber, 5, "0", STR_PAD_LEFT);
+
     if ($has_vat) {
         $vat_value = $total_amount * 0.15;
         $total_amount += $vat_value;

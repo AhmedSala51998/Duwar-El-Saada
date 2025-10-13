@@ -224,7 +224,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
                   </div>
                   <div class="col-md-4">
                     <label class="form-label">السعر</label>
-                    <input type="number" step="0.00000001" name="price" class="form-control" value="<?= esc($r['price']) ?>">
+                    <input type="number" step="0.00000001" min="0" name="price" class="form-control" value="<?= esc($r['price']) ?>">
                   </div>
 
                   <!-- صورة المنتج -->
@@ -372,7 +372,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
                   </select>
                 </td>
                 <td><input name="package[]" class="form-control" placeholder="أدخل العبوة"></td> <!-- حقل العبوة -->
-                <td><input type="number" step="0.00000001" name="price[]" class="form-control"></td>
+                <td><input type="number" step="0.00000001" min="0" name="price[]" class="form-control"></td>
                 <td>
                   <select name="payer_name[]" class="form-select payer-select">
                     <option hidden>اختر</option>

@@ -176,7 +176,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
           </select>
 
           <label>قيمة المصروف</label>
-          <input type="number" step="0.01" id="expense_amount_edit<?= $r['id'] ?>" name="expense_amount" class="form-control"
+          <input type="number" step="0.01" min="0" id="expense_amount_edit<?= $r['id'] ?>" name="expense_amount" class="form-control"
                  value="<?= esc($r['expense_amount']) ?>" placeholder="المبلغ" required
                  oninput="updateVatTotal('<?= $r['id'] ?>')">
 
@@ -296,7 +296,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
           </select>
 
           <label>قيمة المصروف</label>
-          <input type="number" step="0.01" id="expense_amount" name="expense_amount" class="form-control" placeholder="المبلغ" required>
+          <input type="number" step="0.01" min="0" id="expense_amount" name="expense_amount" class="form-control" placeholder="المبلغ" required>
 
           <div id="vat_section" style="display:none;">
             <label>نسبة الضريبة (٪)</label>

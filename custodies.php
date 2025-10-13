@@ -81,6 +81,7 @@ $options = ['بسام','فيصل المطيري','مؤسسة','شركة'];
       <td><?= esc($r['notes']) ?></td>
       <?php if($can_edit): ?>
       <td>
+        <a class="btn btn-sm btn-outline-primary" href="invoice_custody?id=<?= $r['id'] ?>"><i class="bi bi-printer"></i></a>
         <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#e<?= $r['id'] ?>"><i class="bi bi-pencil"></i></button>
         <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#del<?= $r['id'] ?>"><i class="bi bi-trash"></i></button>
       </td>
