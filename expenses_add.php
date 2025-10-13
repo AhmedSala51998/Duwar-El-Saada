@@ -29,6 +29,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
     $payment_source = $_POST['payment_source'] ?? 'كاش';
     $payer_name = $_POST['payer_name'] ?? null;
 
+    $pdo->prepare("INSERT INTO expenses(invoice_serial, main_expense, sub_expense, expense_desc, expense_amount, vat_value, total_amount, has_vat, expense_file, payer_name, payment_source)
+            VALUES(?,?,?,?,?,?,?,?,?,?,?)")
+    ->execute([
+        $serial_invoice,
+        $main_expense,
+        $sub_expense,
+        $expense_desc,
+        $expense_amount,
+        $vat_value,
+        $total_amount,
+        $has_vat,
+        upload_image('expense_file'),
+        $payer_name,
+        $payment_source
+    ]);
+    $expense_id = $pdo->lastInsertId();
+
     // خصم العهدة إذا مصدر الدفع "عهدة"
     if($payment_source === 'عهدة'){
         // جلب كل العهد المتاحة للشخص
@@ -49,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
                 INSERT INTO custody_transactions (type, type_id, custody_id, amount, created_at)
                 VALUES (?, ?, ?, ?, NOW())
             ");
-            $stmtTx->execute(['expense', $id, $custody['id'], $deduct]);
+            $stmtTx->execute(['expense', $expense_id, $custody['id'], $deduct]);
 
             $amountToDeduct -= $deduct;
         }
@@ -60,22 +77,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
             exit;
         }
     }
-
-    $pdo->prepare("INSERT INTO expenses(invoice_serial, main_expense, sub_expense, expense_desc, expense_amount, vat_value, total_amount, has_vat, expense_file, payer_name, payment_source)
-                VALUES(?,?,?,?,?,?,?,?,?,?,?)")
-        ->execute([
-            $serial_invoice,
-            $main_expense,
-            $sub_expense,
-            $expense_desc,
-            $expense_amount,
-            $vat_value,
-            $total_amount,
-            $has_vat,
-            upload_image('expense_file'),
-            $payer_name,
-            $payment_source
-        ]);
 
     $_SESSION['toast'] = ['type'=>'success','msg'=>'تمت الإضافة بنجاح'];
 }

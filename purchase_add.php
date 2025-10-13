@@ -84,6 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         ");
         $stmt->execute([$name, $quantity, $unit, $package, $price, $payer, $payment_source, $order_id]);
+        $purchase_id = $pdo->lastInsertId();
 
         // خصم من العهدة لو كانت وسيلة الدفع "عهدة"
         if ($payment_source === 'عهدة') {

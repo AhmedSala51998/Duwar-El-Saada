@@ -38,6 +38,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
         $_SESSION['toast'] = ['type'=>'warning','msg'=>'هناك أصل بنفس الاسم، النوع والدافع موجود بالفعل'];
     } else {
 
+
+        
+        $pdo->prepare("INSERT INTO assets (invoice_serial, name, type, quantity, price, has_vat, vat_value, total_amount, payer_name, payment_source, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+        ->execute([
+            $serial_invoice,
+            $name,
+            $type,
+            $quantity,
+            $price,
+            $has_vat,
+            $vat_value,
+            $total_amount,
+            $payer,
+            $payment_source,
+            $image
+        ]);
+
+        $asset_id = $pdo->lastInsertId();
+
         // خصم العهدة إذا مصدر الدفع "عهدة"
         if($payment_source === 'عهدة'){
             $amountToDeduct = $price * $quantity;
@@ -66,27 +85,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
                     INSERT INTO custody_transactions (type, type_id, custody_id, amount, created_at)
                     VALUES (?, ?, ?, ?, NOW())
                 ");
-                $stmtTx->execute(['deduct', $operation_id, $custody['id'], $deduct]);
+                $stmtTx->execute(['deduct', $asset_id, $custody['id'], $deduct]);
 
                 $amountToDeduct -= $deduct;
             }
         }
-
-
-        $pdo->prepare("INSERT INTO assets (invoice_serial, name, type, quantity, price, has_vat, vat_value, total_amount, payer_name, payment_source, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
-        ->execute([
-            $serial_invoice,
-            $name,
-            $type,
-            $quantity,
-            $price,
-            $has_vat,
-            $vat_value,
-            $total_amount,
-            $payer,
-            $payment_source,
-            $image
-        ]);
 
         $_SESSION['toast'] = ['type'=>'success','msg'=>'تمت العملية بنجاح'];
     }
