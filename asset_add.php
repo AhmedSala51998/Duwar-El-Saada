@@ -4,6 +4,19 @@ require_role(['admin','manager']);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? '')) {
 
+    $bill_number = trim($_POST['bill_number'] ?? '');
+
+    if ($bill_number !== '') {
+        // فحص التكرار
+        $check = $pdo->prepare("SELECT id FROM assets WHERE bill_number = ?");
+        $check->execute([$bill_number]);
+        if ($check->fetch()) {
+            $_SESSION['toast'] = ['type' => 'error', 'msg' => 'رقم فاتورة المورد مكرر بالفعل'];
+            header('Location: ' . BASE_URL . '/assetes.php');
+            exit;
+        }
+    }
+
     $name = trim($_POST['name']);
     $type = $_POST['type'] ?? '';
     $payer = trim($_POST['payer_name'] ?? '');
@@ -40,8 +53,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
 
 
         
-        $pdo->prepare("INSERT INTO assets (invoice_serial, name, type, quantity, price, has_vat, vat_value, total_amount, payer_name, payment_source, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+        $pdo->prepare("INSERT INTO assets (bill_number , invoice_serial, name, type, quantity, price, has_vat, vat_value, total_amount, payer_name, payment_source, image) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
         ->execute([
+            $bill_number,
             $serial_invoice,
             $name,
             $type,

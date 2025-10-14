@@ -4,6 +4,19 @@ require_role(['admin','manager']);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? '')) {
 
+    $bill_number = trim($_POST['bill_number'] ?? '');
+
+    if ($bill_number !== '') {
+        // فحص التكرار
+        $check = $pdo->prepare("SELECT id FROM expenses WHERE bill_number = ?");
+        $check->execute([$bill_number]);
+        if ($check->fetch()) {
+            $_SESSION['toast'] = ['type' => 'error', 'msg' => 'رقم فاتورة المورد مكرر بالفعل'];
+            header('Location: ' . BASE_URL . '/expenses.php');
+            exit;
+        }
+    }
+
     $main_expense = trim($_POST['main_expense']);
     $sub_expense  = trim($_POST['sub_expense']);
     $expense_desc = trim($_POST['expense_desc']);
@@ -29,9 +42,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
     $payment_source = $_POST['payment_source'] ?? 'كاش';
     $payer_name = $_POST['payer_name'] ?? null;
 
-    $pdo->prepare("INSERT INTO expenses(invoice_serial, main_expense, sub_expense, expense_desc, expense_amount, vat_value, total_amount, has_vat, expense_file, payer_name, payment_source)
-            VALUES(?,?,?,?,?,?,?,?,?,?,?)")
+    $pdo->prepare("INSERT INTO expenses(bill_number, invoice_serial, main_expense, sub_expense, expense_desc, expense_amount, vat_value, total_amount, has_vat, expense_file, payer_name, payment_source)
+            VALUES(?,?,?,?,?,?,?,?,?,?,?,?)")
     ->execute([
+        $bill_number,
         $serial_invoice,
         $main_expense,
         $sub_expense,

@@ -265,6 +265,8 @@ $can_edit = in_array(current_role(), ['admin','manager']);
           <button class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body vstack gap-3">
+          <div><label class="form-label">رقم فاتورة المورد</label>
+          <input type="number" name="bill_number" required class="form-control"></div>
           <div><label class="form-label">الاسم</label>
             <input name="name" class="form-control" required>
           </div>

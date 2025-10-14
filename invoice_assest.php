@@ -122,6 +122,7 @@ select#vatRate {
 
   <div class="invoice-header">
     <div class="text-end invoice-info" style="flex:1">
+      <div><strong>رقم الفاتورة:</strong> <?= esc($asset['bill_number']) ?></div>
       <div><strong>الدافع:</strong> <?= esc($asset['payer_name']) ?></div>
       <div><strong>مصدر الدفع:</strong> <?= esc($asset['payment_source']) ?></div>
       <div>

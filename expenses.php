@@ -247,6 +247,8 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
     <div class="modal-content">
       <form method="post" action="expenses_add" enctype="multipart/form-data">
         <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
+        <label>رقم فاتورة المورد</label>
+        <input type="number" name="bill_number" required class="form-control" placeholder="رقم فاتورة المورد">
         <div class="modal-header"><h5 class="modal-title">إضافة مصروف</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
         <div class="modal-body vstack gap-3">
           <label>المصروفات</label>
