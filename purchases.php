@@ -152,7 +152,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
 <table class="table table-hover align-middle">
   <thead class="table-light">
     <tr>
-      <th>#</th><th>رقم تسلسلي</th><th>صورة</th><th>الاسم</th><th>الكمية</th><th>الوحدة</th><th>السعر</th><th>التاريخ</th><th>فاتورة</th><th>الدافع</th><th>مصدر الدفع</th>
+      <th>#</th><th>رقم تسلسلي</th><th>صورة</th><th>الاسم</th><th>الوحدة \ العبوة</th><th>الكمية</th><th>نوع الوحدة</th><th>السعر</th><th>التاريخ</th><th>فاتورة</th><th>الدافع</th><th>مصدر الدفع</th>
       <?php if($can_edit): ?><th>عمليات</th><?php endif; ?>
     </tr>
   </thead>
@@ -163,6 +163,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
       <td><?= esc($r['invoice_serial'] ?? '-') ?></td>
       <td><?php if($r['product_image']): ?><img src="uploads/<?= esc($r['product_image']) ?>" width="44" class="rounded"><?php endif; ?></td>
       <td><?= esc($r['name']) ?></td>
+      <td><?= esc($r['package']) ?></td>
       <td><span class="badge badge-unit"><?= $r['quantity'] ?></span></td>
       <td><?= esc($r['unit']) ?></td>
       <td><?= number_format((float)$r['price'],7) ?></td>
