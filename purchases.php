@@ -213,7 +213,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
                   <div class="col-md-3">
                     <label class="form-label">الوحدة</label>
                     <select name="unit" class="form-select">
-                      <?php foreach(['عدد','جرام','كيلو','لتر'] as $u): ?>
+                      <?php foreach(['كرتون', 'كيس', 'شدة', 'ربطة', 'سطل', 'تنك', 'درزن', 'بالة', 'باكت', 'بالتة', 'CTN', 'DOZEN', 'BAG', 'PCs', 'GLN'] as $u): ?>
                         <option <?= $r['unit']===$u?'selected':'' ?>><?= $u ?></option>
                       <?php endforeach; ?>
                     </select>
@@ -375,11 +375,22 @@ $can_edit = in_array(current_role(), ['admin','manager']);
                 <td><input type="number" step="0.001" name="quantity[]" class="form-control" required></td>
                 <td>
                   <select name="unit[]" class="form-select">
-                    <option>عدد</option>
-                    <option>جرام</option>
-                    <option>كيلو</option>
-                    <option>لتر</option>
-                  </select>
+                    <option>كرتون</option>
+                    <option>كيس</option>
+                    <option>شدة</option>
+                    <option>ربطة</option>
+                    <option>سطل</option>
+                    <option>تنك</option>
+                    <option>درزن</option>
+                    <option>بالة</option>
+                    <option>باكت</option>
+                    <option>بالتة</option>
+                    <option>CTN</option>
+                    <option>DOZEN</option>
+                    <option>BAG</option>
+                    <option>PCs</option>
+                    <option>GLN</option>
+                </select>
                 </td>
                 <td><input name="package[]" class="form-control" placeholder="أدخل العبوة"></td> <!-- حقل العبوة -->
                 <td><input type="number" step="0.00000001" min="0" name="price[]" class="form-control"></td>
