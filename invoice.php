@@ -144,6 +144,26 @@ select#vatRate {
     line-height: 1.8;
 }
 
+@media print {
+  body { font-size: 10px; }
+  table { page-break-inside: auto; }
+  tr    { page-break-inside: avoid; page-break-after: auto; }
+  th, td { padding: 3px; }
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed; /* مهم */
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 4px;
+  text-align: center;
+  word-wrap: break-word; /* لتقسيم النصوص الطويلة */
+}
+
+
 </style>
 
 <div class="d-print-none mb-3">
