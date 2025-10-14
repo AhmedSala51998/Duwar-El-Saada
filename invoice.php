@@ -206,11 +206,11 @@ select#vatRate {
       <tr data-qty="<?= $item['quantity'] ?>" data-price="<?= $item['price'] ?>">
         <td><?= esc($item['name']) ?></td>
         <td><?= esc($item['unit']) ?></td>
-        <td><?= esc($item['quantity'] . ' ' . $item['package']) ?></td>
+        <td><?= esc($item['total_packages'] . ' ' . $item['package']) ?></td>
         <td><?= number_format($item['total_price'],5) ?> ريال</td>
         <td><?= esc($item['single_package']) ?></td>
         <td><?= number_format($item['price'],5) ?> ريال</td>
-        <td><?= esc($item['total_package']) ?></td>
+        <td><?= esc($item['quantity']) ?></td>
         <td><?= number_format($subtotal,3) ?> ريال</td>
         <td class="vat"><?= number_format($vat,5) ?> ريال</td>
         <td class="total"><?= number_format($total,5) ?> ريال</td>
