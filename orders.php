@@ -47,13 +47,17 @@ $s->execute($params);
 $orders=$s->fetchAll();
 $can_edit = in_array(current_role(), ['admin','manager']);
 
-$usedStocks = $pdo->query("
+$stocks = $pdo->query("
     SELECT 
         p.name,
         p.unit,
-        IFNULL(SUM(o.qty), 0) AS used_qty
+        SUM(p.quantity) - IFNULL(SUM(o.total_used), 0) AS remaining_qty
     FROM purchases p
-    LEFT JOIN orders o ON o.purchase_id = p.id
+    LEFT JOIN (
+        SELECT purchase_id, SUM(qty) AS total_used
+        FROM orders
+        GROUP BY purchase_id
+    ) o ON o.purchase_id = p.id
     GROUP BY p.name, p.unit
     ORDER BY p.name
 ")->fetchAll(PDO::FETCH_ASSOC);
@@ -61,16 +65,15 @@ $usedStocks = $pdo->query("
 
 ?>
 <div class="d-flex flex-wrap gap-3 mb-4">
-<?php foreach($usedStocks as $s): ?>
-    <div class="card text-center shadow-sm" style="width: 160px; border-radius: 15px; background: #ffe0e0; transition: transform 0.2s;">
+<?php foreach($stocks as $s): ?>
+    <div class="card text-center shadow-sm" style="width: 160px; border-radius: 15px; background: #fff8e1; transition: transform 0.2s;">
         <div class="card-body p-2">
             <h6 class="card-title mb-1"><?= esc($s['name']) ?></h6>
-            <p class="card-text mb-0"><strong><?= $s['used_qty'] ?></strong> <?= esc($s['unit']) ?> مصروف</p>
+            <p class="card-text mb-0"><strong><?= $s['remaining_qty'] ?></strong> <?= esc($s['unit']) ?></p>
         </div>
     </div>
 <?php endforeach; ?>
 </div>
-
 
 <div class="d-flex flex-wrap gap-2 justify-content-between align-items-center mb-3">
   <h3 class="mb-0">أوامر التشغيل</h3>
