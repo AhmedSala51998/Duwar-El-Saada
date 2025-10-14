@@ -110,7 +110,10 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 <td>
 <a class="btn btn-sm btn-outline-primary" href="invoice_expense?id=<?= $r['id'] ?>"><i class="bi bi-printer"></i></a>
 <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#edit<?= $r['id'] ?>"><i class="bi bi-pencil"></i></button>
-<button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#del<?= $r['id'] ?>"><i class="bi bi-trash"></i></button>
+<button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" 
+        data-id="<?= $r['id'] ?>" data-name="<?= esc($r['main_expense']) ?>">
+    <i class="bi bi-trash"></i>
+</button>
 </td>
 <?php endif; ?>
 </tr>
@@ -217,7 +220,8 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 </div>
 <!-- مودال الحذف -->
 <?php if($can_edit): ?>
-<div class="modal fade" id="del<?= $r['id'] ?>" tabindex="-1">
+<!-- مودال واحد فقط -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -225,11 +229,14 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
-        هل أنت متأكد أنك تريد حذف المصروف <b><?= esc($r['main_expense']) ?></b> ؟
+        هل تريد حذف المصروف <strong id="expenseName"></strong>؟
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
-        <a href="expenses_delete?id=<?= $r['id'] ?>" class="btn btn-danger">حذف</a>
+        <form method="post" action="expenses_delete">
+          <input type="hidden" name="id" id="expenseId">
+          <button type="submit" class="btn btn-danger">حذف</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+        </form>
       </div>
     </div>
   </div>
@@ -536,5 +543,20 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 });
+
+</script>
+<script>
+  var deleteModal = document.getElementById('deleteModal')
+deleteModal.addEventListener('show.bs.modal', function (event) {
+  var button = event.relatedTarget // الزر اللي ضغط عليه
+  var id = button.getAttribute('data-id')
+  var name = button.getAttribute('data-name')
+
+  var modalTitle = deleteModal.querySelector('#expenseName')
+  var modalIdInput = deleteModal.querySelector('#expenseId')
+
+  modalTitle.textContent = name
+  modalIdInput.value = id
+})
 
 </script>
