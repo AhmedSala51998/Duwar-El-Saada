@@ -49,27 +49,26 @@ $can_edit = in_array(current_role(), ['admin','manager']);
 
 $stocks = $pdo->query("
     SELECT 
-        p.id,
-        p.name,
-        p.unit,
-        SUM(p.quantity - IFNULL((SELECT SUM(qty) FROM orders WHERE purchase_id = p.id),0)) AS remaining_qty
-    FROM purchases p
-    GROUP BY p.id, p.name, p.unit
-    ORDER BY p.name
+        name,
+        unit,
+        SUM(quantity) AS total_qty
+    FROM purchases
+    GROUP BY name, unit
+    ORDER BY name
 ")->fetchAll(PDO::FETCH_ASSOC);
-
-
 ?>
+
 <div class="d-flex flex-wrap gap-3 mb-4">
 <?php foreach($stocks as $s): ?>
     <div class="card text-center shadow-sm" style="width: 160px; border-radius: 15px; background: #fff8e1; transition: transform 0.2s;">
         <div class="card-body p-2">
             <h6 class="card-title mb-1"><?= esc($s['name']) ?></h6>
-            <p class="card-text mb-0"><strong><?= $s['remaining_qty'] ?></strong> <?= esc($s['unit']) ?></p>
+            <p class="card-text mb-0"><strong><?= $s['total_qty'] ?></strong> <?= esc($s['unit']) ?></p>
         </div>
     </div>
 <?php endforeach; ?>
 </div>
+
 
 <div class="d-flex flex-wrap gap-2 justify-content-between align-items-center mb-3">
   <h3 class="mb-0">أوامر التشغيل</h3>
