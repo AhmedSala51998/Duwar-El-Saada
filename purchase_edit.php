@@ -114,10 +114,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
             // التحديث في purchases
             $pdo->prepare("
                 UPDATE purchases 
-                SET name=?, quantity=? , single_package=? , total_packages=?, unit=?, package=?, price=? , total_price=?, product_image=?, invoice_image=?, payer_name=?, payment_source=?, unit_total=?, unit_vat=?, unit_all_total=? 
+                SET name=?, quantity=?, prinitng_quantity=? , single_package=? , total_packages=?, unit=?, package=?, price=? , total_price=?, product_image=?, invoice_image=?, payer_name=?, payment_source=?, unit_total=?, unit_vat=?, unit_all_total=? 
                 WHERE id=?
             ")->execute([
                 $newData['name'],
+                $unit_quantity,
                 $unit_quantity,
                 $newData['single_quantity'],
                 $newData['quantity'],
