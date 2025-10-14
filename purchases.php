@@ -211,15 +211,15 @@ $can_edit = in_array(current_role(), ['admin','manager']);
                     <input type="number" step="0.001" name="quantity" class="form-control" value="<?= esc($r['quantity']) ?>" required>
                   </div>
                   <div class="col-md-3">
-                    <label class="form-label">الوحدة</label>
+                    <label class="form-label">نوع الوحدة</label>
                     <select name="unit" class="form-select">
-                      <?php foreach(['كرتون', 'كيس', 'شدة', 'ربطة', 'سطل', 'تنك', 'درزن', 'بالة', 'باكت', 'بالتة', 'CTN', 'DOZEN', 'BAG', 'PCs', 'GLN'] as $u): ?>
+                      <?php foreach(['عدد','جرام','كيلو','لتر'] as $u): ?>
                         <option <?= $r['unit']===$u?'selected':'' ?>><?= $u ?></option>
                       <?php endforeach; ?>
                     </select>
                   </div>
                   <div class="col-md-3">
-                    <label class="form-label">العبوة</label>
+                    <label class="form-label">الوحدة</label>
                     <input type="text" name="package" class="form-control" value="<?= esc($r['package'] ?? '') ?>" placeholder="أدخل العبوة">
                   </div>
                   <div class="col-md-4">
@@ -374,25 +374,14 @@ $can_edit = in_array(current_role(), ['admin','manager']);
                 <td><input name="name[]" class="form-control" required></td>
                 <td><input type="number" step="0.001" name="quantity[]" class="form-control" required></td>
                 <td>
-                  <select name="unit[]" class="form-select">
-                    <option>كرتون</option>
-                    <option>كيس</option>
-                    <option>شدة</option>
-                    <option>ربطة</option>
-                    <option>سطل</option>
-                    <option>تنك</option>
-                    <option>درزن</option>
-                    <option>بالة</option>
-                    <option>باكت</option>
-                    <option>بالتة</option>
-                    <option>CTN</option>
-                    <option>DOZEN</option>
-                    <option>BAG</option>
-                    <option>PCs</option>
-                    <option>GLN</option>
-                </select>
+                  <select title="نوع الوحدة" name="unit[]" class="form-select">
+                    <option>عدد</option>
+                    <option>جرام</option>
+                    <option>كيلو</option>
+                    <option>لتر</option>
+                  </select>
                 </td>
-                <td><input name="package[]" class="form-control" placeholder="أدخل العبوة"></td> <!-- حقل العبوة -->
+                <td><input name="package[]" class="form-control" title="الوحدة"></td> <!-- حقل العبوة -->
                 <td><input type="number" step="0.00000001" min="0" name="price[]" class="form-control"></td>
                 <td>
                   <select name="payer_name[]" class="form-select payer-select">
@@ -613,25 +602,12 @@ document.getElementById('addRow').addEventListener('click', function() {
     <td><input name="name[]" class="form-control" required></td>
     <td><input type="number" step="0.001" name="quantity[]" class="form-control" required></td>
     <td>
-      <select name="unit[]" class="form-select">
-        <option>كرتون</option>
-        <option>كيس</option>
-        <option>شدة</option>
-        <option>ربطة</option>
-        <option>سطل</option>
-        <option>تنك</option>
-        <option>درزن</option>
-        <option>بالة</option>
-        <option>باكت</option>
-        <option>بالتة</option>
-        <option>CTN</option>
-        <option>DOZEN</option>
-        <option>BAG</option>
-        <option>PCs</option>
-        <option>GLN</option>
-    </select>
+      <select title="نوع الوحدة" name="unit[]" class="form-select">
+        <option>عدد</option><option>جرام</option>
+        <option>كيلو</option><option>لتر</option>
+      </select>
     </td>
-    <td><input name="package[]" class="form-control" placeholder="أدخل العبوة"></td>
+    <td><input name="package[]" class="form-control" title="الوحدة"></td>
     <td><input type="number" step="0.00000001" min="0" name="price[]" class="form-control"></td>
     <td>
       <select name="payer_name[]" class="form-select payer-select">
