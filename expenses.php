@@ -225,14 +225,11 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
-        هل تريد حذف المصروف <strong><?= esc($r['main_expense']) ?></strong>؟
+        هل أنت متأكد أنك تريد حذف المصروف <b><?= esc($r['main_expense']) ?></b> ؟
       </div>
       <div class="modal-footer">
-        <form method="post" action="expenses_delete">
-          <input type="hidden" name="id" value="<?= $r['id'] ?>">
-          <button type="submit" class="btn btn-danger">حذف</button>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
-        </form>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+        <a href="expenses_delete?id=<?= $r['id'] ?>" class="btn btn-danger">حذف</a>
       </div>
     </div>
   </div>

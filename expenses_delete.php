@@ -2,7 +2,7 @@
 require __DIR__.'/config/config.php';
 require_role(['admin','manager']);
 
-$id = (int)($_POST['id'] ?? $_GET['id'] ?? 0);
+$id = (int)($_GET['id'] ?? 0);
 if($id){
     // جلب البيانات القديمة
     $old = $pdo->prepare("SELECT * FROM expenses WHERE id=?");
