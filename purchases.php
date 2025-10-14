@@ -226,7 +226,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
                   </div>
                   <div class="col-md-3">
                     <label class="form-label">الكمية</label>
-                    <input type="number" step="0.001" name="quantity" class="form-control" value="<?= esc($r['quantity']) ?>" required>
+                    <input type="number" step="0.001" min="0" name="quantity" class="form-control" value="<?= esc($r['total_packages']) ?>" required>
                   </div>
                   <div class="col-md-3">
                     <label class="form-label">نوع الوحدة</label>
@@ -242,7 +242,11 @@ $can_edit = in_array(current_role(), ['admin','manager']);
                   </div>
                   <div class="col-md-4">
                     <label class="form-label">السعر</label>
-                    <input type="number" step="0.00000001" min="0" name="price" class="form-control" value="<?= esc($r['price']) ?>">
+                    <input type="number" step="0.00000001" min="0" name="price" class="form-control" value="<?= esc($r['total_price']) ?>">
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label">الكمية بالوحدات</label>
+                    <input type="number" step="0.001" min="0" name="single_quantity" class="form-control" value="<?= esc($r['single_package']) ?>">
                   </div>
 
                   <!-- صورة المنتج -->

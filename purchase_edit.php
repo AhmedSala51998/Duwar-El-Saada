@@ -13,6 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
     $newData = [
         'name'          => trim($_POST['name']),
         'quantity'      => (float)($_POST['quantity'] ?? 0),
+        'single_quantity'      => (float)($_POST['single_quantity'] ?? 0),
         'unit'          => $_POST['unit'] ?? '',
         'price'         => (float)($_POST['price'] ?? 0),
         'product_image' => upload_image('product_image') ?: ($oldData['product_image'] ?? null),
@@ -101,16 +102,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
                 }
             }
 
+            $unit_quantity = $newData['quantity'] * $newData['single_quantity'];
+            $unit_price = $newData['price'] / $newData['single_quantity'];
+
             // التحديث في purchases
             $pdo->prepare("
                 UPDATE purchases 
-                SET name=?, quantity=?, unit=?, package=?, price=?, product_image=?, invoice_image=?, payer_name=?, payment_source=? 
+                SET name=?, quantity=? , single_package=? , total_packages=?, unit=?, package=?, price=? , total_price=?, product_image=?, invoice_image=?, payer_name=?, payment_source=? 
                 WHERE id=?
             ")->execute([
                 $newData['name'],
+                $unit_quantity,
+                $newData['single_quantity'],
                 $newData['quantity'],
                 $newData['unit'],
                 $newData['package'],     // هنا
+                $unit_price,
                 $newData['price'],
                 $newData['product_image'],
                 $newData['invoice_image'],
