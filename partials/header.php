@@ -154,11 +154,10 @@ $current_page = basename($_SERVER['PHP_SELF']);
   </style>
 </head>
 <body>
-  <div class="loader">
+  <!--<div class="loader">
     <div class="circle">
       <div class="loader-text">دوار السعادة</div>
 
-      <!-- البولز حول حافة الدائرة -->
       <div class="pulse-dot"></div>
       <div class="pulse-dot"></div>
       <div class="pulse-dot"></div>
@@ -166,7 +165,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
       <div class="pulse-dot"></div>
       <div class="pulse-dot"></div>
     </div>
-  </div>
+  </div>-->
 <div id="page-wrapper" style="opacity:0; transition:opacity .8s ease;">
 <nav class="navbar navbar-expand-lg sticky-top custom-navbar">
   <div class="container-fluid">
