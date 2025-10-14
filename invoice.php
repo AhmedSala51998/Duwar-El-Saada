@@ -268,17 +268,12 @@ function recalcTotals(saveToDB = false) {
   let grandTotal = 0;
 
   document.querySelectorAll('#invoiceTable tbody tr').forEach(tr => {
-    const qty = parseFloat(tr.dataset.qty);
-    const price = parseFloat(tr.dataset.price);
-    const subtotal = qty * price;
-    const vat = subtotal * vatRate;
-    const total = subtotal + vat;
+    const unitTotal = parseFloat(tr.querySelector('td:nth-child(8)').textContent.replace(/[^\d.-]/g, '')) || 0;
+    const unitVat = parseFloat(tr.querySelector('.vat').textContent.replace(/[^\d.-]/g, '')) || 0;
+    const unitAllTotal = parseFloat(tr.querySelector('.total').textContent.replace(/[^\d.-]/g, '')) || 0;
 
-    tr.querySelector('.vat').textContent = vat.toLocaleString(undefined, {minimumFractionDigits:2}) + ' ريال';
-    tr.querySelector('.total').textContent = total.toLocaleString(undefined, {minimumFractionDigits:2}) + ' ريال';
-
-    subtotalAll += subtotal;
-    grandTotal += total;
+    subtotalAll += unitTotal;
+    grandTotal += unitAllTotal;
   });
 
   const vatValue = grandTotal - subtotalAll;
