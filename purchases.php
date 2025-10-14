@@ -138,7 +138,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
     <a class="btn btn-outline-dark" href="export_purchases_pdf.php?kw=<?= urlencode($kw) ?>"><i class="bi bi-filetype-pdf"></i> PDF</a>
     <?php if($can_edit): ?><button class="btn btn-orange" data-bs-toggle="modal" data-bs-target="#addM"><i class="bi bi-plus-lg"></i> إضافة</button><?php endif; ?>
     <div class="d-flex gap-2">
-        <a class="btn btn-outline-success" href="uploads/purchase_template.xlsx" download>
+        <a class="btn btn-outline-success" href="uploads/purchases_sample_template.xlsx" download>
             <i class="bi bi-download"></i> تحميل نموذج Excel
         </a>
         <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#importExcel">
@@ -435,43 +435,84 @@ $can_edit = in_array(current_role(), ['admin','manager']);
 
 <?php if($can_edit): ?>
 <div class="modal fade" id="importExcel">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <form method="post" action="purchase_import_excel" enctype="multipart/form-data">
         <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
+
         <div class="modal-header">
-          <h5 class="modal-title"><i class="bi bi-file-earmark-spreadsheet"></i> استيراد أصناف من Excel</h5>
+          <h5 class="modal-title"><i class="bi bi-file-earmark-spreadsheet"></i> استيراد أصناف من ملف Excel</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
+
         <div class="modal-body">
-          <label class="form-label">اختر ملف Excel</label>
-          <label class="custom-file-upload w-100">
-            <i class="bi bi-cloud-arrow-up"></i>
-            <span id="file-text-excel">اختر ملف Excel</span>
-            <input required type="file" name="excel_file" id="excel_file" accept=".xlsx,.xls"
-                   onchange="document.getElementById('file-text-excel').textContent=this.files[0].name">
-          </label>
+
+          <div class="mb-3">
+            <label>رقم فاتورة المورد</label>
+            <input type="number" name="bill_number" class="form-control" required placeholder="أدخل رقم فاتورة المورد المكون من 15 رقم">
+          </div>
+
+          <div class="mb-3">
+            <label>الرقم الضريبي للمورد</label>
+            <input type="text" name="tax_number" class="form-control" maxlength="15" pattern="\d{15}" required placeholder="أدخل الرقم الضريبي للمورد المكون من 15 رقم">
+          </div>
+
+          <div class="mb-3">
+            <label>اسم المورد</label>
+            <input type="text" name="supplier_name" class="form-control" required>
+          </div>
+
+          <div class="mb-3">
+            <label>تاريخ الفاتورة</label>
+            <input type="date" name="invoice_date" class="form-control" required>
+          </div>
+
+          <div class="mb-3">
+            <label>اختر ملف Excel</label>
+            <label class="custom-file-upload w-100">
+              <i class="bi bi-cloud-arrow-up"></i>
+              <span id="file-text-excel">اختر ملف Excel</span>
+              <input required type="file" name="excel_file" id="excel_file" accept=".xlsx,.xls"
+                     onchange="document.getElementById('file-text-excel').textContent=this.files[0].name">
+            </label>
+          </div>
+
           <div class="alert alert-info mt-3">
-            📌 يجب أن يحتوي ملف الإكسل على الأعمدة بالـ **keys** التالية:  
+            📘 يجب أن يحتوي ملف الإكسل على الأعمدة التالية (بنفس الأسماء):  
             <ul class="mb-0">
               <li><b>name</b> : اسم المنتج</li>
               <li><b>quantity</b> : الكمية</li>
               <li><b>unit</b> : الوحدة</li>
+              <li><b>package</b> : العبوة</li>
               <li><b>price</b> : السعر</li>
               <li><b>payer_name</b> : اسم الدافع</li>
-              <li><b>image_path</b> : صورة المنتج</li>
-              <li><b>invoice_path</b> : صورة الفاتورة</li>
               <li><b>payment_source</b> : مصدر الدفع</li>
             </ul>
           </div>
+
+          <hr>
+
+          <div class="mt-4">
+            <label>صورة الفاتورة العامة (اختياري)</label>
+            <label class="custom-file-upload w-100">
+              <i class="bi bi-receipt"></i>
+              <span id="file-text-inv-main"></span>
+              <input type="file" name="invoice_image" accept="image/*"
+                     onchange="previewFile(this,'file-text-inv-main','preview-inv-main')">
+              <img id="preview-inv-main" style="display:none; max-width:150px; margin-top:10px"/>
+            </label>
+          </div>
+
         </div>
+
         <div class="modal-footer">
-          <button type="submit" class="btn btn-success"><i class="bi bi-check-lg"></i> رفع</button>
+          <button class="btn btn-orange"><i class="bi bi-check2-circle"></i> استيراد الأصناف</button>
         </div>
       </form>
     </div>
   </div>
 </div>
+
 <?php endif; ?>
 
 <?php require __DIR__.'/partials/footer.php'; ?>
