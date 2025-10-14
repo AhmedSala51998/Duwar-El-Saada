@@ -228,7 +228,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
         هل تريد حذف المصروف <strong><?= esc($r['main_expense']) ?></strong>؟
       </div>
       <div class="modal-footer">
-        <form method="post" action="delete_expense">
+        <form method="post" action="expenses_delete">
           <input type="hidden" name="id" value="<?= $r['id'] ?>">
           <button type="submit" class="btn btn-danger">حذف</button>
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
