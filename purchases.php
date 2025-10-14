@@ -219,7 +219,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
                     </select>
                   </div>
                   <div class="col-md-3">
-                    <label class="form-label">الوحدة</label>
+                    <label class="form-label">الوحدة \ العبوة</label>
                     <input type="text" name="package" class="form-control" value="<?= esc($r['package'] ?? '') ?>" placeholder="أدخل العبوة">
                   </div>
                   <div class="col-md-4">
