@@ -266,42 +266,41 @@ function recalcTotals(saveToDB = false) {
 
   let subtotalAll = 0;
   let grandTotal = 0;
+  let totalVat = 0;
 
+  // نقرأ القيم الجاهزة من الأعمدة وليس نحسبها
   document.querySelectorAll('#invoiceTable tbody tr').forEach(tr => {
-    const qty = parseFloat(tr.dataset.qty);
-    const price = parseFloat(tr.dataset.price);
-    const subtotal = qty * price;
-    const vat = subtotal * vatRate;
-    const total = subtotal + vat;
+    const unitTotal = parseFloat(tr.querySelector('td:nth-child(8)').textContent.replace(/[^\d.-]/g, '')) || 0;
+    const unitVat = parseFloat(tr.querySelector('.vat').textContent.replace(/[^\d.-]/g, '')) || 0;
+    const unitAllTotal = parseFloat(tr.querySelector('.total').textContent.replace(/[^\d.-]/g, '')) || 0;
 
-    tr.querySelector('.vat').textContent = vat.toLocaleString(undefined, {minimumFractionDigits:2}) + ' ريال';
-    tr.querySelector('.total').textContent = total.toLocaleString(undefined, {minimumFractionDigits:2}) + ' ريال';
-
-    subtotalAll += subtotal;
-    grandTotal += total;
+    subtotalAll += unitTotal;
+    totalVat += unitVat;
+    grandTotal += unitAllTotal;
   });
 
-
-  const vatValue = grandTotal - subtotalAll;
-
+  // عرض القيم في الملخص
   document.getElementById('totalNoVat').textContent = subtotalAll.toLocaleString(undefined, {minimumFractionDigits:2});
-  document.getElementById('vatValue').textContent = vatValue.toLocaleString(undefined, {minimumFractionDigits:2});
+  document.getElementById('vatValue').textContent = totalVat.toLocaleString(undefined, {minimumFractionDigits:2});
   document.getElementById('grandTotal').textContent = grandTotal.toLocaleString(undefined, {minimumFractionDigits:2});
 
+  // إخفاء صفوف الضريبة إذا القيمة 0%
   document.getElementById('vatRow').style.display = vatRate === 0 ? 'none' : 'block';
   document.getElementById('grandRow').style.display = vatRate === 0 ? 'none' : 'block';
 
   if (saveToDB) {
+    // لما تتغير النسبة لـ 0، نرسل طلب لتصفير الضريبة في قاعدة البيانات
     fetch('update_vat', {
       method: 'POST',
       headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-      body: `order_id=${orderId}&vat=${vatValue}&all_total=${grandTotal}`
+      body: `order_id=${orderId}&vat=${vatRate === 0 ? 0 : totalVat}&all_total=${vatRate === 0 ? subtotalAll : grandTotal}&vat_rate=${vatRate}`
     }).then(res => res.text()).then(console.log).catch(console.error);
   }
 }
 
 document.getElementById('vatRate').addEventListener('change', () => recalcTotals(true));
 window.addEventListener('DOMContentLoaded', () => recalcTotals(false));
+
 
 const dateInput = document.getElementById('invoiceDate');
 const dateText = document.getElementById('invoiceDateText');
