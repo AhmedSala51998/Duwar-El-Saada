@@ -219,18 +219,18 @@ th, td {
     </thead>
     <tbody>
       <?php foreach($items as $item): 
-        $subtotal = $item['quantity'] * $item['price'];
+        $subtotal = $item['prinitng_quantity'] * $item['price'];
         $vat = $subtotal * $vatRate;
         $total = $subtotal + $vat;
       ?>
-      <tr data-qty="<?= $item['quantity'] ?>" data-price="<?= $item['price'] ?>">
+      <tr data-qty="<?= $item['prinitng_quantity'] ?>" data-price="<?= $item['price'] ?>">
         <td><?= esc($item['name']) ?></td>
         <td><?= esc($item['unit']) ?></td>
         <td><?= esc($item['total_packages'] . ' ' . $item['package']) ?></td>
         <td><?= number_format($item['total_price'],5) ?> ريال</td>
         <td><?= esc($item['single_package']) ?></td>
         <td><?= number_format($item['price'],5) ?> ريال</td>
-        <td><?= esc($item['quantity']) ?></td>
+        <td><?= esc($item['prinitng_quantity']) ?></td>
         <td><?= number_format($item['unit_total'],3) ?> ريال</td>
         <td class="vat"><?= number_format($item['unit_vat'],5) ?> ريال</td>
         <td class="total"><?= number_format($item['unit_all_total'],5) ?> ريال</td>

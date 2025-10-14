@@ -92,10 +92,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
         $alltotal_unit = $subtotal_unit + $vat_unit;
 
         $stmt = $pdo->prepare("
-            INSERT INTO purchases (name, quantity , single_package , total_packages, unit, package, price , total_price, payer_name, payment_source , unit_total ,unit_vat ,unit_all_total, order_id)
-            VALUES (?, ?,?,?, ?, ?, ?,?, ?, ?, ?, ?, ? ,?)
+            INSERT INTO purchases (name, quantity, prinitng_quantity , single_package , total_packages, unit, package, price , total_price, payer_name, payment_source , unit_total ,unit_vat ,unit_all_total, order_id)
+            VALUES (?, ?,?,?, ?, ?, ?,?, ?, ?, ?, ?, ? ,?,?)
         ");
-        $stmt->execute([$name, $unit_quantity , $single_package , $quantity, $unit, $package,$unit_price, $price, $payer, $payment_source , $subtotal_unit , $vat_unit , $alltotal_unit, $order_id]);
+        $stmt->execute([$name, $unit_quantity , $unit_quantity , $single_package , $quantity, $unit, $package,$unit_price, $price, $payer, $payment_source , $subtotal_unit , $vat_unit , $alltotal_unit, $order_id]);
         $purchase_id = $pdo->lastInsertId();
 
         // خصم من العهدة لو كانت وسيلة الدفع "عهدة"
