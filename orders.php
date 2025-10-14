@@ -22,6 +22,13 @@
     }
   });
 </script>
+<style>
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+</style>
 <?php endif; ?>
 <?php
 $items = $pdo->query("SELECT * FROM purchases ORDER BY name")->fetchAll();
@@ -40,7 +47,31 @@ $s=$pdo->prepare($q);
 $s->execute($params);
 $orders=$s->fetchAll();
 $can_edit = in_array(current_role(), ['admin','manager']);
+
+$stocks = $pdo->query("
+    SELECT p.name, p.unit, SUM(p.quantity - IFNULL(o.total_used,0)) as remaining_qty
+    FROM purchases p
+    LEFT JOIN (
+        SELECT purchase_id, SUM(qty) as total_used
+        FROM orders
+        GROUP BY purchase_id
+    ) o ON o.purchase_id = p.id
+    GROUP BY p.name, p.unit
+    ORDER BY p.name
+")->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
+<div class="d-flex flex-wrap gap-3 mb-4">
+<?php foreach($stocks as $s): ?>
+    <div class="card text-center shadow-sm" style="width: 160px; border-radius: 15px; background: #fff8e1; transition: transform 0.2s;">
+        <div class="card-body p-2">
+            <h6 class="card-title mb-1"><?= esc($s['name']) ?></h6>
+            <p class="card-text mb-0"><strong><?= $s['remaining_qty'] ?></strong> <?= esc($s['unit']) ?></p>
+        </div>
+    </div>
+<?php endforeach; ?>
+</div>
+
 <div class="d-flex flex-wrap gap-2 justify-content-between align-items-center mb-3">
   <h3 class="mb-0">أوامر التشغيل</h3>
   <div class="d-flex gap-2">
