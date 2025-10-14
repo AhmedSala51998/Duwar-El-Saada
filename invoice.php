@@ -297,17 +297,40 @@ function recalcTotals(saveToDB = false) {
     .then(res => res.text())
     .then(result => {
       console.log(result);
-      if (vatRate === 0) {
-        // تحديث القيم المعروضة في الجدول فورًا
-        document.querySelectorAll('#invoiceTable tbody tr').forEach(tr => {
-          tr.querySelector('.vat').textContent = '0.00 ريال';
-          tr.querySelector('.total').textContent = tr.querySelector('td:nth-child(8)').textContent;
-        });
+    if (vatRate === 0) {
+      // ✅ تصفير الجدول والملخص فورًا
+      document.querySelectorAll('#invoiceTable tbody tr').forEach(tr => {
+        tr.querySelector('.vat').textContent = '0.00 ريال';
+        tr.querySelector('.total').textContent = tr.querySelector('td:nth-child(8)').textContent;
+      });
 
-        // تحديث الملخص
-        document.getElementById('vatValue').textContent = '0.00';
-        document.getElementById('grandTotal').textContent = subtotalAll.toLocaleString(undefined, {minimumFractionDigits:2});
-      }
+      document.getElementById('vatValue').textContent = '0.00';
+      document.getElementById('grandTotal').textContent = subtotalAll.toLocaleString(undefined, {minimumFractionDigits:2});
+    } else {
+      // ✅ رجع الضريبة تاني واحسبها محليًا بدون رفرش
+      document.querySelectorAll('#invoiceTable tbody tr').forEach(tr => {
+        const unitTotal = parseFloat(tr.querySelector('td:nth-child(8)').textContent.replace(/[^\d.-]/g, '')) || 0;
+        const vatValue = unitTotal * vatRate;
+        const totalWithVat = unitTotal + vatValue;
+
+        tr.querySelector('.vat').textContent = vatValue.toFixed(2) + ' ريال';
+        tr.querySelector('.total').textContent = totalWithVat.toFixed(2) + ' ريال';
+      });
+
+      // إعادة حساب الإجماليات
+      let subtotalAll = 0, totalVat = 0, grandTotal = 0;
+      document.querySelectorAll('#invoiceTable tbody tr').forEach(tr => {
+        const unitTotal = parseFloat(tr.querySelector('td:nth-child(8)').textContent.replace(/[^\d.-]/g, '')) || 0;
+        const vatValue = unitTotal * vatRate;
+        subtotalAll += unitTotal;
+        totalVat += vatValue;
+        grandTotal += unitTotal + vatValue;
+      });
+
+      document.getElementById('totalNoVat').textContent = subtotalAll.toLocaleString(undefined, {minimumFractionDigits:2});
+      document.getElementById('vatValue').textContent = totalVat.toLocaleString(undefined, {minimumFractionDigits:2});
+      document.getElementById('grandTotal').textContent = grandTotal.toLocaleString(undefined, {minimumFractionDigits:2});
+    }
     })
     .catch(console.error);
   }
