@@ -289,12 +289,27 @@ function recalcTotals(saveToDB = false) {
   document.getElementById('grandRow').style.display = vatRate === 0 ? 'none' : 'block';
 
   if (saveToDB) {
-    // لما تتغير النسبة لـ 0، نرسل طلب لتصفير الضريبة في قاعدة البيانات
     fetch('update_vat', {
       method: 'POST',
       headers: {'Content-Type': 'application/x-www-form-urlencoded'},
       body: `order_id=${orderId}&vat=${vatRate === 0 ? 0 : totalVat}&all_total=${vatRate === 0 ? subtotalAll : grandTotal}&vat_rate=${vatRate}`
-    }).then(res => res.text()).then(console.log).catch(console.error);
+    })
+    .then(res => res.text())
+    .then(result => {
+      console.log(result);
+      if (vatRate === 0) {
+        // تحديث القيم المعروضة في الجدول فورًا
+        document.querySelectorAll('#invoiceTable tbody tr').forEach(tr => {
+          tr.querySelector('.vat').textContent = '0.00 ريال';
+          tr.querySelector('.total').textContent = tr.querySelector('td:nth-child(8)').textContent;
+        });
+
+        // تحديث الملخص
+        document.getElementById('vatValue').textContent = '0.00';
+        document.getElementById('grandTotal').textContent = subtotalAll.toLocaleString(undefined, {minimumFractionDigits:2});
+      }
+    })
+    .catch(console.error);
   }
 }
 
