@@ -3,68 +3,77 @@ require __DIR__.'/config/config.php';
 require_role(['admin','manager']);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? '')) {
-    $id = (int)$_POST['id'];
+    $id = (int)($_POST['id'] ?? 0);
 
     // جلب البيانات القديمة
-    $old = $pdo->prepare("SELECT * FROM purchases WHERE id=?");
-    $old->execute([$id]);
-    $oldData = $old->fetch(PDO::FETCH_ASSOC);
+    $stmtOld = $pdo->prepare("SELECT * FROM purchases WHERE id=?");
+    $stmtOld->execute([$id]);
+    $oldData = $stmtOld->fetch(PDO::FETCH_ASSOC);
 
+    if (!$oldData) {
+        $_SESSION['toast'] = ['type'=>'warning','msg'=>'المنتج غير موجود'];
+        header('Location: ' . BASE_URL . '/purchases.php');
+        exit;
+    }
+
+    // البيانات الجديدة من الفورم
     $newData = [
-        'name'          => trim($_POST['name']),
-        'quantity'      => (float)($_POST['quantity'] ?? 0),
-        'single_quantity'      => (float)($_POST['single_quantity'] ?? 0),
-        'unit'          => $_POST['unit'] ?? '',
-        'price'         => (float)($_POST['price'] ?? 0),
-        'product_image' => upload_image('product_image') ?: ($oldData['product_image'] ?? null),
-        'invoice_image' => upload_image('invoice_image') ?: ($oldData['invoice_image'] ?? null),
-        'payer_name'    => trim($_POST['payer_name'] ?? ''),
-        'payment_source'=> $_POST['payment_source'] ?? 'كاش',
-        'package' => trim($_POST['package'] ?? '')
+        'name'           => trim($_POST['name']),
+        'quantity'       => (float)($_POST['quantity'] ?? 0),
+        'single_quantity'=> (float)($_POST['single_quantity'] ?? 0),
+        'unit'           => $_POST['unit'] ?? '',
+        'price'          => (float)($_POST['price'] ?? 0),
+        'product_image'  => upload_image('product_image') ?: ($oldData['product_image'] ?? null),
+        'invoice_image'  => upload_image('invoice_image') ?: ($oldData['invoice_image'] ?? null),
+        'payer_name'     => trim($_POST['payer_name'] ?? ''),
+        'payment_source' => $_POST['payment_source'] ?? 'كاش',
+        'package'        => trim($_POST['package'] ?? '')
     ];
 
-    // تحقق من التكرار
-    $check = $pdo->prepare("SELECT COUNT(*) FROM purchases WHERE name=? AND unit=? AND payer_name=? AND id<>?");
-    $check->execute([$newData['name'], $newData['unit'], $newData['payer_name'], $id]);
-    $exists = $check->fetchColumn();
+    // جلب أعلى كمية مرتبطة بإذن صرف
+    $stmtIssued = $pdo->prepare("SELECT MAX(qty) FROM orders WHERE purchase_id=?");
+    $stmtIssued->execute([$id]);
+    $maxIssuedQty = (float)$stmtIssued->fetchColumn();
 
-    if($exists > 0){
-        $_SESSION['toast'] = ['type'=>'warning','msg'=>'هناك عملية شراء بنفس الاسم، الوحدة والدافع موجودة بالفعل'];
-    } else {
+    // استرجاع العهدة القديمة إذا كانت مدفوعة من العهدة
+    if ($oldData['payment_source'] === 'عهدة') {
+        $stmtTx = $pdo->prepare("SELECT * FROM custody_transactions WHERE type='purchase' AND type_id=?");
+        $stmtTx->execute([$oldData['id']]);
+        $transactions = $stmtTx->fetchAll(PDO::FETCH_ASSOC);
 
-        // التحقق إذا كان هناك أي تغيير فعلي
-        $changed = false;
-        foreach(['name','quantity','single_quantity','unit','package','price','product_image','invoice_image','payer_name','payment_source'] as $key){
-            if(!isset($oldData[$key]) || $oldData[$key] != $newData[$key]){
-                $changed = true;
-                break;
+        foreach ($transactions as $tx) {
+            $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE id=?");
+            $stmtC->execute([$tx['custody_id']]);
+            $custody = $stmtC->fetch();
+            if ($custody) {
+                $newAmount = $custody['amount'] + $tx['amount'];
+                $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
             }
         }
 
-        if($changed){
+        // حذف المعاملات القديمة
+        $pdo->prepare("DELETE FROM custody_transactions WHERE type='purchase' AND type_id=?")->execute([$oldData['id']]);
+    }
 
-            // استرجاع العهدة القديمة إذا كانت مدفوعة من العهدة
-            // استرجاع العهدة القديمة
-            if ($oldData['payment_source'] === 'عهدة') {
-                $stmtTx = $pdo->prepare("SELECT * FROM custody_transactions WHERE type='purchase' AND type_id=?");
-                $stmtTx->execute([$oldData['id']]);
-                $transactions = $stmtTx->fetchAll(PDO::FETCH_ASSOC);
+    // منطق الحذف أو تعديل الكمية
+    if ($newData['quantity'] == 0) {
+        if ($maxIssuedQty > 0) {
+            $_SESSION['toast'] = ['type'=>'danger', 'msg'=>'لا يمكن حذف المنتج، يوجد إذن صرف مرتبط، امسح إذن الصرف أولًا'];
+        } else {
+            // استدعاء كود الحذف القديم مباشرة
+            require __DIR__.'/purchase_delete_logic.php';
+        }
+    } elseif ($newData['quantity'] < $oldData['total_packages']) {
+        if ($newData['quantity'] < $maxIssuedQty) {
+            $_SESSION['toast'] = ['type'=>'danger','msg'=>'لا يمكن تعديل الكمية، مرتبطة بإذن صرف أكبر من الكمية الجديدة، امسح إذن الصرف أولًا'];
+        } else {
+            // تعديل آمن: تقليل أو زيادة بدون المساس بإذن الصرف
+            $addedQty = $newData['quantity'] - $oldData['total_packages'];
+            $newPrintingQty = $oldData['prinitng_quantity'] + max(0, $addedQty);
+            $unit_quantity = $newData['quantity'] * $newData['single_quantity'];
+            $unit_price = $newData['price'] / $newData['single_quantity'];
 
-                foreach ($transactions as $tx) {
-                    $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE id=?");
-                    $stmtC->execute([$tx['custody_id']]);
-                    $custody = $stmtC->fetch();
-                    if ($custody) {
-                        $newAmount = $custody['amount'] + $tx['amount'];
-                        $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
-                    }
-                }
-
-                // حذف المعاملات بعد الإرجاع
-                $pdo->prepare("DELETE FROM custody_transactions WHERE type='purchase' AND type_id=?")->execute([$oldData['id']]);
-            }
-
-            // خصم العهدة الجديدة
+            // خصم العهدة الجديدة إذا مصدر الدفع عهدة
             if ($newData['payment_source'] === 'عهدة') {
                 $amountNeeded = $newData['price'] * $newData['quantity'];
                 $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? AND amount > 0 ORDER BY taken_at ASC");
@@ -73,24 +82,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
 
                 foreach ($custodies as $custody) {
                     if ($amountNeeded <= 0) break;
-
                     if ($custody['amount'] >= $amountNeeded) {
                         $newAmount = $custody['amount'] - $amountNeeded;
                         $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
-
-                        // سجل المعاملة
-                        $stmtTx = $pdo->prepare("INSERT INTO custody_transactions (type, type_id, custody_id, amount, created_at) VALUES (?, ?, ?, ?, NOW())");
-                        $stmtTx->execute(['purchase', $oldData['id'], $custody['id'], $amountNeeded]);
-
+                        $pdo->prepare("INSERT INTO custody_transactions (type, type_id, custody_id, amount, created_at) VALUES (?, ?, ?, ?, NOW())")
+                            ->execute(['purchase', $oldData['id'], $custody['id'], $amountNeeded]);
                         $amountNeeded = 0;
                     } else {
                         $amountDeducted = $custody['amount'];
                         $pdo->prepare("UPDATE custodies SET amount=0 WHERE id=?")->execute([$custody['id']]);
-
-                        // سجل المعاملة
-                        $stmtTx = $pdo->prepare("INSERT INTO custody_transactions (type, type_id, custody_id, amount, created_at) VALUES (?, ?, ?, ?, NOW())");
-                        $stmtTx->execute(['purchase', $oldData['id'], $custody['id'], $amountDeducted]);
-
+                        $pdo->prepare("INSERT INTO custody_transactions (type, type_id, custody_id, amount, created_at) VALUES (?, ?, ?, ?, NOW())")
+                            ->execute(['purchase', $oldData['id'], $custody['id'], $amountDeducted]);
                         $amountNeeded -= $amountDeducted;
                     }
                 }
@@ -102,69 +104,126 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
                 }
             }
 
-            $unit_quantity = $newData['quantity'] * $newData['single_quantity'];
-            $unit_price = $newData['price'] / $newData['single_quantity'];
-
-
+            // حساب الضريبة والقيم النهائية
             $vatRate = 0.15;
-            $subtotal_unit = $newData['quantity'] * $newData['price'];
-            $vat_unit = $subtotal_unit * $vatRate;
-            $alltotal_unit = $subtotal_unit + $vat_unit;
+            $unit_total = $unit_quantity * $unit_price;
+            $unit_vat = $unit_total * $vatRate;
+            $unit_all_total = $unit_total + $unit_vat;
 
-            // التحديث في purchases
-            $pdo->prepare("
-                UPDATE purchases 
-                SET name=?, quantity=?, prinitng_quantity=? , single_package=? , total_packages=?, unit=?, package=?, price=? , total_price=?, product_image=?, invoice_image=?, payer_name=?, payment_source=?, unit_total=?, unit_vat=?, unit_all_total=? 
-                WHERE id=?
-            ")->execute([
+            // تحديث purchase
+            $pdo->prepare("UPDATE purchases SET 
+                name=?, quantity=?, prinitng_quantity=?, single_package=?, total_packages=?, unit=?, package=?, price=?, total_price=?, product_image=?, invoice_image=?, payer_name=?, payment_source=?, unit_total=?, unit_vat=?, unit_all_total=?
+                WHERE id=?")
+            ->execute([
                 $newData['name'],
                 $unit_quantity,
-                $unit_quantity,
+                $newPrintingQty,
                 $newData['single_quantity'],
                 $newData['quantity'],
                 $newData['unit'],
-                $newData['package'],     // هنا
+                $newData['package'],
                 $unit_price,
                 $newData['price'],
                 $newData['product_image'],
                 $newData['invoice_image'],
                 $newData['payer_name'],
                 $newData['payment_source'],
-                $subtotal_unit,
-                $vat_unit,
-                $alltotal_unit,
+                $unit_total,
+                $unit_vat,
+                $unit_all_total,
                 $id
             ]);
 
+            $_SESSION['toast'] = ['type'=>'success','msg'=>'تم تعديل الكمية بنجاح'];
+        }
+    } else {
+        // زيادة على القديم
+        $addedQty = $newData['quantity'] - $oldData['total_packages'];
+        $newPrintingQty = $oldData['prinitng_quantity'] + $addedQty;
+        $unit_quantity = $newData['quantity'] * $newData['single_quantity'];
+        $unit_price = $newData['price'] / $newData['single_quantity'];
 
-            // ✅ إعادة حساب إجمالي الفاتورة
-            if (!empty($oldData['order_id'])) {
-                $orderId = $oldData['order_id'];
+        // خصم العهدة الجديدة إذا مصدر الدفع عهدة
+        if ($newData['payment_source'] === 'عهدة') {
+            $amountNeeded = $newData['price'] * $newData['quantity'];
+            $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? AND amount > 0 ORDER BY taken_at ASC");
+            $stmtC->execute([$newData['payer_name']]);
+            $custodies = $stmtC->fetchAll(PDO::FETCH_ASSOC);
 
-                // جمع كل الأصناف المرتبطة بالفاتورة
-                $stmtItems = $pdo->prepare("SELECT quantity, price FROM purchases WHERE order_id=?");
-                $stmtItems->execute([$orderId]);
-                $items = $stmtItems->fetchAll(PDO::FETCH_ASSOC);
-
-                $total = 0;
-                foreach ($items as $item) {
-                    $total += $item['quantity'] * $item['price'];
+            foreach ($custodies as $custody) {
+                if ($amountNeeded <= 0) break;
+                if ($custody['amount'] >= $amountNeeded) {
+                    $newAmount = $custody['amount'] - $amountNeeded;
+                    $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
+                    $pdo->prepare("INSERT INTO custody_transactions (type, type_id, custody_id, amount, created_at) VALUES (?, ?, ?, ?, NOW())")
+                        ->execute(['purchase', $oldData['id'], $custody['id'], $amountNeeded]);
+                    $amountNeeded = 0;
+                } else {
+                    $amountDeducted = $custody['amount'];
+                    $pdo->prepare("UPDATE custodies SET amount=0 WHERE id=?")->execute([$custody['id']]);
+                    $pdo->prepare("INSERT INTO custody_transactions (type, type_id, custody_id, amount, created_at) VALUES (?, ?, ?, ?, NOW())")
+                        ->execute(['purchase', $oldData['id'], $custody['id'], $amountDeducted]);
+                    $amountNeeded -= $amountDeducted;
                 }
-
-                // افترض أن الضريبة ثابتة 15%
-                $vat = $total * 0.15;
-                $allTotal = $total + $vat;
-
-                // تحديث جدول orders_purchases
-                $pdo->prepare("UPDATE orders_purchases SET total=?, vat=?, all_total=? WHERE id=?")
-                    ->execute([$total, $vat, $allTotal, $orderId]);
             }
 
-            $_SESSION['toast'] = ['type'=>'success','msg'=>'تم تعديل العملية وحساب الفاتورة بنجاح'];
-
-        } else {
-            $_SESSION['toast'] = ['type'=>'info','msg'=>'لا توجد تغييرات للحفظ'];
+            if ($amountNeeded > 0) {
+                $_SESSION['toast'] = ['type'=>'danger','msg'=>'رصيد العهدة غير كافي'];
+                header('Location: ' . BASE_URL . '/purchases.php'); 
+                exit;
+            }
         }
+
+        // حساب الضريبة والقيم النهائية
+        $vatRate = 0.15;
+        $unit_total = $unit_quantity * $unit_price;
+        $unit_vat = $unit_total * $vatRate;
+        $unit_all_total = $unit_total + $unit_vat;
+
+        // تحديث purchase
+        $pdo->prepare("UPDATE purchases SET 
+            name=?, quantity=?, prinitng_quantity=?, single_package=?, total_packages=?, unit=?, package=?, price=?, total_price=?, product_image=?, invoice_image=?, payer_name=?, payment_source=?, unit_total=?, unit_vat=?, unit_all_total=?
+            WHERE id=?")
+        ->execute([
+            $newData['name'],
+            $unit_quantity,
+            $newPrintingQty,
+            $newData['single_quantity'],
+            $newData['quantity'],
+            $newData['unit'],
+            $newData['package'],
+            $unit_price,
+            $newData['price'],
+            $newData['product_image'],
+            $newData['invoice_image'],
+            $newData['payer_name'],
+            $newData['payment_source'],
+            $unit_total,
+            $unit_vat,
+            $unit_all_total,
+            $id
+        ]);
+
+        $_SESSION['toast'] = ['type'=>'success','msg'=>'تم زيادة الكمية بنجاح'];
+    }
+
+    // ✅ إعادة حساب إجمالي الفاتورة
+    if (!empty($oldData['order_id'])) {
+        $orderId = $oldData['order_id'];
+        $stmtItems = $pdo->prepare("SELECT quantity, price FROM purchases WHERE order_id=?");
+        $stmtItems->execute([$orderId]);
+        $items = $stmtItems->fetchAll(PDO::FETCH_ASSOC);
+
+        $total = 0;
+        foreach ($items as $item) {
+            $total += $item['quantity'] * $item['price'];
+        }
+
+        $vat = $total * 0.15;
+        $allTotal = $total + $vat;
+
+        $pdo->prepare("UPDATE orders_purchases SET total=?, vat=?, all_total=? WHERE id=?")
+            ->execute([$total, $vat, $allTotal, $orderId]);
     }
 }
 

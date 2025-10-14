@@ -1,33 +1,6 @@
 <?php
-require __DIR__.'/config/config.php';
-require_role(['admin','manager']);
-
-$id = (int)($_GET['id'] ?? 0);
-
-if ($id) {
-    // جلب البيانات القديمة
-    $old = $pdo->prepare("SELECT * FROM purchases WHERE id=?");
-    $old->execute([$id]);
-    $oldData = $old->fetch(PDO::FETCH_ASSOC);
-
-    if (!$oldData) {
-        $_SESSION['toast'] = ['type'=>'warning','msg'=>'العملية غير موجودة'];
-        header('Location: ' . BASE_URL . '/purchases.php');
-        exit;
-    }
-
-    // جلب أعلى كمية مرتبطة بإذن صرف لهذا المنتج
-    $stmtIssued = $pdo->prepare("SELECT MAX(qty) FROM orders WHERE purchase_id=?");
-    $stmtIssued->execute([$id]);
-    $maxIssuedQty = (float)$stmtIssued->fetchColumn();
-
-    if ($maxIssuedQty > 0) {
-        // يوجد إذن صرف مرتبط، لا يمكن الحذف
-        $_SESSION['toast'] = ['type'=>'danger', 'msg'=>'لا يمكن حذف المنتج، يوجد إذن صرف مرتبط، امسح إذن الصرف أولًا'];
-        header('Location: ' . BASE_URL . '/purchases.php');
-        exit;
-    }
-
+// هذا هو محتوى purchase_delete_logic.php
+if ($oldData) {
     $orderId = $oldData['order_id'] ?? null;
 
     // استرجاع العهدة إذا كانت مدفوعة من العهدة
@@ -48,14 +21,15 @@ if ($id) {
         }
 
         // حذف المعاملات بعد الإرجاع
-        $pdo->prepare("DELETE FROM custody_transactions WHERE type=? AND type_id=?")->execute(['purchase', $oldData['id']]);
+        $pdo->prepare("DELETE FROM custody_transactions WHERE type='purchase' AND type_id=?")->execute([$oldData['id']]);
     }
 
     // حذف المنتج نفسه
-    $pdo->prepare("DELETE FROM purchases WHERE id=?")->execute([$id]);
+    $pdo->prepare("DELETE FROM purchases WHERE id=?")->execute([$oldData['id']]);
 
     // ✅ إعادة التعامل مع الفاتورة المرتبطة
     if ($orderId) {
+        // جلب باقي المنتجات المرتبطة بنفس الفاتورة
         $stmtItems = $pdo->prepare("SELECT quantity, price FROM purchases WHERE order_id=?");
         $stmtItems->execute([$orderId]);
         $items = $stmtItems->fetchAll(PDO::FETCH_ASSOC);
@@ -65,7 +39,7 @@ if ($id) {
             $pdo->prepare("DELETE FROM orders_purchases WHERE id=?")->execute([$orderId]);
             $_SESSION['toast'] = ['type'=>'success','msg'=>'تم حذف المنتج والفاتورة المرتبطة به بنجاح'];
         } else {
-            // إعادة الحساب
+            // لو فيه منتجات تانية نعيد الحساب
             $total = 0;
             foreach ($items as $item) {
                 $total += $item['quantity'] * $item['price'];
@@ -82,7 +56,6 @@ if ($id) {
     } else {
         $_SESSION['toast'] = ['type'=>'success','msg'=>'تم حذف العملية بنجاح'];
     }
+} else {
+    $_SESSION['toast'] = ['type'=>'warning','msg'=>'العملية غير موجودة'];
 }
-
-header('Location: ' . BASE_URL . '/purchases.php');
-exit;
