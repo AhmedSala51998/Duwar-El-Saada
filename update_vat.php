@@ -14,12 +14,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute([$vat, $allTotal, $orderId]);
 
         // لو الضريبة 0 صفر كل القيم في purchases المرتبطة
-        if ($vatRate === 0) {
+        //if ($vatRate === 0) {
             $stmt2 = $pdo->prepare("UPDATE purchases 
                 SET unit_vat = 0, unit_all_total = unit_total 
                 WHERE order_id = ?");
             $stmt2->execute([$orderId]);
-        }
+        //}
 
         echo "VAT and totals updated successfully";
     } else {
