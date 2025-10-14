@@ -262,11 +262,21 @@ $current_page = basename($_SERVER['PHP_SELF']);
       <?php endif; ?>
 
   <script>
-    // إخفاء اللودر بعد 3 ثواني وإظهار المحتوى
     window.addEventListener('load', () => {
-      setTimeout(() => {
-        document.querySelector('.loader').classList.add('hidden');
-        document.getElementById('page-wrapper').style.opacity = '1';
-      }, 3000);
+      const loader = document.querySelector('.loader');
+      const page = document.getElementById('page-wrapper');
+
+      // إخفاء اللودر
+      loader.classList.add('hidden');
+
+      // إظهار المحتوى تدريجيًا
+      page.style.opacity = '1';
+
+      // لو فيه Toast
+      const toastEl = document.getElementById('liveToast');
+      if(toastEl){
+        const toast = new bootstrap.Toast(toastEl, { delay: 2500 });
+        toast.show();
+      }
     });
   </script>
