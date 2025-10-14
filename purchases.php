@@ -214,7 +214,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
                   <div class="col-md-3">
                     <label class="form-label">نوع الوحدة</label>
                     <select name="unit" class="form-select">
-                      <?php foreach(['عدد','جرام','كيلو','لتر'] as $u): ?>
+                      <?php foreach(['عدد','كيلو','لتر'] as $u): ?>
                         <option <?= $r['unit']===$u?'selected':'' ?>><?= $u ?></option>
                       <?php endforeach; ?>
                     </select>
@@ -377,7 +377,6 @@ $can_edit = in_array(current_role(), ['admin','manager']);
                 <td>
                   <select title="نوع الوحدة" name="unit[]" class="form-select">
                     <option>عدد</option>
-                    <option>جرام</option>
                     <option>كيلو</option>
                     <option>لتر</option>
                   </select>
@@ -604,7 +603,7 @@ document.getElementById('addRow').addEventListener('click', function() {
     <td><input type="number" step="0.001" name="quantity[]" class="form-control" required></td>
     <td>
       <select title="نوع الوحدة" name="unit[]" class="form-select">
-        <option>عدد</option><option>جرام</option>
+        <option>عدد</option>
         <option>كيلو</option><option>لتر</option>
       </select>
     </td>
