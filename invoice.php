@@ -185,11 +185,13 @@ select#vatRate {
   <table id="invoiceTable">
     <thead>
       <tr>
-        <th>الصنف</th>
-        <th>الوحدة \ العبوة</th>
-        <th>الكمية</th>
+        <th>البيان</th>
         <th>نوع الوحدة</th>
+        <th>الكمية</th>
         <th>السعر</th>
+        <th>الكميات بالوحدة</th>
+        <th>السعر الافرادي</th>
+        <th>اجمالي الكميات</th>
         <th>الاجمالي</th>
         <th>الضريبة</th>
         <th>الاجمالي بعد الضريبه</th>
@@ -203,10 +205,12 @@ select#vatRate {
       ?>
       <tr data-qty="<?= $item['quantity'] ?>" data-price="<?= $item['price'] ?>">
         <td><?= esc($item['name']) ?></td>
-        <td><?= esc($item['package']) ?></td>
-        <td><?= esc($item['quantity'] . ' ' . $item['package']) ?></td>
         <td><?= esc($item['unit']) ?></td>
+        <td><?= esc($item['quantity'] . ' ' . $item['package']) ?></td>
+        <td><?= number_format($item['total_price'],5) ?> ريال</td>
+        <td><?= esc($item['single_package']) ?></td>
         <td><?= number_format($item['price'],5) ?> ريال</td>
+        <td><?= esc($item['total_package']) ?></td>
         <td><?= number_format($subtotal,3) ?> ريال</td>
         <td class="vat"><?= number_format($vat,5) ?> ريال</td>
         <td class="total"><?= number_format($total,5) ?> ريال</td>

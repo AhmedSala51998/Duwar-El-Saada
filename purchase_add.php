@@ -6,14 +6,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
 
     $names = $_POST['name'] ?? [];
     $units = $_POST['unit'] ?? [];
-    $payers = $_POST['payer_name'] ?? [];
-    $sources = $_POST['payment_source'] ?? [];
+    /*$payers = $_POST['payer_name'] ?? [];
+    $sources = $_POST['payment_source'] ?? [];*/
     $quantities = $_POST['quantity'] ?? [];
+    $single_packages = $_POST['single_package'] ?? [];
     $prices = $_POST['price'] ?? [];
     $supplier_name = trim($_POST['supplier_name'] ?? '');
     $tax_number = trim($_POST['tax_number'] ?? '');
     $bill_number = trim($_POST['bill_number'] ?? '');
     $packages = $_POST['package'] ?? [];
+    $payer    = trim($_POST['payer_name'] ?? '');
+    $payment_source = trim($_POST['payment_source'] ?? '');
 
     // ✅ تحقق من الرقم الضريبي (15 رقم بالضبط) 
     if (!preg_match('/^\d{15}$/', $tax_number)) {
@@ -75,16 +78,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
 
         $unit = $units[$i] ?? '';
         $package = trim($packages[$i] ?? '');
-        $payer = trim($payers[$i] ?? '');
-        $payment_source = $sources[$i] ?? 'كاش';
+        /*$payer = trim($payers[$i] ?? '');
+        $payment_source = $sources[$i] ?? 'كاش';*/
         $quantity = (float)($quantities[$i] ?? 0);
+        $single_package = (float)($single_packages[$i] ?? 0);
+        $unit_quantity = $quantity * $single_package;
         $price = (float)($prices[$i] ?? 0);
+        $unit_price = $price / $single_package;
 
         $stmt = $pdo->prepare("
-            INSERT INTO purchases (name, quantity, unit, package, price, payer_name, payment_source, order_id)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO purchases (name, quantity , single_package , total_packages, unit, package, price , total_price, payer_name, payment_source, order_id)
+            VALUES (?, ?,?,?, ?, ?, ?,?, ?, ?, ?)
         ");
-        $stmt->execute([$name, $quantity, $unit, $package, $price, $payer, $payment_source, $order_id]);
+        $stmt->execute([$name, $unit_quantity , $single_package , $quantity, $unit, $package,$unit_price, $price, $payer, $payment_source, $order_id]);
         $purchase_id = $pdo->lastInsertId();
 
         // خصم من العهدة لو كانت وسيلة الدفع "عهدة"

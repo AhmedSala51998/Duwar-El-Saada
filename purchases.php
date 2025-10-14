@@ -152,7 +152,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
 <table class="table table-hover align-middle">
   <thead class="table-light">
     <tr>
-      <th>#</th><th>رقم تسلسلي</th><th>الاسم</th><th>الوحدة \ العبوة</th><th>الكمية</th><th>نوع الوحدة</th><th>السعر</th><th>التاريخ</th><th>الدافع</th><th>مصدر الدفع</th>
+      <th>#</th><th>رقم تسلسلي</th><th>البيان</th><th>نوع الوحدة</th><th>الكمية</th><th>السعر</th><th>الكميات بالوحدة</th><th>اجمالي الكميات</th><th>السعر الافرادي</th><th>التاريخ</th><th>الدافع</th><th>مصدر الدفع</th>
       <?php if($can_edit): ?><th>عمليات</th><?php endif; ?>
     </tr>
   </thead>
@@ -163,9 +163,26 @@ $can_edit = in_array(current_role(), ['admin','manager']);
       <td><?= esc($r['invoice_serial'] ?? '-') ?></td>
       <!--<td><?php if($r['product_image']): ?><img src="uploads/<?= esc($r['product_image']) ?>" width="44" class="rounded"><?php endif; ?></td>-->
       <td><?= esc($r['name']) ?></td>
-      <td><?= esc($r['package']) ?></td>
-      <td><span class="badge badge-unit"><?= $r['quantity'] ?></span></td>
       <td><?= esc($r['unit']) ?></td>
+      <td>
+        <span class="badge badge-unit">
+          <?= htmlspecialchars($r['total_packages']) ?>
+          <?php if (!empty($r['package'])): ?>
+            × <?= htmlspecialchars($r['package']) ?>
+          <?php endif; ?>
+        </span>
+      </td>
+      <td><?= number_format((float)$r['total_price'],7) ?></td>
+      <td>
+        <span class="badge badge-unit">
+          <?= htmlspecialchars($r['single_package']) ?>
+        </span>
+      </td>
+      <td>
+        <span class="badge badge-unit">
+          <?= htmlspecialchars($r['quantity']) ?>
+        </span>
+      </td>
       <td><?= number_format((float)$r['price'],7) ?></td>
       <td><?= esc($r['created_at']) ?></td>
       <!--<td>
@@ -357,23 +374,46 @@ $can_edit = in_array(current_role(), ['admin','manager']);
             <input type="date" name="invoice_date" class="form-control" id="invoice_date" required>
           </div>
 
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label>اسم الدافع</label>
+              <select name="payer_name" class="form-select payer-select">
+                  <option hidden>اختر</option>
+                  <option>شركة</option>
+                  <option>مؤسسة</option>
+                  <option>فيصل المطيري</option>
+                  <option>بسام</option>
+                </select>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label>مصدر الدفع</label>
+              <select name="payment_source" class="form-select payment-source-select">
+                  <option hidden>اختر</option>
+                  <option>مالك</option>
+                  <option>كاش</option>
+                  <option>بنك</option>
+                </select>
+            </div>
+          </div>
+
           <table class="table table-bordered" id="itemsTable">
             <thead>
               <tr>
-                <th>الاسم</th>
-                <th>الكمية</th>
+                <th>البيان</th>
                 <th>نوع الوحدة</th>
-                <th>الوحدة \ العبوة</th> <!-- العمود الجديد -->
+                <th>الوحدة \ العبوة</th>
+                <th>الكمية</th>
                 <th>السعر</th>
-                <th>اسم الدافع</th>
-                <th>مصدر الدفع</th>
+                <th>الكمية بالوحدة</th>
+                <!--<th>اسم الدافع</th>
+                <th>مصدر الدفع</th>-->
                 <th>إزالة</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td><input name="name[]" class="form-control" required></td>
-                <td><input type="number" step="0.001" name="quantity[]" class="form-control" required></td>
                 <td>
                   <select title="نوع الوحدة" name="unit[]" class="form-select">
                     <option>عدد</option>
@@ -382,8 +422,10 @@ $can_edit = in_array(current_role(), ['admin','manager']);
                   </select>
                 </td>
                 <td><input name="package[]" class="form-control" title="الوحدة"></td> <!-- حقل العبوة -->
+                <td><input type="number" step="0.001" min="0" name="quantity[]" class="form-control" required></td>
                 <td><input type="number" step="0.00000001" min="0" name="price[]" class="form-control"></td>
-                <td>
+                <td><input type="number" step="0.001" min="0" name="single_package[]" class="form-control"></td>
+                <!--<td>
                   <select name="payer_name[]" class="form-select payer-select">
                     <option hidden>اختر</option>
                     <option>شركة</option>
@@ -399,7 +441,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
                     <option>كاش</option>
                     <option>بنك</option>
                   </select>
-                </td>
+                </td>-->
                 <td>
                   <button type="button" class="btn btn-danger btn-sm remove-row">✖</button>
                 </td>
@@ -467,6 +509,29 @@ $can_edit = in_array(current_role(), ['admin','manager']);
             <input type="date" name="invoice_date" class="form-control" required>
           </div>
 
+          <div class="row">
+              <div class="col-md-6 mb-3">
+                <label>اسم الدافع</label>
+                <select name="payer_name" class="form-select payer-select">
+                    <option hidden>اختر</option>
+                    <option>شركة</option>
+                    <option>مؤسسة</option>
+                    <option>فيصل المطيري</option>
+                    <option>بسام</option>
+                  </select>
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <label>مصدر الدفع</label>
+                <select name="payment_source" class="form-select payment-source-select">
+                    <option hidden>اختر</option>
+                    <option>مالك</option>
+                    <option>كاش</option>
+                    <option>بنك</option>
+                  </select>
+              </div>
+            </div>
+
           <div class="mb-3">
             <label>اختر ملف Excel</label>
             <label class="custom-file-upload w-100">
@@ -480,13 +545,14 @@ $can_edit = in_array(current_role(), ['admin','manager']);
           <div class="alert alert-info mt-3">
             📘 يجب أن يحتوي ملف الإكسل على الأعمدة التالية (بنفس الأسماء):  
             <ul class="mb-0">
-              <li><b>name</b> : اسم المنتج</li>
+              <li><b>name</b> : البيان</li>
               <li><b>quantity</b> : الكمية</li>
-              <li><b>unit</b> : الوحدة</li>
-              <li><b>package</b> : العبوة</li>
+              <li><b>unit_type</b> : نوع الوحدة</li>
+              <li><b>unit</b> : الوحدة \ العبوة</li>
               <li><b>price</b> : السعر</li>
-              <li><b>payer_name</b> : اسم الدافع</li>
-              <li><b>payment_source</b> : مصدر الدفع</li>
+              <li><b>unit_quantity</b> : الكميات بالوحدة</li>
+              <!--<li><b>payer_name</b> : اسم الدافع</li>
+              <li><b>payment_source</b> : مصدر الدفع</li>-->
             </ul>
           </div>
 
@@ -555,7 +621,7 @@ document.addEventListener('shown.bs.modal', function (event) {
 
       if (!payer || !paymentSelect) return;
 
-      fetch('get_custody_amount.php?person_name=' + encodeURIComponent(payer))
+      fetch('get_custody_amount?person_name=' + encodeURIComponent(payer))
         .then(res => res.json())
         .then(data => {
           // إزالة أي خيار عهدة قديم
@@ -600,7 +666,6 @@ document.getElementById('addRow').addEventListener('click', function() {
 
   newRow.innerHTML = `
     <td><input name="name[]" class="form-control" required></td>
-    <td><input type="number" step="0.001" name="quantity[]" class="form-control" required></td>
     <td>
       <select title="نوع الوحدة" name="unit[]" class="form-select">
         <option>عدد</option>
@@ -608,8 +673,10 @@ document.getElementById('addRow').addEventListener('click', function() {
       </select>
     </td>
     <td><input name="package[]" class="form-control" title="الوحدة"></td>
+    <td><input type="number" step="0.001" min="0" name="quantity[]" class="form-control" required></td>
     <td><input type="number" step="0.00000001" min="0" name="price[]" class="form-control"></td>
-    <td>
+    <td><input type="number" step="0.001" min="0" name="single_package[]" class="form-control"></td>
+    <!--<td>
       <select name="payer_name[]" class="form-select payer-select">
         <option hidden>اختر</option>
         <option>شركة</option><option>مؤسسة</option>
@@ -621,7 +688,7 @@ document.getElementById('addRow').addEventListener('click', function() {
         <option hidden>اختر</option>
         <option>مالك</option><option>كاش</option><option>بنك</option>
       </select>
-    </td>
+    </td>-->
     <td><button type="button" class="btn btn-danger btn-sm remove-row">✖</button></td>
   `;
 

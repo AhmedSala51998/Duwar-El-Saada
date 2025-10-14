@@ -20,6 +20,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
     $tax_number = trim($_POST['tax_number'] ?? '');
     $bill_number = trim($_POST['bill_number'] ?? '');
     $invoice_date = trim($_POST['invoice_date'] ?? date('Y-m-d'));
+    $payer_name = trim($_POST['payer_name'] ?? '');
+    $payment_source = trim($_POST['payment_source'] ?? '');
 
     // ✅ تحقق من الرقم الضريبي (15 رقم بالضبط)
     if (!preg_match('/^\d{15}$/', $tax_number)) {
@@ -45,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
         $header = array_map('trim', $rows[0]);
         unset($rows[0]);
 
-        $required = ['name','quantity','unit','package','price','payer_name','payment_source'];
+        $required = ['name','unit_type','unit','quantity','price','unit_quantity'];
         foreach($required as $col){
             if(!in_array($col,$header)){
                 $_SESSION['toast'] = ['type'=>'danger','msg'=>"❌ الملف لا يحتوي على العمود: $col"];
@@ -95,22 +97,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
 
         // تحضير استعلام الأصناف
         $stmt = $pdo->prepare("
-            INSERT INTO purchases (name, quantity, unit, package, price, payer_name, payment_source, order_id)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO purchases (name, quantity , single_package , total_packages, unit, package, price , total_price, payer_name, payment_source, order_id)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?,?,?,?)
         ");
 
         foreach($items as $data) {
             $name = trim($data['name']);
             if (!$name) continue;
 
-            $unit = $data['unit'];
-            $package = trim($data['package'] ?? '');
-            $payer = trim($data['payer_name'] ?? '');
-            $source = trim($data['payment_source'] ?? 'كاش');
+            $unit = $data['unit_type'];
+            $package = trim($data['unit'] ?? '');
+            $payer = $payer_name;
+            $source = $payment_source;
             $quantity = (float)$data['quantity'];
             $price = (float)$data['price'];
+            $unit_quantity = (float)$data['unit_quantity'];
 
-            $stmt->execute([$name, $quantity, $unit, $package, $price, $payer, $source, $order_id]);
+            $single_quantity = $quantity * $unit_quantity;
+            $unit_price = $price / $unit_quantity;
+
+            $stmt->execute([$name, $single_quantity ,$unit_quantity , $quantity , $unit, $package, $unit_price , $price, $payer, $source, $order_id]);
             $purchase_id = $pdo->lastInsertId();
 
             // ✅ تطبيق منطق العهدة (نفس كود الإضافة اليدوية)
