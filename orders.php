@@ -48,16 +48,20 @@ $orders=$s->fetchAll();
 $can_edit = in_array(current_role(), ['admin','manager']);
 
 $stocks = $pdo->query("
-    SELECT p.name, p.unit, SUM(p.quantity - IFNULL(o.total_used,0)) as remaining_qty
+    SELECT 
+        p.name,
+        p.unit,
+        SUM(p.quantity) - IFNULL(SUM(o.total_used), 0) AS remaining_qty
     FROM purchases p
     LEFT JOIN (
-        SELECT purchase_id, SUM(qty) as total_used
-        FROM orders o
+        SELECT purchase_id, SUM(qty) AS total_used
+        FROM orders
         GROUP BY purchase_id
     ) o ON o.purchase_id = p.id
     GROUP BY p.name, p.unit
     ORDER BY p.name
 ")->fetchAll(PDO::FETCH_ASSOC);
+
 
 ?>
 <div class="d-flex flex-wrap gap-3 mb-4">
