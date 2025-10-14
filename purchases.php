@@ -614,9 +614,22 @@ document.getElementById('addRow').addEventListener('click', function() {
     <td><input type="number" step="0.001" name="quantity[]" class="form-control" required></td>
     <td>
       <select name="unit[]" class="form-select">
-        <option>عدد</option><option>جرام</option>
-        <option>كيلو</option><option>لتر</option>
-      </select>
+        <option>كرتون</option>
+        <option>كيس</option>
+        <option>شدة</option>
+        <option>ربطة</option>
+        <option>سطل</option>
+        <option>تنك</option>
+        <option>درزن</option>
+        <option>بالة</option>
+        <option>باكت</option>
+        <option>بالتة</option>
+        <option>CTN</option>
+        <option>DOZEN</option>
+        <option>BAG</option>
+        <option>PCs</option>
+        <option>GLN</option>
+    </select>
     </td>
     <td><input name="package[]" class="form-control" placeholder="أدخل العبوة"></td>
     <td><input type="number" step="0.00000001" min="0" name="price[]" class="form-control"></td>
