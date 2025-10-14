@@ -621,7 +621,7 @@ document.addEventListener('shown.bs.modal', function (event) {
 
       if (!payer || !paymentSelect) return;
 
-      fetch('get_custody_amount?person_name=' + encodeURIComponent(payer))
+      fetch('get_custody_amount.php?person_name=' + encodeURIComponent(payer))
         .then(res => res.json())
         .then(data => {
           // إزالة أي خيار عهدة قديم
