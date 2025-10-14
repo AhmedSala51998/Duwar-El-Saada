@@ -611,20 +611,23 @@ document.querySelector('#importExcel form').addEventListener('submit', function(
 document.addEventListener('shown.bs.modal', function (event) {
   const modal = event.target;
 
-  // نسمع لأي تغيير في أي payer-select داخل المودال
   modal.addEventListener('change', function (e) {
     if (e.target && e.target.classList.contains('payer-select')) {
       const payerSelect = e.target;
-      const row = payerSelect.closest('tr'); // الصف الحالي
-      const paymentSelect = row.querySelector('.payment-source-select');
+
+      // بدل closest('tr') استخدم أقرب div.row
+      const container = payerSelect.closest('.row');
+      if (!container) return;
+
+      const paymentSelect = container.querySelector('.payment-source-select');
+      if (!paymentSelect) return;
+
       const payer = payerSelect.value;
+      if (!payer) return;
 
-      if (!payer || !paymentSelect) return;
-
-      fetch('get_custody_amount.php?person_name=' + encodeURIComponent(payer))
+      fetch('get_custody_amount?person_name=' + encodeURIComponent(payer))
         .then(res => res.json())
         .then(data => {
-          // إزالة أي خيار عهدة قديم
           const existing = paymentSelect.querySelector('option[data-custody]');
           if (existing) existing.remove();
 
@@ -640,6 +643,7 @@ document.addEventListener('shown.bs.modal', function (event) {
     }
   });
 });
+
 
 </script>
 <script>
