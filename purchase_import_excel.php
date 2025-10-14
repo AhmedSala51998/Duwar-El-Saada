@@ -97,8 +97,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
 
         // تحضير استعلام الأصناف
         $stmt = $pdo->prepare("
-            INSERT INTO purchases (name, quantity , single_package , total_packages, unit, package, price , total_price, payer_name, payment_source, order_id)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?,?,?,?)
+            INSERT INTO purchases (name, quantity , single_package , total_packages, unit, package, price , total_price, payer_name, payment_source ,unit_total ,unit_vat ,unit_all_total, order_id)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?,?,?,?, ? ,? ,?)
         ");
 
         foreach($items as $data) {
@@ -116,7 +116,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
             $single_quantity = $quantity * $unit_quantity;
             $unit_price = $price / $unit_quantity;
 
-            $stmt->execute([$name, $single_quantity ,$unit_quantity , $quantity , $unit, $package, $unit_price , $price, $payer, $source, $order_id]);
+
+            $vatRate = 0.15;
+            $subtotal_unit = $quantity * $price;
+            $vat_unit = $subtotal_unit * $vatRate;
+            $alltotal_unit = $subtotal_unit + $vat_unit;
+
+            $stmt->execute([$name, $single_quantity ,$unit_quantity , $quantity , $unit, $package, $unit_price , $price, $payer, $source, $subtotal_unit , $vat_unit , $alltotal_unit, $order_id]);
             $purchase_id = $pdo->lastInsertId();
 
             // ✅ تطبيق منطق العهدة (نفس كود الإضافة اليدوية)

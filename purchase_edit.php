@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
 
         // التحقق إذا كان هناك أي تغيير فعلي
         $changed = false;
-        foreach(['name','quantity','unit','package','price','product_image','invoice_image','payer_name','payment_source'] as $key){
+        foreach(['name','quantity','single_quantity','unit','package','price','product_image','invoice_image','payer_name','payment_source'] as $key){
             if(!isset($oldData[$key]) || $oldData[$key] != $newData[$key]){
                 $changed = true;
                 break;
@@ -105,10 +105,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
             $unit_quantity = $newData['quantity'] * $newData['single_quantity'];
             $unit_price = $newData['price'] / $newData['single_quantity'];
 
+
+            $vatRate = 0.15;
+            $subtotal_unit = $newData['quantity'] * $newData['price'];
+            $vat_unit = $subtotal_unit * $vatRate;
+            $alltotal_unit = $subtotal_unit + $vat_unit;
+
             // التحديث في purchases
             $pdo->prepare("
                 UPDATE purchases 
-                SET name=?, quantity=? , single_package=? , total_packages=?, unit=?, package=?, price=? , total_price=?, product_image=?, invoice_image=?, payer_name=?, payment_source=? 
+                SET name=?, quantity=? , single_package=? , total_packages=?, unit=?, package=?, price=? , total_price=?, product_image=?, invoice_image=?, payer_name=?, payment_source=?, unit_total=?, unit_vat=?, unit_all_total=? 
                 WHERE id=?
             ")->execute([
                 $newData['name'],
@@ -123,6 +129,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
                 $newData['invoice_image'],
                 $newData['payer_name'],
                 $newData['payment_source'],
+                $subtotal_unit,
+                $vat_unit,
+                $alltotal_unit,
                 $id
             ]);
 

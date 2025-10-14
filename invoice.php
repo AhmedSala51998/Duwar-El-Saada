@@ -231,9 +231,9 @@ th, td {
         <td><?= esc($item['single_package']) ?></td>
         <td><?= number_format($item['price'],5) ?> ريال</td>
         <td><?= esc($item['quantity']) ?></td>
-        <td><?= number_format($subtotal,3) ?> ريال</td>
-        <td class="vat"><?= number_format($vat,5) ?> ريال</td>
-        <td class="total"><?= number_format($total,5) ?> ريال</td>
+        <td><?= number_format($item['unit_total'],3) ?> ريال</td>
+        <td class="vat"><?= number_format($item['unit_vat'],5) ?> ريال</td>
+        <td class="total"><?= number_format($item['unit_all_total'],5) ?> ريال</td>
       </tr>
       <?php endforeach; ?>
     </tbody>
