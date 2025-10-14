@@ -60,7 +60,7 @@ $stocks = $pdo->query("
 
 <div class="d-flex flex-wrap gap-3 mb-4">
 <?php foreach($stocks as $s): ?>
-    <div class="card text-center shadow-sm" style="width: 160px; border-radius: 15px; background: #fff8e1; transition: transform 0.2s;">
+    <div class="card text-center shadow-sm" style="width: 160px; border-radius: 15px; background: #ff6a00; transition: transform 0.2s;color:#FFF;border:1px solid #FFF">
         <div class="card-body p-2">
             <h6 class="card-title mb-1"><?= esc($s['name']) ?></h6>
             <p class="card-text mb-0"><strong><?= $s['total_qty'] ?></strong> <?= esc($s['unit']) ?></p>
