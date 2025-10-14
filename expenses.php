@@ -75,7 +75,6 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 <th>الإجمالي بعد الضريبة</th>
 <th>الدافع</th>
 <th>مصدر الدفع</th>
-<th>المرفق</th>
 <?php if($can_edit): ?><th>عمليات</th><?php endif; ?>
 </tr>
 </thead>
@@ -106,7 +105,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 </td>
 <td><?= esc($r['payer_name'] ?? '') ?></td>
 <td><?= esc($r['payment_source'] ?? '') ?></td>
-<td><?php if($r['expense_file']): ?><img src="uploads/<?= esc($r['expense_file']) ?>" width="50"><?php endif; ?></td>
+<!--<td><?php if($r['expense_file']): ?><img src="uploads/<?= esc($r['expense_file']) ?>" width="50"><?php endif; ?></td>-->
 <?php if($can_edit): ?>
 <td>
 <a class="btn btn-sm btn-outline-primary" href="invoice_expense?id=<?= $r['id'] ?>"><i class="bi bi-printer"></i></a>

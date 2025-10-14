@@ -12,6 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
     $prices = $_POST['price'] ?? [];
     $supplier_name = trim($_POST['supplier_name'] ?? '');
     $tax_number = trim($_POST['tax_number'] ?? '');
+    $bill_number = trim($_POST['bill_number'] ?? '');
     $packages = $_POST['package'] ?? [];
 
     // ✅ تحقق من الرقم الضريبي (15 رقم بالضبط) 
@@ -60,10 +61,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
 
     // إدخال بيانات الفاتورة
     $stmtOrder = $pdo->prepare("
-        INSERT INTO orders_purchases (tax_number , invoice_number, invoice_serial, supplier_name, total, vat, all_total, created_at, invoice_image)
-        VALUES (? , ?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO orders_purchases (bill_number , tax_number , invoice_number, invoice_serial, supplier_name, total, vat, all_total, created_at, invoice_image)
+        VALUES (? , ? , ?, ?, ?, ?, ?, ?, ?, ?)
     ");
-    $stmtOrder->execute([$tax_number , $invoice_number, $serial_invoice, $supplier_name, $total, $vat, $all_total, $created_at, $invoiceImage]);
+    $stmtOrder->execute([$bill_number , $tax_number , $invoice_number, $serial_invoice, $supplier_name, $total, $vat, $all_total, $created_at, $invoiceImage]);
 
     $order_id = $pdo->lastInsertId();
 

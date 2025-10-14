@@ -335,10 +335,16 @@ $can_edit = in_array(current_role(), ['admin','manager']);
 
         <div class="modal-body">
           <div class="mb-3">
-            <label>الرقم الضريبي</label>
+            <label>رقم فاتورة المورد</label>
+            <input type="number" name="bill_number" id="bill_number" class="form-control" required
+                  placeholder="أدخل رقم فاتورة المورد المكون من 15 رقم">
+            <div class="invalid-feedback">رقم فاتورة المورد يجب أن يكون 15 رقم بالضبط.</div>
+          </div>
+          <div class="mb-3">
+            <label>الرقم الضريبي للمورد</label>
             <input type="text" name="tax_number" id="tax_number" class="form-control" maxlength="15" pattern="\d{15}" required
-                  placeholder="أدخل الرقم الضريبي المكون من 15 رقم">
-            <div class="invalid-feedback">الرقم الضريبي يجب أن يكون 15 رقم بالضبط.</div>
+                  placeholder="أدخل الرقم الضريبي للمورد المكون من 15 رقم">
+            <div class="invalid-feedback">الرقم الضريبي للمورد يجب أن يكون 15 رقم بالضبط.</div>
           </div>
           <div class="mb-3">
             <label>اسم المورد</label>
@@ -591,30 +597,55 @@ document.addEventListener('click', function(e) {
 </script>
 <script>
 document.querySelector('form[action="purchase_add"]').addEventListener('submit', function(e) {
+  e.preventDefault(); // نوقف الإرسال مؤقتاً
+
   const taxInput = document.getElementById('tax_number');
   const taxValue = taxInput.value.trim();
 
-  // تحقق من الطول وعدد الأرقام
+  const billNumber = document.getElementById('bill_number').value.trim();
+  const supplierName = document.getElementById('supplier_name').value.trim();
+
+  // تحقق من الرقم الضريبي
   if (!/^\d{15}$/.test(taxValue)) {
-    e.preventDefault();
     alert('الرقم الضريبي يجب أن يكون 15 رقم بالضبط.');
     taxInput.focus();
     return;
   }
 
-  // تحقق من التكرار (AJAX)
-  e.preventDefault(); // نوقف الإرسال مؤقتاً
-  fetch('check_tax_number?tax=' + encodeURIComponent(taxValue))
+  if (!billNumber) {
+    alert('يرجى إدخال رقم فاتورة المورد.');
+    return;
+  }
+
+  if (!supplierName) {
+    alert('يرجى إدخال اسم المورد.');
+    return;
+  }
+
+  // نتحقق أولاً من رقم الفاتورة
+  fetch('check_bill_number?bill=' + encodeURIComponent(billNumber) + '&supplier=' + encodeURIComponent(supplierName))
     .then(res => res.json())
     .then(data => {
       if (data.exists) {
-        alert('هذا الرقم الضريبي مستخدم بالفعل!');
+        alert('⚠️ فاتورة المورد هذه موجودة من قبل!');
       } else {
-        e.target.submit(); // أرسل النموذج فعلياً
+        // بعد التأكد من رقم الفاتورة، نتحقق من الرقم الضريبي
+        fetch('check_tax_number?tax=' + encodeURIComponent(taxValue))
+          .then(res => res.json())
+          .then(data2 => {
+            if (data2.exists) {
+              alert('هذا الرقم الضريبي مستخدم بالفعل!');
+            } else {
+              e.target.submit(); // أرسل النموذج فعلياً بعد نجاح كل الفحوص
+            }
+          })
+          .catch(() => {
+            alert('حدث خطأ أثناء التحقق من الرقم الضريبي.');
+          });
       }
     })
     .catch(() => {
-      alert('حدث خطأ أثناء التحقق من الرقم الضريبي.');
+      alert('حدث خطأ أثناء التحقق من رقم الفاتورة.');
     });
 });
 </script>

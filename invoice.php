@@ -160,7 +160,8 @@ select#vatRate {
 
 <div class="invoice-header">
   <div class="text-end invoice-info" style="flex:1">
-    <div><strong>الرقم الضريبي:</strong> <?= esc($order['tax_number']) ?></div>
+    <div><strong>رقم فاتورة المورد:</strong> <?= esc($order['bill_number']) ?></div>
+    <div><strong>الرقم الضريبي للمورد:</strong> <?= esc($order['tax_number']) ?></div>
     <div><strong>المورد:</strong> <?= esc($order['supplier_name']) ?></div>
     <div><strong>رقم الفاتورة:</strong> <?= esc($order['invoice_number']) ?></div>
     <div><strong>الدافع:</strong> <?= esc($purchase['payer_name']) ?></div>
