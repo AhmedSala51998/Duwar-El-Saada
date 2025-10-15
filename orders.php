@@ -69,13 +69,14 @@ $stocks = $pdo->query("
 <style>
 .stock-card {
     width: 180px;
+    min-height: 140px; /* يزيد ارتفاع البوكس ليستوعب الاسم الطويل */
     background: linear-gradient(135deg, #ff6a00, #ff9f43);
     border-radius: 18px;
     color: #fff;
     box-shadow: 0 4px 10px rgba(0,0,0,0.15);
     padding: 16px 10px;
     position: relative;
-    overflow: hidden;
+    overflow: visible; /* يسمح للاسماء الطويلة بالظهور بالكامل */
     transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 .stock-card:hover {
@@ -114,9 +115,8 @@ $stocks = $pdo->query("
     font-size: 15px;
     font-weight: 600;
     margin: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    word-wrap: break-word; /* يسمح بتقسيم الاسم على أسطر بدل القطع */
+    white-space: normal;    /* منع القص */
 }
 </style>
 
