@@ -274,55 +274,42 @@ function recalcTotals(saveToDB = false) {
   let grandTotal = 0;
   let totalVat = 0;
 
-  document.querySelectorAll('#invoiceTable tbody tr').forEach(tr => {
-    const unitTotal = parseFloat(tr.dataset.unitTotal || tr.querySelector('td:nth-child(8)').textContent.replace(/[^\d.-]/g, '')) || 0;
-    const unitAllTotal = parseFloat(tr.dataset.unitAllTotal || tr.querySelector('td:nth-child(10)').textContent.replace(/[^\d.-]/g, '')) || 0;
+document.querySelectorAll('#invoiceTable tbody tr').forEach(tr => {
+  const unitTotal = parseFloat(tr.dataset.unitTotal) || 0;
+  const unitAllTotal = parseFloat(tr.dataset.unitAllTotal) || 0;
 
-    if(vatRate === 0){
-      // حالة صفر: العمود قبل الضريبة = unit_all_total
-      tr.querySelector('td:nth-child(8)').textContent = unitAllTotal.toFixed(2) + ' ريال';
-      tr.querySelector('.vat').textContent = '0.00 ريال';
-      tr.querySelector('.total').textContent = unitAllTotal.toFixed(2) + ' ريال';
-
-      subtotalAll += unitAllTotal;
-      totalVat += 0;
-      grandTotal += unitAllTotal;
-    } else {
-      // حالة 15%
-      tr.querySelector('td:nth-child(8)').textContent = unitTotal.toFixed(2) + ' ريال';
-      const vatValue = unitTotal * vatRate;
-      const totalWithVat = unitTotal + vatValue;
-
-      tr.querySelector('.vat').textContent = vatValue.toFixed(5) + ' ريال';
-      tr.querySelector('.total').textContent = totalWithVat.toFixed(5) + ' ريال';
-
-      subtotalAll += unitTotal;
-      totalVat += vatValue;
-      grandTotal += totalWithVat;
-    }
-  });
+  if(vatRate === 0){
+    // حالة صفر
+    tr.querySelector('td:nth-child(8)').textContent = unitAllTotal.toFixed(2) + ' ريال';
+    tr.querySelector('.vat').textContent = '0.00 ريال';
+    tr.querySelector('.total').textContent = unitAllTotal.toFixed(2) + ' ريال';
+  } else {
+    // حالة 15%: لا نحسب الإجماليات، فقط الضريبة
+    tr.querySelector('td:nth-child(8)').textContent = unitTotal.toFixed(2) + ' ريال';
+    tr.querySelector('.vat').textContent = (unitAllTotal - unitTotal).toFixed(5) + ' ريال';
+    tr.querySelector('.total').textContent = unitAllTotal.toFixed(5) + ' ريال';
+  }
+});
 
   // تحديث الملخص
   const totalNoVatEl = document.getElementById('totalNoVat');
   const vatValueEl = document.getElementById('vatValue');
   const grandTotalEl = document.getElementById('grandTotal');
 
-  if(vatRate === 0){
-    // إظهار سطر واحد فقط مع الإجمالي بعد الضريبة
-    totalNoVatEl.textContent = grandTotal.toLocaleString(undefined, {minimumFractionDigits:2});
-    vatValueEl.textContent = '';
-    grandTotalEl.textContent = grandTotal.toLocaleString(undefined, {minimumFractionDigits:2});
+if(vatRate === 0){
+  totalNoVatEl.textContent = parseFloat(totalNoVatEl.dataset.allTotal).toLocaleString(undefined, {minimumFractionDigits:2});
+  vatValueEl.textContent = '';
+  grandTotalEl.textContent = parseFloat(grandTotalEl.dataset.allTotal).toLocaleString(undefined, {minimumFractionDigits:2});
+  document.getElementById('vatRow').style.display = 'none';
+  document.getElementById('grandRow').style.display = 'block';
+} else {
+  totalNoVatEl.textContent = parseFloat(totalNoVatEl.dataset.total).toLocaleString(undefined, {minimumFractionDigits:2});
+  vatValueEl.textContent = parseFloat(vatValueEl.dataset.vat).toLocaleString(undefined, {minimumFractionDigits:2});
+  grandTotalEl.textContent = parseFloat(grandTotalEl.dataset.allTotal).toLocaleString(undefined, {minimumFractionDigits:2});
+  document.getElementById('vatRow').style.display = 'block';
+  document.getElementById('grandRow').style.display = 'block';
+}
 
-    document.getElementById('vatRow').style.display = 'none';
-    document.getElementById('grandRow').style.display = 'block';
-  } else {
-    totalNoVatEl.textContent = subtotalAll.toLocaleString(undefined, {minimumFractionDigits:2});
-    vatValueEl.textContent = totalVat.toLocaleString(undefined, {minimumFractionDigits:2});
-    grandTotalEl.textContent = grandTotal.toLocaleString(undefined, {minimumFractionDigits:2});
-
-    document.getElementById('vatRow').style.display = 'block';
-    document.getElementById('grandRow').style.display = 'block';
-  }
 
   if(saveToDB){
     fetch('update_vat', {
