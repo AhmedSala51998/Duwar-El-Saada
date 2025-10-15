@@ -197,27 +197,29 @@ function recalcTotals(saveToDB = false) {
 
   const tr = document.querySelector('#invoiceTable tbody tr');
   const subtotal = parseFloat(tr.dataset.amount) || 0;
-  const vat = subtotal * vatRate;
-  const total = subtotal + vat;
+  const totalFromDB = parseFloat(tr.dataset.total) || subtotal; // اجمالي من قاعدة البيانات
 
   if (vatRate === 0) {
-    // عند 0%: كل الأعمدة (قبل وبعد الضريبة) نفس القيمة، الضريبة صفر
-    tr.querySelector('td:nth-child(5)').textContent = total.toFixed(2) + ' ريال'; // الإجمالي قبل الضريبة
-    tr.querySelector('.vat').textContent = '0.00 ريال';                            // الضريبة
-    tr.querySelector('.total').textContent = total.toFixed(2) + ' ريال';          // الإجمالي بعد الضريبة
+    // الصفر: استخدم total_amount من قاعدة البيانات لكل القيم
+    tr.querySelector('td:nth-child(5)').textContent = totalFromDB.toFixed(2) + ' ريال'; // الإجمالي قبل الضريبة
+    tr.querySelector('.vat').textContent = '0.00 ريال';                                 // الضريبة
+    tr.querySelector('.total').textContent = totalFromDB.toFixed(2) + ' ريال';        // الإجمالي بعد الضريبة
 
-    // الملخص: عرض الإجمالي الكلي فقط
-    document.getElementById('totalNoVat').textContent = total.toFixed(2);
-    document.getElementById('totalNoVat').parentElement.style.display = 'block';
+    // الملخص
+    document.getElementById('totalNoVat').textContent = totalFromDB.toFixed(2);
+    document.getElementById('totalNoVat').parentElement.style.display = 'none'; // يمكن اخفاؤه حسب التصميم
     document.getElementById('vatRow').style.display = 'none';
-    document.getElementById('grandRow').style.display = 'none';
+    document.getElementById('grandRow').style.display = 'block';
   } else {
-    // عند 15%: عرض القيم الطبيعية
-    tr.querySelector('td:nth-child(5)').textContent = subtotal.toFixed(2) + ' ريال'; 
+    // 15%: حساب القيم الطبيعية
+    const vat = subtotal * vatRate;
+    const total = subtotal + vat;
+
+    tr.querySelector('td:nth-child(5)').textContent = subtotal.toFixed(2) + ' ريال';
     tr.querySelector('.vat').textContent = vat.toFixed(2) + ' ريال';
     tr.querySelector('.total').textContent = total.toFixed(2) + ' ريال';
 
-    // الملخص: عرض الثلاث قيم
+    // الملخص
     document.getElementById('totalNoVat').textContent = subtotal.toFixed(2);
     document.getElementById('vatValue').textContent = vat.toFixed(2);
     document.getElementById('grandTotal').textContent = total.toFixed(2);
@@ -227,18 +229,18 @@ function recalcTotals(saveToDB = false) {
     document.getElementById('grandRow').style.display = 'block';
   }
 
-  // حفظ في قاعدة البيانات
   if (saveToDB) {
     fetch('update_asset_vat', {
       method: 'POST',
       headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-      body: `id=${assetId}&vat_value=${vatRate > 0 ? vat : 0}&total_amount=${total}&has_vat=${vatRate > 0 ? 1 : 0}`
+      body: `id=${assetId}&vat_value=${vatRate > 0 ? (subtotal*vatRate) : 0}&total_amount=${vatRate > 0 ? (subtotal*(1+vatRate)) : totalFromDB}&has_vat=${vatRate > 0 ? 1 : 0}`
     })
     .then(res => res.text())
     .then(console.log)
     .catch(console.error);
   }
 }
+
 
 document.getElementById('vatRate').addEventListener('change', () => recalcTotals(true));
 window.addEventListener('DOMContentLoaded', () => recalcTotals(false));
