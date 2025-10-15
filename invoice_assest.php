@@ -216,7 +216,7 @@ function recalcTotals(saveToDB = false) {
     tr.querySelector('.total').textContent = totalFromDB.toFixed(2) + ' ريال';        // الإجمالي بعد الضريبة
 
     const priceWithvatValue = price + (price * 0.15);
-    tr.querySelector('td:nth-child(4)').textContent = pricetotalWithvatValue.toFixed(7) + ' ريال';
+    tr.querySelector('td:nth-child(4)').textContent = priceWithvatValue.toFixed(7) + ' ريال';
 
     // الملخص
     document.getElementById('totalNoVat').textContent = totalFromDB.toFixed(2);
