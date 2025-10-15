@@ -195,32 +195,36 @@ function recalcTotals(saveToDB = false) {
 
   vatTextEl.textContent = vatRate === 0 ? '0%' : '15%';
 
-  const tr = document.querySelector('#invoiceTable tbody tr');
-  const amount = parseFloat(tr.dataset.amount);
-  const vat = amount * vatRate;
-  const total = amount + vat;
+  // ✅ استخدام القيم الجاهزة من DOM/PHP
+  const totalNoVat = parseFloat(document.getElementById('totalNoVat').textContent.replace(/[^\d.-]/g, '')) || 0;
+  const vatValue   = parseFloat(document.getElementById('vatValue').textContent.replace(/[^\d.-]/g, '')) || 0;
+  const grandTotal = parseFloat(document.getElementById('grandTotal').textContent.replace(/[^\d.-]/g, '')) || 0;
 
-  tr.querySelector('.vat').textContent = vat.toFixed(2) + ' ريال';
-  tr.querySelector('.total').textContent = total.toFixed(2) + ' ريال';
-
-  document.getElementById('totalNoVat').textContent = amount.toFixed(2);
-  document.getElementById('vatValue').textContent = vat.toFixed(2);
-  document.getElementById('grandTotal').textContent = total.toFixed(2);
-
-  document.getElementById('vatRow').style.display = vatRate === 0 ? 'none' : 'block';
-  document.getElementById('grandRow').style.display = vatRate === 0 ? 'none' : 'block';
+  if (vatRate === 0) {
+    // عند 0%: إظهار grandTotal فقط
+    document.getElementById('totalNoVat').parentElement.style.display = 'none';
+    document.getElementById('vatRow').style.display = 'none';
+    document.getElementById('grandRow').style.display = 'block';
+  } else {
+    // عند 15%: إظهار الثلاث قيم
+    document.getElementById('totalNoVat').parentElement.style.display = 'block';
+    document.getElementById('vatRow').style.display = 'block';
+    document.getElementById('grandRow').style.display = 'block';
+  }
 
   if (saveToDB) {
     fetch('update_asset_vat', {
       method: 'POST',
       headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-      body: `id=${assetId}&vat_value=${vat}&total_amount=${total}&has_vat=${vatRate > 0 ? 1 : 0}`
-    }).then(res => res.text()).then(console.log).catch(console.error);
+      body: `id=${assetId}&vat_value=${vatRate > 0 ? vatValue : 0}&total_amount=${grandTotal}&has_vat=${vatRate > 0 ? 1 : 0}`
+    })
+    .then(res => res.text()).then(console.log).catch(console.error);
   }
 }
 
 document.getElementById('vatRate').addEventListener('change', () => recalcTotals(true));
 window.addEventListener('DOMContentLoaded', () => recalcTotals(false));
+
 
 const dateInput = document.getElementById('invoiceDate');
 const dateText = document.getElementById('invoiceDateText');
