@@ -150,7 +150,7 @@ $stmt = $pdo->prepare("
         a.quantity,
         a.type,
         (a.price * a.quantity) AS `before`,
-        (CASE WHEN a.has_vat=1 THEN (a.price * a.quantity) ELSE a.price * a.quantity * 1.15 END) AS `before`
+        (CASE WHEN a.has_vat=1 THEN (a.price * a.quantity) ELSE a.price * a.quantity * 1.15 END) AS `before`,
         (CASE WHEN a.has_vat=1 THEN a.price * a.quantity * 0.15 ELSE 0 END) AS `vat`,
         (CASE WHEN a.has_vat=1 THEN a.price * a.quantity * 1.15 ELSE a.price * a.quantity * 1.15 END) AS `after`
     FROM assets a
