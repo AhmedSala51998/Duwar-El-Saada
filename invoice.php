@@ -168,6 +168,14 @@ th, td {
   text-align: center;
   word-wrap: break-word; /* لتقسيم النصوص الطويلة */
 }
+.badge-unit {
+  display: inline-block;
+  background-color: #f0f0f0;
+  color: #333;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
 
 
 </style>
@@ -232,7 +240,14 @@ th, td {
       <tr data-qty="<?= $item['quantity'] ?>" data-price="<?= $item['price'] ?>">
         <td><?= esc($item['name']) ?></td>
         <td><?= esc($item['unit']) ?></td>
-        <td><?= esc($item['total_packages'] . ' X ' . $item['package']) ?></td>
+        <td>
+          <span class="badge badge-unit">
+            <?= htmlspecialchars($item['total_packages']) ?>
+            <?php if (!empty($item['package'])): ?>
+              × <?= htmlspecialchars($item['package']) ?>
+            <?php endif; ?>
+          </span>
+        </td>
         <td><?= number_format($item['total_price'],5) ?> ريال</td>
         <td><?= esc($item['single_package']) ?></td>
         <td><?= number_format($item['price'],5) ?> ريال</td>
