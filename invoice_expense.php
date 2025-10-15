@@ -194,13 +194,13 @@ function recalcTotals(saveToDB = false) {
 
   document.querySelectorAll('#invoiceTable tbody tr').forEach(tr => {
     const amount = parseFloat(tr.dataset.amount) || 0;       // المبلغ قبل الضريبة
-    const totalFromDB = parseFloat(tr.dataset.total) || 0;   // المبلغ المحفوظ بعد الضريبة
+    const totalFromDB = parseFloat(tr.dataset.total) || 0;   // المبلغ بعد الضريبة (من قاعدة البيانات)
     const vatCell = tr.querySelector('.vat');
     const totalCell = tr.querySelector('.total');
 
-    // ✅ حالة الضريبة = صفر
+    // ✅ في حالة الضريبة = 0%
     if (vatRate === 0) {
-      tr.querySelector('td:nth-child(4)').textContent = totalFromDB.toFixed(2) + ' ريال'; // قبل الضريبة
+      tr.querySelector('td:nth-child(4)').textContent = totalFromDB.toFixed(2) + ' ريال'; // قبل الضريبة = بعد الضريبة
       vatCell.textContent = '0.00 ريال';
       totalCell.textContent = totalFromDB.toFixed(2) + ' ريال';
 
@@ -208,18 +208,17 @@ function recalcTotals(saveToDB = false) {
       totalAfterVat += totalFromDB;
     }
 
-    // ✅ حالة الضريبة = 15%
+    // ✅ في حالة الضريبة = 15%
     else {
-      const vatValue = amount * (vatRate / 100);
-      const totalWithVat = amount + vatValue;
-
-      tr.querySelector('td:nth-child(4)').textContent = amount.toFixed(2) + ' ريال';       // قبل الضريبة
-      vatCell.textContent = vatValue.toFixed(2) + ' ريال';
-      totalCell.textContent = totalWithVat.toFixed(2) + ' ريال';
+      const vatValue = totalFromDB - amount; // نحسبها من الفرق فقط (بدون إعادة حساب)
+      
+      tr.querySelector('td:nth-child(4)').textContent = amount.toFixed(2) + ' ريال';      // قبل الضريبة من DB
+      vatCell.textContent = vatValue.toFixed(2) + ' ريال';                                // فرق الضريبة
+      totalCell.textContent = totalFromDB.toFixed(2) + ' ريال';                           // بعد الضريبة من DB
 
       totalBeforeVat += amount;
       totalVat += vatValue;
-      totalAfterVat += totalWithVat;
+      totalAfterVat += totalFromDB;
     }
   });
 
@@ -228,7 +227,6 @@ function recalcTotals(saveToDB = false) {
   document.getElementById('vatValue').textContent = totalVat.toFixed(2);
   document.getElementById('grandTotal').textContent = totalAfterVat.toFixed(2);
 }
-
 
 // ✅ تحديث تلقائي عند التغيير أو تحميل الصفحة
 document.getElementById('vatRate').addEventListener('change', () => recalcTotals(true));
