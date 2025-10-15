@@ -195,25 +195,29 @@ function recalcTotals(saveToDB = false) {
 
   vatTextEl.textContent = vatRate === 0 ? '0%' : '15%';
 
-  // استخدم subtotal الأصلي من dataset
   const tr = document.querySelector('#invoiceTable tbody tr');
   const subtotal = parseFloat(tr.dataset.amount) || 0;
   const vat = subtotal * vatRate;
   const total = subtotal + vat;
 
-  // تحديث الجدول
-  tr.querySelector('.vat').textContent = vat.toFixed(2) + ' ريال';
-  tr.querySelector('.total').textContent = total.toFixed(2) + ' ريال';
-
-  // التحكم بعرض الملخص
   if (vatRate === 0) {
-    // عند 0%: إظهار grandTotal فقط في المجموع
-    document.getElementById('totalNoVat').textContent = total.toFixed(2); // استخدم الإجمالي شامل الضريبة
+    // عند 0%: كل الأعمدة (قبل وبعد الضريبة) نفس القيمة، الضريبة صفر
+    tr.querySelector('td:nth-child(5)').textContent = total.toFixed(2) + ' ريال'; // الإجمالي قبل الضريبة
+    tr.querySelector('.vat').textContent = '0.00 ريال';                            // الضريبة
+    tr.querySelector('.total').textContent = total.toFixed(2) + ' ريال';          // الإجمالي بعد الضريبة
+
+    // الملخص: عرض الإجمالي الكلي فقط
+    document.getElementById('totalNoVat').textContent = total.toFixed(2);
     document.getElementById('totalNoVat').parentElement.style.display = 'block';
     document.getElementById('vatRow').style.display = 'none';
     document.getElementById('grandRow').style.display = 'none';
   } else {
-    // عند 15%: إظهار الثلاث قيم
+    // عند 15%: عرض القيم الطبيعية
+    tr.querySelector('td:nth-child(5)').textContent = subtotal.toFixed(2) + ' ريال'; 
+    tr.querySelector('.vat').textContent = vat.toFixed(2) + ' ريال';
+    tr.querySelector('.total').textContent = total.toFixed(2) + ' ريال';
+
+    // الملخص: عرض الثلاث قيم
     document.getElementById('totalNoVat').textContent = subtotal.toFixed(2);
     document.getElementById('vatValue').textContent = vat.toFixed(2);
     document.getElementById('grandTotal').textContent = total.toFixed(2);
@@ -235,7 +239,6 @@ function recalcTotals(saveToDB = false) {
     .catch(console.error);
   }
 }
-
 
 document.getElementById('vatRate').addEventListener('change', () => recalcTotals(true));
 window.addEventListener('DOMContentLoaded', () => recalcTotals(false));
