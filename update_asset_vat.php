@@ -19,9 +19,9 @@ if ($id <= 0) {
 
 try {
     $stmt = $pdo->prepare("UPDATE assets 
-        SET vat_value = ?, total_amount = ?, has_vat = ? 
+        SET vat_value = ?, has_vat = ? 
         WHERE id = ?");
-    $stmt->execute([$vat_value, $total_amount, $has_vat, $id]);
+    $stmt->execute([$vat_value, $has_vat, $id]);
 
     echo "تم تحديث بيانات الضريبة بنجاح ✅";
 } catch (Exception $e) {
