@@ -18,11 +18,11 @@ try {
         UPDATE expenses 
         SET 
             has_vat = ?, 
-            vat_value = ?, 
-            total_amount = ? 
+            vat_value = ?
+
         WHERE id = ?
     ");
-    $stmt->execute([$has_vat, $vat_value, $total_amount, $id]);
+    $stmt->execute([$has_vat, $vat_value, $id]);
     echo "تم تحديث الضريبة والإجمالي بنجاح ✅";
 } catch (PDOException $e) {
     http_response_code(500);
