@@ -237,7 +237,7 @@ th, td {
         $vat = $subtotal * $vatRate;
         $total = $subtotal + $vat;
       ?>
-      <tr data-qty="<?= $item['quantity'] ?>" data-price="<?= $item['price'] ?>" data-unit-total="<?= $item['unit_total'] ?>" data-unit-all-total="<?= $item['unit_all_total'] ?>">
+      <tr data-qty="<?= $item['quantity'] ?>" data-price="<?= $item['price'] ?>" data-total_price="<?= $item['total_price'] ?>" data-unit-total="<?= $item['unit_total'] ?>" data-unit-all-total="<?= $item['unit_all_total'] ?>">
         <td><?= esc($item['name']) ?></td>
         <td><?= esc($item['unit']) ?></td>
         <td>
@@ -248,9 +248,26 @@ th, td {
             <?php endif; ?>
           
         </td>
-        <td><?= number_format($item['total_price'],5) ?> ريال</td>
+        <?php if($item['unit_vat'] == 0){
+
+            $totalpricewithvat = $item['total_price'] + ($item['total_price'] * 0.15);
+
+        ?>
+         <td><?= number_format($totalpricewithvat,5) ?> ريال</td>
+        <?php  }else{ ?>
+            <td><?= number_format($item['total_price'],5) ?> ريال</td>
+        <?php } ?>
         <td><?= esc($item['single_package']) ?></td>
-        <td><?= number_format($item['price'],5) ?> ريال</td>
+
+        <?php if($item['unit_vat'] == 0){
+
+            $pricewithvat = $item['price'] + ($item['price'] * 0.15);
+
+        ?>
+         <td><?= number_format($pricewithvat,5) ?> ريال</td>
+        <?php  }else{ ?>
+            <td><?= number_format($item['price'],5) ?> ريال</td>
+        <?php } ?>
         <td><?= esc($item['quantity']) ?></td>
         <td><?= number_format($item['unit_total'],3) ?> ريال</td>
         <td class="vat"><?= number_format($item['unit_vat'],5) ?> ريال</td>
@@ -290,21 +307,29 @@ function recalcTotals(saveToDB = false) {
   let totalVat = 0;
 
   document.querySelectorAll('#invoiceTable tbody tr').forEach(tr => {
+    const price = parseFloat(tr.dataset.price || tr.querySelector('td:nth-child(6)').textContent.replace(/[^\d.-]/g, '')) || 0;
+    const totalPrice = parseFloat(tr.dataset.total_price || tr.querySelector('td:nth-child(4)').textContent.replace(/[^\d.-]/g, '')) || 0;
     const unitTotal = parseFloat(tr.dataset.unitTotal || tr.querySelector('td:nth-child(8)').textContent.replace(/[^\d.-]/g, '')) || 0;
     const unitAllTotal = parseFloat(tr.dataset.unitAllTotal || tr.querySelector('td:nth-child(10)').textContent.replace(/[^\d.-]/g, '')) || 0;
 
     if(vatRate === 0){
+
+      const priceWithvatValue = price + (price * 0.15);
+      const pricetotalWithvatValue = totalPrice + (totalPrice * 0.15);
       // حالة صفر: العمود قبل الضريبة = unit_all_total
-      tr.querySelector('td:nth-child(8)').textContent = unitAllTotal.toFixed(2) + ' ريال';
+      tr.querySelector('td:nth-child(8)').textContent = unitAllTotal.toFixed(5) + ' ريال';
       tr.querySelector('.vat').textContent = '0.00 ريال';
-      tr.querySelector('.total').textContent = unitAllTotal.toFixed(2) + ' ريال';
+      tr.querySelector('.total').textContent = unitAllTotal.toFixed(5) + ' ريال';
+
+      tr.querySelector('td:nth-child(6)').textContent = priceWithvatValue.toFixed(5) + ' ريال';
+      tr.querySelector('td:nth-child(4)').textContent = pricetotalWithvatValue.toFixed(5) + ' ريال';
 
       subtotalAll += unitAllTotal;
       totalVat += 0;
       grandTotal += unitAllTotal;
     } else {
       // حالة 15%
-      tr.querySelector('td:nth-child(8)').textContent = unitTotal.toFixed(2) + ' ريال';
+      tr.querySelector('td:nth-child(8)').textContent = unitTotal.toFixed(5) + ' ريال';
       const vatValue = unitTotal * vatRate;
       const totalWithVat = unitTotal + vatValue;
 
