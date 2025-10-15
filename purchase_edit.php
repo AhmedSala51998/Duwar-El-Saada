@@ -35,23 +35,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
         'package'        => trim($_POST['package'] ?? '')
     ];
 
-    // ✅ التحقق من وجود أي تعديل فعلي
-    $hasChanges = false;
-    foreach ($newData as $key => $value) {
-        // استخدم strcmp لمقارنة النصوص بدقة، و== للأرقام
-        if ((is_numeric($value) && $value != $oldData[$key]) ||
-            (!is_numeric($value) && strcmp((string)$value, (string)$oldData[$key]) !== 0)) {
-            $hasChanges = true;
-            break;
-        }
-    }
-
-    if (!$hasChanges) {
-        $_SESSION['toast'] = ['type'=>'info','msg'=>'لم يتم أي تعديل لأن القيم لم تتغير'];
-        header('Location: ' . BASE_URL . '/purchases.php');
-        exit;
-    }
-
     // جلب أعلى كمية مرتبطة بإذن صرف
     $stmtIssued = $pdo->prepare("SELECT MAX(qty) FROM orders WHERE purchase_id=?");
     $stmtIssued->execute([$id]);
