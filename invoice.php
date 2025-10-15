@@ -237,7 +237,7 @@ th, td {
         $vat = $subtotal * $vatRate;
         $total = $subtotal + $vat;
       ?>
-      <tr data-qty="<?= $item['quantity'] ?>" data-price="<?= $item['price'] ?>">
+      <tr data-qty="<?= $item['quantity'] ?>" data-price="<?= $item['price'] ?>" data-unit-total="<?= $item['unit_total'] ?>" data-unit-all-total="<?= $item['unit_all_total'] ?>">
         <td><?= esc($item['name']) ?></td>
         <td><?= esc($item['unit']) ?></td>
         <td>
