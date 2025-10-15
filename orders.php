@@ -69,14 +69,14 @@ $stocks = $pdo->query("
 <style>
 .stock-card {
     width: 180px;
-    min-height: 140px; /* يزيد ارتفاع البوكس ليستوعب الاسم الطويل */
+    min-height: 140px;
     background: linear-gradient(135deg, #ff6a00, #ff9f43);
     border-radius: 18px;
     color: #fff;
     box-shadow: 0 4px 10px rgba(0,0,0,0.15);
     padding: 16px 10px;
     position: relative;
-    overflow: visible; /* يسمح للاسماء الطويلة بالظهور بالكامل */
+    overflow: visible;
     transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 .stock-card:hover {
@@ -98,6 +98,40 @@ $stocks = $pdo->query("
     font-size: 20px;
     color: #fff;
     box-shadow: inset 0 0 10px rgba(255,255,255,0.3);
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+/* إضافة نبض / شعاع عند hover */
+.stock-quantity::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    top: 0;
+    left: 0;
+    box-shadow: 0 0 0 rgba(255,255,255,0.7);
+    transition: all 0.6s ease-out;
+}
+
+.stock-quantity:hover::after {
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255,255,255,0.7);
+    }
+    50% {
+        transform: scale(1.3);
+        box-shadow: 0 0 20px 10px rgba(255,255,255,0.3);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255,255,255,0);
+    }
 }
 
 .stock-quantity small {
@@ -115,8 +149,8 @@ $stocks = $pdo->query("
     font-size: 15px;
     font-weight: 600;
     margin: 0;
-    word-wrap: break-word; /* يسمح بتقسيم الاسم على أسطر بدل القطع */
-    white-space: normal;    /* منع القص */
+    word-wrap: break-word;
+    white-space: normal;
 }
 </style>
 
