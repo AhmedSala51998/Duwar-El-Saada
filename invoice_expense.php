@@ -188,33 +188,34 @@ select#vatRate {
 function recalcTotals(saveToDB = false) {
   const vatRateEl = document.getElementById('vatRate');
   const vatRate = parseFloat(vatRateEl.value);
+
   let totalBeforeVat = 0;
   let totalVat = 0;
   let totalAfterVat = 0;
 
   document.querySelectorAll('#invoiceTable tbody tr').forEach(tr => {
-    const amount = parseFloat(tr.dataset.amount) || 0;       // المبلغ قبل الضريبة
-    const totalFromDB = parseFloat(tr.dataset.total) || 0;   // المبلغ بعد الضريبة (من قاعدة البيانات)
+    const amount = parseFloat(tr.dataset.amount) || 0;       // قبل الضريبة
+    const totalFromDB = parseFloat(tr.dataset.total) || 0;   // بعد الضريبة من DB
     const vatCell = tr.querySelector('.vat');
     const totalCell = tr.querySelector('.total');
 
-    // ✅ في حالة الضريبة = 0%
+    // 🧾 حالة الضريبة = 0%
     if (vatRate === 0) {
       tr.querySelector('td:nth-child(4)').textContent = totalFromDB.toFixed(2) + ' ريال'; // قبل الضريبة = بعد الضريبة
-      vatCell.textContent = '0.00 ريال';
+      vatCell.textContent = '—'; // إخفاء القيمة (شرطة فقط أو ممكن تسيبها فاضية '')
       totalCell.textContent = totalFromDB.toFixed(2) + ' ريال';
 
       totalBeforeVat += totalFromDB;
       totalAfterVat += totalFromDB;
     }
 
-    // ✅ في حالة الضريبة = 15%
+    // 💰 حالة الضريبة = 15%
     else {
-      const vatValue = totalFromDB - amount; // نحسبها من الفرق فقط (بدون إعادة حساب)
-      
-      tr.querySelector('td:nth-child(4)').textContent = amount.toFixed(2) + ' ريال';      // قبل الضريبة من DB
-      vatCell.textContent = vatValue.toFixed(2) + ' ريال';                                // فرق الضريبة
-      totalCell.textContent = totalFromDB.toFixed(2) + ' ريال';                           // بعد الضريبة من DB
+      const vatValue = totalFromDB - amount;
+
+      tr.querySelector('td:nth-child(4)').textContent = amount.toFixed(2) + ' ريال';
+      vatCell.textContent = vatValue.toFixed(2) + ' ريال';
+      totalCell.textContent = totalFromDB.toFixed(2) + ' ريال';
 
       totalBeforeVat += amount;
       totalVat += vatValue;
@@ -226,6 +227,21 @@ function recalcTotals(saveToDB = false) {
   document.getElementById('totalNoVat').textContent = totalBeforeVat.toFixed(2);
   document.getElementById('vatValue').textContent = totalVat.toFixed(2);
   document.getElementById('grandTotal').textContent = totalAfterVat.toFixed(2);
+
+  // 🎯 إظهار / إخفاء صفوف الملخص حسب الضريبة
+  const totalNoVatRow = document.getElementById('totalNoVat').closest('tr');
+  const vatRow = document.getElementById('vatRow');
+  const grandRow = document.getElementById('grandRow');
+
+  if (vatRate === 0) {
+    totalNoVatRow.style.display = 'none';
+    vatRow.style.display = 'none';
+    grandRow.style.display = 'table-row';
+  } else {
+    totalNoVatRow.style.display = 'table-row';
+    vatRow.style.display = 'table-row';
+    grandRow.style.display = 'table-row';
+  }
 }
 
 // ✅ تحديث تلقائي عند التغيير أو تحميل الصفحة
