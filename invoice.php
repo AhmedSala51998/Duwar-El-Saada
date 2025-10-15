@@ -226,7 +226,7 @@ th, td {
       <tr data-qty="<?= $item['quantity'] ?>" data-price="<?= $item['price'] ?>">
         <td><?= esc($item['name']) ?></td>
         <td><?= esc($item['unit']) ?></td>
-        <td><?= esc($item['total_packages'] . ' ' . $item['package']) ?></td>
+        <td><?= esc($item['total_packages'] . ' X ' . $item['package']) ?></td>
         <td><?= number_format($item['total_price'],5) ?> ريال</td>
         <td><?= esc($item['single_package']) ?></td>
         <td><?= number_format($item['price'],5) ?> ريال</td>
