@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     UPDATE purchases 
                     SET unit_vat = ?
                     WHERE id = ?
-                ")->execute([$unitVat, $unitAllTotal, $r['id']]);
+                ")->execute([$unitVat, $r['id']]);
             }
 
             // ✅ بعد التحديث، نحسب الإجماليات من قاعدة البيانات نفسها
