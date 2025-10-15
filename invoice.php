@@ -269,8 +269,15 @@ function recalcTotals() {
 
     vatTextEl.textContent = vatRate === 0 ? '0%' : '15%';
 
-    document.getElementById('vatRow').style.display = vatRate === 0 ? 'none' : 'block';
-    document.getElementById('grandRow').style.display = vatRate === 0 ? 'none' : 'block';
+    if (vatRate === 0) {
+        document.getElementById('totalNoVatRow').style.display = 'none';
+        document.getElementById('vatRow').style.display = 'none';
+        document.getElementById('grandRow').style.display = 'block';
+    } else {
+        document.getElementById('totalNoVatRow').style.display = 'block';
+        document.getElementById('vatRow').style.display = 'block';
+        document.getElementById('grandRow').style.display = 'block';
+    }
 }
 
 document.getElementById('vatRate').addEventListener('change', recalcTotals);
