@@ -275,25 +275,28 @@ function recalcTotals(saveToDB = false) {
   let totalVat = 0;
 
   document.querySelectorAll('#invoiceTable tbody tr').forEach(tr => {
-    let unitTotal = parseFloat(tr.dataset.unitAllTotal || tr.querySelector('td:nth-child(10)').textContent.replace(/[^\d.-]/g, '')) || 0;
+    const unitTotal = parseFloat(tr.dataset.unitTotal || tr.querySelector('td:nth-child(8)').textContent.replace(/[^\d.-]/g, '')) || 0;
+    const unitAllTotal = parseFloat(tr.dataset.unitAllTotal || tr.querySelector('td:nth-child(10)').textContent.replace(/[^\d.-]/g, '')) || 0;
 
     if(vatRate === 0){
-      // كل القيم = الإجمالي بعد الضريبة (unit_all_total)
+      // حالة صفر: العمود قبل الضريبة = unit_all_total
+      tr.querySelector('td:nth-child(8)').textContent = unitAllTotal.toFixed(2) + ' ريال';
       tr.querySelector('.vat').textContent = '0.00 ريال';
-      tr.querySelector('.total').textContent = unitTotal.toFixed(2) + ' ريال';
-      subtotalAll += unitTotal;
+      tr.querySelector('.total').textContent = unitAllTotal.toFixed(2) + ' ريال';
+
+      subtotalAll += unitAllTotal;
       totalVat += 0;
-      grandTotal += unitTotal;
+      grandTotal += unitAllTotal;
     } else {
       // حالة 15%
-      const unitTotalBeforeVat = parseFloat(tr.querySelector('td:nth-child(8)').textContent.replace(/[^\d.-]/g, '')) || 0;
-      const vatValue = unitTotalBeforeVat * vatRate;
-      const totalWithVat = unitTotalBeforeVat + vatValue;
+      tr.querySelector('td:nth-child(8)').textContent = unitTotal.toFixed(2) + ' ريال';
+      const vatValue = unitTotal * vatRate;
+      const totalWithVat = unitTotal + vatValue;
 
       tr.querySelector('.vat').textContent = vatValue.toFixed(5) + ' ريال';
       tr.querySelector('.total').textContent = totalWithVat.toFixed(5) + ' ريال';
 
-      subtotalAll += unitTotalBeforeVat;
+      subtotalAll += unitTotal;
       totalVat += vatValue;
       grandTotal += totalWithVat;
     }
@@ -305,7 +308,7 @@ function recalcTotals(saveToDB = false) {
   const grandTotalEl = document.getElementById('grandTotal');
 
   if(vatRate === 0){
-    // استخدم الإجمالي من orders_purchases => all_total
+    // إظهار سطر واحد فقط مع الإجمالي بعد الضريبة
     totalNoVatEl.textContent = grandTotal.toLocaleString(undefined, {minimumFractionDigits:2});
     vatValueEl.textContent = '';
     grandTotalEl.textContent = grandTotal.toLocaleString(undefined, {minimumFractionDigits:2});
@@ -332,7 +335,6 @@ function recalcTotals(saveToDB = false) {
 
 document.getElementById('vatRate').addEventListener('change', () => recalcTotals(true));
 window.addEventListener('DOMContentLoaded', () => recalcTotals(false));
-
 
 const dateInput = document.getElementById('invoiceDate');
 const dateText = document.getElementById('invoiceDateText');
