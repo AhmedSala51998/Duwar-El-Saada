@@ -336,6 +336,9 @@ function recalcTotals(saveToDB = false) {
       tr.querySelector('.vat').textContent = vatValue.toFixed(5) + ' ريال';
       tr.querySelector('.total').textContent = totalWithVat.toFixed(5) + ' ريال';
 
+      tr.querySelector('td:nth-child(6)').textContent = price.toFixed(5) + ' ريال';
+      tr.querySelector('td:nth-child(4)').textContent = totalPrice.toFixed(5) + ' ريال';
+
       subtotalAll += unitTotal;
       totalVat += vatValue;
       grandTotal += totalWithVat;
