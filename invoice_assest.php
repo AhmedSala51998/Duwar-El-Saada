@@ -158,7 +158,7 @@ select#vatRate {
         $vat = $subtotal * $vatRate;
         $total = $subtotal + $vat;
       ?>
-      <tr data-amount="<?= $subtotal ?>">
+      <tr data-amount="<?= $subtotal ?>" data-total="<?= $asset['total_amount'] ?>">
         <td><?= esc($asset['name']) ?></td>
         <td><?= esc($asset['type']) ?></td>
         <td><?= esc($asset['quantity']) ?></td>
