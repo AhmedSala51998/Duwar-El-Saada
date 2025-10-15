@@ -82,29 +82,13 @@ function renderSection($title, $rows, $columns, &$totalBefore, &$totalVat, &$tot
                     echo "<td>".htmlspecialchars($r['type'] ?? '-')."</td>";
                     break;
                 case 'الإجمالي قبل الضريبة':
-                    if (empty($r['vat'])) {
-                        // الضريبة فارغة أو صفر
-                        echo "<td>".number_format($r['after'] ?? 0 ,3)."</td>";
-                        $beforeValue = $r['after'] ?? 0; // نخزن القيمة للجمع
-                    } else {
-                        echo "<td>".number_format($r['before'] ?? 0,3)."</td>";
-                        $beforeValue = $r['before'] ?? 0;
-                    }
+                    echo "<td>".number_format($r['before'] ?? 0,3)."</td>";
                     break;
-
                 case 'الضريبة':
-                    if (empty($r['vat'])) {
-                        echo "<td>0.000</td>";
-                        $vatValue = 0; // نخزن القيمة للجمع
-                    } else {
-                        echo "<td>".number_format($r['vat'] ?? 0,3)."</td>";
-                        $vatValue = $r['vat'] ?? 0;
-                    }
+                    echo "<td>".number_format($r['vat'] ?? 0,3)."</td>";
                     break;
-
                 case 'الإجمالي بعد':
                     echo "<td>".number_format($r['after'] ?? 0,3)."</td>";
-                    $afterValue = $r['after'] ?? 0; // للجمع
                     break;
                 default:
                     echo "<td>-</td>";
@@ -113,10 +97,9 @@ function renderSection($title, $rows, $columns, &$totalBefore, &$totalVat, &$tot
         }
         echo "</tr>";
 
-        $sectionBefore += $beforeValue;
-        $sectionVat    += $vatValue;
-        $sectionAfter  += $afterValue;
-
+        $sectionBefore += $r['before'] ?? 0;
+        $sectionVat    += $r['vat'] ?? 0;
+        $sectionAfter  += $r['after'] ?? 0;
     }
 
     echo "<tr style='font-weight:bold;background:#f1f1f1'>
@@ -135,9 +118,9 @@ $stmt = $pdo->prepare("
     SELECT 
         p.name,
         op.supplier_name,
-        (p.price * p.quantity) AS `before`,
-        p.unit_vat AS `vat`,
-        (p.price * p.quantity * 1.15) AS `after`
+        (CASE WHEN unit_vat > 0 THEN (p.price * p.quantity) ELSE (p.price * p.quantity * 1.15) END) AS `before`, 
+        (CASE WHEN unit_vat > 0 THEN (p.price * p.quantity * 0.15) ELSE 0 END) AS `vat`, 
+        (CASE WHEN unit_vat > 0 THEN (p.price * p.quantity * 1.15) ELSE (p.price * p.quantity * 1.15) END) AS `after`, 
     FROM purchases p
     LEFT JOIN orders_purchases op ON p.order_id = op.id
     WHERE 1=1 $dateFilterPurchases
@@ -152,9 +135,9 @@ $stmt = $pdo->prepare("
             THEN CONCAT(main_expense, ' - ', expense_desc)
             ELSE CONCAT(main_expense, ' - ', sub_expense)
         END AS name, 
-        expense_amount AS `before`, 
+        (CASE WHEN has_vat=1 THEN expense_amount ELSE expense_amount * 1.15 END) AS `before`, 
         (CASE WHEN has_vat=1 THEN expense_amount * 0.15 ELSE 0 END) AS `vat`, 
-        (CASE WHEN has_vat=1 THEN expense_amount * 1.15 ELSE expense_amount END) AS `after` 
+        (CASE WHEN has_vat=1 THEN expense_amount * 1.15 ELSE expense_amount * 1.15 END) AS `after` 
     FROM expenses e
     WHERE 1=1 $dateFilterExpenses
 ");
@@ -167,8 +150,9 @@ $stmt = $pdo->prepare("
         a.quantity,
         a.type,
         (a.price * a.quantity) AS `before`,
+        (CASE WHEN a.has_vat=1 THEN (a.price * a.quantity) ELSE a.price * a.quantity * 1.15 END) AS `before`
         (CASE WHEN a.has_vat=1 THEN a.price * a.quantity * 0.15 ELSE 0 END) AS `vat`,
-        (CASE WHEN a.has_vat=1 THEN a.price * a.quantity * 1.15 ELSE a.price * a.quantity END) AS `after`
+        (CASE WHEN a.has_vat=1 THEN a.price * a.quantity * 1.15 ELSE a.price * a.quantity * 1.15 END) AS `after`
     FROM assets a
     WHERE 1=1 $dateFilterAssets
 ");
