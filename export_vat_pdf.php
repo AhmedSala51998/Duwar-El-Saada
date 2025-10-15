@@ -82,23 +82,29 @@ function renderSection($title, $rows, $columns, &$totalBefore, &$totalVat, &$tot
                     echo "<td>".htmlspecialchars($r['type'] ?? '-')."</td>";
                     break;
                 case 'الإجمالي قبل الضريبة':
-                    if ($r['vat'] == 0) {
-                        // لو الضريبة صفر، نعرض الإجمالي بعد الضريبة بدل قبل الضريبة
-                        echo "<td>".number_format($r['after'] ?? 0,3)."</td>";
+                    if (empty($r['vat'])) {
+                        // الضريبة فارغة أو صفر
+                        echo "<td>".number_format($r['after'] ?? 0 ,3)."</td>";
+                        $beforeValue = $r['after'] ?? 0; // نخزن القيمة للجمع
                     } else {
                         echo "<td>".number_format($r['before'] ?? 0,3)."</td>";
+                        $beforeValue = $r['before'] ?? 0;
                     }
                     break;
+
                 case 'الضريبة':
-                    if ($r['vat'] == 0) {
-                        // لو الضريبة صفر، نعرض الإجمالي بعد الضريبة بدل قبل الضريبة
-                        echo "<td>".number_format(0 ?? 0,3)."</td>";
+                    if (empty($r['vat'])) {
+                        echo "<td>0.000</td>";
+                        $vatValue = 0; // نخزن القيمة للجمع
                     } else {
                         echo "<td>".number_format($r['vat'] ?? 0,3)."</td>";
+                        $vatValue = $r['vat'] ?? 0;
                     }
                     break;
+
                 case 'الإجمالي بعد':
                     echo "<td>".number_format($r['after'] ?? 0,3)."</td>";
+                    $afterValue = $r['after'] ?? 0; // للجمع
                     break;
                 default:
                     echo "<td>-</td>";
@@ -107,9 +113,10 @@ function renderSection($title, $rows, $columns, &$totalBefore, &$totalVat, &$tot
         }
         echo "</tr>";
 
-        $sectionBefore += $r['before'] ?? 0;
-        $sectionVat    += $r['vat'] ?? 0;
-        $sectionAfter  += $r['after'] ?? 0;
+        $sectionBefore += $beforeValue;
+        $sectionVat    += $vatValue;
+        $sectionAfter  += $afterValue;
+
     }
 
     echo "<tr style='font-weight:bold;background:#f1f1f1'>
