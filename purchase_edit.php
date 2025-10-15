@@ -181,20 +181,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
 
             $_SESSION['toast'] = ['type'=>'success','msg'=>'تم تعديل الكمية بنجاح'];
         }
-
-    } elseif ($newData['quantity'] == $oldData['total_packages'] 
-        && $newData['single_quantity'] == $oldData['single_quantity'] 
-        && $newData['price'] == $oldData['price']
-        && $newData['unit'] == $oldData['unit']
-        && $newData['package'] == $oldData['package']
-        && $newData['payer_name'] == $oldData['payer_name']
-        && $newData['payment_source'] == $oldData['payment_source']) {
         
-        // ✅ مفيش أي تغيير فعلي
-        $_SESSION['toast'] = ['type'=>'info','msg'=>'لم يتم أي تعديل لأن القيم لم تتغير'];
-        header('Location: ' . BASE_URL . '/purchases.php');
-        exit;
-
     } else {
         // زيادة على القديم
         /*$addedQty = $newData['quantity'] - $oldData['total_packages'];
@@ -204,7 +191,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
         $unit_price = $newData['price'] / $newData['single_quantity'];*/
 
         $oldQuantity = $oldData['total_packages'];
-        $oldSingleQty = $oldData['single_quantity'];
+        $oldSingleQty = $oldData['single_package'];
         $oldPrintingQty = $oldData['prinitng_quantity'];
         $oldUnitQuantity = $oldData['quantity']; // quantity بالوحدات الكاملة
         $newQuantity = $newData['quantity'];
