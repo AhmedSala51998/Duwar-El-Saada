@@ -241,12 +241,12 @@ th, td {
         <td><?= esc($item['name']) ?></td>
         <td><?= esc($item['unit']) ?></td>
         <td>
-          <span class="badge badge-unit">
+          
             <?= htmlspecialchars($item['total_packages']) ?>
             <?php if (!empty($item['package'])): ?>
               × <?= htmlspecialchars($item['package']) ?>
             <?php endif; ?>
-          </span>
+          
         </td>
         <td><?= number_format($item['total_price'],5) ?> ريال</td>
         <td><?= esc($item['single_package']) ?></td>
