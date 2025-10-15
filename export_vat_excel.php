@@ -26,13 +26,13 @@ if ($date_type === 'today') {
 }
 
 if($from_date) {
-    $purchasesFilter .= " AND DATE(p.created_at) >= ?";
+    $purchasesFilter .= " AND DATE(o.created_at) >= ?";
     $expensesFilter  .= " AND DATE(expenses.created_at) >= ?";
     $assetsFilter    .= " AND DATE(assets.created_at) >= ?";
     $params[] = $from_date;
 }
 if($to_date) {
-    $purchasesFilter .= " AND DATE(p.created_at) <= ?";
+    $purchasesFilter .= " AND DATE(o.created_at) <= ?";
     $expensesFilter  .= " AND DATE(expenses.created_at) <= ?";
     $assetsFilter    .= " AND DATE(assets.created_at) <= ?";
     $params[] = $to_date;
@@ -93,16 +93,19 @@ $totalBefore = $totalVat = $totalAfter = 0;
 
 // المشتريات
 foreach ($purchases as $r) {
-    $data[] = ["المشتريات", $r['name'], $r['supplier_name'], $r['before'], $r['vat'], $r['after']];
-    $totalBefore += $r['before'];
+    $beforeValue = ($r['vat'] == 0) ? $r['after'] : $r['before'];
+    $data[] = ["المشتريات", $r['name'], $r['supplier_name'], $beforeValue, $r['vat'], $r['after']];
+    $totalBefore += $beforeValue;
     $totalVat += $r['vat'];
     $totalAfter += $r['after'];
 }
 
 // المصروفات
 foreach ($expenses as $r) {
-    $data[] = ["المصروفات", $r['name'], "", $r['before'], $r['vat'], $r['after']];
-    $totalBefore += $r['before'];
+    $beforeValue = ($r['vat'] == 0) ? $r['after'] : $r['before'];
+    $data[] = ["المصروفات", $r['name'], "", $beforeValue, $r['vat'], $r['after']];
+
+    $totalBefore += $beforeValue;
     $totalVat += $r['vat'];
     $totalAfter += $r['after'];
 }
@@ -110,8 +113,10 @@ foreach ($expenses as $r) {
 // الأصول
 foreach ($assets as $r) {
     $typeInfo = trim(($r['quantity'] ?? '') . '-' . ($r['type'] ?? ''));
-    $data[] = ["الأصول", $r['name'], $typeInfo, $r['before'], $r['vat'], $r['after']];
-    $totalBefore += $r['before'];
+    $beforeValue = ($r['vat'] == 0) ? $r['after'] : $r['before'];
+    $data[] = ["الأصول", $r['name'], $typeInfo, $beforeValue, $r['vat'], $r['after']];
+
+    $totalBefore += $beforeValue;
     $totalVat += $r['vat'];
     $totalAfter += $r['after'];
 }

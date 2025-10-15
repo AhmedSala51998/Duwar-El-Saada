@@ -28,11 +28,11 @@ if ($date_type === 'today') {
 
 // فلترة المشتريات (p.created_at)
 if($from_date) { 
-    $dateFilterPurchases .= " AND DATE(p.created_at) >= ?"; 
+    $dateFilterPurchases .= " AND DATE(o.created_at) >= ?"; 
     $paramsPurchases[] = $from_date; 
 }
 if($to_date) { 
-    $dateFilterPurchases .= " AND DATE(p.created_at) <= ?"; 
+    $dateFilterPurchases .= " AND DATE(o.created_at) <= ?"; 
     $paramsPurchases[] = $to_date; 
 }
 
@@ -82,7 +82,12 @@ function renderSection($title, $rows, $columns, &$totalBefore, &$totalVat, &$tot
                     echo "<td>".htmlspecialchars($r['type'] ?? '-')."</td>";
                     break;
                 case 'الإجمالي قبل الضريبة':
-                    echo "<td>".number_format($r['before'] ?? 0,3)."</td>";
+                    if (($r['vat'] ?? 0) == 0) {
+                        // لو الضريبة صفر، نعرض الإجمالي بعد الضريبة بدل قبل الضريبة
+                        echo "<td>".number_format($r['after'] ?? 0,3)."</td>";
+                    } else {
+                        echo "<td>".number_format($r['before'] ?? 0,3)."</td>";
+                    }
                     break;
                 case 'الضريبة':
                     echo "<td>".number_format($r['vat'] ?? 0,3)."</td>";
