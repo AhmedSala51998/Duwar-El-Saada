@@ -35,23 +35,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
         'package'        => trim($_POST['package'] ?? '')
     ];
 
-    // ✅ التحقق من وجود أي تعديل فعلي
+    // ✅ مقارنة القيم القديمة بالقيم الجديدة قبل أي تعديل فعلي
     $hasChanges = false;
     foreach ($newData as $key => $value) {
-        // استخدم strcmp لمقارنة النصوص بدقة، و== للأرقام
-        if ((is_numeric($value) && $value != $oldData[$key]) ||
-            (!is_numeric($value) && strcmp((string)$value, (string)$oldData[$key]) !== 0)) {
+        $oldValue = $oldData[$key] ?? null;
+
+        // تجاهل الصور لأنها ممكن تتغير حتى لو فارغة
+        if (in_array($key, ['product_image', 'invoice_image'])) {
+            continue;
+        }
+
+        // قارن القيم النصية والأرقام بدقة
+        if ((is_numeric($value) && (float)$value !== (float)$oldValue) ||
+            (!is_numeric($value) && trim((string)$value) !== trim((string)$oldValue))) {
             $hasChanges = true;
             break;
         }
     }
 
     if (!$hasChanges) {
-        $_SESSION['toast'] = ['type'=>'info','msg'=>'لم يتم أي تعديل لأن القيم لم تتغير'];
+        // لا يوجد أي تغيير فعلي
+        $_SESSION['toast'] = ['type' => 'info', 'msg' => 'لم يتم أي تعديل لأن القيم لم تتغير'];
         header('Location: ' . BASE_URL . '/purchases.php');
         exit;
     }
-
 
     // جلب أعلى كمية مرتبطة بإذن صرف
     $stmtIssued = $pdo->prepare("SELECT MAX(qty) FROM orders WHERE purchase_id=?");
