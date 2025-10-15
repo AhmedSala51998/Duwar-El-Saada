@@ -120,7 +120,7 @@ $stmt = $pdo->prepare("
         op.supplier_name,
         (CASE WHEN unit_vat > 0 THEN (p.price * p.quantity) ELSE (p.price * p.quantity * 1.15) END) AS `before`, 
         (CASE WHEN unit_vat > 0 THEN (p.price * p.quantity * 0.15) ELSE 0 END) AS `vat`, 
-        (CASE WHEN unit_vat > 0 THEN (p.price * p.quantity * 1.15) ELSE (p.price * p.quantity * 1.15) END) AS `after`, 
+        (CASE WHEN unit_vat > 0 THEN (p.price * p.quantity * 1.15) ELSE (p.price * p.quantity * 1.15) END) AS `after` 
     FROM purchases p
     LEFT JOIN orders_purchases op ON p.order_id = op.id
     WHERE 1=1 $dateFilterPurchases
