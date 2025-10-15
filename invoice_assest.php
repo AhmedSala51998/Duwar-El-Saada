@@ -158,11 +158,19 @@ select#vatRate {
         $vat = $subtotal * $vatRate;
         $total = $subtotal + $vat;
       ?>
-      <tr data-amount="<?= $subtotal ?>" data-total="<?= $asset['total_amount'] ?>">
+      <tr data-amount="<?= $subtotal ?>" data-price="<?= $asset['price'] ?>" data-total="<?= $asset['total_amount'] ?>">
         <td><?= esc($asset['name']) ?></td>
         <td><?= esc($asset['type']) ?></td>
         <td><?= esc($asset['quantity']) ?></td>
-        <td><?= number_format($asset['price'],7) ?> ريال</td>
+        <?php if($item['vat_value'] == 0){
+
+            $pricewithvat = $asset['price'] + ($asset['price'] * 0.15);
+
+        ?>
+         <td><?= number_format($pricewithvat,7) ?> ريال</td>
+        <?php  }else{ ?>
+            <td><?= number_format($asset['price'],7) ?> ريال</td>
+        <?php } ?>
         <td><?= number_format($subtotal,7) ?> ريال</td>
         <td class="vat"><?= number_format($vat,7) ?> ريال</td>
         <td class="total"><?= number_format($total,7) ?> ريال</td>
@@ -199,11 +207,16 @@ function recalcTotals(saveToDB = false) {
   const subtotal = parseFloat(tr.dataset.amount) || 0;
   const totalFromDB = parseFloat(tr.dataset.total) || subtotal; // اجمالي من قاعدة البيانات
 
+  const price = parseFloat(tr.dataset.price || tr.querySelector('td:nth-child(4)').textContent.replace(/[^\d.-]/g, '')) || 0;
+
   if (vatRate === 0) {
     // الصفر: استخدم total_amount من قاعدة البيانات لكل القيم
     tr.querySelector('td:nth-child(5)').textContent = totalFromDB.toFixed(2) + ' ريال'; // الإجمالي قبل الضريبة
     tr.querySelector('.vat').textContent = '0.00 ريال';                                 // الضريبة
     tr.querySelector('.total').textContent = totalFromDB.toFixed(2) + ' ريال';        // الإجمالي بعد الضريبة
+
+    const priceWithvatValue = price + (price * 0.15);
+    tr.querySelector('td:nth-child(4)').textContent = pricetotalWithvatValue.toFixed(7) + ' ريال';
 
     // الملخص
     document.getElementById('totalNoVat').textContent = totalFromDB.toFixed(2);
@@ -218,6 +231,7 @@ function recalcTotals(saveToDB = false) {
     tr.querySelector('td:nth-child(5)').textContent = subtotal.toFixed(2) + ' ريال';
     tr.querySelector('.vat').textContent = vat.toFixed(2) + ' ريال';
     tr.querySelector('.total').textContent = total.toFixed(2) + ' ريال';
+    tr.querySelector('td:nth-child(4)').textContent = price.toFixed(7) + ' ريال';
 
     // الملخص
     document.getElementById('totalNoVat').textContent = subtotal.toFixed(2);
