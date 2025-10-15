@@ -68,7 +68,7 @@ $stocks = $pdo->query("
 
 <style>
 .stock-card {
-    width: 180px;
+    width: 200px;
     min-height: 140px;
     background: linear-gradient(135deg, #ff6a00, #ff9f43);
     border-radius: 18px;
