@@ -68,11 +68,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
             $_SESSION['toast'] = ['type'=>'danger','msg'=>'لا يمكن تعديل الكمية، مرتبطة بإذن صرف أكبر من الكمية الجديدة، امسح إذن الصرف أولًا'];
         } else {
             // تعديل آمن: تقليل أو زيادة بدون المساس بإذن الصرف
-            $addedQty = $newData['quantity'] - $oldData['total_packages'];
+            /*$addedQty = $newData['quantity'] - $oldData['total_packages'];
             $result_data = $addedQty * $newData['single_quantity'];
             $newPrintingQty = $oldData['prinitng_quantity'] + $result_data;
             $unit_quantity = $oldData['quantity'] + $result_data;
-            $unit_price = $newData['price'] / $newData['single_quantity'];
+            $unit_price = $newData['price'] / $newData['single_quantity'];*/
+
+            $oldQuantity = $oldData['total_packages'];
+            $oldSingleQty = $oldData['single_package'];
+            $oldPrintingQty = $oldData['prinitng_quantity'];
+            $oldUnitQuantity = $oldData['quantity']; // quantity بالوحدات الكاملة
+            $newQuantity = $newData['quantity'];
+            $newSingleQty = $newData['single_quantity'];
+            $newPrice = $newData['price'];
+
+            // أربع احتمالات
+            if ($newQuantity != $oldQuantity && $newSingleQty == $oldSingleQty) {
+                // تغيير الكمية فقط
+                $addedQty = $newQuantity - $oldQuantity;
+                $result_data = $addedQty * $newSingleQty;
+                $newPrintingQty = $oldPrintingQty + $result_data;
+                $unit_quantity = $oldUnitQuantity + $result_data;
+                $unit_price = $newPrice / $newSingleQty;
+
+            } elseif ($newQuantity == $oldQuantity && $newSingleQty != $oldSingleQty) {
+                // تغيير single_quantity فقط
+                $result_data = $newQuantity * ($newSingleQty - $oldSingleQty);
+                $newPrintingQty = $oldPrintingQty + $result_data;
+                $unit_quantity = $oldUnitQuantity + $result_data;
+                $unit_price = $newPrice / $newSingleQty;
+
+            } elseif ($newQuantity != $oldQuantity && $newSingleQty != $oldSingleQty) {
+                // تغيير كلاهما
+                $addedQty = $newQuantity - $oldQuantity;
+                $result_data = $addedQty * $newSingleQty;
+                $newPrintingQty = $oldPrintingQty + $result_data;
+                $unit_quantity = $oldUnitQuantity + $result_data;
+                $unit_price = $newPrice / $newSingleQty;
+
+            } else {
+                // لا تغيير
+                $newPrintingQty = $oldPrintingQty;
+                $unit_quantity = $oldUnitQuantity;
+                $unit_price = $newPrice / $newSingleQty;
+            }
 
             // خصم العهدة الجديدة إذا مصدر الدفع عهدة
             if ($newData['payment_source'] === 'عهدة') {
@@ -139,11 +178,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
         }
     } else {
         // زيادة على القديم
-        $addedQty = $newData['quantity'] - $oldData['total_packages'];
+        /*$addedQty = $newData['quantity'] - $oldData['total_packages'];
         $result_data = $addedQty * $newData['single_quantity'];
         $newPrintingQty = $oldData['prinitng_quantity'] + $result_data;
         $unit_quantity = $oldData['quantity'] + $result_data;
-        $unit_price = $newData['price'] / $newData['single_quantity'];
+        $unit_price = $newData['price'] / $newData['single_quantity'];*/
+
+        $oldQuantity = $oldData['total_packages'];
+        $oldSingleQty = $oldData['single_quantity'];
+        $oldPrintingQty = $oldData['prinitng_quantity'];
+        $oldUnitQuantity = $oldData['quantity']; // quantity بالوحدات الكاملة
+        $newQuantity = $newData['quantity'];
+        $newSingleQty = $newData['single_quantity'];
+        $newPrice = $newData['price'];
+
+        if ($newQuantity != $oldQuantity && $newSingleQty == $oldSingleQty) {
+            // تغيير الكمية فقط
+            $addedQty = $newQuantity - $oldQuantity;
+            $result_data = $addedQty * $newSingleQty;
+            $newPrintingQty = $oldPrintingQty + $result_data;
+            $unit_quantity = $oldUnitQuantity + $result_data;
+            $unit_price = $newPrice / $newSingleQty;
+
+        } elseif ($newQuantity == $oldQuantity && $newSingleQty != $oldSingleQty) {
+            // تغيير single_quantity فقط
+            $result_data = $newQuantity * ($newSingleQty - $oldSingleQty);
+            $newPrintingQty = $oldPrintingQty + $result_data;
+            $unit_quantity = $oldUnitQuantity + $result_data;
+            $unit_price = $newPrice / $newSingleQty;
+
+        } elseif ($newQuantity != $oldQuantity && $newSingleQty != $oldSingleQty) {
+            // تغيير كلاهما
+            $addedQty = $newQuantity - $oldQuantity;
+            $result_data = $addedQty * $newSingleQty;
+            $newPrintingQty = $oldPrintingQty + $result_data;
+            $unit_quantity = $oldUnitQuantity + $result_data;
+            $unit_price = $newPrice / $newSingleQty;
+
+        } else {
+            // لا تغيير
+            $newPrintingQty = $oldPrintingQty;
+            $unit_quantity = $oldUnitQuantity;
+            $unit_price = $newPrice / $newSingleQty;
+        }
 
         // خصم العهدة الجديدة إذا مصدر الدفع عهدة
         if ($newData['payment_source'] === 'عهدة') {
