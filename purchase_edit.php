@@ -3,6 +3,11 @@ require __DIR__.'/config/config.php';
 require_role(['admin','manager']);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? '')) {
+    // ✅ منع تنفيذ أي تعديل إذا المستخدم قفل المودال أو لم يضغط "حفظ"
+    if (!isset($_POST['save'])) {
+        header('Location: ' . BASE_URL . '/purchases.php');
+        exit;
+    }
     $id = (int)($_POST['id'] ?? 0);
 
     // جلب البيانات القديمة
