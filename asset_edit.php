@@ -32,6 +32,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
         'payment_source' => $_POST['payment_source'] ?? 'كاش'
     ];
 
+    // ✅ لو الكمية أصبحت صفر نحذف الأصل تمامًا ونرجع العهدة لو كانت عهدة
+    if ($quantity == 0) {
+
+        // استرجاع العهدة إذا كانت مدفوعة من العهدة
+        if ($oldData['payment_source'] === 'عهدة') {
+            $stmtTx = $pdo->prepare("SELECT * FROM custody_transactions WHERE type='asset' AND type_id=?");
+            $stmtTx->execute([$oldData['id']]);
+            $transactions = $stmtTx->fetchAll(PDO::FETCH_ASSOC);
+
+            foreach ($transactions as $tx) {
+                $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE id=?");
+                $stmtC->execute([$tx['custody_id']]);
+                $custody = $stmtC->fetch();
+
+                if ($custody) {
+                    $newAmount = $custody['amount'] + $tx['amount'];
+                    $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
+                }
+            }
+
+            // حذف معاملات العهدة بعد الإرجاع
+            $pdo->prepare("DELETE FROM custody_transactions WHERE type='asset' AND type_id=?")->execute([$oldData['id']]);
+        }
+
+        // حذف الأصل نفسه
+        $pdo->prepare("DELETE FROM assets WHERE id=?")->execute([$id]);
+
+        $_SESSION['toast'] = ['type' => 'success', 'msg' => 'تم حذف الأصل لأن الكمية أصبحت صفر'];
+        header('Location: ' . BASE_URL . '/assetes.php');
+        exit;
+    }
+
     // تحقق من التكرار
     $check = $pdo->prepare("SELECT COUNT(*) FROM assets WHERE name=? AND type=? AND payer_name=? AND id<>?");
     $check->execute([$newData['name'], $newData['type'], $newData['payer_name'], $id]);
