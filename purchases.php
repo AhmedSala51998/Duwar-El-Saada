@@ -745,19 +745,7 @@ document.querySelector('form[action="purchase_add"]').addEventListener('submit',
       if (data.exists) {
         alert('⚠️ فاتورة المورد هذه موجودة من قبل!');
       } else {
-        // بعد التأكد من رقم الفاتورة، نتحقق من الرقم الضريبي
-        fetch('check_tax_number?tax=' + encodeURIComponent(taxValue))
-          .then(res => res.json())
-          .then(data2 => {
-            if (data2.exists) {
-              alert('هذا الرقم الضريبي مستخدم بالفعل!');
-            } else {
-              e.target.submit(); // أرسل النموذج فعلياً بعد نجاح كل الفحوص
-            }
-          })
-          .catch(() => {
-            alert('حدث خطأ أثناء التحقق من الرقم الضريبي.');
-          });
+        e.target.submit(); // أرسل النموذج فعلياً بعد نجاح فحص رقم الفاتورة فقط
       }
     })
     .catch(() => {

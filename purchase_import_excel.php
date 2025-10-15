@@ -31,10 +31,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
     }
 
     // ✅ تحقق من التكرار
-    $checkTax = $pdo->prepare("SELECT COUNT(*) FROM orders_purchases WHERE tax_number = ?");
-    $checkTax->execute([$tax_number]);
+    $checkTax = $pdo->prepare("SELECT COUNT(*) FROM orders_purchases WHERE bill_number = ?");
+    $checkTax->execute([$bill_number]);
     if ($checkTax->fetchColumn() > 0) {
-        $_SESSION['toast'] = ['type'=>'danger','msg'=>'❌ هذا الرقم الضريبي مستخدم بالفعل.'];
+        $_SESSION['toast'] = ['type'=>'danger','msg'=>'❌ رقم الفاتورة مستخدم بالفعل.'];
         header('Location: ' . BASE_URL . '/purchases.php');
         exit;
     }

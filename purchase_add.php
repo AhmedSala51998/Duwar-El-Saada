@@ -23,10 +23,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
          $_SESSION['toast'] = ['type'=>'danger','msg'=>'❌ الرقم الضريبي يجب أن يكون 15 رقم بالضبط.'];
           header('Location: ' . BASE_URL . '/purchases.php'); exit; 
         } // ✅ تحقق من التكرار في قاعدة البيانات 
-        $checkTax = $pdo->prepare("SELECT COUNT(*) FROM orders_purchases WHERE tax_number = ?");
-         $checkTax->execute([$tax_number]);
+        $checkTax = $pdo->prepare("SELECT COUNT(*) FROM orders_purchases WHERE bill_number = ?");
+         $checkTax->execute([$bill_number]);
           if ($checkTax->fetchColumn() > 0) { 
-            $_SESSION['toast'] = ['type'=>'danger','msg'=>'❌ هذا الرقم الضريبي مستخدم بالفعل في فاتورة سابقة.'];
+            $_SESSION['toast'] = ['type'=>'danger','msg'=>'❌ رقم الفاتورة مستخدم بالفعل في فاتورة سابقة.'];
              header('Location: ' . BASE_URL . '/purchases.php'); exit; 
           }
 
