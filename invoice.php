@@ -27,6 +27,12 @@ if ($orderId) {
     exit; 
 }
 
+  // قيم الإجماليات من DB
+  $subtotalAll = $order['total'];      // المجموع قبل الضريبة
+  $totalVat    = $order['vat'];        // الضريبة
+  $grandTotal  = $order['all_total'];  // الإجمالي بعد الضريبة
+
+
 // نسبة الضريبة حسب قاعدة البيانات
 $vatRate = ($order['vat'] > 0) ? 0.15 : 0.00;
 
@@ -249,95 +255,27 @@ th, td {
       </select>
       <span id="vatRateText"><?= $vatRate == 0 ? '0%' : '15%' ?></span>
     </div>
-    <div><strong>المجموع:</strong> <span id="totalNoVat">0.00</span> ريال</div>
-    <div id="vatRow"><strong>الضريبة:</strong> <span id="vatValue">0.00</span> ريال</div>
-    <div id="grandRow"><strong>الإجمالي بعد الضريبة:</strong> <span id="grandTotal">0.00</span> ريال</div>
+    <div><strong>المجموع:</strong> <span id="totalNoVat"><?= number_format($subtotalAll,2) ?></span> ريال</div>
+    <div id="vatRow" style="display: <?= $vatRate==0?'none':'block' ?>;"><strong>الضريبة:</strong> <span id="vatValue"><?= number_format($totalVat,2) ?></span> ريال</div>
+    <div id="grandRow" style="display: <?= $vatRate==0?'none':'block' ?>;"><strong>الإجمالي بعد الضريبة:</strong> <span id="grandTotal"><?= number_format($grandTotal,2) ?></span> ريال</div>
   </div>
 </div>
 
 <script>
-function recalcTotals(saveToDB = false) {
-  const vatRateEl = document.getElementById('vatRate');
-  const vatTextEl = document.getElementById('vatRateText');
-  const vatRate = parseFloat(vatRateEl.value);
-  const orderId = vatRateEl.dataset.orderId;
+function recalcTotals() {
+    const vatRateEl = document.getElementById('vatRate');
+    const vatTextEl = document.getElementById('vatRateText');
+    const vatRate = parseFloat(vatRateEl.value);
 
-  vatTextEl.textContent = vatRate === 0 ? '0%' : '15%';
+    vatTextEl.textContent = vatRate === 0 ? '0%' : '15%';
 
-  let subtotalAll = 0;
-  let grandTotal = 0;
-  let totalVat = 0;
-
-  // نقرأ القيم الجاهزة من الأعمدة وليس نحسبها
-  document.querySelectorAll('#invoiceTable tbody tr').forEach(tr => {
-    const unitTotal = parseFloat(tr.querySelector('td:nth-child(8)').textContent.replace(/[^\d.-]/g, '')) || 0;
-    const unitVat = parseFloat(tr.querySelector('.vat').textContent.replace(/[^\d.-]/g, '')) || 0;
-    const unitAllTotal = parseFloat(tr.querySelector('.total').textContent.replace(/[^\d.-]/g, '')) || 0;
-
-    subtotalAll += unitTotal;
-    totalVat += unitVat;
-    grandTotal += unitAllTotal;
-  });
-
-  // عرض القيم في الملخص
-  document.getElementById('totalNoVat').textContent = subtotalAll.toLocaleString(undefined, {minimumFractionDigits:2});
-  document.getElementById('vatValue').textContent = totalVat.toLocaleString(undefined, {minimumFractionDigits:2});
-  document.getElementById('grandTotal').textContent = grandTotal.toLocaleString(undefined, {minimumFractionDigits:2});
-
-  // إخفاء صفوف الضريبة إذا القيمة 0%
-  document.getElementById('vatRow').style.display = vatRate === 0 ? 'none' : 'block';
-  document.getElementById('grandRow').style.display = vatRate === 0 ? 'none' : 'block';
-
-  if (saveToDB) {
-    fetch('update_vat', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-      body: `order_id=${orderId}&vat=${vatRate === 0 ? 0 : totalVat}&all_total=${vatRate === 0 ? subtotalAll : grandTotal}&vat_rate=${vatRate}`
-    })
-    .then(res => res.text())
-    .then(result => {
-      console.log(result);
-    if (vatRate === 0) {
-      // ✅ تصفير الجدول والملخص فورًا
-      document.querySelectorAll('#invoiceTable tbody tr').forEach(tr => {
-        tr.querySelector('.vat').textContent = '0.00 ريال';
-        tr.querySelector('.total').textContent = tr.querySelector('td:nth-child(8)').textContent;
-      });
-
-      document.getElementById('vatValue').textContent = '0.00';
-      document.getElementById('grandTotal').textContent = grandTotal.toLocaleString(undefined, {minimumFractionDigits:2});
-    } else {
-      // ✅ رجع الضريبة تاني واحسبها محليًا بدون رفرش
-      document.querySelectorAll('#invoiceTable tbody tr').forEach(tr => {
-        const unitTotal = parseFloat(tr.querySelector('td:nth-child(8)').textContent.replace(/[^\d.-]/g, '')) || 0;
-        const vatValue = unitTotal * vatRate;
-        const totalWithVat = unitTotal + vatValue;
-
-        tr.querySelector('.vat').textContent = vatValue.toFixed(5) + ' ريال';
-        tr.querySelector('.total').textContent = totalWithVat.toFixed(5) + ' ريال';
-      });
-
-      // إعادة حساب الإجماليات
-      let subtotalAll = 0, totalVat = 0, grandTotal = 0;
-      document.querySelectorAll('#invoiceTable tbody tr').forEach(tr => {
-        const unitTotal = parseFloat(tr.querySelector('td:nth-child(8)').textContent.replace(/[^\d.-]/g, '')) || 0;
-        const vatValue = unitTotal * vatRate;
-        subtotalAll += unitTotal;
-        totalVat += vatValue;
-        grandTotal += unitTotal + vatValue;
-      });
-
-      document.getElementById('totalNoVat').textContent = subtotalAll.toLocaleString(undefined, {minimumFractionDigits:2});
-      document.getElementById('vatValue').textContent = totalVat.toLocaleString(undefined, {minimumFractionDigits:2});
-      document.getElementById('grandTotal').textContent = grandTotal.toLocaleString(undefined, {minimumFractionDigits:2});
-    }
-    })
-    .catch(console.error);
-  }
+    document.getElementById('vatRow').style.display = vatRate === 0 ? 'none' : 'block';
+    document.getElementById('grandRow').style.display = vatRate === 0 ? 'none' : 'block';
 }
 
-document.getElementById('vatRate').addEventListener('change', () => recalcTotals(true));
-window.addEventListener('DOMContentLoaded', () => recalcTotals(false));
+document.getElementById('vatRate').addEventListener('change', recalcTotals);
+window.addEventListener('DOMContentLoaded', recalcTotals);
+
 
 
 const dateInput = document.getElementById('invoiceDate');
