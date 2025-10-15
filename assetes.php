@@ -156,7 +156,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
               <input name="type" class="form-control" value="<?= esc($r['type']) ?>">
 
               <label>العدد</label>
-              <input type="number" name="quantity" id="quantity_edit_<?= $r['id'] ?>" class="form-control" value="<?= (int)$r['quantity'] ?>" min="1">
+              <input type="number" name="quantity" id="quantity_edit_<?= $r['id'] ?>" class="form-control" value="<?= (int)$r['quantity'] ?>" min="0">
 
               <label>السعر</label>
               <input type="number" step="0.01" min="0" name="price" id="price_edit_<?= $r['id'] ?>" class="form-control" 
