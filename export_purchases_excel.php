@@ -36,11 +36,11 @@ if($kw !== '') {
 
 // فلترة بالتواريخ
 if($from_date !== '') {
-    $q .= " AND DATE(p.created_at) >= ?";
+    $q .= " AND DATE(o.created_at) >= ?";
     $params[] = $from_date;
 }
 if($to_date !== '') {
-    $q .= " AND DATE(p.created_at) <= ?";
+    $q .= " AND DATE(o.created_at) <= ?";
     $params[] = $to_date;
 }
 
