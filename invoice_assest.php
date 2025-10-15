@@ -205,17 +205,19 @@ function recalcTotals(saveToDB = false) {
   tr.querySelector('.vat').textContent = vat.toFixed(2) + ' ريال';
   tr.querySelector('.total').textContent = total.toFixed(2) + ' ريال';
 
-  // تحديث الملخص
-  document.getElementById('totalNoVat').textContent = subtotal.toFixed(2);
-  document.getElementById('vatValue').textContent = vat.toFixed(2);
-  document.getElementById('grandTotal').textContent = total.toFixed(2);
-
-  // التحكم بعرض الصفوف
+  // التحكم بعرض الملخص
   if (vatRate === 0) {
-    document.getElementById('totalNoVat').parentElement.style.display = 'none';
+    // عند 0%: إظهار grandTotal فقط في المجموع
+    document.getElementById('totalNoVat').textContent = total.toFixed(2); // استخدم الإجمالي شامل الضريبة
+    document.getElementById('totalNoVat').parentElement.style.display = 'block';
     document.getElementById('vatRow').style.display = 'none';
-    document.getElementById('grandRow').style.display = 'block';
+    document.getElementById('grandRow').style.display = 'none';
   } else {
+    // عند 15%: إظهار الثلاث قيم
+    document.getElementById('totalNoVat').textContent = subtotal.toFixed(2);
+    document.getElementById('vatValue').textContent = vat.toFixed(2);
+    document.getElementById('grandTotal').textContent = total.toFixed(2);
+
     document.getElementById('totalNoVat').parentElement.style.display = 'block';
     document.getElementById('vatRow').style.display = 'block';
     document.getElementById('grandRow').style.display = 'block';
@@ -226,13 +228,14 @@ function recalcTotals(saveToDB = false) {
     fetch('update_asset_vat', {
       method: 'POST',
       headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-      body: `id=${assetId}&vat_value=${vat}&total_amount=${total}&has_vat=${vatRate > 0 ? 1 : 0}`
+      body: `id=${assetId}&vat_value=${vatRate > 0 ? vat : 0}&total_amount=${total}&has_vat=${vatRate > 0 ? 1 : 0}`
     })
     .then(res => res.text())
     .then(console.log)
     .catch(console.error);
   }
 }
+
 
 document.getElementById('vatRate').addEventListener('change', () => recalcTotals(true));
 window.addEventListener('DOMContentLoaded', () => recalcTotals(false));
