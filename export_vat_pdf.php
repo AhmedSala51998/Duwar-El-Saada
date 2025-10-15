@@ -82,7 +82,7 @@ function renderSection($title, $rows, $columns, &$totalBefore, &$totalVat, &$tot
                     echo "<td>".htmlspecialchars($r['type'] ?? '-')."</td>";
                     break;
                 case 'الإجمالي قبل الضريبة':
-                    if (($r['vat'] ?? 0) == 0) {
+                    if ($r['vat'] == 0) {
                         // لو الضريبة صفر، نعرض الإجمالي بعد الضريبة بدل قبل الضريبة
                         echo "<td>".number_format($r['after'] ?? 0,3)."</td>";
                     } else {
@@ -90,7 +90,12 @@ function renderSection($title, $rows, $columns, &$totalBefore, &$totalVat, &$tot
                     }
                     break;
                 case 'الضريبة':
-                    echo "<td>".number_format($r['vat'] ?? 0,3)."</td>";
+                    if ($r['vat'] == 0) {
+                        // لو الضريبة صفر، نعرض الإجمالي بعد الضريبة بدل قبل الضريبة
+                        echo "<td>".number_format(0 ?? 0,3)."</td>";
+                    } else {
+                        echo "<td>".number_format($r['vat'] ?? 0,3)."</td>";
+                    }
                     break;
                 case 'الإجمالي بعد':
                     echo "<td>".number_format($r['after'] ?? 0,3)."</td>";
