@@ -136,7 +136,7 @@ $stmt = $pdo->prepare("
         p.name,
         op.supplier_name,
         (p.price * p.quantity) AS `before`,
-        (p.price * p.quantity * 0.15) AS `vat`,
+        p.unit_vat AS `vat`,
         (p.price * p.quantity * 1.15) AS `after`
     FROM purchases p
     LEFT JOIN orders_purchases op ON p.order_id = op.id
