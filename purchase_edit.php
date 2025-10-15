@@ -71,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
             $addedQty = $newData['quantity'] - $oldData['total_packages'];
             $result_data = $addedQty * $newData['single_quantity'];
             $newPrintingQty = $oldData['prinitng_quantity'] + $result_data;
-            $unit_quantity = $newData['quantity'] + $result_data;
+            $unit_quantity = $oldData['quantity'] + $result_data;
             $unit_price = $newData['price'] / $newData['single_quantity'];
 
             // خصم العهدة الجديدة إذا مصدر الدفع عهدة
@@ -142,7 +142,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
         $addedQty = $newData['quantity'] - $oldData['total_packages'];
         $result_data = $addedQty * $newData['single_quantity'];
         $newPrintingQty = $oldData['prinitng_quantity'] + $result_data;
-        $unit_quantity = $newData['quantity'] + $result_data;
+        $unit_quantity = $oldData['quantity'] + $result_data;
         $unit_price = $newData['price'] / $newData['single_quantity'];
 
         // خصم العهدة الجديدة إذا مصدر الدفع عهدة
