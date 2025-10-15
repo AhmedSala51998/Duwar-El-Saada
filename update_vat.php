@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $pdo->prepare("
                 UPDATE purchases 
-                SET unit_vat = 0, unit_all_total = unit_total 
+                SET unit_vat = 0 
                 WHERE order_id = ?
             ")->execute([$orderId]);
 
@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 $pdo->prepare("
                     UPDATE purchases 
-                    SET unit_vat = ?, unit_all_total = ? 
+                    SET unit_vat = ?
                     WHERE id = ?
                 ")->execute([$unitVat, $unitAllTotal, $r['id']]);
             }
