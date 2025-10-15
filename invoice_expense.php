@@ -187,58 +187,48 @@ select#vatRate {
 <script>
 function recalcTotals(saveToDB = false) {
   const vatRateEl = document.getElementById('vatRate');
-  const vatTextEl = document.getElementById('vatRateText');
   const vatRate = parseFloat(vatRateEl.value);
-  const expenseId = vatRateEl.dataset.expenseId;
+  let totalBeforeVat = 0;
+  let totalVat = 0;
+  let totalAfterVat = 0;
 
-  vatTextEl.textContent = vatRate === 0 ? '0%' : '15%';
+  document.querySelectorAll('#invoiceTable tbody tr').forEach(tr => {
+    const amount = parseFloat(tr.dataset.amount) || 0;       // المبلغ قبل الضريبة
+    const totalFromDB = parseFloat(tr.dataset.total) || 0;   // المبلغ المحفوظ بعد الضريبة
+    const vatCell = tr.querySelector('.vat');
+    const totalCell = tr.querySelector('.total');
 
-  const tr = document.querySelector('#invoiceTable tbody tr');
-  const amount = parseFloat(tr.dataset.amount) || 0;
-  const totalFromDB = parseFloat(tr.dataset.total) || amount; // اجمالي من قاعدة البيانات
+    // ✅ حالة الضريبة = صفر
+    if (vatRate === 0) {
+      tr.querySelector('td:nth-child(4)').textContent = totalFromDB.toFixed(2) + ' ريال'; // قبل الضريبة
+      vatCell.textContent = '0.00 ريال';
+      totalCell.textContent = totalFromDB.toFixed(2) + ' ريال';
 
-  if (vatRate === 0) {
-    // ✅ في حالة الضريبة صفر: استخدم القيم المخزنة (total_amount)
-    tr.querySelector('td:nth-child(4)').textContent = totalFromDB.toFixed(2) + ' ريال'; // الإجمالي قبل الضريبة
-    tr.querySelector('.vat').textContent = '0.00 ريال';                                 // الضريبة
-    tr.querySelector('.total').textContent = totalFromDB.toFixed(2) + ' ريال';          // الإجمالي بعد الضريبة
+      totalBeforeVat += totalFromDB;
+      totalAfterVat += totalFromDB;
+    }
 
-    // الملخص
-    document.getElementById('totalNoVat').textContent = totalFromDB.toFixed(2);
-    document.getElementById('totalNoVat').parentElement.style.display = 'none';
-    document.getElementById('vatRow').style.display = 'none';
-    document.getElementById('grandRow').style.display = 'block';
-  } else {
-    // ✅ في حالة 15%: احسب القيم من جديد
-    const vat = amount * vatRate;
-    const total = amount + vat;
+    // ✅ حالة الضريبة = 15%
+    else {
+      const vatValue = amount * (vatRate / 100);
+      const totalWithVat = amount + vatValue;
 
-    tr.querySelector('td:nth-child(5)').textContent = amount.toFixed(2) + ' ريال';
-    tr.querySelector('.vat').textContent = vat.toFixed(2) + ' ريال';
-    tr.querySelector('.total').textContent = total.toFixed(2) + ' ريال';
+      tr.querySelector('td:nth-child(4)').textContent = amount.toFixed(2) + ' ريال';       // قبل الضريبة
+      vatCell.textContent = vatValue.toFixed(2) + ' ريال';
+      totalCell.textContent = totalWithVat.toFixed(2) + ' ريال';
 
-    // الملخص
-    document.getElementById('totalNoVat').textContent = amount.toFixed(2);
-    document.getElementById('vatValue').textContent = vat.toFixed(2);
-    document.getElementById('grandTotal').textContent = total.toFixed(2);
+      totalBeforeVat += amount;
+      totalVat += vatValue;
+      totalAfterVat += totalWithVat;
+    }
+  });
 
-    document.getElementById('totalNoVat').parentElement.style.display = 'block';
-    document.getElementById('vatRow').style.display = 'block';
-    document.getElementById('grandRow').style.display = 'block';
-  }
-
-  // ✅ الحفظ في قاعدة البيانات
-  if (saveToDB) {
-    fetch('update_expense_vat', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-      body: `id=${expenseId}&vat_value=${vatRate > 0 ? (amount * vatRate) : 0}&total_amount=${vatRate > 0 ? (amount * (1 + vatRate)) : totalFromDB}&has_vat=${vatRate > 0 ? 1 : 0}`
-    })
-    .then(res => res.text())
-    .then(console.log)
-    .catch(console.error);
-  }
+  // ✅ تحديث الملخص
+  document.getElementById('totalNoVat').textContent = totalBeforeVat.toFixed(2);
+  document.getElementById('vatValue').textContent = totalVat.toFixed(2);
+  document.getElementById('grandTotal').textContent = totalAfterVat.toFixed(2);
 }
+
 
 // ✅ تحديث تلقائي عند التغيير أو تحميل الصفحة
 document.getElementById('vatRate').addEventListener('change', () => recalcTotals(true));
