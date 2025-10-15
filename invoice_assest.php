@@ -181,7 +181,7 @@ select#vatRate {
       <span id="vatRateText"><?= $vatRate == 0 ? '0%' : '15%' ?></span>
     </div>
     <div><strong>المجموع:</strong> <span id="totalNoVat"><?= number_format($subtotal,2) ?></span> ريال</div>
-    <div id="vatRow" <?= $vatRate == 0 ? 'style="display:none;"' : '' ?>><strong>الضريبة:</strong> <span id="vatValue"><?= number_format($asset['vat_value'],2) ?></span> ريال</div>
+    <div id="vatRow" <?= $vatRate == 0 ? 'style="display:none;"' : '' ?>><strong>الضريبة:</strong> <span id="vatValue"><?= number_format($vat,2) ?></span> ريال</div>
     <div id="grandRow" <?= $vatRate == 0 ? 'style="display:none;"' : '' ?>><strong>الإجمالي بعد الضريبة:</strong> <span id="grandTotal"><?= number_format($asset['total_amount'],2) ?></span> ريال</div>
   </div>
 </div>
