@@ -22,12 +22,6 @@
     }
   });
 </script>
-<style>
-  .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-}
-</style>
 <?php endif; ?>
 <?php
 $items = $pdo->query("SELECT * FROM purchases ORDER BY name")->fetchAll();
@@ -58,16 +52,73 @@ $stocks = $pdo->query("
 ")->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
-<div class="d-flex flex-wrap gap-3 mb-4">
+<div class="d-flex flex-wrap justify-content-start gap-3 mb-4">
 <?php foreach($stocks as $s): ?>
-    <div class="card text-center shadow-sm" style="width: 160px; border-radius: 15px; background: #ff6a00; transition: transform 0.2s;color:#FFF;border:1px solid #FFF">
-        <div class="card-body p-2">
-            <h6 class="card-title mb-1"><?= esc($s['name']) ?></h6>
-            <p class="card-text mb-0"><strong><?= $s['total_qty'] ?></strong> <?= esc($s['unit']) ?></p>
+    <div class="stock-card text-center">
+        <div class="stock-quantity">
+            <span><?= number_format($s['total_qty'], 2) ?></span>
+            <small><?= esc($s['unit']) ?></small>
+        </div>
+        <div class="stock-info">
+            <h6 class="stock-name"><?= esc($s['name']) ?></h6>
         </div>
     </div>
 <?php endforeach; ?>
 </div>
+
+<style>
+.stock-card {
+    width: 180px;
+    background: linear-gradient(135deg, #ff6a00, #ff9f43);
+    border-radius: 18px;
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    padding: 16px 10px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.stock-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+}
+
+.stock-quantity {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 20px;
+    color: #fff;
+    box-shadow: inset 0 0 10px rgba(255,255,255,0.3);
+}
+
+.stock-quantity small {
+    font-size: 12px;
+    opacity: 0.9;
+}
+
+.stock-info {
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 6px 8px;
+}
+
+.stock-name {
+    font-size: 15px;
+    font-weight: 600;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+</style>
 
 
 <div class="d-flex flex-wrap gap-2 justify-content-between align-items-center mb-3">
