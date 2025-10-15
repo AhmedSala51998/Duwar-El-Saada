@@ -329,7 +329,7 @@ function recalcTotals(saveToDB = false) {
     grandTotalEl.textContent = grandTotal.toLocaleString(undefined, {minimumFractionDigits:2});
 
     document.getElementById('vatRow').style.display = 'none';
-    document.getElementById('grandRow').style.display = 'block';
+    document.getElementById('grandRow').style.display = 'none';
   } else {
     totalNoVatEl.textContent = subtotalAll.toLocaleString(undefined, {minimumFractionDigits:2});
     vatValueEl.textContent = totalVat.toLocaleString(undefined, {minimumFractionDigits:2});
