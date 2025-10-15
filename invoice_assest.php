@@ -207,7 +207,7 @@ function recalcTotals(saveToDB = false) {
   const subtotal = parseFloat(tr.dataset.amount) || 0;
   const totalFromDB = parseFloat(tr.dataset.total) || subtotal; // اجمالي من قاعدة البيانات
 
-  const price = parseFloat(tr.dataset.price || tr.querySelector('td:nth-child(4)').textContent.replace(/[^\d.-]/g, '')) || 0;
+  const price = parseFloat(tr.dataset.price) || 0;
 
   if (vatRate === 0) {
     // الصفر: استخدم total_amount من قاعدة البيانات لكل القيم
