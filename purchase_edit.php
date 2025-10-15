@@ -61,24 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
     }
 
     // منطق الحذف أو تعديل الكمية
-    // منطق الحذف أو تعديل الكمية
-    if (
-        $newData['quantity'] == $oldData['total_packages'] &&
-        $newData['single_quantity'] == $oldData['single_quantity'] &&
-        $newData['price'] == $oldData['price'] &&
-        $newData['unit'] == $oldData['unit'] &&
-        $newData['package'] == $oldData['package'] &&
-        $newData['payer_name'] == $oldData['payer_name'] &&
-        $newData['payment_source'] == $oldData['payment_source']
-    ) {
-        // ✅ لم يتغير شيء فعليًا في البيانات المؤثرة
-        $_SESSION['toast'] = ['type' => 'info', 'msg' => 'لم يتم أي تعديل لأن القيم لم تتغير'];
-        header('Location: ' . BASE_URL . '/purchases.php');
-        exit;
-    }
-    
-    elseif ($newData['quantity'] == 0) {
-
+    if ($newData['quantity'] == 0) {
         if ($maxIssuedQty > 0) {
             $_SESSION['toast'] = ['type'=>'danger', 'msg'=>'لا يمكن حذف المنتج، يوجد إذن صرف مرتبط، امسح إذن الصرف أولًا'];
         } else {
@@ -198,6 +181,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
 
             $_SESSION['toast'] = ['type'=>'success','msg'=>'تم تعديل الكمية بنجاح'];
         }
+
+    } elseif ($newData['quantity'] == $oldData['total_packages'] 
+        && $newData['single_quantity'] == $oldData['single_quantity'] 
+        && $newData['price'] == $oldData['price']
+        && $newData['unit'] == $oldData['unit']
+        && $newData['package'] == $oldData['package']
+        && $newData['payer_name'] == $oldData['payer_name']
+        && $newData['payment_source'] == $oldData['payment_source']) {
+        
+        // ✅ مفيش أي تغيير فعلي
+        $_SESSION['toast'] = ['type'=>'info','msg'=>'لم يتم أي تعديل لأن القيم لم تتغير'];
+        header('Location: ' . BASE_URL . '/purchases.php');
+        exit;
+
     } else {
         // زيادة على القديم
         /*$addedQty = $newData['quantity'] - $oldData['total_packages'];
