@@ -157,7 +157,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
             ->execute([
                 $newData['name'],
                 $unit_quantity,
-                $newPrintingQty,
+                $oldPrintingQty,
                 $newData['single_quantity'],
                 $newData['quantity'],
                 $newData['unit'],
@@ -266,7 +266,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
         ->execute([
             $newData['name'],
             $unit_quantity,
-            $newPrintingQty,
+            $oldPrintingQty,
             $newData['single_quantity'],
             $newData['quantity'],
             $newData['unit'],
