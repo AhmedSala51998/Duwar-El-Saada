@@ -102,42 +102,34 @@ $stocks = $pdo->query("
     position: relative;
 }
 
-/* إضافة نبض + توهج من كل الجهات */
-.stock-quantity::before {
+/* إضافة نبض / شعاع عند hover */
+.stock-quantity::after {
     content: '';
     position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 80px;
-    height: 80px;
-    background: rgba(255,255,255,0.5);
+    width: 100%;
+    height: 100%;
     border-radius: 50%;
-    transform: translate(-50%, -50%) scale(1);
-    filter: blur(10px);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
+    top: 0;
+    left: 0;
+    box-shadow: 0 0 0 rgba(255,255,255,0.7);
+    transition: all 0.6s ease-out;
 }
 
-.stock-quantity:hover::before {
-    opacity: 1;
-    animation: glowPulse 1s infinite;
+.stock-quantity:hover::after {
+    animation: pulse 1s infinite;
 }
 
-@keyframes glowPulse {
+@keyframes pulse {
     0% {
-        transform: translate(-50%, -50%) scale(1);
-        opacity: 0.7;
-        box-shadow: 0 0 20px 10px rgba(255,255,255,0.5);
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255,255,255,0.7);
     }
     50% {
-        transform: translate(-50%, -50%) scale(1.5);
-        opacity: 0.4;
-        box-shadow: 0 0 40px 20px rgba(255,255,255,0.3);
+        transform: scale(1.3);
+        box-shadow: 0 0 20px 10px rgba(255,255,255,0.3);
     }
     100% {
-        transform: translate(-50%, -50%) scale(1);
-        opacity: 0;
+        transform: scale(1);
         box-shadow: 0 0 0 0 rgba(255,255,255,0);
     }
 }
