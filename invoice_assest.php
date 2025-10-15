@@ -181,7 +181,7 @@ select#vatRate {
       <span id="vatRateText"><?= $vatRate == 0 ? '0%' : '15%' ?></span>
     </div>
     <div><strong>المجموع:</strong> <span id="totalNoVat"><?= number_format($subtotal,2) ?></span> ريال</div>
-    <div id="vatRow" <?= $vatRate == 0 ? 'style="display:none;"' : '' ?>><strong>الضريبة:</strong> <span id="vatValue"><?= number_format($vat,2) ?></span> ريال</div>
+    <div id="vatRow" <?= $vatRate == 0 ? 'style="display:none;"' : '' ?>><strong>الضريبة:</strong> <span id="vatValue"><?= number_format($asset['vat_value'],2) ?></span> ريال</div>
     <div id="grandRow" <?= $vatRate == 0 ? 'style="display:none;"' : '' ?>><strong>الإجمالي بعد الضريبة:</strong> <span id="grandTotal"><?= number_format($asset['total_amount'],2) ?></span> ريال</div>
   </div>
 </div>
@@ -195,30 +195,42 @@ function recalcTotals(saveToDB = false) {
 
   vatTextEl.textContent = vatRate === 0 ? '0%' : '15%';
 
-  // ✅ استخدام القيم الجاهزة من DOM/PHP
-  const totalNoVat = parseFloat(document.getElementById('totalNoVat').textContent.replace(/[^\d.-]/g, '')) || 0;
-  const vatValue   = parseFloat(document.getElementById('vatValue').textContent.replace(/[^\d.-]/g, '')) || 0;
-  const grandTotal = parseFloat(document.getElementById('grandTotal').textContent.replace(/[^\d.-]/g, '')) || 0;
+  // استخدم subtotal الأصلي من dataset
+  const tr = document.querySelector('#invoiceTable tbody tr');
+  const subtotal = parseFloat(tr.dataset.amount) || 0;
+  const vat = subtotal * vatRate;
+  const total = subtotal + vat;
 
+  // تحديث الجدول
+  tr.querySelector('.vat').textContent = vat.toFixed(2) + ' ريال';
+  tr.querySelector('.total').textContent = total.toFixed(2) + ' ريال';
+
+  // تحديث الملخص
+  document.getElementById('totalNoVat').textContent = subtotal.toFixed(2);
+  document.getElementById('vatValue').textContent = vat.toFixed(2);
+  document.getElementById('grandTotal').textContent = total.toFixed(2);
+
+  // التحكم بعرض الصفوف
   if (vatRate === 0) {
-    // عند 0%: إظهار grandTotal فقط
     document.getElementById('totalNoVat').parentElement.style.display = 'none';
     document.getElementById('vatRow').style.display = 'none';
     document.getElementById('grandRow').style.display = 'block';
   } else {
-    // عند 15%: إظهار الثلاث قيم
     document.getElementById('totalNoVat').parentElement.style.display = 'block';
     document.getElementById('vatRow').style.display = 'block';
     document.getElementById('grandRow').style.display = 'block';
   }
 
+  // حفظ في قاعدة البيانات
   if (saveToDB) {
     fetch('update_asset_vat', {
       method: 'POST',
       headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-      body: `id=${assetId}&vat_value=${vatRate > 0 ? vatValue : 0}&total_amount=${grandTotal}&has_vat=${vatRate > 0 ? 1 : 0}`
+      body: `id=${assetId}&vat_value=${vat}&total_amount=${total}&has_vat=${vatRate > 0 ? 1 : 0}`
     })
-    .then(res => res.text()).then(console.log).catch(console.error);
+    .then(res => res.text())
+    .then(console.log)
+    .catch(console.error);
   }
 }
 
