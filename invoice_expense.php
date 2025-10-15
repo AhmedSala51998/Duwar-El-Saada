@@ -199,7 +199,7 @@ function recalcTotals(saveToDB = false) {
 
   if (vatRate === 0) {
     // ✅ في حالة الضريبة صفر: استخدم القيم المخزنة (total_amount)
-    tr.querySelector('td:nth-child(5)').textContent = totalFromDB.toFixed(2) + ' ريال'; // الإجمالي قبل الضريبة
+    tr.querySelector('td:nth-child(4)').textContent = totalFromDB.toFixed(2) + ' ريال'; // الإجمالي قبل الضريبة
     tr.querySelector('.vat').textContent = '0.00 ريال';                                 // الضريبة
     tr.querySelector('.total').textContent = totalFromDB.toFixed(2) + ' ريال';          // الإجمالي بعد الضريبة
 
