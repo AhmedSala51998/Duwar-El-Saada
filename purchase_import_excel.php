@@ -127,7 +127,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
 
             // ✅ تطبيق منطق العهدة (نفس كود الإضافة اليدوية)
             if ($source === 'عهدة') {
-                $amountNeeded = $price * $quantity;
+                $amountNeeded = ($price * $quantity) + $vat_unit;
                 $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? AND amount > 0 ORDER BY taken_at ASC");
                 $stmtC->execute([$payer]);
                 $custodies = $stmtC->fetchAll(PDO::FETCH_ASSOC);

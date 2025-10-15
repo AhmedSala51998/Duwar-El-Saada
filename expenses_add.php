@@ -67,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
         $stmtC->execute([$payer_name]);
         $custodies = $stmtC->fetchAll(PDO::FETCH_ASSOC);
 
-        $amountToDeduct = $expense_amount;
+        $amountToDeduct = $expense_amount + $vat_value;
         foreach($custodies as $custody){
             if($amountToDeduct <= 0) break;
 

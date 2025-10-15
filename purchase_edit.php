@@ -118,9 +118,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
                 $unit_price = $newPrice / $newSingleQty;
             }
 
+            // حساب الضريبة والقيم النهائية
+            $vatRate = 0.15;
+            $unit_total = $unit_quantity * $unit_price;
+            $unit_vat = $unit_total * $vatRate;
+            $unit_all_total = $unit_total + $unit_vat;
+
+
             // خصم العهدة الجديدة إذا مصدر الدفع عهدة
             if ($newData['payment_source'] === 'عهدة') {
-                $amountNeeded = $newData['price'] * $newData['quantity'];
+                $amountNeeded = ($newData['price'] * $newData['quantity']) + $unit_vat;
                 $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? AND amount > 0 ORDER BY taken_at ASC");
                 $stmtC->execute([$newData['payer_name']]);
                 $custodies = $stmtC->fetchAll(PDO::FETCH_ASSOC);
@@ -148,12 +155,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
                     exit;
                 }
             }
-
-            // حساب الضريبة والقيم النهائية
-            $vatRate = 0.15;
-            $unit_total = $unit_quantity * $unit_price;
-            $unit_vat = $unit_total * $vatRate;
-            $unit_all_total = $unit_total + $unit_vat;
 
             // تحديث purchase
             $pdo->prepare("UPDATE purchases SET 
@@ -228,9 +229,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
             $unit_price = $newPrice / $newSingleQty;
         }
 
+        // حساب الضريبة والقيم النهائية
+        $vatRate = 0.15;
+        $unit_total = $unit_quantity * $unit_price;
+        $unit_vat = $unit_total * $vatRate;
+        $unit_all_total = $unit_total + $unit_vat;
+
         // خصم العهدة الجديدة إذا مصدر الدفع عهدة
         if ($newData['payment_source'] === 'عهدة') {
-            $amountNeeded = $newData['price'] * $newData['quantity'];
+            $amountNeeded = ($newData['price'] * $newData['quantity']) + $unit_vat;
             $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? AND amount > 0 ORDER BY taken_at ASC");
             $stmtC->execute([$newData['payer_name']]);
             $custodies = $stmtC->fetchAll(PDO::FETCH_ASSOC);
@@ -259,11 +266,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
             }
         }
 
-        // حساب الضريبة والقيم النهائية
-        $vatRate = 0.15;
-        $unit_total = $unit_quantity * $unit_price;
-        $unit_vat = $unit_total * $vatRate;
-        $unit_all_total = $unit_total + $unit_vat;
 
         // تحديث purchase
         $pdo->prepare("UPDATE purchases SET 

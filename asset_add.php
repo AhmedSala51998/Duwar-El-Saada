@@ -73,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
 
         // خصم العهدة إذا مصدر الدفع "عهدة"
         if($payment_source === 'عهدة'){
-            $amountToDeduct = $price * $quantity;
+            $amountToDeduct = ($price * $quantity) + $vat_value;
 
             // جلب كل العهد للشخص، الأقدم أولاً
             $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? ORDER BY taken_at ASC");

@@ -305,7 +305,7 @@ function recalcTotals(saveToDB = false) {
       });
 
       document.getElementById('vatValue').textContent = '0.00';
-      document.getElementById('grandTotal').textContent = subtotalAll.toLocaleString(undefined, {minimumFractionDigits:2});
+      document.getElementById('grandTotal').textContent = grandTotal.toLocaleString(undefined, {minimumFractionDigits:2});
     } else {
       // ✅ رجع الضريبة تاني واحسبها محليًا بدون رفرش
       document.querySelectorAll('#invoiceTable tbody tr').forEach(tr => {

@@ -11,8 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // ✅ لو الضريبة صفر
             $pdo->prepare("
                 UPDATE orders_purchases 
-                SET vat = 0, 
-                    all_total = (SELECT SUM(unit_total) FROM purchases WHERE order_id = ?)
+                SET vat = 0
                 WHERE id = ?
             ")->execute([$orderId, $orderId]);
 
@@ -54,9 +53,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // ✅ نحدث الفاتورة الرئيسية بناءً على القيم الحقيقية
             $pdo->prepare("
                 UPDATE orders_purchases 
-                SET vat = ?, all_total = ?
+                SET vat = ?
                 WHERE id = ?
-            ")->execute([$t['total_vat'], $t['total_all'], $orderId]);
+            ")->execute([$t['total_vat'], $orderId]);
         }
 
         echo "ok";
