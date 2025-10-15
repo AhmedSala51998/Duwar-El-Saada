@@ -3,6 +3,10 @@ require __DIR__.'/config/config.php';
 require_role(['admin','manager']);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? '')) {
+    if (!isset($_POST['save'])) {
+        header('Location: ' . BASE_URL . '/purchases.php');
+        exit;
+    }
     $id = (int)$_POST['id'];
 
     $old = $pdo->prepare("SELECT * FROM expenses WHERE id=?");

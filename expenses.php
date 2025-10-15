@@ -206,7 +206,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
         </div>
 
         <div class="modal-footer">
-          <button type="submit" class="btn btn-orange">حفظ</button>
+          <button name="save" type="submit" class="btn btn-orange">حفظ</button>
         </div>
       </form>
     </div>
@@ -320,7 +320,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
             <img id="preview-add" style="display:none;max-width:100px;margin-top:8px"/>
           </label>
         </div>
-        <div class="modal-footer"><button type="submit" class="btn btn-orange">حفظ</button></div>
+        <div class="modal-footer"><button name="save" type="submit" class="btn btn-orange">حفظ</button></div>
       </form>
     </div>
   </div>

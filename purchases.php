@@ -471,7 +471,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
         </div>
 
         <div class="modal-footer">
-          <button class="btn btn-orange">حفظ</button>
+          <button name="save" type="submit" class="btn btn-orange">حفظ</button>
         </div>
       </form>
     </div>
@@ -576,7 +576,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
         </div>
 
         <div class="modal-footer">
-          <button class="btn btn-orange"><i class="bi bi-check2-circle"></i> استيراد الأصناف</button>
+          <button name="save" type="submit" class="btn btn-orange"><i class="bi bi-check2-circle"></i> استيراد الأصناف</button>
         </div>
       </form>
     </div>

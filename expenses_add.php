@@ -4,6 +4,11 @@ require_role(['admin','manager']);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? '')) {
 
+    if (!isset($_POST['save'])) {
+        header('Location: ' . BASE_URL . '/purchases.php');
+        exit;
+    }
+
     $bill_number = trim($_POST['bill_number'] ?? '');
 
     if ($bill_number !== '') {

@@ -6,6 +6,11 @@ require_role(['admin','manager']);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? '')) {
 
+    if (!isset($_POST['save'])) {
+        header('Location: ' . BASE_URL . '/purchases.php');
+        exit;
+    }
+
     // التحقق من ملف الإكسل
     if (!isset($_FILES['excel_file']) || $_FILES['excel_file']['error'] !== UPLOAD_ERR_OK) {
         $_SESSION['toast'] = ['type'=>'danger','msg'=>'❌ لم يتم رفع ملف Excel بشكل صحيح'];
