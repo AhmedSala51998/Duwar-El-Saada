@@ -62,25 +62,14 @@ $options = ['بسام','فيصل المطيري','مؤسسة','شركة'];
   </div>
 </div>
 
-<?php
+<?php 
 $last_balance = 0; // الرصيد السابق
 $total_in = 0; 
 $total_out = 0; 
 
 foreach($rows as $r) {
-    // جلب الحركات المرتبطة بالعهدة
-    $transactions_stmt->execute([$r['id']]);
-    $transactions = $transactions_stmt->fetchAll();
-
-    // لو ما فيهاش حركة، نتخطاها
-    if(count($transactions) == 0) continue;
-
-    $in = (float)$r['main_amount'];     // الوارد
-    $out = $in - (float)$r['amount'];   // الصادر
-    if($out < 0) $out = 0;
-
-    $total_in += $in;
-    $total_out += $out;
+  $total_in += (float)$r['main_amount'];
+  $total_out += ((float)$r['main_amount'] - (float)$r['amount']);
 }
 $total_balance = $total_in - $total_out;
 ?>
@@ -115,13 +104,6 @@ $total_balance = $total_in - $total_out;
     <tbody>
     <?php
     foreach($rows as $r): 
-        // جلب الحركات المرتبطة بالعهدة
-        $transactions_stmt->execute([$r['id']]);
-        $transactions = $transactions_stmt->fetchAll();
-
-        // لو مفيش حركات، نتخطى هذه العهدة
-        if(count($transactions) == 0) continue;
-
         $in = (float)$r['main_amount'];  // الوارد
         $remain = (float)$r['amount'];   // المتبقي
         $out = $in - $remain;            // المصروف
@@ -146,23 +128,24 @@ $total_balance = $total_in - $total_out;
         </td>
     </tr>
 
-    <?php
-        // طباعة الحركات
-        $prev_balance = $current_balance; // نخزن رصيد العهدة قبل الحركات
-        foreach($transactions as $t):
-            $trans_amount = (float)$t['amount'];
+    <?php 
+    // الحركات المرتبطة بالعهدة
+    $transactions_stmt->execute([$r['id']]);
+    $transactions = $transactions_stmt->fetchAll();
+    foreach($transactions as $t):
+        $trans_amount = (float)$t['amount'];
 
-            // الرصيد بعد الحركة = الرصيد السابق - الصرف
-            //$current_balance = $prev_balance - $trans_amount;
+        // في حالتك الحركات هي صرف من العهدة => نطرح من الرصيد
+        //$current_balance -= $trans_amount;
 
-            // تحويل النوع للعربي
-            $type_ar = '';
-            switch($t['type']) {
-                case 'asset': $type_ar = 'أصول'; break;
-                case 'expense': $type_ar = 'مصروفات'; break;
-                case 'purchase': $type_ar = 'مشتريات'; break;
-                default: $type_ar = esc($t['type']); 
-            }
+        // تحويل النوع للعربي
+        $type_ar = '';
+        switch($t['type']) {
+            case 'asset': $type_ar = 'أصول'; break;
+            case 'expense': $type_ar = 'مصروفات'; break;
+            case 'purchase': $type_ar = 'مشتريات'; break;
+            default: $type_ar = esc($t['type']); 
+        }
     ?>
     <tr>
         <td></td>
@@ -176,10 +159,7 @@ $total_balance = $total_in - $total_out;
         <?php if($can_edit): ?><td></td><?php endif; ?>
     </tr>
 
-    <?php
-            $prev_balance = $current_balance; // تحديث الرصيد لكل حركة
-        endforeach; 
-    ?>
+    <?php endforeach; ?>
 
     <!-- تعديل -->
     <div class="modal fade" id="e<?= $r['id'] ?>">
