@@ -162,7 +162,7 @@ foreach($rows as $r):
   <td><?= esc($r['name']) ?></td>
   <td><?= esc($r['supplier_name']) ?></td>
   <td><?= esc($r['package']) ?></td>
-  <td><?= $r['total_packages'] ?></td>
+  <td><?= $r['quantity'] ?></td>
   <td><?= esc($r['unit']) ?></td>
   <td><?= number_format((float)$price, 7) ?></td>
   <td><?= number_format($before, 7) ?></td>
