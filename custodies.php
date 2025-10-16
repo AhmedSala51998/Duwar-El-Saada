@@ -103,28 +103,24 @@ $total_balance = $total_in - $total_out;
       $last_balance = 0; // الرصيد التراكمي من فوق
 
       foreach($rows as $r): 
-        $in = (float)$r['main_amount'];   // الوارد
-        $out = (float)$r['amount'];       // الصادر (المبلغ اللي اتسحب)
-        
-        // لو مفيش صرف خالص
-        if ($out <= 0) {
-          $out_display = 0;
-        } else {
-          $out_display = $out;
-        }
+        $in  = (float)$r['main_amount'];  // المبلغ الأصلي (الوارد)
+        $remain = (float)$r['amount'];    // المبلغ المتبقي بعد الصرف
+        $out = $in - $remain;             // الصادر = الفرق بين الأصلي والمتبقي
 
-        // احسب الرصيد: المبلغ المتبقي من الوارد + الرصيد السابق
-        $remaining_from_in = $in - $out_display;
-        $current_balance = $remaining_from_in + $last_balance;
+        // لو النتيجة سالبة (مافيش صرف)، خليه صفر
+        if ($out < 0) $out = 0;
 
-        // خزن الرصيد الحالي علشان الصف اللي بعده يبدأ منه
+        // الرصيد = المبلغ المتبقي + الرصيد السابق
+        $current_balance = $remain + $last_balance;
+
+        // خزِّن الرصيد الحالي للصف اللي بعده
         $last_balance = $current_balance;
       ?>
       <tr>
         <td><?= $r['id'] ?></td>
         <td><?= esc($r['person_name']) ?></td>
         <td><?= number_format($in, 2) ?></td>
-        <td><?= number_format($out_display, 2) ?></td>
+        <td><?= number_format($out, 2) ?></td>
         <td><?= number_format($current_balance, 2) ?></td>
         <td><?= esc($r['taken_at']) ?></td>
         <td><?= esc($r['notes']) ?></td>
