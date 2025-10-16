@@ -347,7 +347,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
 <div class="modal fade" id="addM">
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
-      <form method="post" action="purchase_add" enctype="multipart/form-data">
+      <form method="post" action="purchase_add.php" enctype="multipart/form-data">
         <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
 
         <div class="modal-header">
