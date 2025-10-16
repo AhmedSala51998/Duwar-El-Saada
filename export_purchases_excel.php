@@ -73,15 +73,18 @@ foreach ($rows as $r) {
     $quantity = (float)$r['quantity'];
     $price = (float)$r['price'];
     $total = $quantity * $price;
+    $price1 = $r['price'];
 
     // تحديد هل الفاتورة فيها ضريبة أم لا
     if (!empty($r['order_vat']) && $r['order_vat'] > 0) {
         $vat = $total * 0.15;
         $total_with_vat = $total + $vat;
+        $price1 = 0;
     } else {
         $vat = 0;
-        $total = $total + ($total * 0.15);
-        $total_with_vat = $total + ($total * 0.15);
+        $total = $r['unit_all_total'];;
+        $total_with_vat = $r['unit_all_total'];
+        $price1 = $r['price'] + ($r['price'] * 0.15);
     }
 
     $data[] = [
@@ -90,9 +93,9 @@ foreach ($rows as $r) {
         $r['name'],
         $r['supplier_name'],
         $r['package'],
-        $quantity,
+        $r['total_packages'],
         $r['unit'],
-        number_format($price, 7, '.', ''),
+        number_format($price1, 7, '.', ''),
         number_format($total, 7, '.', ''),
         number_format($vat, 7, '.', ''),
         number_format($total_with_vat, 7, '.', ''),
