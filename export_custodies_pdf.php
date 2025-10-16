@@ -37,7 +37,7 @@ if ($to_date) {
     $params[] = $to_date; 
 }
 
-$q .= " ORDER BY id DESC";
+$q .= " ORDER BY id ASC";
 
 $s = $pdo->prepare($q); 
 $s->execute($params); 
@@ -88,8 +88,9 @@ if ($date_type === 'today') {
 <tr>
   <th>#</th>
   <th>الشخص</th>
-  <th>المبلغ الأصلي</th>
-  <th>ميلغ الصرف \ الرصيد</th>
+  <th>الوارد</th>
+  <th>الصادر</th>
+  <th>الرصيد</th>
   <th>تاريخ الاستلام</th>
   <th>ملاحظات</th>
   <th>تاريخ الإضافة</th>
@@ -97,31 +98,44 @@ if ($date_type === 'today') {
 </thead>
 <tbody>
 <?php 
-$totalAmount = 0;
-$totalAmount1 = 0;
-foreach($rows as $r): 
-    $amount = (float)$r['main_amount'];
-    $totalAmount += $amount;
+$total_in = 0;
+$total_out = 0;
+$balance = 0;
 
-    $amount1 = (float)$r['amount'];
-    $totalAmount1 += $amount1;
+foreach($rows as $r): 
+    $in  = (float)$r['main_amount'];  // الوارد
+    $out = (float)$r['amount'];       // الصادر
+
+    // لو الصف فيه حركة
+    if ($in > 0 || $out > 0) {
+        $balance = $balance + $in - $out;
+        $current_balance = $balance;
+    } else {
+        $current_balance = 0; // مفيش حركة
+    }
+
+    $total_in  += $in;
+    $total_out += $out;
 ?>
 <tr>
   <td><?= $r['id'] ?></td>
   <td><?= htmlspecialchars($r['person_name']) ?></td>
-  <td><?= number_format($amount,2) ?></td>
-  <td><?= number_format($amount1,2) ?></td>
+  <td><?= number_format($in,2) ?></td>
+  <td><?= number_format($out,2) ?></td>
+  <td><?= number_format($current_balance,2) ?></td>
   <td><?= htmlspecialchars($r['taken_at']) ?></td>
   <td><?= htmlspecialchars($r['notes'] ?? '-') ?></td>
   <td><?= htmlspecialchars($r['created_at']) ?></td>
 </tr>
 <?php endforeach; ?>
 </tbody>
+
 <tfoot>
 <tr>
-  <td colspan="2">الإجمالي الكلي</td>
-  <td><?= number_format($totalAmount, 2) ?></td>
-  <td><?= number_format($totalAmount1, 2) ?></td>
+  <td colspan="2">الإجماليات</td>
+  <td><?= number_format($total_in, 2) ?></td>
+  <td><?= number_format($total_out, 2) ?></td>
+  <td><?= number_format($balance, 2) ?></td>
   <td colspan="3"></td>
 </tr>
 </tfoot>
