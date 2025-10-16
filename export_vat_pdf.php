@@ -194,6 +194,8 @@ renderSection("المصروفات", $expenses, ['الاسم','الإجمالي �
 renderSection("الأصول", $assets, ['الأصل','الكمية','النوع','الإجمالي قبل الضريبة','الضريبة','الإجمالي بعد'], $totalBefore,$totalVat,$totalAfter);
 ?>
 
+<?php if($totalVat != 0){ ?>
+
 <table style="margin-top:30px;font-weight:bold;background:#d4edda">
   <tr>
     <td>الإجمالي الكلي قبل الضريبة</td>
@@ -208,6 +210,17 @@ renderSection("الأصول", $assets, ['الأصل','الكمية','النوع'
     <td><?= number_format($totalAfter,3) ?></td>
   </tr>
 </table>
+
+<?php }else{ ?>
+    
+<table style="margin-top:30px;font-weight:bold;background:#d4edda">
+  <tr>
+    <td>الإجمالي الكلي</td>
+    <td><?= number_format($totalAfter,3) ?></td>
+  </tr>
+</table>
+
+<?php } ?>
 
 <script>
   window.print();
