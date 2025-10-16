@@ -60,11 +60,10 @@ $options = ['بسام','فيصل المطيري','مؤسسة','شركة'];
 </div>
 
 <?php 
-$balance = 0; 
+$last_balance = 0; // الرصيد السابق
 $total_in = 0; 
 $total_out = 0; 
 
-// نحسب الإجماليات قبل عرض الجدول
 foreach($rows as $r) {
   $total_in += (float)$r['main_amount'];
   $total_out += (float)$r['amount'];
@@ -74,7 +73,7 @@ $total_balance = $total_in - $total_out;
 
 <div class="table-responsive">
 <table class="table table-hover align-middle">
-  <thead>
+<thead>
     <!-- صف الإجماليات -->
     <tr class="fw-bold text-center">
       <th colspan="2" style="background:#f0f0f0;">الرصيد</th>
@@ -87,7 +86,7 @@ $total_balance = $total_in - $total_out;
       <th style="background:#fff3cd;"><?= number_format($total_in, 2) ?></th>
     </tr>
 
-    <!-- العناوين العادية -->
+    <!-- عناوين الأعمدة -->
     <tr class="table-light">
       <th>#</th>
       <th>اسم الشخص</th>
@@ -99,19 +98,26 @@ $total_balance = $total_in - $total_out;
       <?php if($can_edit): ?><th>عمليات</th><?php endif; ?>
     </tr>
   </thead>
-
   <tbody>
     <?php foreach($rows as $r): 
-      $in = (float)$r['main_amount']; 
-      $out = (float)$r['amount']; 
-      $balance += $in - $out; 
+      $in = (float)$r['main_amount'];
+      $out = (float)$r['amount'];
+      
+      // لو الصف فيه حركة (وارد أو صادر)
+      if($in > 0 || $out > 0) {
+        $last_balance = $last_balance + $in - $out;
+        $current_balance = $last_balance;
+      } else {
+        // مفيش حركة = خليه صفر
+        $current_balance = 0;
+      }
     ?>
     <tr>
       <td><?= $r['id'] ?></td>
       <td><?= esc($r['person_name']) ?></td>
       <td><?= number_format($in, 2) ?></td>
       <td><?= number_format($out, 2) ?></td>
-      <td><?= number_format($balance, 2) ?></td>
+      <td><?= number_format($current_balance, 2) ?></td>
       <td><?= esc($r['taken_at']) ?></td>
       <td><?= esc($r['notes']) ?></td>
       <?php if($can_edit): ?>
