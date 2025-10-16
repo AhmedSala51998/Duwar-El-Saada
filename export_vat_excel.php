@@ -123,7 +123,11 @@ foreach ($assets as $r) {
 
 // الإجماليات النهائية
 $data[] = [];
-$data[] = ["الإجماليات الكلية", "", "", round($totalBefore, 2), round($totalVat, 2), round($totalAfter, 2)];
+if($totalVat != 0){
+ $data[] = ["الإجماليات الكلية", "", "", round($totalBefore, 2), round($totalVat, 2), round($totalAfter, 2)];
+}else{
+ $data[] = ["الإجماليات الكلية", "", round($totalBefore, 2), round($totalAfter, 2)];
+}
 
 // ---------------------------- تحديد عنوان التقرير ----------------------------
 if ($date_type === 'today') {
