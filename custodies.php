@@ -30,7 +30,7 @@ if($kw!==''){
   $q.=" AND person_name LIKE ?"; 
   $ps[]="%$kw%"; 
 }
-$q.=" ORDER BY id DESC";
+$q.=" ORDER BY id ASC";
 $s=$pdo->prepare($q);
 $s->execute($ps);
 $rows=$s->fetchAll();
