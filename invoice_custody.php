@@ -132,7 +132,7 @@ if (!$custody) {
 
   <!-- الملخص -->
   <div class="invoice-summary">
-    <div><strong>الإجمالي:</strong> <?= number_format($custody['amount'], 2) ?> ريال</div>
+    <div><strong>الإجمالي:</strong> <?= number_format($custody['main_amount'], 2) ?> ريال</div>
     <div><strong>تاريخ الإدخال:</strong> <?= esc($custody['created_at']) ?></div>
   </div>
 </div>
