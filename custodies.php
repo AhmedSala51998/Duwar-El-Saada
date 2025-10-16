@@ -30,7 +30,7 @@ if($kw!==''){
   $q.=" AND person_name LIKE ?"; 
   $ps[]="%$kw%"; 
 }
-$q.=" ORDER BY id ASC";
+$q.=" ORDER BY id DESC";
 $s=$pdo->prepare($q);
 $s->execute($ps);
 $rows=$s->fetchAll();
@@ -59,13 +59,39 @@ $options = ['بسام','فيصل المطيري','مؤسسة','شركة'];
   </div>
 </div>
 
+<?php 
+$balance = 0; 
+$total_in = 0; 
+$total_out = 0; 
+
+// نحسب الإجماليات قبل عرض الجدول
+foreach($rows as $r) {
+  $total_in += (float)$r['main_amount'];
+  $total_out += (float)$r['amount'];
+}
+$total_balance = $total_in - $total_out;
+?>
+
 <div class="table-responsive">
 <table class="table table-hover align-middle">
-  <thead class="table-light">
-    <tr>
+  <thead>
+    <!-- صف الإجماليات -->
+    <tr class="fw-bold text-center">
+      <th colspan="2" style="background:#f0f0f0;">الرصيد</th>
+      <th style="background:#d4edda;">الصادر</th>
+      <th style="background:#fff3cd;">الوارد</th>
+    </tr>
+    <tr class="fw-bold text-center">
+      <th colspan="2" style="background:#e9ecef;"><?= number_format($total_balance, 2) ?></th>
+      <th style="background:#d4edda;"><?= number_format($total_out, 2) ?></th>
+      <th style="background:#fff3cd;"><?= number_format($total_in, 2) ?></th>
+    </tr>
+
+    <!-- العناوين العادية -->
+    <tr class="table-light">
       <th>#</th>
       <th>اسم الشخص</th>
-      <th>االوارد</th>
+      <th>الوارد</th>
       <th>الصادر</th>
       <th>الرصيد</th>
       <th>التاريخ</th>
@@ -73,14 +99,12 @@ $options = ['بسام','فيصل المطيري','مؤسسة','شركة'];
       <?php if($can_edit): ?><th>عمليات</th><?php endif; ?>
     </tr>
   </thead>
-  <tbody>
-    <?php 
-    $balance = 0; // رصيد ابتدائي
 
-    foreach($rows as $r): 
-      $in = (float)$r['main_amount']; // الوارد
-      $out = (float)$r['amount']; // الصادر
-      $balance += $in - $out; // نحسب الرصيد التراكمي
+  <tbody>
+    <?php foreach($rows as $r): 
+      $in = (float)$r['main_amount']; 
+      $out = (float)$r['amount']; 
+      $balance += $in - $out; 
     ?>
     <tr>
       <td><?= $r['id'] ?></td>
