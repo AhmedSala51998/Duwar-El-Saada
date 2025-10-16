@@ -41,13 +41,13 @@ $s = $pdo->prepare($q);
 $s->execute($params);
 $rows = $s->fetchAll(PDO::FETCH_ASSOC);
 
-// إعداد استعلام الحركات
+// استعلام الحركات
 $transactions_stmt = $pdo->prepare("SELECT * FROM custody_transactions WHERE custody_id=? ORDER BY created_at ASC");
 
 $data = [];
 $data[] = ["ID", "الشخص", "الوارد", "الصادر", "الرصيد", "تاريخ الاستلام", "ملاحظات", "تاريخ الإضافة"];
 
-$balance = 0;
+$last_balance = 0;
 $total_in = 0;
 $total_out = 0;
 
@@ -56,15 +56,17 @@ foreach ($rows as $r) {
     $transactions_stmt->execute([$r['id']]);
     $transactions = $transactions_stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // لو مفيش حركات، نتخطى هذه العهدة
+    // نتخطى العهد اللي ما عليهاش حركة
     if (count($transactions) == 0) continue;
 
-    $in  = (float)$r['main_amount'];
-    $out = $in - (float)$r['amount'];
+    $in = (float)$r['main_amount'];
+    $remain = (float)$r['amount'];
+    $out = $in - $remain;
     if ($out < 0) $out = 0;
 
-    $balance += $in - $out; // تحديث الرصيد التراكمي
-    $current_balance = $balance;
+    // الرصيد التراكمي
+    $current_balance = $last_balance + $in - $out;
+    $last_balance = $current_balance;
 
     $data[] = [
         $r['id'],
@@ -77,17 +79,42 @@ foreach ($rows as $r) {
         $r['created_at']
     ];
 
-    $total_in  += $in;
+    $total_in += $in;
     $total_out += $out;
+
+    // إضافة الحركات تحت كل عهدة
+    foreach ($transactions as $t) {
+        $trans_amount = (float)$t['amount'];
+
+        // تحويل النوع للعربي
+        $type_ar = '';
+        switch($t['type']) {
+            case 'asset': $type_ar = 'أصول'; break;
+            case 'expense': $type_ar = 'مصروفات'; break;
+            case 'purchase': $type_ar = 'مشتريات'; break;
+            default: $type_ar = $t['type'];
+        }
+
+        $data[] = [
+            '',                // ID فارغ للحركة
+            "-- $type_ar",     // اسم الحركة
+            '',                // الوارد فارغ
+            number_format($trans_amount,2), // الصادر
+            number_format($current_balance,2), // الرصيد
+            $t['created_at'],
+            $t['notes'] ?? '',
+            'حركة'
+        ];
+    }
 }
 
-// صف الإجماليات
+// إضافة صف الإجماليات
 $data[] = [
     '',
     'الإجمالي الكلي',
     number_format($total_in, 2),
     number_format($total_out, 2),
-    number_format($balance, 2),
+    number_format($last_balance, 2),
     '',
     '',
     ''
