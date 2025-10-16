@@ -19,16 +19,13 @@ if ($date_type === 'today') {
     $from_date = $to_date = $yesterday;
 }
 
-// بناء الاستعلام
+// استعلام العهد
 $q = "SELECT id, person_name, main_amount, amount, taken_at, notes, created_at FROM custodies WHERE 1";
 
-// فلترة بالكلمة المفتاحية
 if ($kw !== '') {
     $q .= " AND person_name LIKE ?";
     $params[] = "%$kw%";
 }
-
-// فلترة بالتواريخ
 if ($from_date !== '') {
     $q .= " AND DATE(created_at) >= ?";
     $params[] = $from_date;
@@ -40,29 +37,31 @@ if ($to_date !== '') {
 
 $q .= " ORDER BY id ASC";
 
-// تنفيذ الاستعلام
 $s = $pdo->prepare($q);
 $s->execute($params);
 $rows = $s->fetchAll(PDO::FETCH_ASSOC);
 
-// تجهيز البيانات للتصدير
+// إعداد استعلام الحركات
+$transactions_stmt = $pdo->prepare("SELECT * FROM custody_transactions WHERE custody_id=? ORDER BY created_at ASC");
+
 $data = [];
 $data[] = ["ID", "الشخص", "الوارد", "الصادر", "الرصيد", "تاريخ الاستلام", "ملاحظات", "تاريخ الإضافة"];
 
-$balance = 0; // الرصيد السابق
+$balance = 0;
+$total_in = 0;
+$total_out = 0;
 
 foreach ($rows as $r) {
     // جلب الحركات المرتبطة بالعهدة
-    $transactions_stmt = $pdo->prepare("SELECT * FROM custody_transactions WHERE custody_id=?");
     $transactions_stmt->execute([$r['id']]);
     $transactions = $transactions_stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // لو مفيش حركات، نتخطى هذه العهدة
-    if(count($transactions) == 0) continue;
+    if (count($transactions) == 0) continue;
 
-    $in  = (float)$r['main_amount']; // الوارد
-    $out = $in - (float)$r['amount']; // الصادر
-    if($out < 0) $out = 0;
+    $in  = (float)$r['main_amount'];
+    $out = $in - (float)$r['amount'];
+    if ($out < 0) $out = 0;
 
     $balance += $in - $out; // تحديث الرصيد التراكمي
     $current_balance = $balance;
@@ -77,22 +76,12 @@ foreach ($rows as $r) {
         $r['notes'] ?? '-',
         $r['created_at']
     ];
-}
 
-// حساب الإجماليات فقط للعهد اللي عليها حركات
-$total_in = 0;
-$total_out = 0;
-foreach ($rows as $r) {
-    $transactions_stmt->execute([$r['id']]);
-    $transactions = $transactions_stmt->fetchAll(PDO::FETCH_ASSOC);
-    if(count($transactions) == 0) continue;
-    $in = (float)$r['main_amount'];
-    $out = $in - (float)$r['amount'];
-    if($out < 0) $out = 0;
-    $total_in += $in;
+    $total_in  += $in;
     $total_out += $out;
 }
 
+// صف الإجماليات
 $data[] = [
     '',
     'الإجمالي الكلي',
