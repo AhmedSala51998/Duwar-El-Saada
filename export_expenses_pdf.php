@@ -114,7 +114,8 @@ $totalBefore = $totalVat = $totalAfter = 0;
 foreach($rows as $r): 
     $before = (float)$r['expense_amount'];
     $vat = (!empty($r['has_vat']) && $r['has_vat'] == 1) ? (float)$r['vat_value'] : 0;
-    $after = (!empty($r['has_vat']) && $r['has_vat'] == 1) ? (float)$r['total_amount'] : $before;
+    $after = (!empty($r['has_vat']) && $r['has_vat'] == 1) ? (float)$r['total_amount'] : (float)$r['total_amount'];
+    $before = (!empty($r['has_vat']) && $r['has_vat'] == 1) ? $before : (float)$r['total_amount'];
 
     $totalBefore += $before;
     $totalVat += $vat;
@@ -136,6 +137,7 @@ foreach($rows as $r):
 <?php endforeach; ?>
 </tbody>
 <tfoot>
+<?php if((!empty($r['has_vat']) && $r['has_vat'] == 1)){ ?>    
 <tr>
 <td colspan="4">الإجماليات الكلية</td>
  <td><?= number_format($totalBefore, 4) ?></td>
@@ -143,6 +145,15 @@ foreach($rows as $r):
  <td><?= number_format($totalAfter, 4) ?></td>
 <td colspan="4"></td>
 </tr>
+<?php }else{ ?>   
+<tr>
+<td colspan="4">الإجماليات الكلية</td>
+ <td><?= number_format($totalBefore, 4) ?></td>
+ <td>------</td>
+ <td><?= number_format($totalAfter, 4) ?></td>
+<td colspan="4"></td>
+</tr>
+<?php } ?>   
 </tfoot>
 </table>
 

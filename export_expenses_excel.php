@@ -60,7 +60,8 @@ $data = [[
 foreach ($rows as $r) {
     $before = (float)$r['expense_amount'];
     $vat    = (!empty($r['has_vat']) && $r['has_vat'] == 1) ? (float)$r['vat_value'] : 0;
-    $after  = (!empty($r['has_vat']) && $r['has_vat'] == 1) ? (float)$r['total_amount'] : $before;
+    $after  = (!empty($r['has_vat']) && $r['has_vat'] == 1) ? (float)$r['total_amount'] : (float)$r['total_amount'];
+    $before  = (!empty($r['has_vat']) && $r['has_vat'] == 1) ? $before : (float)$r['total_amount'];
 
     // معالجة القيم لو كانت "أخرى" أو فارغة
     $main = $r['main_expense'] ?: '-';
