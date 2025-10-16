@@ -19,7 +19,7 @@ if ($date_type === 'today') {
 }
 
 // بناء الاستعلام
-$q = "SELECT id, person_name, main_amount, taken_at, notes, created_at FROM custodies WHERE 1";
+$q = "SELECT id, person_name, main_amount,amount, taken_at, notes, created_at FROM custodies WHERE 1";
 
 // فلترة بالكلمة المفتاحية
 if ($kw !== '') { 
@@ -88,7 +88,8 @@ if ($date_type === 'today') {
 <tr>
   <th>#</th>
   <th>الشخص</th>
-  <th>المبلغ</th>
+  <th>المبلغ الأصلي</th>
+  <th>ميلغ الصرف \ الرصيد</th>
   <th>تاريخ الاستلام</th>
   <th>ملاحظات</th>
   <th>تاريخ الإضافة</th>
@@ -97,14 +98,19 @@ if ($date_type === 'today') {
 <tbody>
 <?php 
 $totalAmount = 0;
+$totalAmount1 = 0;
 foreach($rows as $r): 
     $amount = (float)$r['main_amount'];
     $totalAmount += $amount;
+
+    $amount1 = (float)$r['amount'];
+    $totalAmount1 += $amount1;
 ?>
 <tr>
   <td><?= $r['id'] ?></td>
   <td><?= htmlspecialchars($r['person_name']) ?></td>
   <td><?= number_format($amount,2) ?></td>
+  <td><?= number_format($amount1,2) ?></td>
   <td><?= htmlspecialchars($r['taken_at']) ?></td>
   <td><?= htmlspecialchars($r['notes'] ?? '-') ?></td>
   <td><?= htmlspecialchars($r['created_at']) ?></td>
@@ -115,6 +121,7 @@ foreach($rows as $r):
 <tr>
   <td colspan="2">الإجمالي الكلي</td>
   <td><?= number_format($totalAmount, 2) ?></td>
+  <td><?= number_format($totalAmount1, 2) ?></td>
   <td colspan="3"></td>
 </tr>
 </tfoot>
