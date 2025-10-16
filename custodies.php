@@ -153,7 +153,7 @@ $total_balance = $total_in - $total_out;
             $trans_amount = (float)$t['amount'];
 
             // الرصيد بعد الحركة = الرصيد السابق - الصرف
-            $current_balance = $prev_balance - $trans_amount;
+            //$current_balance = $prev_balance - $trans_amount;
 
             // تحويل النوع للعربي
             $type_ar = '';
