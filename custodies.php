@@ -65,7 +65,8 @@ $options = ['بسام','فيصل المطيري','مؤسسة','شركة'];
     <tr>
       <th>#</th>
       <th>اسم الشخص</th>
-      <th>المبلغ</th>
+      <th>المبلغ الأصلي</th>
+      <th>مبلغ الصرف</th>
       <th>التاريخ</th>
       <th>ملاحظات</th>
       <?php if($can_edit): ?><th>عمليات</th><?php endif; ?>
@@ -76,6 +77,7 @@ $options = ['بسام','فيصل المطيري','مؤسسة','شركة'];
     <tr>
       <td><?= $r['id'] ?></td>
       <td><?= esc($r['person_name']) ?></td>
+      <td><?= number_format((float)$r['main_amount'],2) ?></td>
       <td><?= number_format((float)$r['amount'],2) ?></td>
       <td><?= esc($r['taken_at']) ?></td>
       <td><?= esc($r['notes']) ?></td>

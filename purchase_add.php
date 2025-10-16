@@ -105,7 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
 
         // خصم من العهدة لو كانت وسيلة الدفع "عهدة"
         if ($payment_source === 'عهدة') {
-            $amountNeeded = $alltotal_unit;
+            $amountNeeded = ($price * $quantity) + $vat_unit;
 
             // جلب كل العهد المتاحة للشخص بالترتيب من الأقدم للأحدث
             $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? AND amount > 0 ORDER BY taken_at ASC");

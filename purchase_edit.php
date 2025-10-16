@@ -127,7 +127,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
 
             // خصم العهدة الجديدة إذا مصدر الدفع عهدة
             if ($newData['payment_source'] === 'عهدة') {
-                $amountNeeded = $unit_all_total;
+                $amountNeeded = ($newData['price'] * $newData['quantity']) + $unit_vat;
                 $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? AND amount > 0 ORDER BY taken_at ASC");
                 $stmtC->execute([$newData['payer_name']]);
                 $custodies = $stmtC->fetchAll(PDO::FETCH_ASSOC);
