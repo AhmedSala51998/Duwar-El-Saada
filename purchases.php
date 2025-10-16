@@ -287,7 +287,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
 
                   <div class="col-md-6">
                     <label class="form-label">مصدر الدفع</label>
-                    <select name="payment_source" class="form-select" id="payment_source_<?= $r['id'] ?>">
+                    <select name="payment_source" class="form-select payment-source-select" id="payment_source_<?= $r['id'] ?>">
                       <option hidden>اختر مصدر الدفع</option>
                       <option value="مالك" <?= $r['payment_source']=='مالك'?'selected':'' ?>>مالك</option>
                       <option value="كاش" <?= $r['payment_source']=='كاش'?'selected':'' ?>>كاش</option>
