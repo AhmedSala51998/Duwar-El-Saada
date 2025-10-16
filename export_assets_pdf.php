@@ -116,13 +116,17 @@ $totalBefore = $totalVat = $totalAfter = 0;
     $quantity = (float)$r['quantity'];
     $price = (float)$r['price'];
     $total = $quantity * $price;
+    $price1 = 0;
 
     if(!empty($r['has_vat']) && $r['has_vat'] == 1){
         $vat = $total * 0.15;
         $total_with_vat = $total + $vat;
+        $price1 = $r['price'];
     } else {
         $vat = 0;
-        $total_with_vat = $total;
+        $total_with_vat = $r['total_amount'];
+        $total = $r['total_amount'];
+        $price1 = $r['price'] + ($r['price'] * 0.15);
     }
 
     $totalBefore += $total;
@@ -134,7 +138,7 @@ $totalBefore = $totalVat = $totalAfter = 0;
   <td><?= htmlspecialchars($r['name']) ?></td>
   <td><?= htmlspecialchars($r['type']) ?></td>
   <td><?= $quantity ?></td>
-  <td><?= number_format($price, 7) ?></td>
+  <td><?= number_format($price1, 7) ?></td>
   <td><?= number_format($total, 7) ?></td>
   <td><?= number_format($vat, 7) ?></td>
   <td><?= number_format($total_with_vat, 7) ?></td>
@@ -146,6 +150,7 @@ $totalBefore = $totalVat = $totalAfter = 0;
 </tbody>
 
 <tfoot>
+<?php if(!empty($r['has_vat']) && $r['has_vat'] == 1){ ?>   
 <tr style="font-weight:bold;background:#f1f1f1">
   <td colspan="5">الإجماليات الكلية</td>
   <td><?= number_format($totalBefore, 4) ?></td>
@@ -153,6 +158,15 @@ $totalBefore = $totalVat = $totalAfter = 0;
   <td><?= number_format($totalAfter, 4) ?></td>
   <td colspan="3"></td>
 </tr>
+<?php }else{ ?>
+  <tr style="font-weight:bold;background:#f1f1f1">
+  <td colspan="5">الإجماليات الكلية</td>
+  <td><?= number_format($totalBefore, 4) ?></td>
+  <td>----</td>
+  <td><?= number_format($totalAfter, 4) ?></td>
+  <td colspan="3"></td>
+</tr>
+<?php } ?>   
 </tfoot>
 </table>
 

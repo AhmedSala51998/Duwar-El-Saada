@@ -52,13 +52,17 @@ foreach ($rows as $r) {
     $quantity = (float)$r['quantity'];
     $price = (float)$r['price'];
     $total = $quantity * $price;
+    $price1 = 0;
 
     if (!empty($r['has_vat']) && $r['has_vat'] == 1) {
         $vat = $total * 0.15;
         $total_with_vat = $total + $vat;
+        $price1 = $r['price'];
     } else {
         $vat = 0;
-        $total_with_vat = $total;
+        $total_with_vat = $r['total_amount'];
+        $total = $r['total_amount'];
+        $price1 = $r['price'] + ($r['price'] * 0.15);
     }
 
     $data[] = [
@@ -66,7 +70,7 @@ foreach ($rows as $r) {
         $r['name'],
         $r['type'],
         $quantity,
-        $price,
+        $price1,
         $total,
         $vat,
         $total_with_vat,
