@@ -102,7 +102,7 @@ $total_balance = $total_in - $total_out;
     </tr>
     </thead>
     <tbody>
-      <?php 
+      <?php
       foreach($rows as $r): 
           $in = (float)$r['main_amount'];  // الوارد
           $remain = (float)$r['amount'];  // المبلغ المتبقي
@@ -119,7 +119,11 @@ $total_balance = $total_in - $total_out;
           <td><?= number_format($current_balance,2) ?></td>
           <td><?= esc($r['taken_at']) ?></td>
           <td><?= esc($r['notes']) ?></td>
-          <td>عهدة</td>
+          <td>
+            <a class="btn btn-sm btn-outline-primary" href="invoice_custody?id=<?= $r['id'] ?>"><i class="bi bi-printer"></i></a>
+            <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#e<?= $r['id'] ?>"><i class="bi bi-pencil"></i></button>
+            <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#del<?= $r['id'] ?>"><i class="bi bi-trash"></i></button>
+          </td>
       </tr>
 
       <?php 
@@ -127,20 +131,30 @@ $total_balance = $total_in - $total_out;
       $transactions_stmt->execute([$r['id']]);
       $transactions = $transactions_stmt->fetchAll();
       foreach($transactions as $t):
-          $trans_amount = (float)$t['amount'];
-          // الرصيد بعد الحركة
-          $current_balance += $trans_amount;  
-      ?>
-      <tr>
-          <td></td>
-          <td>-- <?= esc($t['type']) ?></td>
-          <td><?= $t['type']=='in' ? number_format($trans_amount,2) : '' ?></td>
-          <td><?= $t['type']=='out' ? number_format($trans_amount,2) : '' ?></td>
-          <td><?= number_format($current_balance,2) ?></td>
-          <td><?= esc($t['created_at']) ?></td>
-          <td></td>
-          <td>حركة</td>
-      </tr>
+        $trans_amount = (float)$t['amount'];
+        $current_balance += $trans_amount;  // كل حركة تزيد الرصيد
+
+        // تحويل النوع للعربي
+        $type_ar = '';
+        switch($t['type']) {
+            case 'asset': $type_ar = 'أصول'; break;
+            case 'expense': $type_ar = 'مصروفات'; break;
+            case 'purchase': $type_ar = 'مشتريات'; break;
+            default: $type_ar = esc($t['type']); 
+        }
+        ?>
+        <tr>
+            <td></td>
+            <td>-- <?= $type_ar ?></td> <!-- النوع بالعربي -->
+            <td><?= number_format($trans_amount,2) ?></td> <!-- الوارد -->
+            <td></td> <!-- الصادر فاضي -->
+            <td><?= number_format($current_balance,2) ?></td>
+            <td><?= esc($t['created_at']) ?></td>
+            <td><?= esc($t['notes'] ?? '') ?></td>
+            <td>حركة</td> <!-- النوع العام للحركة -->
+            <?php if($can_edit): ?><td></td><?php endif; ?>
+        </tr>
+
       <?php endforeach; ?>
 
     <!-- تعديل -->
