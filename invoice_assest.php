@@ -220,9 +220,9 @@ function recalcTotals(saveToDB = false) {
 
     // الملخص
     document.getElementById('totalNoVat').textContent = totalFromDB.toFixed(2);
-    document.getElementById('totalNoVat').parentElement.style.display = 'none'; // يمكن اخفاؤه حسب التصميم
+    document.getElementById('totalNoVat').parentElement.style.display = 'block'; // يمكن اخفاؤه حسب التصميم
     document.getElementById('vatRow').style.display = 'none';
-    document.getElementById('grandRow').style.display = 'block';
+    document.getElementById('grandRow').style.display = 'none';
   } else {
     // 15%: حساب القيم الطبيعية
     const vat = subtotal * vatRate;
