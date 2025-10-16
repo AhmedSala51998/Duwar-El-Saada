@@ -18,9 +18,8 @@ if ($date_type === 'today') {
     $from_date = $to_date = $yesterday;
 }
 
-// جلب العهد
-$q = "SELECT id, person_name, main_amount,amount, taken_at, notes, created_at 
-      FROM custodies WHERE 1";
+// بناء الاستعلام
+$q = "SELECT id, person_name, main_amount, amount, taken_at, notes, created_at FROM custodies WHERE 1";
 
 // فلترة بالكلمة المفتاحية
 if ($kw !== '') { 
@@ -42,12 +41,8 @@ $q .= " ORDER BY id ASC";
 
 $s = $pdo->prepare($q); 
 $s->execute($params); 
-$rows = $s->fetchAll();
-
-// جلب الحركات
-$transactions_stmt = $pdo->prepare("SELECT * FROM custody_transactions WHERE custody_id=? ORDER BY created_at ASC");
+$rows = $s->fetchAll(PDO::FETCH_ASSOC);
 ?>
-
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
@@ -108,17 +103,26 @@ $total_out = 0;
 $balance = 0;
 
 foreach($rows as $r): 
-    $in  = (float)$r['main_amount'];      // الوارد
-    $out = $in - (float)$r['amount'];     // الصادر الأساسي
+
+    // جلب الحركات المرتبطة بالعهدة
+    $transactions_stmt = $pdo->prepare("SELECT * FROM custody_transactions WHERE custody_id=?");
+    $transactions_stmt->execute([$r['id']]);
+    $transactions = $transactions_stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // لو مفيش حركة، نتخطى هذه العهدة
+    if(count($transactions) == 0) continue;
+
+    $in  = (float)$r['main_amount'];  // الوارد
+    $out = $in - (float)$r['amount']; // الصادر (ما تم صرفه)
     if($out < 0) $out = 0;
 
-    $balance += $in - $out;               // الرصيد بعد العهدة
+    $balance += $in - $out;           // الرصيد التراكمي
     $current_balance = $balance;
 
     $total_in  += $in;
     $total_out += $out;
 ?>
-<tr style="background:#d0f0ff">
+<tr>
   <td><?= $r['id'] ?></td>
   <td><?= htmlspecialchars($r['person_name']) ?></td>
   <td><?= number_format($in,2) ?></td>
@@ -128,40 +132,6 @@ foreach($rows as $r):
   <td><?= htmlspecialchars($r['notes'] ?? '-') ?></td>
   <td><?= htmlspecialchars($r['created_at']) ?></td>
 </tr>
-
-<?php 
-// الحركات المرتبطة بالعهدة
-$transactions_stmt->execute([$r['id']]);
-$transactions = $transactions_stmt->fetchAll();
-foreach($transactions as $t):
-    $trans_amount = (float)$t['amount'];
-
-    // الرصيد بعد الحركة
-    $balance -= $trans_amount;
-    //$current_balance = $balance;
-
-    // تحويل النوع للعربي
-    $type_ar = '';
-    switch($t['type']) {
-        case 'asset': $type_ar = 'أصول'; break;
-        case 'expense': $type_ar = 'مصروفات'; break;
-        case 'purchase': $type_ar = 'مشتريات'; break;
-        default: $type_ar = htmlspecialchars($t['type']); 
-    }
-
-    $total_out += $trans_amount;
-?>
-<tr>
-  <td></td>
-  <td>-- <?= $type_ar ?></td>
-  <td></td>
-  <td><?= number_format($trans_amount,2) ?></td>
-  <td><?= number_format($current_balance,2) ?></td>
-  <td><?= htmlspecialchars($t['created_at']) ?></td>
-  <td><?= htmlspecialchars($t['notes'] ?? '-') ?></td>
-  <td>حركة</td>
-</tr>
-<?php endforeach; ?>
 <?php endforeach; ?>
 </tbody>
 

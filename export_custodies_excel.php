@@ -46,22 +46,26 @@ $s->execute($params);
 $rows = $s->fetchAll(PDO::FETCH_ASSOC);
 
 // تجهيز البيانات للتصدير
-// تجهيز البيانات للتصدير
 $data = [];
 $data[] = ["ID", "الشخص", "الوارد", "الصادر", "الرصيد", "تاريخ الاستلام", "ملاحظات", "تاريخ الإضافة"];
 
 $balance = 0; // الرصيد السابق
 
 foreach ($rows as $r) {
-    $in  = (float)$r['main_amount']; // الوارد
-    $out = (float)$r['amount'];      // الصادر
+    // جلب الحركات المرتبطة بالعهدة
+    $transactions_stmt = $pdo->prepare("SELECT * FROM custody_transactions WHERE custody_id=?");
+    $transactions_stmt->execute([$r['id']]);
+    $transactions = $transactions_stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    if ($in > 0 || $out > 0) {
-        $balance = $balance + $in - $out; // لو في حركة نحسب الرصيد
-        $current_balance = $balance;
-    } else {
-        $current_balance = 0; // مفيش حركة
-    }
+    // لو مفيش حركات، نتخطى هذه العهدة
+    if(count($transactions) == 0) continue;
+
+    $in  = (float)$r['main_amount']; // الوارد
+    $out = $in - (float)$r['amount']; // الصادر
+    if($out < 0) $out = 0;
+
+    $balance += $in - $out; // تحديث الرصيد التراكمي
+    $current_balance = $balance;
 
     $data[] = [
         $r['id'],
@@ -75,9 +79,19 @@ foreach ($rows as $r) {
     ];
 }
 
-// صف الإجماليات في النهاية
-$total_in  = array_sum(array_column($rows, 'main_amount'));
-$total_out = array_sum(array_column($rows, 'amount'));
+// حساب الإجماليات فقط للعهد اللي عليها حركات
+$total_in = 0;
+$total_out = 0;
+foreach ($rows as $r) {
+    $transactions_stmt->execute([$r['id']]);
+    $transactions = $transactions_stmt->fetchAll(PDO::FETCH_ASSOC);
+    if(count($transactions) == 0) continue;
+    $in = (float)$r['main_amount'];
+    $out = $in - (float)$r['amount'];
+    if($out < 0) $out = 0;
+    $total_in += $in;
+    $total_out += $out;
+}
 
 $data[] = [
     '',
@@ -93,5 +107,4 @@ $data[] = [
 // إنشاء ملف Excel وتنزيله
 $xlsx = Shuchkin\SimpleXLSXGen::fromArray($data);
 $xlsx->downloadAs('custodies.xlsx');
-
 ?>
