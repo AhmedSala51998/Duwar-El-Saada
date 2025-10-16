@@ -205,9 +205,9 @@ function recalcTotals(saveToDB = false) {
 
     // ✅ الملخص
     document.getElementById('totalNoVat').textContent = totalAmountDB.toFixed(2);
-    document.getElementById('totalNoVat').parentElement.style.display = 'none';
+    document.getElementById('totalNoVat').parentElement.style.display = 'block';
     document.getElementById('vatRow').style.display = 'none';
-    document.getElementById('grandRow').style.display = 'block';
+    document.getElementById('grandRow').style.display = 'none';
   } else {
     // ✅ في حالة 15%: استخدم expense_amount
     const vat = expenseAmount * vatRate;
