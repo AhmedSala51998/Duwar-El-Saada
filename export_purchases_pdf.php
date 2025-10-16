@@ -134,6 +134,7 @@ th, td {
 <tbody>
 <?php 
 $totalBefore = $totalVat = $totalAfter = 0;
+$price = 0;
 
 foreach($rows as $r): 
   $before = $r['quantity'] * $r['price'];
@@ -142,11 +143,13 @@ foreach($rows as $r):
   if (!empty($r['order_vat']) && $r['order_vat'] > 0) {
       $vat  = $before * 0.15;
       $after = $before + $vat;
+      $price = $r['price'];
   } else {
       // مافيش ضريبة على الفاتورة، نخلي الضريبة صفر
       $vat = 0;
-      $before = $before + ($before * 0.15);
-      $after =  $before = $before + ($before * 0.15);
+      $before = $r['unit_all_total'];
+      $after =  $r['unit_all_total'];
+      $price = $r['price'] + ($r['price'] * 0.15);
   }
 
   $totalBefore += $before;
@@ -161,7 +164,7 @@ foreach($rows as $r):
   <td><?= esc($r['package']) ?></td>
   <td><?= $r['quantity'] ?></td>
   <td><?= esc($r['unit']) ?></td>
-  <td><?= number_format((float)$r['price'], 7) ?></td>
+  <td><?= number_format((float)$price, 7) ?></td>
   <td><?= number_format($before, 7) ?></td>
   <td><?= number_format($vat, 7) ?></td>
   <td><?= number_format($after, 7) ?></td>
@@ -172,6 +175,7 @@ foreach($rows as $r):
 <?php endforeach; ?>
 </tbody>
 <tfoot>
+<?php if($totalVat != 0){ ?>
 <tr>
   <td colspan="8">الإجماليات الكلية</td>
   <td><?= number_format($totalBefore, 4) ?></td>
@@ -179,6 +183,15 @@ foreach($rows as $r):
   <td><?= number_format($totalAfter, 4) ?></td>
   <td colspan="3"></td>
 </tr>
+<?php }else{ ?>
+  <tr>
+    <td colspan="8">الإجماليات الكلية</td>
+    <td><?= number_format($totalBefore, 4) ?></td>
+    <td>-----</td>
+    <td><?= number_format($totalAfter, 4) ?></td>
+  <td colspan="3"></td>
+</tr>
+<?php } ?>
 </tfoot>
 </table>
 
