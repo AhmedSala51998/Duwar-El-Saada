@@ -20,7 +20,7 @@ if ($date_type === 'today') {
 }
 
 // بناء الاستعلام
-$q = "SELECT id, person_name, amount, taken_at, notes, created_at FROM custodies WHERE 1";
+$q = "SELECT id, person_name, main_amount, taken_at, notes, created_at FROM custodies WHERE 1";
 
 // فلترة بالكلمة المفتاحية
 if ($kw !== '') {
@@ -53,7 +53,7 @@ foreach ($rows as $r) {
     $data[] = [
         $r['id'],
         $r['person_name'],
-        $r['amount'],
+        $r['main_amount'],
         $r['taken_at'],
         $r['notes'] ?? '-',
         $r['created_at']

@@ -98,7 +98,7 @@ if ($date_type === 'today') {
 <?php 
 $totalAmount = 0;
 foreach($rows as $r): 
-    $amount = (float)$r['amount'];
+    $amount = (float)$r['main_amount'];
     $totalAmount += $amount;
 ?>
 <tr>
