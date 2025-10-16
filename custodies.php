@@ -102,37 +102,41 @@ $total_balance = $total_in - $total_out;
     </tr>
     </thead>
     <tbody>
-      <?php
-      foreach($rows as $r): 
-          $in = (float)$r['main_amount'];  // الوارد
-          $remain = (float)$r['amount'];  // المبلغ المتبقي
-          $out = $in - $remain;
-          if($out < 0) $out = 0;
-          $current_balance = $remain + $last_balance;
-          $last_balance = $current_balance;
-      ?>
-      <tr class="table-primary">
-          <td><?= $r['id'] ?></td>
-          <td><?= esc($r['person_name']) ?></td>
-          <td><?= number_format($in,2) ?></td>
-          <td><?= number_format($out,2) ?></td>
-          <td><?= number_format($current_balance,2) ?></td>
-          <td><?= esc($r['taken_at']) ?></td>
-          <td><?= esc($r['notes']) ?></td>
-          <td>
-            <a class="btn btn-sm btn-outline-primary" href="invoice_custody?id=<?= $r['id'] ?>"><i class="bi bi-printer"></i></a>
-            <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#e<?= $r['id'] ?>"><i class="bi bi-pencil"></i></button>
-            <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#del<?= $r['id'] ?>"><i class="bi bi-trash"></i></button>
-          </td>
-      </tr>
+    <?php
+    foreach($rows as $r): 
+        $in = (float)$r['main_amount'];  // الوارد
+        $remain = (float)$r['amount'];   // المتبقي
+        $out = $in - $remain;            // المصروف
+        if($out < 0) $out = 0;
 
-      <?php 
-      // جلب الحركات المرتبطة بالعهدة
-      $transactions_stmt->execute([$r['id']]);
-      $transactions = $transactions_stmt->fetchAll();
-      foreach($transactions as $t):
+        // الرصيد = الرصيد السابق + الوارد - الصادر
+        $current_balance = $last_balance + $in - $out;
+        $last_balance = $current_balance;
+    ?>
+    <tr class="table-primary">
+        <td><?= $r['id'] ?></td>
+        <td><?= esc($r['person_name']) ?></td>
+        <td><?= number_format($in,2) ?></td>  <!-- الوارد -->
+        <td><?= number_format($out,2) ?></td> <!-- الصادر -->
+        <td><?= number_format($current_balance,2) ?></td> <!-- الرصيد -->
+        <td><?= esc($r['taken_at']) ?></td>
+        <td><?= esc($r['notes']) ?></td>
+        <td>
+          <a class="btn btn-sm btn-outline-primary" href="invoice_custody?id=<?= $r['id'] ?>"><i class="bi bi-printer"></i></a>
+          <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#e<?= $r['id'] ?>"><i class="bi bi-pencil"></i></button>
+          <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#del<?= $r['id'] ?>"><i class="bi bi-trash"></i></button>
+        </td>
+    </tr>
+
+    <?php 
+    // الحركات المرتبطة بالعهدة
+    $transactions_stmt->execute([$r['id']]);
+    $transactions = $transactions_stmt->fetchAll();
+    foreach($transactions as $t):
         $trans_amount = (float)$t['amount'];
-        $current_balance += $trans_amount;  // كل حركة تزيد الرصيد
+
+        // في حالتك الحركات هي صرف من العهدة => نطرح من الرصيد
+        $current_balance -= $trans_amount;
 
         // تحويل النوع للعربي
         $type_ar = '';
@@ -142,20 +146,20 @@ $total_balance = $total_in - $total_out;
             case 'purchase': $type_ar = 'مشتريات'; break;
             default: $type_ar = esc($t['type']); 
         }
-        ?>
-        <tr>
-            <td></td>
-            <td>-- <?= $type_ar ?></td> <!-- النوع بالعربي -->
-            <td><?= number_format($trans_amount,2) ?></td> <!-- الوارد -->
-            <td></td> <!-- الصادر فاضي -->
-            <td><?= number_format($current_balance,2) ?></td>
-            <td><?= esc($t['created_at']) ?></td>
-            <td><?= esc($t['notes'] ?? '') ?></td>
-            <td>حركة</td> <!-- النوع العام للحركة -->
-            <?php if($can_edit): ?><td></td><?php endif; ?>
-        </tr>
+    ?>
+    <tr>
+        <td></td>
+        <td>-- <?= $type_ar ?></td>
+        <td></td> <!-- لا يوجد وارد هنا -->
+        <td><?= number_format($trans_amount,2) ?></td> <!-- الصادر -->
+        <td><?= number_format($current_balance,2) ?></td>
+        <td><?= esc($t['created_at']) ?></td>
+        <td><?= esc($t['notes'] ?? '') ?></td>
+        <td>حركة</td>
+        <?php if($can_edit): ?><td></td><?php endif; ?>
+    </tr>
 
-      <?php endforeach; ?>
+    <?php endforeach; ?>
 
     <!-- تعديل -->
     <div class="modal fade" id="e<?= $r['id'] ?>">
