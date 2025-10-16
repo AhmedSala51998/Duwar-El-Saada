@@ -100,22 +100,25 @@ $total_balance = $total_in - $total_out;
     </thead>
     <tbody>
       <?php 
-      $last_balance = 0; // بداية الرصيد من صفر
+      $last_balance = 0; // الرصيد التراكمي من فوق
 
       foreach($rows as $r): 
         $in = (float)$r['main_amount'];   // الوارد
-        $out = (float)$r['amount'];       // الصادر
-
-        // لو مفيش صرف خالص خليه صفر صريح
+        $out = (float)$r['amount'];       // الصادر (المبلغ اللي اتسحب)
+        
+        // لو مفيش صرف خالص
         if ($out <= 0) {
           $out_display = 0;
         } else {
           $out_display = $out;
         }
 
-        // حساب الرصيد صف بصف
-        $last_balance = $last_balance + $in - $out;
-        $current_balance = $last_balance;
+        // احسب الرصيد: المبلغ المتبقي من الوارد + الرصيد السابق
+        $remaining_from_in = $in - $out_display;
+        $current_balance = $remaining_from_in + $last_balance;
+
+        // خزن الرصيد الحالي علشان الصف اللي بعده يبدأ منه
+        $last_balance = $current_balance;
       ?>
       <tr>
         <td><?= $r['id'] ?></td>
