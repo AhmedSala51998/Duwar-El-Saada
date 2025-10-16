@@ -65,20 +65,29 @@ $options = ['بسام','فيصل المطيري','مؤسسة','شركة'];
     <tr>
       <th>#</th>
       <th>اسم الشخص</th>
-      <th>المبلغ الأصلي</th>
-      <th>مبلغ الصرف</th>
+      <th>االوارد</th>
+      <th>الصادر</th>
+      <th>الرصيد</th>
       <th>التاريخ</th>
       <th>ملاحظات</th>
       <?php if($can_edit): ?><th>عمليات</th><?php endif; ?>
     </tr>
   </thead>
   <tbody>
-    <?php foreach($rows as $r): ?>
+    <?php 
+    $balance = 0; // رصيد ابتدائي
+
+    foreach($rows as $r): 
+      $in = (float)$r['main_amount']; // الوارد
+      $out = (float)$r['amount']; // الصادر
+      $balance += $in - $out; // نحسب الرصيد التراكمي
+    ?>
     <tr>
       <td><?= $r['id'] ?></td>
       <td><?= esc($r['person_name']) ?></td>
-      <td><?= number_format((float)$r['main_amount'],2) ?></td>
-      <td><?= number_format((float)$r['amount'],2) ?></td>
+      <td><?= number_format($in, 2) ?></td>
+      <td><?= number_format($out, 2) ?></td>
+      <td><?= number_format($balance, 2) ?></td>
       <td><?= esc($r['taken_at']) ?></td>
       <td><?= esc($r['notes']) ?></td>
       <?php if($can_edit): ?>
