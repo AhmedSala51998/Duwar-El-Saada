@@ -66,7 +66,7 @@ $total_out = 0;
 
 foreach($rows as $r) {
   $total_in += (float)$r['main_amount'];
-  $total_out += (float)$r['amount'];
+  $total_out += ((float)$r['main_amount'] - (float)$r['amount']);
 }
 $total_balance = $total_in - $total_out;
 ?>
