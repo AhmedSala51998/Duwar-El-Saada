@@ -132,14 +132,11 @@ $total_balance = $total_in - $total_out;
     // الحركات المرتبطة بالعهدة
     $transactions_stmt->execute([$r['id']]);
     $transactions = $transactions_stmt->fetchAll();
-
-    $prev_balance = $current_balance; // نخزن رصيد العهدة قبل الحركات
-
     foreach($transactions as $t):
         $trans_amount = (float)$t['amount'];
 
-        // حسب نوعك كل حركة هي صرف => الرصيد = الرصيد السابق - المبلغ
-        $current_balance = $prev_balance - $trans_amount;
+        // في حالتك الحركات هي صرف من العهدة => نطرح من الرصيد
+        $current_balance -= $trans_amount;
 
         // تحويل النوع للعربي
         $type_ar = '';
@@ -162,11 +159,7 @@ $total_balance = $total_in - $total_out;
         <?php if($can_edit): ?><td></td><?php endif; ?>
     </tr>
 
-    <?php 
-        // تحديث الرصيد السابق لكل حركة
-        $prev_balance = $current_balance;
-    endforeach; 
-    ?>
+    <?php endforeach; ?>
 
     <!-- تعديل -->
     <div class="modal fade" id="e<?= $r['id'] ?>">
