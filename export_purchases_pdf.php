@@ -145,7 +145,8 @@ foreach($rows as $r):
   } else {
       // مافيش ضريبة على الفاتورة، نخلي الضريبة صفر
       $vat = 0;
-      $after = $before;
+      $before = $before + ($before * 0.15);
+      $after =  $before = $before + ($before * 0.15);
   }
 
   $totalBefore += $before;

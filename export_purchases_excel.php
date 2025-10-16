@@ -80,7 +80,8 @@ foreach ($rows as $r) {
         $total_with_vat = $total + $vat;
     } else {
         $vat = 0;
-        $total_with_vat = $total;
+        $total = $total + ($total * 0.15);
+        $total_with_vat = $total + ($total * 0.15);
     }
 
     $data[] = [
