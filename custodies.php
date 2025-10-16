@@ -97,37 +97,42 @@ $total_balance = $total_in - $total_out;
       <th>ملاحظات</th>
       <?php if($can_edit): ?><th>عمليات</th><?php endif; ?>
     </tr>
-  </thead>
-  <tbody>
-    <?php foreach($rows as $r): 
-      $in = (float)$r['main_amount'];
-      $out = (float)$r['amount'];
-      
-      // لو الصف فيه حركة (وارد أو صادر)
-      if($in > 0 || $out > 0) {
+    </thead>
+    <tbody>
+      <?php 
+      $last_balance = 0; // بداية الرصيد من صفر
+
+      foreach($rows as $r): 
+        $in = (float)$r['main_amount'];   // الوارد
+        $out = (float)$r['amount'];       // الصادر
+
+        // لو مفيش صرف خالص خليه صفر صريح
+        if ($out <= 0) {
+          $out_display = 0;
+        } else {
+          $out_display = $out;
+        }
+
+        // حساب الرصيد صف بصف
         $last_balance = $last_balance + $in - $out;
         $current_balance = $last_balance;
-      } else {
-        // مفيش حركة = خليه صفر
-        $current_balance = 0;
-      }
-    ?>
-    <tr>
-      <td><?= $r['id'] ?></td>
-      <td><?= esc($r['person_name']) ?></td>
-      <td><?= number_format($in, 2) ?></td>
-      <td><?= number_format($out, 2) ?></td>
-      <td><?= number_format($current_balance, 2) ?></td>
-      <td><?= esc($r['taken_at']) ?></td>
-      <td><?= esc($r['notes']) ?></td>
-      <?php if($can_edit): ?>
-      <td>
-        <a class="btn btn-sm btn-outline-primary" href="invoice_custody?id=<?= $r['id'] ?>"><i class="bi bi-printer"></i></a>
-        <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#e<?= $r['id'] ?>"><i class="bi bi-pencil"></i></button>
-        <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#del<?= $r['id'] ?>"><i class="bi bi-trash"></i></button>
-      </td>
-      <?php endif; ?>
-    </tr>
+      ?>
+      <tr>
+        <td><?= $r['id'] ?></td>
+        <td><?= esc($r['person_name']) ?></td>
+        <td><?= number_format($in, 2) ?></td>
+        <td><?= number_format($out_display, 2) ?></td>
+        <td><?= number_format($current_balance, 2) ?></td>
+        <td><?= esc($r['taken_at']) ?></td>
+        <td><?= esc($r['notes']) ?></td>
+        <?php if($can_edit): ?>
+        <td>
+          <a class="btn btn-sm btn-outline-primary" href="invoice_custody?id=<?= $r['id'] ?>"><i class="bi bi-printer"></i></a>
+          <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#e<?= $r['id'] ?>"><i class="bi bi-pencil"></i></button>
+          <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#del<?= $r['id'] ?>"><i class="bi bi-trash"></i></button>
+        </td>
+        <?php endif; ?>
+      </tr>
 
     <!-- تعديل -->
     <div class="modal fade" id="e<?= $r['id'] ?>">
