@@ -124,7 +124,7 @@ if (!$custody) {
     <tbody>
       <tr>
         <td><?= esc($custody['person_name']) ?></td>
-        <td><?= number_format($custody['amount'], 2) ?> ريال</td>
+        <td><?= number_format($custody['main_amount'], 2) ?> ريال</td>
         <td><?= nl2br(esc($custody['notes'])) ?></td>
       </tr>
     </tbody>
