@@ -19,7 +19,7 @@ if ($date_type === 'today') {
 }
 
 // استعلام العهد
-$q = "SELECT id, person_name, main_amount, amount, taken_at, notes, created_at FROM custodies WHERE 1";
+$q = "SELECT id, person_name, main_amount,sub_amount, amount, taken_at, notes, created_at FROM custodies WHERE 1";
 
 // فلترة بالكلمة المفتاحية
 if ($kw !== '') { 
