@@ -108,6 +108,7 @@ $total_balance = $total_in - $total_out;
         $remain = (float)$r['amount'];   // المتبقي
         $out = $in - $remain;            // المصروف
         if($out < 0) $out = 0;
+        if($in == $remain) $out = 0;
 
         // الرصيد = الرصيد السابق + الوارد - الصادر
         $current_balance = $last_balance + $in - $out;
