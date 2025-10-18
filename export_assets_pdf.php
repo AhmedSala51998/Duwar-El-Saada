@@ -99,7 +99,7 @@ if ($date_type === 'today') {
 ?>
 
 <!-- زر الطباعة -->
-<div style="text-align:center;margin:15px 0">
+<div id="printBtnContainer" style="text-align:center;margin:15px 0">
   <button onclick="printAndGoBack()">طباعة التقرير</button>
 </div>
 
