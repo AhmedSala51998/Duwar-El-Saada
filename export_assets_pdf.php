@@ -99,8 +99,25 @@ if ($date_type === 'today') {
 ?>
 
 <!-- زر الطباعة -->
-<div id="printBtnContainer" style="text-align:center;margin:15px 0">
-  <button onclick="printAndGoBack()">طباعة التقرير</button>
+<div id="printBtnContainer" style="text-align:center;margin:20px 0;">
+  <button 
+    onclick="printAndGoBack()" 
+    style="
+      background-color: #ff6a00;  /* لون أخضر */
+      color: white;                /* لون الخط */
+      border: none;                /* إزالة الحدود */
+      padding: 10px 20px;          /* مساحة حول النص */
+      font-size: 16px;             /* حجم الخط */
+      font-weight: bold;           /* خط غامق */
+      border-radius: 8px;          /* زوايا مستديرة */
+      cursor: pointer;             /* شكل المؤشر */
+      transition: background 0.3s; /* تأثير عند المرور */
+    "
+    onmouseover="this.style.backgroundColor='#ff6a00';"
+    onmouseout="this.style.backgroundColor='#ff6a00';"
+  >
+    طباعة التقرير
+  </button>
 </div>
 
 <table>
