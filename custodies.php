@@ -94,7 +94,7 @@ $total_balance = $total_in - $total_out;
     </tr>
 
     <!-- عناوين الأعمدة -->
-    <tr class="transparent-orange">
+    <tr class="table-light">
       <th>#</th>
       <th>البيان</th>
       <th>الوارد</th>
@@ -128,7 +128,7 @@ $total_balance = $total_in - $total_out;
         // تحديث الرصيد الأخير للصفوف التالية
         $last_balance = $current_balance;
     ?>
-    <tr class="table-primary">
+    <tr class="transparent-orange">
         <td><?= $r['id'] ?></td>
         <td><?= esc($r['person_name']) ?></td>
         <td><?= number_format($in,2) ?></td>
