@@ -61,11 +61,6 @@ $options = ['بسام','فيصل المطيري','مؤسسة','شركة'];
     <?php endif; ?>
   </div>
 </div>
-<style>
-.table-primary {
-    background-color: rgba(255, 106, 0, 0.3) !important; /* 0.1 يعني شفاف جدًا */
-}
-</style>
 <?php 
 $last_balance = 0; // الرصيد السابق
 $total_in = 0; 
