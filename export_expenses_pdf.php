@@ -57,6 +57,9 @@ tfoot td{font-weight:bold;background:#f1f1f1}
   table { page-break-inside: auto; }
   tr    { page-break-inside: avoid; page-break-after: auto; }
   th, td { padding: 3px; }
+    #printBtnContainer {
+      display: none; /* إخفاء الزر أثناء الطباعة */
+    }
 }
 table {
   width: 100%;
@@ -91,6 +94,48 @@ if ($date_type === 'today') {
     echo "<p style='text-align:center;font-weight:bold'>كل التقرير</p>";
 }
 ?>
+
+<div id="printBtnContainer" style="text-align:center;margin:20px 0; display: flex; justify-content: center; gap: 15px;">
+  <!-- زر الطباعة -->
+  <button 
+    onclick="printAndGoBack()" 
+    style="
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    "
+    onmouseover="this.style.backgroundColor='#45a049';"
+    onmouseout="this.style.backgroundColor='#4CAF50';"
+  >
+    طباعة التقرير
+  </button>
+
+  <!-- زر الرجوع -->
+  <button 
+    onclick="goBack()" 
+    style="
+      background-color: #f44336;  /* أحمر */
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    "
+    onmouseover="this.style.backgroundColor='#d32f2f';"
+    onmouseout="this.style.backgroundColor='#f44336';"
+  >
+    العودة للصفحة السابقة
+  </button>
+</div>
 
 <table>
 <thead>
@@ -158,10 +203,15 @@ foreach($rows as $r):
 </table>
 
 <script>
-window.print();
-window.onafterprint = function () {
+function printAndGoBack() {
+  window.print();
+  window.onafterprint = function () {
     window.history.back();
-};
+  };
+}
+function goBack() {
+  window.history.back();
+}
 </script>
 </body>
 </html>

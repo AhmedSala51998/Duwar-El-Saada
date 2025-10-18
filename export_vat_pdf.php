@@ -171,6 +171,11 @@ $totalBefore = 0; $totalVat = 0; $totalAfter = 0;
   th,td{border:1px solid #ddd;padding:6px;text-align:center}
   th{background:#f7f7f7}
   h3,h4{text-align:center}
+    @media print {
+    #printBtnContainer {
+      display: none; /* إخفاء الزر أثناء الطباعة */
+    }
+  }
 </style>
 </head>
 <body>
@@ -193,6 +198,48 @@ renderSection("المشتريات", $purchases, ['الاسم','المورد','ا
 renderSection("المصروفات", $expenses, ['الاسم','الإجمالي قبل الضريبة','الضريبة','الإجمالي بعد'], $totalBefore,$totalVat,$totalAfter);
 renderSection("الأصول", $assets, ['الأصل','الكمية','النوع','الإجمالي قبل الضريبة','الضريبة','الإجمالي بعد'], $totalBefore,$totalVat,$totalAfter);
 ?>
+
+<div id="printBtnContainer" style="text-align:center;margin:20px 0; display: flex; justify-content: center; gap: 15px;">
+  <!-- زر الطباعة -->
+  <button 
+    onclick="printAndGoBack()" 
+    style="
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    "
+    onmouseover="this.style.backgroundColor='#45a049';"
+    onmouseout="this.style.backgroundColor='#4CAF50';"
+  >
+    طباعة التقرير
+  </button>
+
+  <!-- زر الرجوع -->
+  <button 
+    onclick="goBack()" 
+    style="
+      background-color: #f44336;  /* أحمر */
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    "
+    onmouseover="this.style.backgroundColor='#d32f2f';"
+    onmouseout="this.style.backgroundColor='#f44336';"
+  >
+    العودة للصفحة السابقة
+  </button>
+</div>
 
 <?php if($totalVat != 0){ ?>
 
@@ -223,8 +270,15 @@ renderSection("الأصول", $assets, ['الأصل','الكمية','النوع'
 <?php } ?>
 
 <script>
+function printAndGoBack() {
   window.print();
-  window.onafterprint = function(){ window.history.back(); }
+  window.onafterprint = function () {
+    window.history.back();
+  };
+}
+function goBack() {
+  window.history.back();
+}
 </script>
 </body>
 </html>
