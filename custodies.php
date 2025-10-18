@@ -106,8 +106,14 @@ $total_balance = $total_in - $total_out;
     foreach($rows as $r): 
         $in = (float)$r['main_amount'];  
         $remain = (float)$r['amount'];   
-        $out = $in - $remain;            
-        if($out < 0) $out = 0;
+
+        // لو لسه ما اتصرفش يبقى الصادر = 0
+        if ($remain == $in) {
+            $out = 0;
+        } else {
+            $out = $in - $remain;
+            if($out < 0) $out = 0;
+        }
 
         // الرصيد = الرصيد السابق + الوارد - الصادر
         $current_balance = $last_balance + $in - $out;
@@ -117,7 +123,7 @@ $total_balance = $total_in - $total_out;
         <td><?= $r['id'] ?></td>
         <td><?= esc($r['person_name']) ?></td>
         <td><?= number_format($in,2) ?></td>  
-        <td><?= $out > 0 ? number_format($out,2) : '' ?></td> 
+        <td><?= $out > 0 ? number_format($out,2) : '0.00' ?></td> 
         <td><?= number_format($current_balance,2) ?></td> 
         <td><?= esc($r['taken_at']) ?></td>
         <td><?= esc($r['notes']) ?></td>
