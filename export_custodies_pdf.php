@@ -99,9 +99,6 @@ foreach($rows as $r):
     $transactions_stmt->execute([$r['id']]);
     $transactions = $transactions_stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // لو مفيش حركات، نتخطى هذه العهدة
-    if(count($transactions) == 0) continue;
-
     $in = (float)$r['main_amount'];  // الوارد
     $remain = (float)$r['amount'];   // المتبقي
     $out = $in - $remain;            // المصروف
@@ -126,7 +123,7 @@ foreach($rows as $r):
 </tr>
 
 <?php
-    // طباعة الحركات
+    // طباعة الحركات إذا موجودة
     $prev_balance = $current_balance;
     foreach($transactions as $t):
         $trans_amount = (float)$t['amount'];
