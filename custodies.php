@@ -63,7 +63,7 @@ $options = ['بسام','فيصل المطيري','مؤسسة','شركة'];
 </div>
 <style>
 .transparent-orange {
-    background-color: rgba(255, 165, 0, 0.6) !important; /* 0.1 يعني شفاف جدًا */
+    background-color: rgba(255, 106, 0, 0.3) !important; /* شفاف شويه */
 }
 </style>
 <?php 
