@@ -139,21 +139,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
 
                 foreach ($custodies as $custody) {
                     if ($amountNeeded <= 0) break;
+                    $notes = "شراء " . $name;
 
                     if ($custody['amount'] >= $amountNeeded) {
                         $newAmount = $custody['amount'] - $amountNeeded;
                         $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
 
-                        $stmtTx = $pdo->prepare("INSERT INTO custody_transactions (type, type_id, custody_id, amount, created_at) VALUES (?, ?, ?, ?, NOW())");
-                        $stmtTx->execute(['purchase', $purchase_id, $custody['id'], $amountNeeded]);
+                        $stmtTx = $pdo->prepare("INSERT INTO custody_transactions (type, type_id, custody_id, amount,notes, created_at) VALUES (?, ?, ?, ?,?, NOW())");
+                        $stmtTx->execute(['purchase', $purchase_id, $custody['id'], $amountNeeded, $notes]);
 
                         $amountNeeded = 0;
                     } else {
                         $amountToUse = $custody['amount'];
                         $pdo->prepare("UPDATE custodies SET amount=0 WHERE id=?")->execute([$custody['id']]);
 
-                        $stmtTx = $pdo->prepare("INSERT INTO custody_transactions (type, type_id, custody_id, amount, created_at) VALUES (?, ?, ?, ?, NOW())");
-                        $stmtTx->execute(['purchase', $purchase_id, $custody['id'], $amountToUse]);
+                        $stmtTx = $pdo->prepare("INSERT INTO custody_transactions (type, type_id, custody_id, amount,notes, created_at) VALUES (?, ?, ?, ?,?, NOW())");
+                        $stmtTx->execute(['purchase', $purchase_id, $custody['id'], $amountToUse , $notes]);
 
                         $amountNeeded -= $amountToUse;
                     }
