@@ -110,7 +110,7 @@ $total_balance = $total_in - $total_out;
         if($out < 0) $out = 0;
 
         // الرصيد = الرصيد السابق + الوارد - الصادر
-        $current_balance = $last_balance + $in - $out;
+        $current_balance = $in - $out;
         $last_balance = $current_balance;
     ?>
     <tr class="table-primary">
