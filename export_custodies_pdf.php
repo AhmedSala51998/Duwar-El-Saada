@@ -94,22 +94,25 @@ th, td { word-wrap: break-word; }
 <tbody>
 <?php 
 foreach($rows as $r): 
-
-    // جلب الحركات المرتبطة بالعهدة
-    $transactions_stmt->execute([$r['id']]);
-    $transactions = $transactions_stmt->fetchAll(PDO::FETCH_ASSOC);
-
     $in = (float)$r['main_amount'];  // الوارد
-    $remain = (float)$r['amount'];   // المتبقي
+    $remain = (float)$r['sub_amount'];   // المتبقي
     $out = $in - $remain;            // المصروف
     if($out < 0) $out = 0;
 
-    // الرصيد = الرصيد السابق + الوارد - الصادر
-    $current_balance = $last_balance + $in - $out;
-    $last_balance = $current_balance;
+    // جلب الحركات المرتبطة بالعهدة
+    $transactions_stmt->execute([$r['id']]);
+    $transactions = $transactions_stmt->fetchAll();
 
-    $total_in  += $in;
-    $total_out += $out;
+    if(count($transactions) > 0){
+        // لو فيه حركة، الرصيد يبدأ من الوارد - الصادر
+        $current_balance = $in - $out;
+    } else {
+        // لو مفيش حركة، الرصيد يعتمد على آخر رصيد محسوب
+        $current_balance = $last_balance + $in - $out;
+    }
+
+    // تحديث الرصيد الأخير للصفوف التالية
+    $last_balance = $current_balance;
 ?>
 <tr class="table-primary">
     <td><?= $r['id'] ?></td>
@@ -122,23 +125,24 @@ foreach($rows as $r):
     <td><?= htmlspecialchars($r['created_at']) ?></td>
 </tr>
 
-<?php
-    // طباعة الحركات إذا موجودة
-    $prev_balance = $current_balance;
-    foreach($transactions as $t):
-        $trans_amount = (float)$t['amount'];
+<?php 
+// استعراض الحركات
+foreach($transactions as $t):
+    $trans_amount = (float)$t['amount'];
 
-        // خصم الصرف من الرصيد
-        $current_balance = $prev_balance - $trans_amount;
+    // خصم الحركة من الرصيد الحالي
+    $current_balance -= $trans_amount;
 
-        // تحويل النوع للعربي
-        $type_ar = '';
-        switch($t['type']) {
-            case 'asset': $type_ar = 'أصول'; break;
-            case 'expense': $type_ar = 'مصروفات'; break;
-            case 'purchase': $type_ar = 'مشتريات'; break;
-            default: $type_ar = htmlspecialchars($t['type']); 
-        }
+    // تحديث آخر رصيد بعد كل حركة
+    $last_balance = $current_balance;
+
+    $type_ar = '';
+    switch($t['type']) {
+        case 'asset': $type_ar = 'أصول'; break;
+        case 'expense': $type_ar = 'مصروفات'; break;
+        case 'purchase': $type_ar = 'مشتريات'; break;
+        default: $type_ar = esc($t['type']); 
+    }
 ?>
 <tr>
     <td></td>
@@ -157,11 +161,22 @@ endforeach;
 ?>
 </tbody>
 <tfoot>
+<?php 
+$last_balance = 0; // الرصيد السابق
+$total_in = 0; 
+$total_out = 0; 
+
+foreach($rows as $r) {
+  $total_in += (float)$r['main_amount'];
+  $total_out += ((float)$r['main_amount'] - (float)$r['amount']);
+}
+$total_balance = $total_in - $total_out;
+?>
 <tr>
     <td colspan="2">الإجماليات</td>
     <td><?= number_format($total_in, 2) ?></td>
     <td><?= number_format($total_out, 2) ?></td>
-    <td><?= number_format($last_balance, 2) ?></td>
+    <td><?= number_format($total_balance, 2) ?></td>
     <td colspan="3"></td>
 </tr>
 </tfoot>
