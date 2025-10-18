@@ -1,101 +1,180 @@
-<?php
-require __DIR__.'/config/config.php';
+<?php 
+require __DIR__.'/config/config.php'; 
 require_auth();
-require_once __DIR__.'/libs/fpdf.php'; // أو Dompdf لو تحب HTML كامل
 
-$kw = trim($_GET['kw'] ?? '');
+$kw         = trim($_GET['kw'] ?? ''); 
+$date_type  = $_GET['date_type'] ?? '';
+$from_date  = $_GET['from_date'] ?? '';
+$to_date    = $_GET['to_date'] ?? '';
+
 $params = [];
-$q = "SELECT * FROM custodies WHERE 1";
-if($kw !== ''){
-  $q .= " AND person_name LIKE ?";
-  $params[] = "%$kw%";
-}
-$q .= " ORDER BY id ASC";
-$stmt = $pdo->prepare($q);
-$stmt->execute($params);
-$rows = $stmt->fetchAll();
+$dateFilter = '';
 
-$transactions_stmt = $pdo->prepare("SELECT * FROM custody_transactions WHERE custody_id=? ORDER BY created_at ASC");
-
-// إنشاء كائن PDF
-$pdf = new FPDF('P','mm','A4');
-$pdf->AddPage();
-$pdf->SetFont('Arial','B',14);
-$pdf->Cell(0,10,'تقرير العُهد',0,1,'C');
-$pdf->Ln(3);
-
-$pdf->SetFont('Arial','',11);
-if($kw!==''){
-  $pdf->Cell(0,8,"بحث عن: $kw",0,1,'C');
+// تطبيق منطق الفلترة حسب نوع التاريخ
+if ($date_type === 'today') {
+    $today = date('Y-m-d');
+    $from_date = $to_date = $today;
+} elseif ($date_type === 'yesterday') {
+    $yesterday = date('Y-m-d', strtotime('-1 day'));
+    $from_date = $to_date = $yesterday;
 }
 
-$pdf->Ln(4);
-$pdf->SetFont('Arial','B',10);
-$pdf->SetFillColor(240,240,240);
-$pdf->Cell(10,8,'#',1,0,'C',true);
-$pdf->Cell(40,8,'الشخص',1,0,'C',true);
-$pdf->Cell(30,8,'الوارد',1,0,'C',true);
-$pdf->Cell(30,8,'الصادر',1,0,'C',true);
-$pdf->Cell(30,8,'الرصيد',1,0,'C',true);
-$pdf->Cell(25,8,'تاريخ',1,0,'C',true);
-$pdf->Cell(35,8,'ملاحظات',1,1,'C',true);
+// فلترة بالبحث بالكلمة
+$q = "SELECT id,name,type,quantity,price,has_vat,payer_name,payment_source,total_amount,created_at FROM assets WHERE 1";
 
-$pdf->SetFont('Arial','',9);
+if ($kw !== '') { 
+  $q .= " AND name LIKE ?"; 
+  $params[] = "%$kw%"; 
+}
 
-$total_in = 0;
-$total_out = 0;
-$balance = 0;
-foreach($rows as $r){
-    $in = (float)$r['main_amount'];
-    $out = $in - (float)$r['amount'];
-    if($out < 0) $out = 0;
-    $balance += $in - $out;
-    $current_balance = $balance;
+// فلترة بالتواريخ
+if ($from_date) { 
+  $q .= " AND DATE(created_at) >= ?"; 
+  $params[] = $from_date; 
+}
+if ($to_date) { 
+  $q .= " AND DATE(created_at) <= ?"; 
+  $params[] = $to_date; 
+}
 
-    $total_in += $in;
-    $total_out += $out;
+$q .= " ORDER BY id DESC";
 
-    $pdf->SetFillColor(208,240,255);
-    $pdf->Cell(10,8,$r['id'],1,0,'C',true);
-    $pdf->Cell(40,8,iconv('UTF-8','windows-1256',$r['person_name']),1,0,'C',true);
-    $pdf->Cell(30,8,number_format($in,2),1,0,'C',true);
-    $pdf->Cell(30,8,number_format($out,2),1,0,'C',true);
-    $pdf->Cell(30,8,number_format($current_balance,2),1,0,'C',true);
-    $pdf->Cell(25,8,$r['taken_at'],1,0,'C',true);
-    $pdf->Cell(35,8,iconv('UTF-8','windows-1256', $r['notes'] ?: '-'),1,1,'C',true);
+$s = $pdo->prepare($q); 
+$s->execute($params); 
+$rows = $s->fetchAll();
+?>
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>تقرير الأصول</title>
+<style>
+  body{font-family:Cairo,Arial}
+  table{width:100%;border-collapse:collapse}
+  th,td{border:1px solid #ddd;padding:6px;text-align:center}
+  th{background:#f7f7f7}
+  @media print {
+  body { font-size: 10px; }
+  table { page-break-inside: auto; }
+  tr    { page-break-inside: avoid; page-break-after: auto; }
+  th, td { padding: 3px; }
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed; /* مهم */
+}
 
-    // الحركات
-    $transactions_stmt->execute([$r['id']]);
-    $transactions = $transactions_stmt->fetchAll();
-    foreach($transactions as $t){
-        $trans_amount = (float)$t['amount'];
-        $balance -= $trans_amount;
-        $current_balance = $balance;
+th, td {
+  border: 1px solid #ddd;
+  padding: 4px;
+  text-align: center;
+  word-wrap: break-word; /* لتقسيم النصوص الطويلة */
+}
 
-        switch($t['type']){
-          case 'asset': $type_ar='أصول'; break;
-          case 'expense': $type_ar='مصروفات'; break;
-          case 'purchase': $type_ar='مشتريات'; break;
-          default: $type_ar=$t['type'];
-        }
+</style>
+</head>
+<body>
+<img src="assets/logo.png" width="60" style="float:left">
+<h2 style="text-align:center;margin:0">تقرير الأصول</h2>
 
-        $pdf->Cell(10,8,'',1,0,'C');
-        $pdf->Cell(40,8,iconv('UTF-8','windows-1256',"-- $type_ar"),1,0,'C');
-        $pdf->Cell(30,8,'',1,0,'C');
-        $pdf->Cell(30,8,number_format($trans_amount,2),1,0,'C');
-        $pdf->Cell(30,8,number_format($current_balance,2),1,0,'C');
-        $pdf->Cell(25,8,$t['created_at'],1,0,'C');
-        $pdf->Cell(35,8,iconv('UTF-8','windows-1256',$t['notes'] ?: ''),1,1,'C');
+<?php
+if ($date_type === 'today') {
+    echo "<p style='text-align:center;font-weight:bold'>تقرير اليوم (" . date('Y-m-d') . ")</p>";
+} elseif ($date_type === 'yesterday') {
+    echo "<p style='text-align:center;font-weight:bold'>تقرير أمس (" . date('Y-m-d', strtotime('-1 day')) . ")</p>";
+} elseif ($from_date || $to_date) {
+    $fromText = $from_date ?: 'بداية';
+    $toText   = $to_date   ?: 'اليوم';
+    echo "<p style='text-align:center;font-weight:bold'>الفترة من $fromText إلى $toText</p>";
+} else {
+    echo "<p style='text-align:center;font-weight:bold'>كل التقرير</p>";
+}
+?>
+
+<table>
+<thead>
+<tr>
+  <th>#</th>
+  <th>الاسم</th>
+  <th>النوع</th>
+  <th>العدد</th>
+  <th>السعر</th>
+  <th>الإجمالي الطبيعي</th>
+  <th>الضريبة (15%)</th>
+  <th>الإجمالي بعد الضريبة</th>
+  <th>الدافع</th>
+  <th>مصدر الدفع</th>
+  <th>التاريخ</th>
+</tr>
+</thead>
+<?php 
+$totalBefore = $totalVat = $totalAfter = 0;
+?>
+<tbody>
+<?php foreach($rows as $r): 
+    $quantity = (float)$r['quantity'];
+    $price = (float)$r['price'];
+    $total = $quantity * $price;
+    $price1 = 0;
+
+    if(!empty($r['has_vat']) && $r['has_vat'] == 1){
+        $vat = $total * 0.15;
+        $total_with_vat = $total + $vat;
+        $price1 = $r['price'];
+    } else {
+        $vat = 0;
+        $total_with_vat = $r['total_amount'];
+        $total = $r['total_amount'];
+        $price1 = $r['price'] + ($r['price'] * 0.15);
     }
-}
 
-$pdf->SetFont('Arial','B',10);
-$pdf->SetFillColor(230,230,230);
-$pdf->Cell(50,8,iconv('UTF-8','windows-1256','الإجماليات'),1,0,'C',true);
-$pdf->Cell(30,8,number_format($total_in,2),1,0,'C',true);
-$pdf->Cell(30,8,number_format($total_out,2),1,0,'C',true);
-$pdf->Cell(30,8,number_format($balance,2),1,0,'C',true);
-$pdf->Cell(85,8,'',1,1,'C',true);
+    $totalBefore += $total;
+    $totalVat += $vat;
+    $totalAfter += $total_with_vat;
+?>
+<tr>
+  <td><?= $r['id'] ?></td>
+  <td><?= htmlspecialchars($r['name']) ?></td>
+  <td><?= htmlspecialchars($r['type']) ?></td>
+  <td><?= $quantity ?></td>
+  <td><?= number_format($price1, 7) ?></td>
+  <td><?= number_format($total, 7) ?></td>
+  <td><?= number_format($vat, 7) ?></td>
+  <td><?= number_format($total_with_vat, 7) ?></td>
+  <td><?= htmlspecialchars($r['payer_name']) ?></td>
+  <td><?= htmlspecialchars($r['payment_source'] ?? '-') ?></td>
+  <td><?= htmlspecialchars($r['created_at']) ?></td>
+</tr>
+<?php endforeach; ?>
+</tbody>
 
-// عرض أو تحميل
-$pdf->Output('I','تقرير_العهد.pdf');
+<tfoot>
+<?php if(!empty($r['has_vat']) && $r['has_vat'] == 1){ ?>   
+<tr style="font-weight:bold;background:#f1f1f1">
+  <td colspan="5">الإجماليات الكلية</td>
+  <td><?= number_format($totalBefore, 4) ?></td>
+  <td><?= number_format($totalVat, 4) ?></td>
+  <td><?= number_format($totalAfter, 4) ?></td>
+  <td colspan="3"></td>
+</tr>
+<?php }else{ ?>
+  <tr style="font-weight:bold;background:#f1f1f1">
+  <td colspan="5">الإجماليات الكلية</td>
+  <td><?= number_format($totalBefore, 4) ?></td>
+  <td>----</td>
+  <td><?= number_format($totalAfter, 4) ?></td>
+  <td colspan="3"></td>
+</tr>
+<?php } ?>   
+</tfoot>
+</table>
+
+<script>
+  window.print();
+  window.onafterprint = function () {
+    window.history.back();
+  };
+</script>
+</body>
+</html>
