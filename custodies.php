@@ -75,18 +75,21 @@ $total_balance = $total_in - $total_out;
 ?>
 
 <div class="table-responsive">
-<table class="table table-hover align-middle text-center">
+<table class="table table-hover align-middle">
 <thead>
-    <tr class="fw-bold">
+    <!-- صف الإجماليات -->
+    <tr class="fw-bold text-center">
       <th colspan="2" style="background:#f0f0f0;">الرصيد</th>
       <th style="background:#d4edda;">الصادر</th>
       <th style="background:#fff3cd;">الوارد</th>
     </tr>
-    <tr class="fw-bold">
+    <tr class="fw-bold text-center">
       <th colspan="2" style="background:#e9ecef;"><?= number_format($total_balance, 2) ?></th>
       <th style="background:#d4edda;"><?= number_format($total_out, 2) ?></th>
       <th style="background:#fff3cd;"><?= number_format($total_in, 2) ?></th>
     </tr>
+
+    <!-- عناوين الأعمدة -->
     <tr class="table-light">
       <th>#</th>
       <th>اسم الشخص</th>
@@ -97,112 +100,109 @@ $total_balance = $total_in - $total_out;
       <th>ملاحظات</th>
       <?php if($can_edit): ?><th>عمليات</th><?php endif; ?>
     </tr>
-</thead>
-<tbody>
-<?php
-foreach($rows as $r): 
-    $in = (float)$r['main_amount'];  // المبلغ المستلم (الوارد)
-    $remain = (float)$r['amount'];   // المتبقي
-    $out = $in - $remain;            // المصروف حتى الآن
+    </thead>
+    <tbody>
+    <?php
+    foreach($rows as $r): 
+        $in = (float)$r['main_amount'];  // الوارد
+        $remain = (float)$r['amount'];   // المتبقي
+        $out = $in - $remain;            // المصروف
+        if($out < 0) $out = 0;
 
-    // لو لسه متصرفش حاجة
-    if ($out <= 0) $out = 0;
+        // الرصيد = الرصيد السابق + الوارد - الصادر
+        $current_balance = $last_balance + $in - $out;
+        $last_balance = $current_balance;
+    ?>
+    <tr class="table-primary">
+        <td><?= $r['id'] ?></td>
+        <td><?= esc($r['person_name']) ?></td>
+        <td><?= number_format($in,2) ?></td>  <!-- الوارد -->
+        <td><?= number_format($out,2) ?></td> <!-- الصادر -->
+        <td><?= number_format($current_balance,2) ?></td> <!-- الرصيد -->
+        <td><?= esc($r['taken_at']) ?></td>
+        <td><?= esc($r['notes']) ?></td>
+        <td>
+          <a class="btn btn-sm btn-outline-primary" href="invoice_custody?id=<?= $r['id'] ?>"><i class="bi bi-printer"></i></a>
+          <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#e<?= $r['id'] ?>"><i class="bi bi-pencil"></i></button>
+          <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#del<?= $r['id'] ?>"><i class="bi bi-trash"></i></button>
+        </td>
+    </tr>
 
-    // الرصيد = الرصيد السابق + الوارد - الصادر
-    $current_balance = $last_balance + $in - $out;
-    $last_balance = $current_balance;
-?>
-<tr class="table-primary">
-    <td><?= $r['id'] ?></td>
-    <td><?= esc($r['person_name']) ?></td>
-    <td><?= number_format($in,2) ?></td>
-    <td><?= number_format($out,2) ?></td>
-    <td><?= number_format($current_balance,2) ?></td>
-    <td><?= esc($r['taken_at']) ?></td>
-    <td><?= esc($r['notes']) ?></td>
-    <?php if($can_edit): ?>
-    <td>
-      <a class="btn btn-sm btn-outline-primary" href="invoice_custody?id=<?= $r['id'] ?>"><i class="bi bi-printer"></i></a>
-      <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#e<?= $r['id'] ?>"><i class="bi bi-pencil"></i></button>
-      <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#del<?= $r['id'] ?>"><i class="bi bi-trash"></i></button>
-    </td>
-    <?php endif; ?>
-</tr>
+    <?php 
+    // الحركات المرتبطة بالعهدة
+    $transactions_stmt->execute([$r['id']]);
+    $transactions = $transactions_stmt->fetchAll();
+    foreach($transactions as $t):
+        $trans_amount = (float)$t['amount'];
 
-<?php 
-// الحركات المرتبطة بالعهدة
-$transactions_stmt->execute([$r['id']]);
-$transactions = $transactions_stmt->fetchAll();
-foreach($transactions as $t):
-    $trans_amount = (float)$t['amount'];
+        // في حالتك الحركات هي صرف من العهدة => نطرح من الرصيد
+        //$current_balance -= $trans_amount;
 
-    // خصم الصادر من الرصيد
-    $current_balance -= $trans_amount;
+        // تحويل النوع للعربي
+        $type_ar = '';
+        switch($t['type']) {
+            case 'asset': $type_ar = 'أصول'; break;
+            case 'expense': $type_ar = 'مصروفات'; break;
+            case 'purchase': $type_ar = 'مشتريات'; break;
+            default: $type_ar = esc($t['type']); 
+        }
+    ?>
+    <tr>
+        <td></td>
+        <td>-- <?= $type_ar ?></td>
+        <td></td> <!-- لا يوجد وارد هنا -->
+        <td><?= number_format($trans_amount,2) ?></td> <!-- الصادر -->
+        <td><?= number_format($current_balance,2) ?></td>
+        <td><?= esc($t['created_at']) ?></td>
+        <td><?= esc($t['notes'] ?? '') ?></td>
+        <td>حركة</td>
+        <?php if($can_edit): ?><td></td><?php endif; ?>
+    </tr>
 
-    // تحويل النوع للعربي
-    $type_ar = '';
-    switch($t['type']) {
-        case 'asset': $type_ar = 'أصول'; break;
-        case 'expense': $type_ar = 'مصروفات'; break;
-        case 'purchase': $type_ar = 'مشتريات'; break;
-        default: $type_ar = esc($t['type']); 
-    }
-?>
-<tr>
-    <td></td>
-    <td>-- <?= $type_ar ?></td>
-    <td></td>
-    <td><?= number_format($trans_amount,2) ?></td>
-    <td><?= number_format($current_balance,2) ?></td>
-    <td><?= esc($t['created_at']) ?></td>
-    <td><?= esc($t['notes'] ?? '') ?></td>
-    <?php if($can_edit): ?><td>حركة</td><?php endif; ?>
-</tr>
+    <?php endforeach; ?>
 
-<?php endforeach; ?>
-
-<!-- تعديل -->
-<div class="modal fade" id="e<?= $r['id'] ?>">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <form method="post" action="custody_edit">
-        <input type="hidden" name="_csrf" value="<?=esc(csrf_token())?>">
-        <input type="hidden" name="id" value="<?= $r['id'] ?>">
-        <div class="modal-header"><h5 class="modal-title">تعديل عهدة</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
-        <div class="modal-body vstack gap-3">
-          <div>
-            <label class="form-label">اسم الشخص</label>
-            <select name="person_name" class="form-select" required>
-              <?php foreach($options as $opt): ?>
-                <option value="<?=esc($opt)?>" <?= $r['person_name']==$opt?'selected':'' ?>><?=esc($opt)?></option>
-              <?php endforeach; ?>
-            </select>
-          </div>
-          <div><label class="form-label">المبلغ</label><input type="number" step="0.01" name="amount" class="form-control" value="<?=esc($r['amount'])?>" required></div>
-          <div><label class="form-label">التاريخ</label><input type="date" name="taken_at" class="form-control" value="<?=esc($r['taken_at'])?>" required></div>
-          <div><label class="form-label">ملاحظات</label><textarea name="notes" class="form-control"><?=esc($r['notes'])?></textarea></div>
+    <!-- تعديل -->
+    <div class="modal fade" id="e<?= $r['id'] ?>">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <form method="post" action="custody_edit">
+            <input type="hidden" name="_csrf" value="<?=esc(csrf_token())?>">
+            <input type="hidden" name="id" value="<?= $r['id'] ?>">
+            <div class="modal-header"><h5 class="modal-title">تعديل عهدة</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
+            <div class="modal-body vstack gap-3">
+              <div>
+                <label class="form-label">اسم الشخص</label>
+                <select name="person_name" class="form-select" required>
+                  <?php foreach($options as $opt): ?>
+                    <option value="<?=esc($opt)?>" <?= $r['person_name']==$opt?'selected':'' ?>><?=esc($opt)?></option>
+                  <?php endforeach; ?>
+                </select>
+              </div>
+              <div><label class="form-label">المبلغ</label><input type="number" step="0.01" name="amount" class="form-control" value="<?=esc($r['amount'])?>" required></div>
+              <div><label class="form-label">التاريخ</label><input type="date" name="taken_at" class="form-control" value="<?=esc($r['taken_at'])?>" required></div>
+              <div><label class="form-label">ملاحظات</label><textarea name="notes" class="form-control"><?=esc($r['notes'])?></textarea></div>
+            </div>
+            <div class="modal-footer"><button class="btn btn-orange">حفظ</button></div>
+          </form>
         </div>
-        <div class="modal-footer"><button class="btn btn-orange">حفظ</button></div>
-      </form>
-    </div>
-  </div>
-</div>
-
-<!-- حذف -->
-<div class="modal fade" id="del<?= $r['id'] ?>">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header"><h5 class="modal-title">تأكيد الحذف</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
-      <div class="modal-body">هل تريد حذف العهدة الخاصة بـ <b><?=esc($r['person_name'])?></b>؟</div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
-        <a href="custody_delete?id=<?=$r['id']?>" class="btn btn-danger">حذف</a>
       </div>
     </div>
-  </div>
-</div>
-<?php endforeach; ?>
-</tbody>
+
+    <!-- حذف -->
+    <div class="modal fade" id="del<?= $r['id'] ?>">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header"><h5 class="modal-title">تأكيد الحذف</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
+          <div class="modal-body">هل تريد حذف العهدة الخاصة بـ <b><?=esc($r['person_name'])?></b>؟</div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+            <a href="custody_delete?id=<?=$r['id']?>" class="btn btn-danger">حذف</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <?php endforeach; ?>
+  </tbody>
 </table>
 </div>
 
