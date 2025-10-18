@@ -92,6 +92,7 @@ th, td { word-wrap: break-word; }
 </tr>
 </thead>
 <tbody>
+<tbody>
 <?php 
 foreach($rows as $r): 
 
@@ -99,13 +100,20 @@ foreach($rows as $r):
     $transactions_stmt->execute([$r['id']]);
     $transactions = $transactions_stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $in = (float)$r['main_amount'];  // الوارد
-    $remain = (float)$r['amount'];   // المتبقي
-    $out = $in - $remain;            // المصروف
+    $in = (float)$r['main_amount'];   // الوارد
+    $remain = (float)$r['sub_amount']; // المتبقي
+    $out = $in - $remain;              // المصروف
     if($out < 0) $out = 0;
 
-    // الرصيد = الرصيد السابق + الوارد - الصادر
-    $current_balance = $last_balance + $in - $out;
+    // تحديد الرصيد حسب وجود الحركات
+    if(count($transactions) > 0){
+        // لو فيه حركة، الرصيد = الوارد - الصادر
+        $current_balance = $in - $out;
+    } else {
+        // لو مفيش حركة، الرصيد = آخر رصيد + الوارد - الصادر
+        $current_balance = $last_balance + $in - $out;
+    }
+
     $last_balance = $current_balance;
 
     $total_in  += $in;
@@ -124,12 +132,14 @@ foreach($rows as $r):
 
 <?php
     // طباعة الحركات إذا موجودة
-    $prev_balance = $current_balance;
     foreach($transactions as $t):
         $trans_amount = (float)$t['amount'];
 
-        // خصم الصرف من الرصيد
-        $current_balance = $prev_balance - $trans_amount;
+        // خصم الحركة من الرصيد
+        $current_balance -= $trans_amount;
+
+        // تحديث آخر رصيد بعد كل حركة
+        $last_balance = $current_balance;
 
         // تحويل النوع للعربي
         $type_ar = '';
@@ -151,7 +161,6 @@ foreach($rows as $r):
     <td>حركة</td>
 </tr>
 <?php
-        $prev_balance = $current_balance;
     endforeach; 
 endforeach; 
 ?>
