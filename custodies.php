@@ -105,7 +105,7 @@ $total_balance = $total_in - $total_out;
     <?php
     foreach($rows as $r): 
         $in = (float)$r['main_amount'];  // الوارد
-        $remain = (float)$r['amount'];   // المتبقي
+        $remain = (float)$r['sub_amount'];   // المتبقي
         $out = $in - $remain;            // المصروف
         if($out < 0) $out = 0;
 
