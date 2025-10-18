@@ -2,13 +2,12 @@
 require __DIR__.'/config/config.php'; 
 require_auth();
 
-$kw         = trim($_GET['kw'] ?? ''); 
-$date_type  = $_GET['date_type'] ?? '';
-$from_date  = $_GET['from_date'] ?? '';
-$to_date    = $_GET['to_date'] ?? '';
+$kw        = trim($_GET['kw'] ?? ''); 
+$date_type = $_GET['date_type'] ?? '';
+$from_date = $_GET['from_date'] ?? '';
+$to_date   = $_GET['to_date'] ?? '';
 
 $params = [];
-$dateFilter = '';
 
 // تطبيق منطق الفلترة حسب نوع التاريخ
 if ($date_type === 'today') {
@@ -19,64 +18,61 @@ if ($date_type === 'today') {
     $from_date = $to_date = $yesterday;
 }
 
-// فلترة بالبحث بالكلمة
-$q = "SELECT id,name,type,quantity,price,has_vat,payer_name,payment_source,total_amount,created_at FROM assets WHERE 1";
+// جلب العهد
+$q = "SELECT id, person_name, main_amount,amount, taken_at, notes, created_at 
+      FROM custodies WHERE 1";
 
+// فلترة بالكلمة المفتاحية
 if ($kw !== '') { 
-  $q .= " AND name LIKE ?"; 
-  $params[] = "%$kw%"; 
+    $q .= " AND person_name LIKE ?"; 
+    $params[] = "%$kw%"; 
 }
 
 // فلترة بالتواريخ
 if ($from_date) { 
-  $q .= " AND DATE(created_at) >= ?"; 
-  $params[] = $from_date; 
+    $q .= " AND DATE(created_at) >= ?"; 
+    $params[] = $from_date; 
 }
 if ($to_date) { 
-  $q .= " AND DATE(created_at) <= ?"; 
-  $params[] = $to_date; 
+    $q .= " AND DATE(created_at) <= ?"; 
+    $params[] = $to_date; 
 }
 
-$q .= " ORDER BY id DESC";
+$q .= " ORDER BY id ASC";
 
 $s = $pdo->prepare($q); 
 $s->execute($params); 
 $rows = $s->fetchAll();
+
+// جلب الحركات
+$transactions_stmt = $pdo->prepare("SELECT * FROM custody_transactions WHERE custody_id=? ORDER BY created_at ASC");
 ?>
+
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<title>تقرير الأصول</title>
+<title>تقرير العُهد</title>
 <style>
-  body{font-family:Cairo,Arial}
-  table{width:100%;border-collapse:collapse}
-  th,td{border:1px solid #ddd;padding:6px;text-align:center}
-  th{background:#f7f7f7}
-  @media print {
+body{font-family:Cairo,Arial}
+table{width:100%;border-collapse:collapse;margin-top:15px}
+th,td{border:1px solid #ddd;padding:6px;text-align:center}
+th{background:#f7f7f7}
+h2{text-align:center;margin-bottom:10px}
+tfoot td{font-weight:bold;background:#f1f1f1}
+@media print {
   body { font-size: 10px; }
   table { page-break-inside: auto; }
   tr    { page-break-inside: avoid; page-break-after: auto; }
   th, td { padding: 3px; }
 }
-table {
-  width: 100%;
-  border-collapse: collapse;
-  table-layout: fixed; /* مهم */
-}
-
-th, td {
-  border: 1px solid #ddd;
-  padding: 4px;
-  text-align: center;
-  word-wrap: break-word; /* لتقسيم النصوص الطويلة */
-}
-
+table { table-layout: fixed; }
+th, td { word-wrap: break-word; }
 </style>
 </head>
 <body>
 <img src="assets/logo.png" width="60" style="float:left">
-<h2 style="text-align:center;margin:0">تقرير الأصول</h2>
+<h2>تقرير العُهد</h2>
 
 <?php
 if ($date_type === 'today') {
@@ -96,77 +92,87 @@ if ($date_type === 'today') {
 <thead>
 <tr>
   <th>#</th>
-  <th>الاسم</th>
-  <th>النوع</th>
-  <th>العدد</th>
-  <th>السعر</th>
-  <th>الإجمالي الطبيعي</th>
-  <th>الضريبة (15%)</th>
-  <th>الإجمالي بعد الضريبة</th>
-  <th>الدافع</th>
-  <th>مصدر الدفع</th>
-  <th>التاريخ</th>
+  <th>الشخص</th>
+  <th>الوارد</th>
+  <th>الصادر</th>
+  <th>الرصيد</th>
+  <th>تاريخ الاستلام</th>
+  <th>ملاحظات</th>
+  <th>تاريخ الإضافة</th>
 </tr>
 </thead>
-<?php 
-$totalBefore = $totalVat = $totalAfter = 0;
-?>
 <tbody>
-<?php foreach($rows as $r): 
-    $quantity = (float)$r['quantity'];
-    $price = (float)$r['price'];
-    $total = $quantity * $price;
-    $price1 = 0;
+<?php 
+$total_in = 0;
+$total_out = 0;
+$balance = 0;
 
-    if(!empty($r['has_vat']) && $r['has_vat'] == 1){
-        $vat = $total * 0.15;
-        $total_with_vat = $total + $vat;
-        $price1 = $r['price'];
-    } else {
-        $vat = 0;
-        $total_with_vat = $r['total_amount'];
-        $total = $r['total_amount'];
-        $price1 = $r['price'] + ($r['price'] * 0.15);
-    }
+foreach($rows as $r): 
+    $in  = (float)$r['main_amount'];      // الوارد
+    $out = $in - (float)$r['amount'];     // الصادر الأساسي
+    if($out < 0) $out = 0;
 
-    $totalBefore += $total;
-    $totalVat += $vat;
-    $totalAfter += $total_with_vat;
+    $balance += $in - $out;               // الرصيد بعد العهدة
+    $current_balance = $balance;
+
+    $total_in  += $in;
+    $total_out += $out;
 ?>
-<tr>
+<tr style="background:#d0f0ff">
   <td><?= $r['id'] ?></td>
-  <td><?= htmlspecialchars($r['name']) ?></td>
-  <td><?= htmlspecialchars($r['type']) ?></td>
-  <td><?= $quantity ?></td>
-  <td><?= number_format($price1, 7) ?></td>
-  <td><?= number_format($total, 7) ?></td>
-  <td><?= number_format($vat, 7) ?></td>
-  <td><?= number_format($total_with_vat, 7) ?></td>
-  <td><?= htmlspecialchars($r['payer_name']) ?></td>
-  <td><?= htmlspecialchars($r['payment_source'] ?? '-') ?></td>
+  <td><?= htmlspecialchars($r['person_name']) ?></td>
+  <td><?= number_format($in,2) ?></td>
+  <td><?= number_format($out,2) ?></td>
+  <td><?= number_format($current_balance,2) ?></td>
+  <td><?= htmlspecialchars($r['taken_at']) ?></td>
+  <td><?= htmlspecialchars($r['notes'] ?? '-') ?></td>
   <td><?= htmlspecialchars($r['created_at']) ?></td>
 </tr>
+
+<?php 
+// الحركات المرتبطة بالعهدة
+$transactions_stmt->execute([$r['id']]);
+$transactions = $transactions_stmt->fetchAll();
+foreach($transactions as $t):
+    $trans_amount = (float)$t['amount'];
+
+    // الرصيد بعد الحركة
+    $balance -= $trans_amount;
+    //$current_balance = $balance;
+
+    // تحويل النوع للعربي
+    $type_ar = '';
+    switch($t['type']) {
+        case 'asset': $type_ar = 'أصول'; break;
+        case 'expense': $type_ar = 'مصروفات'; break;
+        case 'purchase': $type_ar = 'مشتريات'; break;
+        default: $type_ar = htmlspecialchars($t['type']); 
+    }
+
+    $total_out += $trans_amount;
+?>
+<tr>
+  <td></td>
+  <td>-- <?= $type_ar ?></td>
+  <td></td>
+  <td><?= number_format($trans_amount,2) ?></td>
+  <td><?= number_format($current_balance,2) ?></td>
+  <td><?= htmlspecialchars($t['created_at']) ?></td>
+  <td><?= htmlspecialchars($t['notes'] ?? '-') ?></td>
+  <td>حركة</td>
+</tr>
+<?php endforeach; ?>
 <?php endforeach; ?>
 </tbody>
 
 <tfoot>
-<?php if(!empty($r['has_vat']) && $r['has_vat'] == 1){ ?>   
-<tr style="font-weight:bold;background:#f1f1f1">
-  <td colspan="5">الإجماليات الكلية</td>
-  <td><?= number_format($totalBefore, 4) ?></td>
-  <td><?= number_format($totalVat, 4) ?></td>
-  <td><?= number_format($totalAfter, 4) ?></td>
+<tr>
+  <td colspan="2">الإجماليات</td>
+  <td><?= number_format($total_in, 2) ?></td>
+  <td><?= number_format($total_out, 2) ?></td>
+  <td><?= number_format($balance, 2) ?></td>
   <td colspan="3"></td>
 </tr>
-<?php }else{ ?>
-  <tr style="font-weight:bold;background:#f1f1f1">
-  <td colspan="5">الإجماليات الكلية</td>
-  <td><?= number_format($totalBefore, 4) ?></td>
-  <td>----</td>
-  <td><?= number_format($totalAfter, 4) ?></td>
-  <td colspan="3"></td>
-</tr>
-<?php } ?>   
 </tfoot>
 </table>
 
