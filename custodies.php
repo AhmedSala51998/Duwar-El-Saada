@@ -62,8 +62,8 @@ $options = ['بسام','فيصل المطيري','مؤسسة','شركة'];
   </div>
 </div>
 <style>
-.transparent-orange {
-    background-color: #ff6a00 !important; /* شفاف شويه */
+.table-primary {
+    background-color: rgba(255, 106, 0, 0.3) !important; /* 0.1 يعني شفاف جدًا */
 }
 </style>
 <?php 
@@ -128,7 +128,7 @@ $total_balance = $total_in - $total_out;
         // تحديث الرصيد الأخير للصفوف التالية
         $last_balance = $current_balance;
     ?>
-    <tr class="transparent-orange">
+    <tr class="table-primary">
         <td><?= $r['id'] ?></td>
         <td><?= esc($r['person_name']) ?></td>
         <td><?= number_format($in,2) ?></td>
