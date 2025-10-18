@@ -82,7 +82,7 @@ th, td { word-wrap: break-word; }
 <thead>
 <tr>
   <th>#</th>
-  <th>الشخص</th>
+  <th>البيان</th>
   <th>الوارد</th>
   <th>الصادر</th>
   <th>الرصيد</th>
@@ -142,7 +142,7 @@ foreach($rows as $r):
 ?>
 <tr>
     <td></td>
-    <td>-- <?= $type_ar ?></td>
+    <td><?= htmlspecialchars($r['person_name']) ?> -- <?= $type_ar ?></td>
     <td></td>
     <td><?= number_format($trans_amount,2) ?></td>
     <td><?= number_format($current_balance,2) ?></td>
