@@ -61,7 +61,11 @@ $options = ['بسام','فيصل المطيري','مؤسسة','شركة'];
     <?php endif; ?>
   </div>
 </div>
-
+<style>
+.transparent-orange {
+    background-color: rgba(255, 165, 0, 0.1) !important; /* 0.1 يعني شفاف جدًا */
+}
+</style>
 <?php 
 $last_balance = 0; // الرصيد السابق
 $total_in = 0; 
@@ -90,7 +94,7 @@ $total_balance = $total_in - $total_out;
     </tr>
 
     <!-- عناوين الأعمدة -->
-    <tr class="table-light">
+    <tr class="transparent-orange">
       <th>#</th>
       <th>البيان</th>
       <th>الوارد</th>
