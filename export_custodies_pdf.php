@@ -18,8 +18,9 @@ if ($date_type === 'today') {
     $from_date = $to_date = $yesterday;
 }
 
-// استعلام العهد
-$q = "SELECT id, person_name, main_amount, amount, taken_at, notes, created_at FROM custodies WHERE 1";
+// جلب العهد
+$q = "SELECT id, person_name, main_amount,amount, taken_at, notes, created_at 
+      FROM custodies WHERE 1";
 
 // فلترة بالكلمة المفتاحية
 if ($kw !== '') { 
@@ -41,14 +42,10 @@ $q .= " ORDER BY id ASC";
 
 $s = $pdo->prepare($q); 
 $s->execute($params); 
-$rows = $s->fetchAll(PDO::FETCH_ASSOC);
+$rows = $s->fetchAll();
 
-// إعداد استعلام الحركات
+// جلب الحركات
 $transactions_stmt = $pdo->prepare("SELECT * FROM custody_transactions WHERE custody_id=? ORDER BY created_at ASC");
-
-$last_balance = 0; // الرصيد التراكمي
-$total_in = 0;
-$total_out = 0;
 ?>
 
 <!doctype html>
@@ -71,12 +68,25 @@ tfoot td{font-weight:bold;background:#f1f1f1}
 }
 table { table-layout: fixed; }
 th, td { word-wrap: break-word; }
-.table-primary { background-color: #d9edf7; }
 </style>
 </head>
 <body>
 <img src="assets/logo.png" width="60" style="float:left">
 <h2>تقرير العُهد</h2>
+
+<?php
+if ($date_type === 'today') {
+    echo "<p style='text-align:center;font-weight:bold'>تقرير اليوم (" . date('Y-m-d') . ")</p>";
+} elseif ($date_type === 'yesterday') {
+    echo "<p style='text-align:center;font-weight:bold'>تقرير أمس (" . date('Y-m-d', strtotime('-1 day')) . ")</p>";
+} elseif ($from_date || $to_date) {
+    $fromText = $from_date ?: 'بداية';
+    $toText   = $to_date   ?: 'اليوم';
+    echo "<p style='text-align:center;font-weight:bold'>الفترة من $fromText إلى $toText</p>";
+} else {
+    echo "<p style='text-align:center;font-weight:bold'>كل التقرير</p>";
+}
+?>
 
 <table>
 <thead>
@@ -93,79 +103,75 @@ th, td { word-wrap: break-word; }
 </thead>
 <tbody>
 <?php 
+$total_in = 0;
+$total_out = 0;
+$balance = 0;
+
 foreach($rows as $r): 
-
-    // جلب الحركات المرتبطة بالعهدة
-    $transactions_stmt->execute([$r['id']]);
-    $transactions = $transactions_stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    // لو مفيش حركات، نتخطى هذه العهدة
-    if(count($transactions) == 0) continue;
-
-    $in = (float)$r['main_amount'];  // الوارد
-    $remain = (float)$r['amount'];   // المتبقي
-    $out = $in - $remain;            // المصروف
+    $in  = (float)$r['main_amount'];      // الوارد
+    $out = $in - (float)$r['amount'];     // الصادر الأساسي
     if($out < 0) $out = 0;
 
-    // الرصيد = الرصيد السابق + الوارد - الصادر
-    $current_balance = $last_balance + $in - $out;
-    $last_balance = $current_balance;
+    $balance += $in - $out;               // الرصيد بعد العهدة
+    $current_balance = $balance;
 
     $total_in  += $in;
     $total_out += $out;
 ?>
-<tr class="table-primary">
-    <td><?= $r['id'] ?></td>
-    <td><?= htmlspecialchars($r['person_name']) ?></td>
-    <td><?= number_format($in,2) ?></td>
-    <td><?= number_format($out,2) ?></td>
-    <td><?= number_format($current_balance,2) ?></td>
-    <td><?= htmlspecialchars($r['taken_at']) ?></td>
-    <td><?= htmlspecialchars($r['notes'] ?? '-') ?></td>
-    <td><?= htmlspecialchars($r['created_at']) ?></td>
+<tr style="background:#d0f0ff">
+  <td><?= $r['id'] ?></td>
+  <td><?= htmlspecialchars($r['person_name']) ?></td>
+  <td><?= number_format($in,2) ?></td>
+  <td><?= number_format($out,2) ?></td>
+  <td><?= number_format($current_balance,2) ?></td>
+  <td><?= htmlspecialchars($r['taken_at']) ?></td>
+  <td><?= htmlspecialchars($r['notes'] ?? '-') ?></td>
+  <td><?= htmlspecialchars($r['created_at']) ?></td>
 </tr>
 
-<?php
-    // طباعة الحركات
-    $prev_balance = $current_balance;
-    foreach($transactions as $t):
-        $trans_amount = (float)$t['amount'];
+<?php 
+// الحركات المرتبطة بالعهدة
+$transactions_stmt->execute([$r['id']]);
+$transactions = $transactions_stmt->fetchAll();
+foreach($transactions as $t):
+    $trans_amount = (float)$t['amount'];
 
-        // خصم الصرف من الرصيد
-        //$current_balance = $prev_balance - $trans_amount;
+    // الرصيد بعد الحركة
+    $balance -= $trans_amount;
+    //$current_balance = $balance;
 
-        // تحويل النوع للعربي
-        $type_ar = '';
-        switch($t['type']) {
-            case 'asset': $type_ar = 'أصول'; break;
-            case 'expense': $type_ar = 'مصروفات'; break;
-            case 'purchase': $type_ar = 'مشتريات'; break;
-            default: $type_ar = htmlspecialchars($t['type']); 
-        }
+    // تحويل النوع للعربي
+    $type_ar = '';
+    switch($t['type']) {
+        case 'asset': $type_ar = 'أصول'; break;
+        case 'expense': $type_ar = 'مصروفات'; break;
+        case 'purchase': $type_ar = 'مشتريات'; break;
+        default: $type_ar = htmlspecialchars($t['type']); 
+    }
+
+    $total_out += $trans_amount;
 ?>
 <tr>
-    <td></td>
-    <td>-- <?= $type_ar ?></td>
-    <td></td>
-    <td><?= number_format($trans_amount,2) ?></td>
-    <td><?= number_format($current_balance,2) ?></td>
-    <td><?= htmlspecialchars($t['created_at']) ?></td>
-    <td><?= htmlspecialchars($t['notes'] ?? '') ?></td>
-    <td>حركة</td>
+  <td></td>
+  <td>-- <?= $type_ar ?></td>
+  <td></td>
+  <td><?= number_format($trans_amount,2) ?></td>
+  <td><?= number_format($current_balance,2) ?></td>
+  <td><?= htmlspecialchars($t['created_at']) ?></td>
+  <td><?= htmlspecialchars($t['notes'] ?? '-') ?></td>
+  <td>حركة</td>
 </tr>
-<?php
-        $prev_balance = $current_balance;
-    endforeach; 
-endforeach; 
-?>
+<?php endforeach; ?>
+<?php endforeach; ?>
 </tbody>
+
 <tfoot>
 <tr>
-    <td colspan="2">الإجماليات</td>
-    <td><?= number_format($total_in, 2) ?></td>
-    <td><?= number_format($total_out, 2) ?></td>
-    <td><?= number_format($last_balance, 2) ?></td>
-    <td colspan="3"></td>
+  <td colspan="2">الإجماليات</td>
+  <td><?= number_format($total_in, 2) ?></td>
+  <td><?= number_format($total_out, 2) ?></td>
+  <td><?= number_format($balance, 2) ?></td>
+  <td colspan="3"></td>
 </tr>
 </tfoot>
 </table>
