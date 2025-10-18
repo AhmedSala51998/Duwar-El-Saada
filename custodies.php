@@ -136,7 +136,7 @@ $total_balance = $total_in - $total_out;
         $trans_amount = (float)$t['amount'];
 
         // في حالتك الحركات هي صرف من العهدة => نطرح من الرصيد
-        $current_balance -= ($trans_amount - $last_balance);
+        $current_balance -= $trans_amount;
 
         // تحويل النوع للعربي
         $type_ar = '';
