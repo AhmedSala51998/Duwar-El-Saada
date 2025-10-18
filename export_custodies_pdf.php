@@ -211,7 +211,7 @@ foreach($transactions as $t):
     <td><?= number_format($current_balance,2) ?></td>
     <td><?= htmlspecialchars($t['created_at']) ?></td>
     <td><?= htmlspecialchars($t['notes'] ?? '') ?></td>
-    <td>حركة</td>
+    <td><?= $type_ar ?></td>
 </tr>
 <?php
         $prev_balance = $current_balance;

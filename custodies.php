@@ -165,7 +165,7 @@ $total_balance = $total_in - $total_out;
         <td><?= number_format($current_balance,2) ?></td>
         <td><?= esc($t['created_at']) ?></td>
         <td><?= esc($t['notes'] ?? '') ?></td>
-        <td>حركة</td>
+        <td><?= $type_ar ?></td>
         <?php if($can_edit): ?><td></td><?php endif; ?>
     </tr>
 

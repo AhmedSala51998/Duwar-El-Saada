@@ -105,7 +105,7 @@ foreach ($rows as $r) {
             number_format($current_balance, 2),
             $t['created_at'],
             $t['notes'] ?? '',
-            'حركة'
+            $type_ar
         ];
 
         $total_out += $trans_amount;
