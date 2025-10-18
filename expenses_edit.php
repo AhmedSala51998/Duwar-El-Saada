@@ -75,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
             $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? AND amount > 0 ORDER BY taken_at ASC");
             $stmtC->execute([$newData['payer_name']]);
             $custodies = $stmtC->fetchAll(PDO::FETCH_ASSOC);
-            $notes = $_POST['main_expense'] . "-" . $_POST['sub_expense'] . "-" . $_POST['expense_desc'];
+            $notes = "مصروفات " . $_POST['main_expense'] . "-" . $_POST['sub_expense'] . "-" . $_POST['expense_desc'];
 
             foreach ($custodies as $custody) {
                 if ($amountNeeded <= 0) break;

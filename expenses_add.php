@@ -71,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
         $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? AND amount > 0 ORDER BY taken_at ASC");
         $stmtC->execute([$payer_name]);
         $custodies = $stmtC->fetchAll(PDO::FETCH_ASSOC);
-        $notes = $main_expense . "-" . $sub_expense . "-" . $expense_desc;
+        $notes = "مصروفات " . $main_expense . "-" . $sub_expense . "-" . $expense_desc;
 
         $amountToDeduct = $expense_amount + $vat_value;
         foreach($custodies as $custody){
