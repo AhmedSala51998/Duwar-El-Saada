@@ -111,6 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
             $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? AND amount > 0 ORDER BY taken_at ASC");
             $stmtC->execute([$payer]);
             $custodies = $stmtC->fetchAll(PDO::FETCH_ASSOC);
+            $notes = "شراء " . $name;
 
             foreach ($custodies as $custody) {
                 if ($amountNeeded <= 0) break;
@@ -120,8 +121,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
                     $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
 
                     // سجل المعاملة
-                    $stmtTx = $pdo->prepare("INSERT INTO custody_transactions (type, type_id, custody_id, amount, created_at) VALUES (?, ?, ?, ?, NOW())");
-                    $stmtTx->execute(['purchase', $purchase_id ?? 0, $custody['id'], $amountNeeded]);
+                    $stmtTx = $pdo->prepare("INSERT INTO custody_transactions (type, type_id, custody_id, amount,notes, created_at) VALUES (?, ?, ?, ?,?, NOW())");
+                    $stmtTx->execute(['purchase', $purchase_id ?? 0, $custody['id'], $amountNeeded, $notes]);
 
                     $amountNeeded = 0;
                 } else {
@@ -129,8 +130,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
                     $pdo->prepare("UPDATE custodies SET amount=0 WHERE id=?")->execute([$custody['id']]);
 
                     // سجل المعاملة
-                    $stmtTx = $pdo->prepare("INSERT INTO custody_transactions (type, type_id, custody_id, amount, created_at) VALUES (?, ?, ?, ?, NOW())");
-                    $stmtTx->execute(['purchase', $purchase_id ?? 0, $custody['id'], $amountToUse]);
+                    $stmtTx = $pdo->prepare("INSERT INTO custody_transactions (type, type_id, custody_id, amount,notes, created_at) VALUES (?, ?, ?, ?,?, NOW())");
+                    $stmtTx->execute(['purchase', $purchase_id ?? 0, $custody['id'], $amountToUse, $notes]);
 
                     $amountNeeded -= $amountToUse;
                 }

@@ -131,20 +131,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
                 $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? AND amount > 0 ORDER BY taken_at ASC");
                 $stmtC->execute([$newData['payer_name']]);
                 $custodies = $stmtC->fetchAll(PDO::FETCH_ASSOC);
+                $notes = "شراء " . $_POST['name'];
 
                 foreach ($custodies as $custody) {
                     if ($amountNeeded <= 0) break;
                     if ($custody['amount'] >= $amountNeeded) {
                         $newAmount = $custody['amount'] - $amountNeeded;
                         $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
-                        $pdo->prepare("INSERT INTO custody_transactions (type, type_id, custody_id, amount, created_at) VALUES (?, ?, ?, ?, NOW())")
-                            ->execute(['purchase', $oldData['id'], $custody['id'], $amountNeeded]);
+                        $pdo->prepare("INSERT INTO custody_transactions (type, type_id, custody_id, amount,notes, created_at) VALUES (?, ?, ?, ?,?, NOW())")
+                            ->execute(['purchase', $oldData['id'], $custody['id'], $amountNeeded, $notes]);
                         $amountNeeded = 0;
                     } else {
                         $amountDeducted = $custody['amount'];
                         $pdo->prepare("UPDATE custodies SET amount=0 WHERE id=?")->execute([$custody['id']]);
-                        $pdo->prepare("INSERT INTO custody_transactions (type, type_id, custody_id, amount, created_at) VALUES (?, ?, ?, ?, NOW())")
-                            ->execute(['purchase', $oldData['id'], $custody['id'], $amountDeducted]);
+                        $pdo->prepare("INSERT INTO custody_transactions (type, type_id, custody_id, amount,notes, created_at) VALUES (?, ?, ?, ?,?, NOW())")
+                            ->execute(['purchase', $oldData['id'], $custody['id'], $amountDeducted, $notes]);
                         $amountNeeded -= $amountDeducted;
                     }
                 }
@@ -241,20 +242,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
             $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? AND amount > 0 ORDER BY taken_at ASC");
             $stmtC->execute([$newData['payer_name']]);
             $custodies = $stmtC->fetchAll(PDO::FETCH_ASSOC);
+            $notes = "شراء " . $_POST['name'];
 
             foreach ($custodies as $custody) {
                 if ($amountNeeded <= 0) break;
                 if ($custody['amount'] >= $amountNeeded) {
                     $newAmount = $custody['amount'] - $amountNeeded;
                     $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
-                    $pdo->prepare("INSERT INTO custody_transactions (type, type_id, custody_id, amount, created_at) VALUES (?, ?, ?, ?, NOW())")
-                        ->execute(['purchase', $oldData['id'], $custody['id'], $amountNeeded]);
+                    $pdo->prepare("INSERT INTO custody_transactions (type, type_id, custody_id, amount,notes, created_at) VALUES (?, ?, ?, ?,?, NOW())")
+                        ->execute(['purchase', $oldData['id'], $custody['id'], $amountNeeded, $notes]);
                     $amountNeeded = 0;
                 } else {
                     $amountDeducted = $custody['amount'];
                     $pdo->prepare("UPDATE custodies SET amount=0 WHERE id=?")->execute([$custody['id']]);
-                    $pdo->prepare("INSERT INTO custody_transactions (type, type_id, custody_id, amount, created_at) VALUES (?, ?, ?, ?, NOW())")
-                        ->execute(['purchase', $oldData['id'], $custody['id'], $amountDeducted]);
+                    $pdo->prepare("INSERT INTO custody_transactions (type, type_id, custody_id, amount,notes, created_at) VALUES (?, ?, ?, ?,?, NOW())")
+                        ->execute(['purchase', $oldData['id'], $custody['id'], $amountDeducted, $notes]);
                     $amountNeeded -= $amountDeducted;
                 }
             }

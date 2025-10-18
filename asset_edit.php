@@ -120,6 +120,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
                 $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? AND amount > 0 ORDER BY taken_at ASC");
                 $stmtC->execute([$newData['payer_name']]);
                 $custodies = $stmtC->fetchAll(PDO::FETCH_ASSOC);
+                $notes = "شراء " . $_POST['name'];
 
                 foreach ($custodies as $custody) {
                     if ($amountNeeded <= 0) break;
@@ -130,10 +131,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
 
                     // سجل المعاملة
                     $stmtTx = $pdo->prepare("
-                        INSERT INTO custody_transactions (type, type_id, custody_id, amount, created_at)
-                        VALUES (?, ?, ?, ?, NOW())
+                        INSERT INTO custody_transactions (type, type_id, custody_id, amount , notes, created_at)
+                        VALUES (?, ?, ?, ?,?, NOW())
                     ");
-                    $stmtTx->execute(['asset', $oldData['id'], $custody['id'], $deduct]);
+                    $stmtTx->execute(['asset', $oldData['id'], $custody['id'], $deduct , $notes]);
 
                     $amountNeeded -= $deduct;
                 }
