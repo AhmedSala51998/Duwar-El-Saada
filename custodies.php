@@ -108,7 +108,6 @@ $total_balance = $total_in - $total_out;
         $remain = (float)$r['amount'];   // المتبقي
         $out = $in - $remain;            // المصروف
         if($out < 0) $out = 0;
-        if($in == $remain) $out = 0;
 
         // الرصيد = الرصيد السابق + الوارد - الصادر
         $current_balance = $last_balance + $in - $out;
@@ -137,7 +136,7 @@ $total_balance = $total_in - $total_out;
         $trans_amount = (float)$t['amount'];
 
         // في حالتك الحركات هي صرف من العهدة => نطرح من الرصيد
-        //$current_balance -= $trans_amount;
+        $current_balance -= $trans_amount;
 
         // تحويل النوع للعربي
         $type_ar = '';
