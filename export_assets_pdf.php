@@ -99,24 +99,45 @@ if ($date_type === 'today') {
 ?>
 
 <!-- زر الطباعة -->
-<div id="printBtnContainer" style="text-align:center;margin:20px 0;">
+<div id="printBtnContainer" style="text-align:center;margin:20px 0; display: flex; justify-content: center; gap: 15px;">
+  <!-- زر الطباعة -->
   <button 
     onclick="printAndGoBack()" 
     style="
-      background-color: #ff6a00;  /* لون أخضر */
-      color: white;                /* لون الخط */
-      border: none;                /* إزالة الحدود */
-      padding: 10px 20px;          /* مساحة حول النص */
-      font-size: 16px;             /* حجم الخط */
-      font-weight: bold;           /* خط غامق */
-      border-radius: 8px;          /* زوايا مستديرة */
-      cursor: pointer;             /* شكل المؤشر */
-      transition: background 0.3s; /* تأثير عند المرور */
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
     "
-    onmouseover="this.style.backgroundColor='#ff6a00';"
-    onmouseout="this.style.backgroundColor='#ff6a00';"
+    onmouseover="this.style.backgroundColor='#45a049';"
+    onmouseout="this.style.backgroundColor='#4CAF50';"
   >
     طباعة التقرير
+  </button>
+
+  <!-- زر الرجوع -->
+  <button 
+    onclick="goBack()" 
+    style="
+      background-color: #f44336;  /* أحمر */
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    "
+    onmouseover="this.style.backgroundColor='#d32f2f';"
+    onmouseout="this.style.backgroundColor='#f44336';"
+  >
+    العودة للصفحة السابقة
   </button>
 </div>
 
@@ -203,6 +224,9 @@ function printAndGoBack() {
   window.onafterprint = function () {
     window.history.back();
   };
+}
+function goBack() {
+  window.history.back();
 }
 </script>
 </body>
