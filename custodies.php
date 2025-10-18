@@ -63,7 +63,7 @@ $options = ['بسام','فيصل المطيري','مؤسسة','شركة'];
 </div>
 
 <?php 
-$last_balance = 0; // الرصيد السابق
+$last_balance = 0;
 $total_in = 0; 
 $total_out = 0; 
 
@@ -104,9 +104,9 @@ $total_balance = $total_in - $total_out;
     <tbody>
     <?php
     foreach($rows as $r): 
-        $in = (float)$r['main_amount'];  // الوارد
-        $remain = (float)$r['amount'];   // المتبقي
-        $out = $in - $remain;            // المصروف
+        $in = (float)$r['main_amount'];  
+        $remain = (float)$r['amount'];   
+        $out = $in - $remain;            
         if($out < 0) $out = 0;
 
         // الرصيد = الرصيد السابق + الوارد - الصادر
@@ -116,29 +116,33 @@ $total_balance = $total_in - $total_out;
     <tr class="table-primary">
         <td><?= $r['id'] ?></td>
         <td><?= esc($r['person_name']) ?></td>
-        <td><?= number_format($in,2) ?></td>  <!-- الوارد -->
-        <td><?= number_format($out,2) ?></td> <!-- الصادر -->
-        <td><?= number_format($current_balance,2) ?></td> <!-- الرصيد -->
+        <td><?= number_format($in,2) ?></td>  
+        <td><?= $out > 0 ? number_format($out,2) : '' ?></td> 
+        <td><?= number_format($current_balance,2) ?></td> 
         <td><?= esc($r['taken_at']) ?></td>
         <td><?= esc($r['notes']) ?></td>
+        <?php if($can_edit): ?>
         <td>
           <a class="btn btn-sm btn-outline-primary" href="invoice_custody?id=<?= $r['id'] ?>"><i class="bi bi-printer"></i></a>
           <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#e<?= $r['id'] ?>"><i class="bi bi-pencil"></i></button>
           <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#del<?= $r['id'] ?>"><i class="bi bi-trash"></i></button>
         </td>
+        <?php endif; ?>
     </tr>
 
     <?php 
-    // الحركات المرتبطة بالعهدة
+    // عرض الحركات
     $transactions_stmt->execute([$r['id']]);
     $transactions = $transactions_stmt->fetchAll();
+
     foreach($transactions as $t):
         $trans_amount = (float)$t['amount'];
 
-        // في حالتك الحركات هي صرف من العهدة => نطرح من الرصيد
-        //$current_balance -= $trans_amount;
+        // الرصيد = الرصيد السابق + 0 (مفيش وارد) - الصادر
+        $current_balance = $last_balance - $trans_amount;
+        $last_balance = $current_balance;
 
-        // تحويل النوع للعربي
+        // نوع الحركة بالعربي
         $type_ar = '';
         switch($t['type']) {
             case 'asset': $type_ar = 'أصول'; break;
@@ -150,15 +154,13 @@ $total_balance = $total_in - $total_out;
     <tr>
         <td></td>
         <td>-- <?= $type_ar ?></td>
-        <td></td> <!-- لا يوجد وارد هنا -->
+        <td></td> <!-- وارد فاضي -->
         <td><?= number_format($trans_amount,2) ?></td> <!-- الصادر -->
-        <td><?= number_format($current_balance,2) ?></td>
+        <td><?= number_format($current_balance,2) ?></td> <!-- الرصيد -->
         <td><?= esc($t['created_at']) ?></td>
         <td><?= esc($t['notes'] ?? '') ?></td>
         <td>حركة</td>
-        <?php if($can_edit): ?><td></td><?php endif; ?>
     </tr>
-
     <?php endforeach; ?>
 
     <!-- تعديل -->
