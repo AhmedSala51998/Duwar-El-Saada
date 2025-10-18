@@ -138,7 +138,7 @@ foreach($transactions as $t):
 
     // الرصيد بعد الحركة
     $balance -= $trans_amount;
-    //$current_balance = $balance;
+    $current_balance = $balance;
 
     // تحويل النوع للعربي
     $type_ar = '';
