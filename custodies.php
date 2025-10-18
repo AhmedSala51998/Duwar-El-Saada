@@ -160,7 +160,7 @@ $total_balance = $total_in - $total_out;
     ?>
     <tr>
         <td></td>
-        <td>-- <?= $type_ar ?></td>
+        <td><?= esc($r['person_name']) ?> -- <?= $type_ar ?></td>
         <td></td>
         <td><?= number_format($trans_amount,2) ?></td>
         <td><?= number_format($current_balance,2) ?></td>

@@ -18,8 +18,8 @@ if($_SERVER['REQUEST_METHOD']==='POST' && csrf_validate($_POST['_csrf'] ?? '')){
     }
     $serial_invoice = "DAELC" . str_pad($nextNumber, 5, "0", STR_PAD_LEFT);
 
-    $pdo->prepare("INSERT INTO custodies(invoice_serial , person_name,amount , main_amount,taken_at,notes) VALUES(?,?,?,?,?,?)")
-        ->execute([$serial_invoice,$person_name,$amount , $main_amount,$taken_at,$notes]);
+    $pdo->prepare("INSERT INTO custodies(invoice_serial , person_name,amount , main_amount,sub_amount,taken_at,notes) VALUES(?,?,?,?,?,?)")
+        ->execute([$serial_invoice,$person_name,$amount , $main_amount,$main_amount,$taken_at,$notes]);
 
     $_SESSION['toast'] = ['type'=>'success','msg'=>'تمت الإضافة بنجاح'];
 }
