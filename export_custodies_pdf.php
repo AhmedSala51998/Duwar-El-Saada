@@ -103,18 +103,21 @@ if ($date_type === 'today') {
 </thead>
 <tbody>
 <?php 
+$last_balance = 0;   // الرصيد السابق
 $total_in = 0;
 $total_out = 0;
-$balance = 0;
 
 foreach($rows as $r): 
-    $in  = (float)$r['main_amount'];      // الوارد
-    $out = $in - (float)$r['amount'];     // الصادر الأساسي
+    $in  = (float)$r['main_amount'];    // الوارد
+    $remain = (float)$r['amount'];      // المتبقي
+    $out = $in - $remain;               // الصادر
     if($out < 0) $out = 0;
 
-    $balance += $in - $out;               // الرصيد بعد العهدة
-    $current_balance = $balance;
+    // الرصيد = الرصيد السابق + الوارد - الصادر
+    $current_balance = $last_balance + $in - $out;
+    $last_balance = $current_balance;
 
+    // إجماليات
     $total_in  += $in;
     $total_out += $out;
 ?>
@@ -130,17 +133,18 @@ foreach($rows as $r):
 </tr>
 
 <?php 
-// الحركات المرتبطة بالعهدة
+// الحركات التابعة للعهدة
 $transactions_stmt->execute([$r['id']]);
 $transactions = $transactions_stmt->fetchAll();
+
 foreach($transactions as $t):
     $trans_amount = (float)$t['amount'];
 
-    // الرصيد بعد الحركة
-    $balance -= $trans_amount;
-    $current_balance = $balance;
+    // في الحركات، نخصم الصادر من الرصيد الحالي
+    $current_balance -= $trans_amount;
+    $last_balance = $current_balance;
 
-    // تحويل النوع للعربي
+    // نوع الحركة بالعربي
     $type_ar = '';
     switch($t['type']) {
         case 'asset': $type_ar = 'أصول'; break;
@@ -170,7 +174,7 @@ foreach($transactions as $t):
   <td colspan="2">الإجماليات</td>
   <td><?= number_format($total_in, 2) ?></td>
   <td><?= number_format($total_out, 2) ?></td>
-  <td><?= number_format($balance, 2) ?></td>
+  <td><?= number_format($last_balance, 2) ?></td>
   <td colspan="3"></td>
 </tr>
 </tfoot>
