@@ -172,8 +172,9 @@ $totalBefore = 0; $totalVat = 0; $totalAfter = 0;
   th{background:#f7f7f7}
   h3,h4{text-align:center}
     @media print {
-    #printBtnContainer {
-      display: none; /* إخفاء الزر أثناء الطباعة */
+    #printBtnContainer,
+    #printBtnContainer * {
+      display: none !important; /* إخفاء الزر وكل محتوياته أثناء الطباعة */
     }
   }
 </style>

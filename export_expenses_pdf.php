@@ -57,8 +57,9 @@ tfoot td{font-weight:bold;background:#f1f1f1}
   table { page-break-inside: auto; }
   tr    { page-break-inside: avoid; page-break-after: auto; }
   th, td { padding: 3px; }
-    #printBtnContainer {
-      display: none; /* إخفاء الزر أثناء الطباعة */
+    #printBtnContainer,
+    #printBtnContainer * {
+      display: none !important; /* إخفاء الزر وكل محتوياته أثناء الطباعة */
     }
 }
 table {
