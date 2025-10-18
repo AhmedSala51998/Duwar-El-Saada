@@ -100,7 +100,7 @@ foreach($rows as $r):
     $transactions = $transactions_stmt->fetchAll(PDO::FETCH_ASSOC);
 
     $in = (float)$r['main_amount'];  // الوارد
-    $remain = (float)$r['sub_amount'];   // المتبقي
+    $remain = (float)$r['amount'];   // المتبقي
     $out = $in - $remain;            // المصروف
     if($out < 0) $out = 0;
 
