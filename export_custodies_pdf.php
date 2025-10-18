@@ -77,6 +77,19 @@ th, td { word-wrap: break-word; }
 <body>
 <img src="assets/logo.png" width="60" style="float:left">
 <h2>تقرير العُهد</h2>
+<?php
+if ($date_type === 'today') {
+    echo "<p style='text-align:center;font-weight:bold'>تقرير اليوم (" . date('Y-m-d') . ")</p>";
+} elseif ($date_type === 'yesterday') {
+    echo "<p style='text-align:center;font-weight:bold'>تقرير أمس (" . date('Y-m-d', strtotime('-1 day')) . ")</p>";
+} elseif ($from_date || $to_date) {
+    $fromText = $from_date ?: 'بداية';
+    $toText   = $to_date   ?: 'اليوم';
+    echo "<p style='text-align:center;font-weight:bold'>الفترة من $fromText إلى $toText</p>";
+} else {
+    echo "<p style='text-align:center;font-weight:bold'>كل التقرير</p>";
+}
+?>
 
 <table>
 <thead>
