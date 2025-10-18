@@ -92,7 +92,7 @@ $total_balance = $total_in - $total_out;
     <!-- عناوين الأعمدة -->
     <tr class="table-light">
       <th>#</th>
-      <th>اسم الشخص</th>
+      <th>البيان</th>
       <th>الوارد</th>
       <th>الصادر</th>
       <th>الرصيد</th>
