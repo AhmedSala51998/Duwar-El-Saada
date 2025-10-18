@@ -84,8 +84,8 @@ foreach ($rows as $r) {
     $transactions = $transactions_stmt->fetchAll(PDO::FETCH_ASSOC);
     foreach ($transactions as $t) {
         $trans_amount = (float)$t['amount'];
-        $balance -= $trans_amount;
-        /*$current_balance = $balance;*/
+        /*$balance -= $trans_amount;
+        $current_balance = $balance;*/
 
         // تحويل نوع الحركة للعربي
         $type_ar = '';
