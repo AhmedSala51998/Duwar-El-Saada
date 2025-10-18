@@ -54,24 +54,27 @@ $rows = $s->fetchAll();
   th,td{border:1px solid #ddd;padding:6px;text-align:center}
   th{background:#f7f7f7}
   @media print {
-  body { font-size: 10px; }
-  table { page-break-inside: auto; }
-  tr    { page-break-inside: avoid; page-break-after: auto; }
-  th, td { padding: 3px; }
-}
-table {
-  width: 100%;
-  border-collapse: collapse;
-  table-layout: fixed; /* مهم */
-}
-
-th, td {
-  border: 1px solid #ddd;
-  padding: 4px;
-  text-align: center;
-  word-wrap: break-word; /* لتقسيم النصوص الطويلة */
-}
-
+    body { font-size: 10px; }
+    table { page-break-inside: auto; }
+    tr    { page-break-inside: avoid; page-break-after: auto; }
+    th, td { padding: 3px; }
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed; /* مهم */
+  }
+  th, td {
+    border: 1px solid #ddd;
+    padding: 4px;
+    text-align: center;
+    word-wrap: break-word; /* لتقسيم النصوص الطويلة */
+  }
+  button {
+    padding: 8px 15px;
+    font-size: 16px;
+    cursor: pointer;
+  }
 </style>
 </head>
 <body>
@@ -92,6 +95,11 @@ if ($date_type === 'today') {
 }
 ?>
 
+<!-- زر الطباعة -->
+<div style="text-align:center;margin:15px 0">
+  <button onclick="printAndGoBack()">طباعة التقرير</button>
+</div>
+
 <table>
 <thead>
 <tr>
@@ -108,11 +116,10 @@ if ($date_type === 'today') {
   <th>التاريخ</th>
 </tr>
 </thead>
+<tbody>
 <?php 
 $totalBefore = $totalVat = $totalAfter = 0;
-?>
-<tbody>
-<?php foreach($rows as $r): 
+foreach($rows as $r): 
     $quantity = (float)$r['quantity'];
     $price = (float)$r['price'];
     $total = $quantity * $price;
@@ -159,7 +166,7 @@ $totalBefore = $totalVat = $totalAfter = 0;
   <td colspan="3"></td>
 </tr>
 <?php }else{ ?>
-  <tr style="font-weight:bold;background:#f1f1f1">
+<tr style="font-weight:bold;background:#f1f1f1">
   <td colspan="5">الإجماليات الكلية</td>
   <td><?= number_format($totalBefore, 4) ?></td>
   <td>----</td>
@@ -171,10 +178,12 @@ $totalBefore = $totalVat = $totalAfter = 0;
 </table>
 
 <script>
+function printAndGoBack() {
   window.print();
   window.onafterprint = function () {
     window.history.back();
   };
+}
 </script>
 </body>
 </html>
