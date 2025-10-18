@@ -100,16 +100,23 @@ foreach($rows as $r):
     $transactions = $transactions_stmt->fetchAll(PDO::FETCH_ASSOC);
 
     $in = (float)$r['main_amount'];  // الوارد
-    $remain = (float)$r['amount'];   // المتبقي
+    $remain = (float)$r['sub_amount'];   // المتبقي
     $out = $in - $remain;            // المصروف
     if($out < 0) $out = 0;
 
     // الرصيد = الرصيد السابق + الوارد - الصادر
-    $current_balance = $last_balance + $in - $out;
-    $last_balance = $current_balance;
+   // جلب الحركات المرتبطة بالعهدة
 
-    $total_in  += $in;
-    $total_out += $out;
+    if(count($transactions) > 0){
+        // لو فيه حركة، الرصيد يبدأ من الوارد - الصادر
+        $current_balance = $in - $out;
+    } else {
+        // لو مفيش حركة، الرصيد يعتمد على آخر رصيد محسوب
+        $current_balance = $last_balance + $in - $out;
+    }
+
+    // تحديث الرصيد الأخير للصفوف التالية
+    $last_balance = $current_balance;
 ?>
 <tr class="table-primary">
     <td><?= $r['id'] ?></td>
@@ -128,18 +135,18 @@ foreach($rows as $r):
     foreach($transactions as $t):
         $trans_amount = (float)$t['amount'];
 
-        // خصم الصرف من الرصيد
+
+        // خصم الحركة من الرصيد الحالي
         $current_balance = $prev_balance - $trans_amount;
 
-        // تحويل النوع للعربي
         $type_ar = '';
         switch($t['type']) {
             case 'asset': $type_ar = 'أصول'; break;
             case 'expense': $type_ar = 'مصروفات'; break;
             case 'purchase': $type_ar = 'مشتريات'; break;
-            default: $type_ar = htmlspecialchars($t['type']); 
+            default: $type_ar = esc($t['type']); 
         }
-?>
+    ?>
 <tr>
     <td></td>
     <td><?= htmlspecialchars($r['person_name']) ?> -- <?= $type_ar ?></td>
