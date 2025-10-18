@@ -20,17 +20,17 @@ if ($date_type === 'today') {
 }
 
 // استعلام العهد
-$q = "SELECT id, person_name, main_amount, amount, taken_at, notes, created_at FROM custodies WHERE 1";
+$q = "SELECT id, person_name, main_amount,sub_amount, amount, taken_at, notes, created_at FROM custodies WHERE 1";
 
 if ($kw !== '') {
     $q .= " AND person_name LIKE ?";
     $params[] = "%$kw%";
 }
-if ($from_date !== '') {
+if ($from_date) {
     $q .= " AND DATE(created_at) >= ?";
     $params[] = $from_date;
 }
-if ($to_date !== '') {
+if ($to_date) {
     $q .= " AND DATE(created_at) <= ?";
     $params[] = $to_date;
 }
@@ -45,24 +45,28 @@ $rows = $s->fetchAll(PDO::FETCH_ASSOC);
 $transactions_stmt = $pdo->prepare("SELECT * FROM custody_transactions WHERE custody_id=? ORDER BY created_at ASC");
 
 $data = [];
-$data[] = ["ID", "الشخص", "الوارد", "الصادر", "الرصيد", "تاريخ الاستلام", "ملاحظات", "تاريخ الإضافة"];
+$data[] = ["ID", "البيان", "الوارد", "الصادر", "الرصيد", "تاريخ الاستلام", "ملاحظات", "تاريخ الإضافة"];
 
 $last_balance = 0;
 $total_in = 0;
 $total_out = 0;
 
 foreach ($rows as $r) {
-    // جلب الحركات المرتبطة بالعهدة
-    $transactions_stmt->execute([$r['id']]);
-    $transactions = $transactions_stmt->fetchAll(PDO::FETCH_ASSOC);
-
     $in = (float)$r['main_amount'];
-    $remain = (float)$r['amount'];
+    $remain = (float)$r['sub_amount'];
     $out = $in - $remain;
     if ($out < 0) $out = 0;
 
-    // الرصيد التراكمي
-    $current_balance = $last_balance + $in - $out;
+    // جلب الحركات
+    $transactions_stmt->execute([$r['id']]);
+    $transactions = $transactions_stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    if (count($transactions) > 0) {
+        $current_balance = $in - $out;
+    } else {
+        $current_balance = $last_balance + $in - $out;
+    }
+
     $last_balance = $current_balance;
 
     $data[] = [
@@ -79,13 +83,14 @@ foreach ($rows as $r) {
     $total_in += $in;
     $total_out += $out;
 
-    // إضافة الحركات تحت كل عهدة (لو موجودة)
+    // إضافة الحركات
     foreach ($transactions as $t) {
         $trans_amount = (float)$t['amount'];
+        $current_balance -= $trans_amount;
+        $last_balance = $current_balance;
 
-        // تحويل النوع للعربي
         $type_ar = '';
-        switch($t['type']) {
+        switch ($t['type']) {
             case 'asset': $type_ar = 'أصول'; break;
             case 'expense': $type_ar = 'مصروفات'; break;
             case 'purchase': $type_ar = 'مشتريات'; break;
@@ -93,22 +98,24 @@ foreach ($rows as $r) {
         }
 
         $data[] = [
-            '',                // ID فارغ للحركة
-            "-- $type_ar",     // اسم الحركة
-            '',                // الوارد فارغ
-            number_format($trans_amount,2), // الصادر
-            number_format($current_balance,2), // الرصيد
+            '',
+            "-- {$r['person_name']} -- $type_ar",
+            '',
+            number_format($trans_amount, 2),
+            number_format($current_balance, 2),
             $t['created_at'],
             $t['notes'] ?? '',
             'حركة'
         ];
+
+        $total_out += $trans_amount;
     }
 }
 
-// إضافة صف الإجماليات
+// صف الإجماليات
 $data[] = [
     '',
-    'الإجمالي الكلي',
+    'الإجماليات',
     number_format($total_in, 2),
     number_format($total_out, 2),
     number_format($last_balance, 2),
@@ -117,7 +124,7 @@ $data[] = [
     ''
 ];
 
-// إنشاء ملف Excel وتنزيله
+// إنشاء Excel وتنزيله
 $xlsx = Shuchkin\SimpleXLSXGen::fromArray($data);
 $xlsx->downloadAs('custodies.xlsx');
 ?>
