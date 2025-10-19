@@ -1,5 +1,28 @@
 <?php require __DIR__.'/partials/header.php'; ?>
+<style>
+  .pagination .page-link {
+    color: #ff6a00;
+    border-color: #ff6a00;
+}
 
+.pagination .page-item.active .page-link {
+    background-color: #ff6a00;
+    border-color: #ff6a00;
+    color: #fff;
+}
+
+.pagination .page-link:hover {
+    background-color: #ff6a00;
+    color: #fff;
+    border-color: #ff6a00;
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #ccc;
+    border-color: #ccc;
+}
+
+</style>
 <?php
 // توست الرسائل
 if(!empty($_SESSION['toast'])){ 
@@ -24,13 +47,36 @@ if(!empty($_SESSION['toast'])){
 
 <?php
 $kw = trim($_GET['kw'] ?? '');
+
+$perPage = 10; // عدد الصفوف في الصفحة
+$page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+
+// بناء استعلام العد الكلي
+$count_query = "SELECT COUNT(*) as total FROM custodies WHERE 1";
+$count_params = [];
+
+if($kw!==''){ 
+  $count_query .= " AND person_name LIKE ?"; 
+  $count_params[] = "%$kw%"; 
+}
+
+$stmtTotal = $pdo->prepare($count_query);
+$stmtTotal->execute($count_params);
+$total_rows = $stmtTotal->fetch()['total'];
+$total_pages = ceil($total_rows / $perPage);
+
+// حساب الـ offset
+$offset = ($page - 1) * $perPage;
+
+// بناء الاستعلام الرئيسي مع LIMIT
 $q = "SELECT * FROM custodies WHERE 1";
-$ps=[];
+$ps = [];
 if($kw!==''){ 
   $q.=" AND person_name LIKE ?"; 
   $ps[]="%$kw%"; 
 }
-$q.=" ORDER BY id ASC";
+$q.=" ORDER BY id ASC LIMIT $perPage OFFSET $offset";
+
 $s=$pdo->prepare($q);
 $s->execute($ps);
 $rows=$s->fetchAll();
@@ -215,6 +261,48 @@ $total_balance = $total_in - $total_out;
   </tbody>
 </table>
 </div>
+<?php if ($total_pages > 1): ?>
+<nav aria-label="صفحات النتائج" class="mt-3">
+  <ul class="pagination justify-content-center flex-wrap">
+    <li class="page-item <?= $page == 1 ? 'disabled' : '' ?>">
+      <a class="page-link" href="?kw=<?= urlencode($kw) ?>&page=1">الأول</a>
+    </li>
+
+    <li class="page-item <?= $page <= 1 ? 'disabled' : '' ?>">
+      <a class="page-link" href="?kw=<?= urlencode($kw) ?>&page=<?= $page - 1 ?>">السابق</a>
+    </li>
+
+    <?php
+    $max_links = 5;
+    $start = max($page - 2, 1);
+    $end = min($page + 2, $total_pages);
+
+    if($start > 1){
+        echo '<li class="page-item disabled"><span class="page-link">…</span></li>';
+    }
+
+    for($i = $start; $i <= $end; $i++): ?>
+      <li class="page-item <?= $page == $i ? 'active' : '' ?>">
+        <a class="page-link" href="?kw=<?= urlencode($kw) ?>&page=<?= $i ?>"><?= $i ?></a>
+      </li>
+    <?php endfor;
+
+    if($end < $total_pages){
+        echo '<li class="page-item disabled"><span class="page-link">…</span></li>';
+    }
+    ?>
+
+    <li class="page-item <?= $page >= $total_pages ? 'disabled' : '' ?>">
+      <a class="page-link" href="?kw=<?= urlencode($kw) ?>&page=<?= $page + 1 ?>">التالي</a>
+    </li>
+
+    <li class="page-item <?= $page == $total_pages ? 'disabled' : '' ?>">
+      <a class="page-link" href="?kw=<?= urlencode($kw) ?>&page=<?= $total_pages ?>">الأخير</a>
+    </li>
+  </ul>
+</nav>
+<?php endif; ?>
+
 
 <!-- إضافة -->
 <?php if($can_edit): ?>
