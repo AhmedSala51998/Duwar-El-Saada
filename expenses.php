@@ -142,6 +142,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
             <option <?= $r['main_expense']=="رواتب"?"selected":"" ?>>رواتب</option>
             <option <?= $r['main_expense']=="سكن"?"selected":"" ?>>سكن</option>
             <option <?= $r['main_expense']=="مصروفات تشغيلية"?"selected":"" ?>>مصروفات تشغيلية</option>
+            <option <?= $r['main_expense']=="مصروفات تأسيس"?"selected":"" ?>>مصروفات تأسيس</option>
             <option <?= $r['main_expense']=="مصروفات اخرى"?"selected":"" ?>>مصروفات اخرى</option>
           </select>
 
@@ -264,6 +265,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
             <option value="رواتب">رواتب</option>
             <option value="سكن">سكن</option>
             <option value="مصروفات تشغيلية">مصروفات تشغيلية</option>
+            <option value="مصروفات تأسيس">مصروفات تأسيس</option>
             <option value="مصروفات اخرى">مصروفات اخرى</option>
           </select>
 
@@ -335,7 +337,8 @@ const expenseTypes = {
   "رواتب": ["رواتب موظفين","أخرى"],
   "سكن": ["سكن وإعاشة","كهرباء","مياه","أخرى"],
   "مصروفات اخرى": ["أخرى"],
-  "مصروفات تشغيلية": ["أخرى"]
+  "مصروفات تشغيلية": ["أخرى"],
+  "مصروفات تأسيس": ["أخرى"]
 };
 
 // Helper: يقرأ القيمة الحالية داخل wrapper (select أو input)
