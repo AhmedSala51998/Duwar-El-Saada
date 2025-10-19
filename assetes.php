@@ -34,6 +34,31 @@
 input[type="file"] {
     display: none;
 }
+
+/* Pagination Styling */
+.pagination .page-link {
+    color: #ff6a00;
+    border-color: #ff6a00;
+    transition: all 0.2s ease-in-out;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #ff6a00;
+    border-color: #ff6a00;
+    color: #fff;
+}
+
+.pagination .page-link:hover {
+    background-color: #ff6a00;
+    color: #fff;
+    border-color: #ff6a00;
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #aaa;
+    border-color: #ccc;
+}
+
 </style>
 
 <?php require __DIR__.'/partials/header.php'; ?>
@@ -63,15 +88,35 @@ document.addEventListener("DOMContentLoaded", function() {
 
 <?php
 $kw = trim($_GET['kw'] ?? '');
-$q = "SELECT * FROM assets WHERE 1"; 
-$ps=[]; 
+
+$perPage = 10; // عدد النتائج في الصفحة
+$page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+
+// حساب إجمالي الصفوف
+$count_q = "SELECT COUNT(*) AS total FROM assets WHERE 1";
+$count_params = [];
+if($kw!==''){
+  $count_q .= " AND name LIKE ?";
+  $count_params[] = "%$kw%";
+}
+
+$stmtCount = $pdo->prepare($count_q);
+$stmtCount->execute($count_params);
+$total_rows = $stmtCount->fetch()['total'];
+$total_pages = ceil($total_rows / $perPage);
+$offset = ($page - 1) * $perPage;
+
+// جلب الصفوف الفعلية
+$q = "SELECT * FROM assets WHERE 1";
+$ps = [];
 if($kw!==''){ 
   $q.=" AND name LIKE ?"; 
   $ps[]="%$kw%"; 
 } 
-$q.=" ORDER BY id DESC";
-$s=$pdo->prepare($q); 
-$s->execute($ps); 
+$q.=" ORDER BY id DESC LIMIT $perPage OFFSET $offset";
+
+$s=$pdo->prepare($q);
+$s->execute($ps);
 $rows=$s->fetchAll();
 $can_edit = in_array(current_role(), ['admin','manager']);
 ?>
@@ -253,6 +298,48 @@ $can_edit = in_array(current_role(), ['admin','manager']);
   </tbody>
 </table>
 </div>
+<?php if ($total_pages > 1): ?>
+<nav aria-label="صفحات النتائج" class="mt-3">
+  <ul class="pagination justify-content-center flex-wrap">
+    <li class="page-item <?= $page == 1 ? 'disabled' : '' ?>">
+      <a class="page-link" href="?kw=<?= urlencode($kw) ?>&page=1">الأول</a>
+    </li>
+
+    <li class="page-item <?= $page <= 1 ? 'disabled' : '' ?>">
+      <a class="page-link" href="?kw=<?= urlencode($kw) ?>&page=<?= $page - 1 ?>">السابق</a>
+    </li>
+
+    <?php
+    $max_links = 5;
+    $start = max($page - 2, 1);
+    $end = min($page + 2, $total_pages);
+
+    if($start > 1){
+        echo '<li class="page-item disabled"><span class="page-link">…</span></li>';
+    }
+
+    for($i = $start; $i <= $end; $i++): ?>
+      <li class="page-item <?= $page == $i ? 'active' : '' ?>">
+        <a class="page-link" href="?kw=<?= urlencode($kw) ?>&page=<?= $i ?>"><?= $i ?></a>
+      </li>
+    <?php endfor;
+
+    if($end < $total_pages){
+        echo '<li class="page-item disabled"><span class="page-link">…</span></li>';
+    }
+    ?>
+
+    <li class="page-item <?= $page >= $total_pages ? 'disabled' : '' ?>">
+      <a class="page-link" href="?kw=<?= urlencode($kw) ?>&page=<?= $page + 1 ?>">التالي</a>
+    </li>
+
+    <li class="page-item <?= $page == $total_pages ? 'disabled' : '' ?>">
+      <a class="page-link" href="?kw=<?= urlencode($kw) ?>&page=<?= $total_pages ?>">الأخير</a>
+    </li>
+  </ul>
+</nav>
+<?php endif; ?>
+
 
 <?php if($can_edit): ?>
 <div class="modal fade" id="add">
