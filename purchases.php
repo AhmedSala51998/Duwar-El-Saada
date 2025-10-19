@@ -72,6 +72,28 @@
 .table td label.custom-file-upload img[src] ~ span {
   display: none;
 }
+/* ألوان pagination مخصصة */
+.pagination .page-link {
+    color: #ff6a00;
+    border-color: #ff6a00;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #ff6a00;
+    border-color: #ff6a00;
+    color: #fff;
+}
+
+.pagination .page-link:hover {
+    background-color: #ff6a00;
+    color: #fff;
+    border-color: #ff6a00;
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #ccc;
+    border-color: #ccc;
+}
 
 
 </style>
