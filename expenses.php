@@ -6,11 +6,31 @@ require_role(['admin','manager']);
 $custodies = $pdo->query("SELECT person_name, SUM(amount) as balance FROM custodies GROUP BY person_name")->fetchAll(PDO::FETCH_KEY_PAIR);
 
 $kw = trim($_GET['kw'] ?? '');
+$perPage = 10; // عدد الصفوف لكل صفحة
+$page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+
 $q = "SELECT * FROM expenses WHERE 1";
-$ps = [];
-if($kw!==''){ $q .= " AND main_expense LIKE ?"; $ps[] = "%$kw%"; }
-$q .= " ORDER BY id DESC";
-$s = $pdo->prepare($q); $s->execute($ps); $rows = $s->fetchAll();
+$params = [];
+if($kw!==''){ 
+    $q .= " AND main_expense LIKE ?"; 
+    $params[] = "%$kw%"; 
+}
+
+// جلب العدد الكلي للصفوف
+$stmtTotal = $pdo->prepare(str_replace("SELECT *","SELECT COUNT(*) as total",$q));
+$stmtTotal->execute($params);
+$total_rows = $stmtTotal->fetch()['total'];
+$total_pages = ceil($total_rows / $perPage);
+
+// حساب offset
+$offset = ($page - 1) * $perPage;
+
+// تعديل الاستعلام الأصلي ليشمل LIMIT
+$q .= " ORDER BY id DESC LIMIT $perPage OFFSET $offset";
+$stmt = $pdo->prepare($q); 
+$stmt->execute($params); 
+$rows = $stmt->fetchAll();
+
 $can_edit = in_array(current_role(), ['admin','manager']);
 
 // تحضير JS لحقول التعديل
@@ -34,6 +54,28 @@ foreach($rows as $r){
 .custom-file-upload span{font-size:14px;color:#666}
 .custom-file-upload img{max-height:120px;margin-top:10px;border-radius:8px}
 input[type="file"]{display:none}
+.pagination .page-link {
+    color: #ff6a00;
+    border-color: #ff6a00;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #ff6a00;
+    border-color: #ff6a00;
+    color: #fff;
+}
+
+.pagination .page-link:hover {
+    background-color: #ff6a00;
+    color: #fff;
+    border-color: #ff6a00;
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #ccc;
+    border-color: #ccc;
+}
+
 </style>
 
 <?php if(!empty($_SESSION['toast'])): $toast=$_SESSION['toast']; unset($_SESSION['toast']); ?>
@@ -219,6 +261,48 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 </tbody>
 </table>
 </div>
+<?php if ($total_pages > 1): ?>
+<nav aria-label="صفحات النتائج" class="mt-3">
+  <ul class="pagination justify-content-center flex-wrap">
+    <li class="page-item <?= $page == 1 ? 'disabled' : '' ?>">
+      <a class="page-link" href="?kw=<?= urlencode($kw) ?>&page=1">الأول</a>
+    </li>
+
+    <li class="page-item <?= $page <= 1 ? 'disabled' : '' ?>">
+      <a class="page-link" href="?kw=<?= urlencode($kw) ?>&page=<?= $page - 1 ?>">السابق</a>
+    </li>
+
+    <?php
+    $max_links = 5;
+    $start = max($page - 2, 1);
+    $end = min($page + 2, $total_pages);
+
+    if($start > 1){
+        echo '<li class="page-item disabled"><span class="page-link">…</span></li>';
+    }
+
+    for($i = $start; $i <= $end; $i++): ?>
+      <li class="page-item <?= $page == $i ? 'active' : '' ?>">
+        <a class="page-link" href="?kw=<?= urlencode($kw) ?>&page=<?= $i ?>"><?= $i ?></a>
+      </li>
+    <?php endfor;
+
+    if($end < $total_pages){
+        echo '<li class="page-item disabled"><span class="page-link">…</span></li>';
+    }
+    ?>
+
+    <li class="page-item <?= $page >= $total_pages ? 'disabled' : '' ?>">
+      <a class="page-link" href="?kw=<?= urlencode($kw) ?>&page=<?= $page + 1 ?>">التالي</a>
+    </li>
+
+    <li class="page-item <?= $page == $total_pages ? 'disabled' : '' ?>">
+      <a class="page-link" href="?kw=<?= urlencode($kw) ?>&page=<?= $total_pages ?>">الأخير</a>
+    </li>
+  </ul>
+</nav>
+<?php endif; ?>
+
 <!-- مودال الحذف -->
 <?php if($can_edit): ?>
 <!-- مودال واحد فقط -->
