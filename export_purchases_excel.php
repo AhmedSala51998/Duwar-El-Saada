@@ -102,7 +102,7 @@ foreach ($rows as $r) {
         number_format($total_with_vat, 7, '.', ''),
         $r['payer_name'],
         $r['payment_source'],
-        $order_dating
+        $r['order_dating']
     ];
 }
 

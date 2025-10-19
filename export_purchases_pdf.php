@@ -217,7 +217,7 @@ foreach($rows as $r):
   <td><?= number_format($after, 7) ?></td>
   <td><?= esc($r['payer_name']) ?></td>
   <td><?= esc($r['payment_source']) ?></td>
-  <td><?= esc($order_dating) ?></td>
+  <td><?= esc($r['order_dating']) ?></td>
 </tr>
 <?php endforeach; ?>
 </tbody>
