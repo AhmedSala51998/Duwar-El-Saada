@@ -119,6 +119,23 @@ if($kw !== '') {
 
 $q .= " ORDER BY p.id DESC";
 
+// عدد الصفوف لكل صفحة
+$perPage = 10; 
+
+// الصفحة الحالية
+$page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+
+// جلب العدد الكلي للصفوف
+$stmtTotal = $pdo->prepare(str_replace("SELECT p.*, o.invoice_serial","SELECT COUNT(*) as total",$q));
+$stmtTotal->execute($params);
+$total_rows = $stmtTotal->fetch()['total'];
+$total_pages = ceil($total_rows / $perPage);
+
+// حساب offset
+$offset = ($page - 1) * $perPage;
+
+// تعديل الاستعلام الأصلي ليشمل LIMIT
+$q .= " LIMIT $perPage OFFSET $offset";
 $stmt = $pdo->prepare($q); 
 $stmt->execute($params); 
 $rows = $stmt->fetchAll();
@@ -342,6 +359,52 @@ $can_edit = in_array(current_role(), ['admin','manager']);
   </tbody>
 </table>
 </div>
+<?php if ($total_pages > 1): ?>
+<nav aria-label="صفحات النتائج" class="mt-3">
+  <ul class="pagination justify-content-center flex-wrap">
+    <!-- أول صفحة -->
+    <li class="page-item <?= $page == 1 ? 'disabled' : '' ?>">
+      <a class="page-link" href="?kw=<?= urlencode($kw) ?>&page=1">الأول</a>
+    </li>
+
+    <!-- السابق -->
+    <li class="page-item <?= $page <= 1 ? 'disabled' : '' ?>">
+      <a class="page-link" href="?kw=<?= urlencode($kw) ?>&page=<?= $page - 1 ?>">السابق</a>
+    </li>
+
+    <?php
+    $max_links = 5; 
+    $start = max($page - 2, 1);
+    $end = min($page + 2, $total_pages);
+
+    if($start > 1){
+        echo '<li class="page-item disabled"><span class="page-link">…</span></li>';
+    }
+
+    for($i = $start; $i <= $end; $i++): ?>
+      <li class="page-item <?= $page == $i ? 'active' : '' ?>">
+        <a class="page-link" href="?kw=<?= urlencode($kw) ?>&page=<?= $i ?>"><?= $i ?></a>
+      </li>
+    <?php endfor;
+
+    if($end < $total_pages){
+        echo '<li class="page-item disabled"><span class="page-link">…</span></li>';
+    }
+    ?>
+
+    <!-- التالي -->
+    <li class="page-item <?= $page >= $total_pages ? 'disabled' : '' ?>">
+      <a class="page-link" href="?kw=<?= urlencode($kw) ?>&page=<?= $page + 1 ?>">التالي</a>
+    </li>
+
+    <!-- آخر صفحة -->
+    <li class="page-item <?= $page == $total_pages ? 'disabled' : '' ?>">
+      <a class="page-link" href="?kw=<?= urlencode($kw) ?>&page=<?= $total_pages ?>">الأخير</a>
+    </li>
+  </ul>
+</nav>
+<?php endif; ?>
+
 
 <?php if($can_edit): ?>
 <div class="modal fade" id="addM">
