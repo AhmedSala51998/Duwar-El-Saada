@@ -25,6 +25,7 @@ $q = "SELECT
         p.*, 
         o.invoice_serial, 
         o.supplier_name,
+        o.created_at AS order_dating,
         o.vat AS order_vat
       FROM purchases p
       LEFT JOIN orders_purchases o ON p.order_id = o.id
@@ -216,7 +217,7 @@ foreach($rows as $r):
   <td><?= number_format($after, 7) ?></td>
   <td><?= esc($r['payer_name']) ?></td>
   <td><?= esc($r['payment_source']) ?></td>
-  <td><?= esc($r['created_at']) ?></td>
+  <td><?= esc($order_dating) ?></td>
 </tr>
 <?php endforeach; ?>
 </tbody>
