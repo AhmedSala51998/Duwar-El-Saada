@@ -110,8 +110,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
                 $newPrintingQty = $oldPrintingQty + $result_data;
                 $unit_quantity = $oldUnitQuantity + $result_data;
                 $unit_price = $newPrice / $newSingleQty;*/
-                $newPrintingQty = $newQuantity + $newSingleQty;
-                $unit_quantity = $newQuantity + $newSingleQty;
+                $newPrintingQty = $newQuantity * $newSingleQty;
+                $unit_quantity = $newQuantity * $newSingleQty;
                 $unit_price = $newPrice / $newSingleQty;
 
             } else {
@@ -225,8 +225,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
             $newPrintingQty = $oldPrintingQty + $result_data;
             $unit_quantity = $oldUnitQuantity + $result_data;
             $unit_price = $newPrice / $newSingleQty;*/
-            $newPrintingQty = $newQuantity + $newSingleQty;
-            $unit_quantity = $newQuantity + $newSingleQty;
+            $newPrintingQty = $newQuantity * $newSingleQty;
+            $unit_quantity = $newQuantity * $newSingleQty;
             $unit_price = $newPrice / $newSingleQty;
 
 
