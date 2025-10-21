@@ -504,16 +504,16 @@ $can_edit = in_array(current_role(), ['admin','manager']);
               <tr>
                 <td><input name="name[]" class="form-control" required></td>
                 <td>
-                  <select title="نوع الوحدة" name="unit[]" class="form-select">
+                  <select title="نوع الوحدة" name="unit[]" required class="form-select">
                     <option>عدد</option>
                     <option>كيلو</option>
                     <option>لتر</option>
                   </select>
                 </td>
-                <td><input name="package[]" class="form-control" title="الوحدة"></td> <!-- حقل العبوة -->
+                <td><input name="package[]" class="form-control" required title="الوحدة"></td> <!-- حقل العبوة -->
                 <td><input type="number" step="0.001" min="0" name="quantity[]" class="form-control" required></td>
-                <td><input type="number" step="0.00000001" min="0" name="price[]" class="form-control"></td>
-                <td><input type="number" step="0.001" min="0" name="single_package[]" class="form-control"></td>
+                <td><input type="number" step="0.00000001" min="0" name="price[]" required class="form-control"></td>
+                <td><input type="number" step="0.001" min="0" name="single_package[]" required class="form-control"></td>
                 <!--<td>
                   <select name="payer_name[]" class="form-select payer-select">
                     <option hidden>اختر</option>
