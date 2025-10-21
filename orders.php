@@ -249,7 +249,7 @@ $stocks = $pdo->query("
       </div>
       <div class="modal-body">
         <div class="table-responsive">
-          <table class="table table-bordered align-middle">
+          <table class="table table-bordered align-middle mb-0">
             <thead class="table-light">
               <tr>
                 <th>اسم الصنف</th>
@@ -260,26 +260,12 @@ $stocks = $pdo->query("
             </thead>
             <tbody>
               <?php foreach($stocks as $s): ?>
-              <a 
-                href="invoice?id=<?= $s['id'] ?>" 
-                class="text-orange fw-bold text-decoration-none"
-                title="عرض فاتورة <?= esc($s['name']) ?>"
-              >
-              <tr>
-                <td>
-                  <a 
-                    href="invoice?id=<?= $s['id'] ?>" 
-                    class="text-orange fw-bold text-decoration-none"
-                    title="عرض فاتورة <?= esc($s['name']) ?>"
-                  >
-                    <?= esc($s['name']) ?>
-                  </a>
-                </td>
+              <tr class="clickable-row" data-href="invoice?id=<?= $s['id'] ?>" title="عرض فاتورة <?= esc($s['name']) ?>">
+                <td><?= esc($s['name']) ?></td>
                 <td><?= number_format($s['total_qty'], 2) ?></td>
                 <td><?= esc($s['unit']) ?></td>
                 <td><?= esc($s['last_added']) ?></td>
               </tr>
-              </a>
               <?php endforeach; ?>
             </tbody>
           </table>
@@ -291,6 +277,27 @@ $stocks = $pdo->query("
     </div>
   </div>
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    document.querySelectorAll(".clickable-row").forEach(row => {
+      row.addEventListener("click", function() {
+        window.location = this.dataset.href;
+      });
+    });
+  });
+</script>
+
+<style>
+.clickable-row {
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+.clickable-row:hover {
+  background-color: rgba(255, 154, 67, 0.15);
+}
+</style>
+
 
 <?php if($can_edit): ?>
 <div class="modal fade" id="addOrder"><div class="modal-dialog"><div class="modal-content">
