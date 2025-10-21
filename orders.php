@@ -52,6 +52,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
 ")->fetchAll(PDO::FETCH_ASSOC);*/
 $stocks = $pdo->query("
     SELECT 
+        id,
         name,
         unit,
         SUM(quantity) AS total_qty,
@@ -260,7 +261,15 @@ $stocks = $pdo->query("
             <tbody>
               <?php foreach($stocks as $s): ?>
               <tr>
-                <td><?= esc($s['name']) ?></td>
+                <td>
+                  <a 
+                    href="invoice?id=<?= $s['id'] ?>" 
+                    class="text-orange fw-bold text-decoration-none"
+                    title="عرض فاتورة <?= esc($s['name']) ?>"
+                  >
+                    <?= esc($s['name']) ?>
+                  </a>
+                </td>
                 <td><?= number_format($s['total_qty'], 2) ?></td>
                 <td><?= esc($s['unit']) ?></td>
                 <td><?= esc($s['last_added']) ?></td>
