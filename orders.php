@@ -260,6 +260,11 @@ $stocks = $pdo->query("
             </thead>
             <tbody>
               <?php foreach($stocks as $s): ?>
+              <a 
+                href="invoice?id=<?= $s['id'] ?>" 
+                class="text-orange fw-bold text-decoration-none"
+                title="عرض فاتورة <?= esc($s['name']) ?>"
+              >
               <tr>
                 <td>
                   <a 
@@ -274,6 +279,7 @@ $stocks = $pdo->query("
                 <td><?= esc($s['unit']) ?></td>
                 <td><?= esc($s['last_added']) ?></td>
               </tr>
+              </a>
               <?php endforeach; ?>
             </tbody>
           </table>
