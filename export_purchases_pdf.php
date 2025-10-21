@@ -184,12 +184,12 @@ $totalBefore = $totalVat = $totalAfter = 0;
 $price = 0;
 
 foreach($rows as $r): 
-  $before = $r['total_packages'] * $r['total_price'];
+  $before = $r['unit_total'];
 
   // لو الفاتورة فيها ضريبة فعلية نحسب الضريبة للمنتجات
   if (!empty($r['order_vat']) && $r['order_vat'] > 0) {
       $vat  = $before * 0.15;
-      $after = $before + $vat;
+      $after = $r['unit_all_total'];
       $price = $r['price'];
   } else {
       // مافيش ضريبة على الفاتورة، نخلي الضريبة صفر
