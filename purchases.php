@@ -269,7 +269,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
                   </div>
                   <div class="col-md-3">
                     <label class="form-label">نوع الوحدة</label>
-                    <select name="unit" class="form-select">
+                    <select name="unit" class="form-select" required>
                       <?php foreach(['عدد','كيلو','لتر'] as $u): ?>
                         <option <?= $r['unit']===$u?'selected':'' ?>><?= $u ?></option>
                       <?php endforeach; ?>
@@ -277,15 +277,15 @@ $can_edit = in_array(current_role(), ['admin','manager']);
                   </div>
                   <div class="col-md-3">
                     <label class="form-label">الوحدة \ العبوة</label>
-                    <input type="text" name="package" class="form-control" value="<?= esc($r['package'] ?? '') ?>" placeholder="أدخل العبوة">
+                    <input type="text" name="package" class="form-control" required value="<?= esc($r['package'] ?? '') ?>" placeholder="أدخل العبوة">
                   </div>
                   <div class="col-md-4">
                     <label class="form-label">السعر</label>
-                    <input type="number" step="0.00000001" min="0" name="price" class="form-control" value="<?= esc($r['total_price']) ?>">
+                    <input type="number" step="0.00000001" min="0" name="price" class="form-control" required value="<?= esc($r['total_price']) ?>">
                   </div>
                   <div class="col-md-4">
                     <label class="form-label">الكمية بالوحدات</label>
-                    <input type="number" step="0.001" min="0" name="single_quantity" class="form-control" value="<?= esc($r['single_package']) ?>">
+                    <input type="number" step="0.001" min="0" name="single_quantity" class="form-control" required value="<?= esc($r['single_package']) ?>">
                   </div>
 
                   <!-- صورة المنتج -->
