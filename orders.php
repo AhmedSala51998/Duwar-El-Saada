@@ -175,7 +175,7 @@ $stocks = $pdo->query("
     <a class="btn btn-outline-dark" href="export_orders_excel.php?kw=<?= urlencode($kw) ?>"><i class="bi bi-file-earmark-spreadsheet"></i> Excel</a>
     <a class="btn btn-outline-dark" href="export_orders_pdf.php?kw=<?= urlencode($kw) ?>"><i class="bi bi-filetype-pdf"></i> PDF</a>
     <?php if($can_edit): ?>
-      <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#stocksModal">
+      <button class="btn btn-outline-orange" data-bs-toggle="modal" data-bs-target="#stocksModal">
         <i class="bi bi-box-seam"></i> المخزون
       </button>
       <button class="btn btn-orange" data-bs-toggle="modal" data-bs-target="#addOrder">
@@ -242,7 +242,7 @@ $stocks = $pdo->query("
 <div class="modal fade" id="stocksModal" tabindex="-1">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
-      <div class="modal-header bg-primary text-white">
+      <div class="modal-header bg-orange text-white">
         <h5 class="modal-title"><i class="bi bi-box-seam"></i> المخزون الحالي</h5>
         <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
       </div>
