@@ -25,7 +25,7 @@ if ($id > 0) {
         }
 
         $_SESSION['toast'] = [
-            'type' => 'error',
+            'type' => 'danger',
             'msg'  => 'لا يمكن حذف هذه العهدة لأنها تحتوي على حركات (' . implode(' - ', $translated) . ')'
         ];
     } else {
