@@ -41,7 +41,7 @@ $s->execute($params);
 $orders=$s->fetchAll();
 $can_edit = in_array(current_role(), ['admin','manager']);
 
-$stocks = $pdo->query("
+/*$stocks = $pdo->query("
     SELECT 
         name,
         unit,
@@ -49,10 +49,20 @@ $stocks = $pdo->query("
     FROM purchases
     GROUP BY name, unit
     ORDER BY name
+")->fetchAll(PDO::FETCH_ASSOC);*/
+$stocks = $pdo->query("
+    SELECT 
+        name,
+        unit,
+        SUM(quantity) AS total_qty,
+        MAX(created_at) AS last_added
+    FROM purchases
+    GROUP BY name, unit
+    ORDER BY name
 ")->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
-<div class="d-flex flex-wrap justify-content-start gap-3 mb-4">
+<!--<div class="d-flex flex-wrap justify-content-start gap-3 mb-4">
 <?php foreach($stocks as $s): ?>
     <div class="stock-card text-center">
         <div class="stock-quantity">
@@ -64,7 +74,7 @@ $stocks = $pdo->query("
         </div>
     </div>
 <?php endforeach; ?>
-</div>
+</div>-->
 
 <style>
 .stock-card {
@@ -165,6 +175,9 @@ $stocks = $pdo->query("
     <a class="btn btn-outline-dark" href="export_orders_excel.php?kw=<?= urlencode($kw) ?>"><i class="bi bi-file-earmark-spreadsheet"></i> Excel</a>
     <a class="btn btn-outline-dark" href="export_orders_pdf.php?kw=<?= urlencode($kw) ?>"><i class="bi bi-filetype-pdf"></i> PDF</a>
     <?php if($can_edit): ?>
+      <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#stocksModal">
+        <i class="bi bi-box-seam"></i> المخزون
+      </button>
       <button class="btn btn-orange" data-bs-toggle="modal" data-bs-target="#addOrder">
         <i class="bi bi-plus-lg"></i> إنشاء أمر
       </button>
@@ -223,6 +236,45 @@ $stocks = $pdo->query("
     <?php endforeach; ?>
   </tbody>
 </table>
+</div>
+
+<!-- ✅ Modal عرض المخزون -->
+<div class="modal fade" id="stocksModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title"><i class="bi bi-box-seam"></i> المخزون الحالي</h5>
+        <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="table-responsive">
+          <table class="table table-bordered align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>اسم الصنف</th>
+                <th>الكمية</th>
+                <th>الوحدة</th>
+                <th>تاريخ آخر إضافة</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php foreach($stocks as $s): ?>
+              <tr>
+                <td><?= esc($s['name']) ?></td>
+                <td><?= number_format($s['total_qty'], 2) ?></td>
+                <td><?= esc($s['unit']) ?></td>
+                <td><?= esc($s['last_added']) ?></td>
+              </tr>
+              <?php endforeach; ?>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <?php if($can_edit): ?>
