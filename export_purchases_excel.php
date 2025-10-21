@@ -94,7 +94,7 @@ foreach ($rows as $r) {
         $r['name'],
         $r['supplier_name'],
         $r['package'],
-        $quantity,
+        $r['quantity'],
         $r['unit'],
         number_format($price1, 7, '.', ''),
         number_format($total, 7, '.', ''),
