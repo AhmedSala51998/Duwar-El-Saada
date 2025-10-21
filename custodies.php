@@ -112,9 +112,20 @@ $last_balance = 0; // الرصيد السابق
 $total_in = 0; 
 $total_out = 0; 
 
-foreach($rows as $r) {
-  $total_in += (float)$r['main_amount'];
-  $total_out += ((float)$r['main_amount'] - (float)$r['amount']);
+$w = "SELECT * FROM custodies WHERE 1";
+$pz = [];
+if($kw!==''){ 
+  $w.=" AND person_name LIKE ?"; 
+  $pz[]="%$kw%"; 
+}
+
+$d=$pdo->prepare($w);
+$d->execute($pz);
+$rowsa=$d->fetchAll();
+
+foreach($rowsa as $f) {
+  $total_in += (float)$f['main_amount'];
+  $total_out += ((float)$f['main_amount'] - (float)$f['amount']);
 }
 $total_balance = $total_in - $total_out;
 ?>
