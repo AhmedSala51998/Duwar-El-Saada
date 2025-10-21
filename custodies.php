@@ -75,7 +75,7 @@ if($kw!==''){
   $q.=" AND person_name LIKE ?"; 
   $ps[]="%$kw%"; 
 }
-$q.=" ORDER BY id ASC LIMIT $perPage OFFSET $offset";
+$q.=" ORDER BY taken_at ASC LIMIT $perPage OFFSET $offset";
 
 $s=$pdo->prepare($q);
 $s->execute($ps);

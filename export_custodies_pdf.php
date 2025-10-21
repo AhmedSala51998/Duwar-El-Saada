@@ -37,7 +37,7 @@ if ($to_date) {
     $params[] = $to_date; 
 }
 
-$q .= " ORDER BY id ASC";
+$q .= " ORDER BY taken_at ASC";
 
 $s = $pdo->prepare($q); 
 $s->execute($params); 
