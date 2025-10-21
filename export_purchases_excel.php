@@ -71,8 +71,8 @@ $data[] = [
 ];
 
 foreach ($rows as $r) {
-    $quantity = (float)$r['quantity'];
-    $price = (float)$r['price'];
+    $quantity = (float)$r['total_packages'];
+    $price = (float)$r['total_price'];
     $total = $quantity * $price;
     $price1 = $r['price'];
 

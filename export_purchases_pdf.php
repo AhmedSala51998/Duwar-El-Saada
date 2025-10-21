@@ -26,7 +26,7 @@ $q = "SELECT
         o.invoice_serial, 
         o.supplier_name,
         o.created_at AS order_dating,
-        p.unit_vat AS order_vat
+        o.vat AS order_vat
       FROM purchases p
       LEFT JOIN orders_purchases o ON p.order_id = o.id
       WHERE 1=1";
@@ -184,7 +184,7 @@ $totalBefore = $totalVat = $totalAfter = 0;
 $price = 0;
 
 foreach($rows as $r): 
-  $before = $r['quantity'] * $r['price'];
+  $before = $r['total_packages'] * $r['total_price'];
 
   // لو الفاتورة فيها ضريبة فعلية نحسب الضريبة للمنتجات
   if (!empty($r['order_vat']) && $r['order_vat'] > 0) {
