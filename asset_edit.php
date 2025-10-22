@@ -22,11 +22,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
     $vat_value = $has_vat ? $total_price * 0.15 : 0;
     $total_amount = $total_price + $vat_value;
 
-
     $newData = [
         'name' => trim($_POST['name']),
         'type' => $_POST['type'] ?? '',
-        'quantity' => (float)($_POST['quantity'] ?? 0),
+        'quantity' => $quantity,
         'price' => $price,
         'has_vat' => $has_vat,
         'vat_value' => $vat_value,
@@ -36,46 +35,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
         'payment_source' => $_POST['payment_source'] ?? 'كاش'
     ];
 
-    // ✅ لو الكمية أصبحت صفر نحذف الأصل تمامًا ونرجع العهدة لو كانت عهدة
-    if ($quantity == 0) {
+    try {
+        $pdo->beginTransaction(); // بدء transaction
 
-        // استرجاع العهدة إذا كانت مدفوعة من العهدة
-        if ($oldData['payment_source'] === 'عهدة') {
-            $stmtTx = $pdo->prepare("SELECT * FROM custody_transactions WHERE type='asset' AND type_id=?");
-            $stmtTx->execute([$oldData['id']]);
-            $transactions = $stmtTx->fetchAll(PDO::FETCH_ASSOC);
+        // ✅ لو الكمية أصبحت صفر نحذف الأصل تمامًا ونرجع العهدة لو كانت عهدة
+        if ($quantity == 0) {
+            if ($oldData['payment_source'] === 'عهدة') {
+                $stmtTx = $pdo->prepare("SELECT * FROM custody_transactions WHERE type='asset' AND type_id=?");
+                $stmtTx->execute([$oldData['id']]);
+                $transactions = $stmtTx->fetchAll(PDO::FETCH_ASSOC);
 
-            foreach ($transactions as $tx) {
-                $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE id=?");
-                $stmtC->execute([$tx['custody_id']]);
-                $custody = $stmtC->fetch();
-
-                if ($custody) {
-                    $newAmount = $custody['amount'] + $tx['amount'];
-                    $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
+                foreach ($transactions as $tx) {
+                    $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE id=?");
+                    $stmtC->execute([$tx['custody_id']]);
+                    $custody = $stmtC->fetch();
+                    if ($custody) {
+                        $newAmount = $custody['amount'] + $tx['amount'];
+                        $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
+                    }
                 }
+
+                $pdo->prepare("DELETE FROM custody_transactions WHERE type='asset' AND type_id=?")->execute([$oldData['id']]);
             }
 
-            // حذف معاملات العهدة بعد الإرجاع
-            $pdo->prepare("DELETE FROM custody_transactions WHERE type='asset' AND type_id=?")->execute([$oldData['id']]);
+            $pdo->prepare("DELETE FROM assets WHERE id=?")->execute([$id]);
+            $pdo->commit();
+
+            $_SESSION['toast'] = ['type' => 'success', 'msg' => 'تم حذف الأصل لأن الكمية أصبحت صفر'];
+            header('Location: ' . BASE_URL . '/assetes.php');
+            exit;
         }
 
-        // حذف الأصل نفسه
-        $pdo->prepare("DELETE FROM assets WHERE id=?")->execute([$id]);
+        // تحقق من التكرار
+        $check = $pdo->prepare("SELECT COUNT(*) FROM assets WHERE name=? AND type=? AND payer_name=? AND id<>?");
+        $check->execute([$newData['name'], $newData['type'], $newData['payer_name'], $id]);
+        $exists = $check->fetchColumn();
 
-        $_SESSION['toast'] = ['type' => 'success', 'msg' => 'تم حذف الأصل لأن الكمية أصبحت صفر'];
-        header('Location: ' . BASE_URL . '/assetes.php');
-        exit;
-    }
+        if($exists > 0){
+            throw new Exception('هناك أصل بنفس الاسم، النوع والدافع موجود بالفعل');
+        }
 
-    // تحقق من التكرار
-    $check = $pdo->prepare("SELECT COUNT(*) FROM assets WHERE name=? AND type=? AND payer_name=? AND id<>?");
-    $check->execute([$newData['name'], $newData['type'], $newData['payer_name'], $id]);
-    $exists = $check->fetchColumn();
-
-    if($exists > 0){
-        $_SESSION['toast'] = ['type'=>'warning','msg'=>'هناك أصل بنفس الاسم، النوع والدافع موجود بالفعل'];
-    } else {
         $changed = false;
         foreach(['name','type','quantity','price','has_vat','vat_value','total_amount','image','payer_name','payment_source'] as $key){
             if(!isset($oldData[$key]) || $oldData[$key] != $newData[$key]){
@@ -86,29 +85,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
 
         if($changed){
             // استرجاع العهدة القديمة إذا كانت مدفوعة من العهدة
-            // إعادة العهدة القديمة
-            // إعادة العهدة القديمة إذا كان مصدر الدفع عهدة
             if ($oldData['payment_source'] === 'عهدة') {
-                $amountToReturn = $oldData['price'] * $oldData['quantity'];
-
-                // جلب كل المعاملات السابقة الخاصة بهذا الصنف
                 $stmtTx = $pdo->prepare("SELECT * FROM custody_transactions WHERE type='asset' AND type_id=?");
                 $stmtTx->execute([$oldData['id']]);
                 $transactions = $stmtTx->fetchAll(PDO::FETCH_ASSOC);
 
                 foreach ($transactions as $tx) {
-                    // جلب العهدة الأصلية
                     $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE id=?");
                     $stmtC->execute([$tx['custody_id']]);
                     $custody = $stmtC->fetch();
-
                     if ($custody) {
                         $newAmount = $custody['amount'] + $tx['amount'];
                         $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
                     }
                 }
-
-                // حذف المعاملات بعد الإرجاع
                 $pdo->prepare("DELETE FROM custody_transactions WHERE type='asset' AND type_id=?")->execute([$oldData['id']]);
             }
 
@@ -116,7 +106,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
             if ($newData['payment_source'] === 'عهدة') {
                 $amountNeeded = ($price * $quantity) + $vat_value;
 
-                // جلب كل العهد المتاحة للشخص بالترتيب من الأقدم للأحدث
                 $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? AND amount > 0 ORDER BY taken_at ASC");
                 $stmtC->execute([$newData['payer_name']]);
                 $custodies = $stmtC->fetchAll(PDO::FETCH_ASSOC);
@@ -124,48 +113,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
 
                 foreach ($custodies as $custody) {
                     if ($amountNeeded <= 0) break;
-
                     if ($custody['amount'] >= $amountNeeded) {
-                        // العهدة الحالية تكفي المبلغ بالكامل
                         $newAmount = $custody['amount'] - $amountNeeded;
                         $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
-
-                        $pdo->prepare("
-                            INSERT INTO custody_transactions (type, type_id, custody_id, amount, notes, created_at)
-                            VALUES (?, ?, ?, ?, ?, NOW())
-                        ")->execute(['asset', $oldData['id'], $custody['id'], $amountNeeded, $notes]);
-
-                        $amountNeeded = 0; // تم تغطية المبلغ بالكامل
+                        $pdo->prepare("INSERT INTO custody_transactions (type, type_id, custody_id, amount, notes, created_at) VALUES (?, ?, ?, ?, ?, NOW())")
+                            ->execute(['asset', $oldData['id'], $custody['id'], $amountNeeded, $notes]);
+                        $amountNeeded = 0;
                     } else {
-                        // العهدة لا تكفي، خذ كل اللي فيها وكمّل من اللي بعدها
                         $amountDeducted = $custody['amount'];
                         $pdo->prepare("UPDATE custodies SET amount=0 WHERE id=?")->execute([$custody['id']]);
-
-                        $pdo->prepare("
-                            INSERT INTO custody_transactions (type, type_id, custody_id, amount, notes, created_at)
-                            VALUES (?, ?, ?, ?, ?, NOW())
-                        ")->execute(['asset', $oldData['id'], $custody['id'], $amountDeducted, $notes]);
-
+                        $pdo->prepare("INSERT INTO custody_transactions (type, type_id, custody_id, amount, notes, created_at) VALUES (?, ?, ?, ?, ?, NOW())")
+                            ->execute(['asset', $oldData['id'], $custody['id'], $amountDeducted, $notes]);
                         $amountNeeded -= $amountDeducted;
                     }
                 }
 
                 if ($amountNeeded > 0) {
-                    $_SESSION['toast'] = ['type' => 'danger', 'msg' => 'رصيد العهدة غير كافي'];
-                    header('Location: ' . BASE_URL . '/assets.php');
-                    exit;
+                    throw new Exception('رصيد العهدة غير كافي');
                 }
             }
 
-
-            // تحديث قاعدة البيانات
+            // تحديث الأصل
             $pdo->prepare("UPDATE assets SET name=?, type=?, quantity=?, price=?, has_vat=?, vat_value=?, total_amount=?, payer_name=?, payment_source=?, image=? WHERE id=?")
                 ->execute([$newData['name'],$newData['type'],$newData['quantity'],$price,$has_vat,$vat_value,$total_amount,$newData['payer_name'],$newData['payment_source'],$newData['image'],$id]);
 
+            $pdo->commit();
             $_SESSION['toast'] = ['type'=>'success','msg'=>'تم تعديل الأصل بنجاح'];
         } else {
+            $pdo->commit();
             $_SESSION['toast'] = ['type'=>'info','msg'=>'لا توجد تغييرات للحفظ'];
         }
+
+    } catch (Exception $e) {
+        $pdo->rollBack();
+        $_SESSION['toast'] = ['type'=>'danger','msg'=>'فشل العملية: ' . $e->getMessage()];
     }
 }
 

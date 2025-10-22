@@ -9,7 +9,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
     }
 
     $bill_number = trim($_POST['bill_number'] ?? '');
-
     if ($bill_number !== '') {
         // فحص التكرار
         $check = $pdo->prepare("SELECT id FROM assets WHERE bill_number = ?");
@@ -32,10 +31,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
     $total_amount = $price * $quantity;
 
     $lastSerial = $pdo->query("SELECT invoice_serial FROM assets ORDER BY id DESC LIMIT 1")->fetchColumn();
+    $nextNumber = 1;
     if ($lastSerial && preg_match('/DAELA(\d+)/', $lastSerial, $m)) {
         $nextNumber = (int)$m[1] + 1;
-    } else {
-        $nextNumber = 1;
     }
     $serial_invoice = "DAELA" . str_pad($nextNumber, 5, "0", STR_PAD_LEFT);
 
@@ -50,28 +48,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
     $check = $pdo->prepare("SELECT COUNT(*) FROM assets WHERE name=? AND type=? AND payer_name=?");
     $check->execute([$name, $type, $payer]);
     $exists = $check->fetchColumn();
-
     if ($exists > 0) {
         $_SESSION['toast'] = ['type'=>'warning','msg'=>'هناك أصل بنفس الاسم، النوع والدافع موجود بالفعل'];
-    } else {
+        header('Location: ' . BASE_URL . '/assetes.php');
+        exit;
+    }
 
+    try {
+        // بدء Transaction
+        $pdo->beginTransaction();
 
-        
+        // إدخال الأصل
         $pdo->prepare("INSERT INTO assets (bill_number , invoice_serial, name, type, quantity, price, has_vat, vat_value, total_amount, payer_name, payment_source, image) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
-        ->execute([
-            $bill_number,
-            $serial_invoice,
-            $name,
-            $type,
-            $quantity,
-            $price,
-            $has_vat,
-            $vat_value,
-            $total_amount,
-            $payer,
-            $payment_source,
-            $image
-        ]);
+            ->execute([
+                $bill_number,
+                $serial_invoice,
+                $name,
+                $type,
+                $quantity,
+                $price,
+                $has_vat,
+                $vat_value,
+                $total_amount,
+                $payer,
+                $payment_source,
+                $image
+            ]);
 
         $asset_id = $pdo->lastInsertId();
 
@@ -86,44 +88,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
 
             $totalAvailable = array_sum(array_column($custodies, 'amount'));
             if($totalAvailable < $amountToDeduct){
-                $_SESSION['toast'] = ['type'=>'danger','msg'=>'رصيد العهدة غير كافي'];
-                header('Location: ' . BASE_URL . '/assetes.php'); 
-                exit;
+                throw new Exception('رصيد العهدة غير كافي');
             }
 
             foreach ($custodies as $custody) {
                 if ($amountToDeduct <= 0) break;
 
+                $notes = "شراء " . $name;
+
                 if ($custody['amount'] >= $amountToDeduct) {
-                    // العهدة الحالية تكفي المبلغ بالكامل
                     $newAmount = $custody['amount'] - $amountToDeduct;
                     $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
-
-                    $notes = "شراء " . $name;
-                    $pdo->prepare("
-                        INSERT INTO custody_transactions (type, type_id, custody_id, amount, notes, created_at)
-                        VALUES (?, ?, ?, ?, ?, NOW())
-                    ")->execute(['asset', $asset_id, $custody['id'], $amountToDeduct, $notes]);
-
-                    $amountToDeduct = 0; // تم تغطية المبلغ بالكامل
+                    $pdo->prepare("INSERT INTO custody_transactions (type, type_id, custody_id, amount, notes, created_at) VALUES (?, ?, ?, ?, ?, NOW())")
+                        ->execute(['asset', $asset_id, $custody['id'], $amountToDeduct, $notes]);
+                    $amountToDeduct = 0;
                 } else {
-                    // العهدة لا تكفي، خذ كل اللي فيها وكمّل من اللي بعدها
                     $amountDeducted = $custody['amount'];
                     $pdo->prepare("UPDATE custodies SET amount=0 WHERE id=?")->execute([$custody['id']]);
-
-                    $notes = "شراء " . $name;
-                    $pdo->prepare("
-                        INSERT INTO custody_transactions (type, type_id, custody_id, amount, notes, created_at)
-                        VALUES (?, ?, ?, ?, ?, NOW())
-                    ")->execute(['asset', $asset_id, $custody['id'], $amountDeducted, $notes]);
-
+                    $pdo->prepare("INSERT INTO custody_transactions (type, type_id, custody_id, amount, notes, created_at) VALUES (?, ?, ?, ?, ?, NOW())")
+                        ->execute(['asset', $asset_id, $custody['id'], $amountDeducted, $notes]);
                     $amountToDeduct -= $amountDeducted;
                 }
             }
-
         }
 
+        $pdo->commit(); // تأكيد Transaction
         $_SESSION['toast'] = ['type'=>'success','msg'=>'تمت العملية بنجاح'];
+
+    } catch (Exception $e) {
+        $pdo->rollBack(); // التراجع عن كل العمليات في حالة الخطأ
+        $_SESSION['toast'] = ['type'=>'danger','msg'=>'فشل العملية: ' . $e->getMessage()];
     }
 }
 
