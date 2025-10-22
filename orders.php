@@ -278,6 +278,9 @@ $stocks = $pdo->query("
         <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
+        <div class="mb-3">
+          <input type="text" id="stockSearch" class="form-control" placeholder="ابحث عن منتج..." onkeyup="filterStocks()">
+        </div>
         <div class="table-responsive">
           <table class="table table-bordered align-middle mb-0">
             <thead class="table-light">
@@ -390,4 +393,20 @@ document.addEventListener("DOMContentLoaded", function() {
     dropdownParent: $('#addOrder')
   });
 });
+</script>
+<script>
+function filterStocks() {
+  const input = document.getElementById("stockSearch");
+  const filter = input.value.toLowerCase();
+  const table = document.getElementById("stocksTable");
+  const trs = table.getElementsByTagName("tr");
+
+  for (let i = 1; i < trs.length; i++) { // نبدأ من 1 لتجاهل الهيدر
+    const td = trs[i].getElementsByTagName("td")[0]; // اسم الصنف
+    if (td) {
+      const txt = td.textContent || td.innerText;
+      trs[i].style.display = txt.toLowerCase().includes(filter) ? "" : "none";
+    }
+  }
+}
 </script>
