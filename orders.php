@@ -395,18 +395,21 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 </script>
 <script>
-function filterStocks() {
-  const input = document.getElementById("stockSearch");
-  const filter = input.value.toLowerCase();
-  const table = document.getElementById("stocksTable");
-  const trs = table.getElementsByTagName("tr");
+// 📌 ننفذ الكود بعد تحميل الصفحة بالكامل
+document.addEventListener("DOMContentLoaded", function () {
+  const searchInput = document.getElementById("stockSearch");
 
-  for (let i = 1; i < trs.length; i++) { // نبدأ من 1 لتجاهل الهيدر
-    const td = trs[i].getElementsByTagName("td")[0]; // اسم الصنف
-    if (td) {
-      const txt = td.textContent || td.innerText;
-      trs[i].style.display = txt.toLowerCase().includes(filter) ? "" : "none";
-    }
-  }
-}
+  // 📌 نضيف الحدث لما يكتب المستخدم
+  searchInput?.addEventListener("keyup", function () {
+    const filter = this.value.toLowerCase();
+    const table = document.getElementById("stocksTable");
+    if (!table) return; // لو الجدول مش موجود نخرج بهدوء
+
+    const trs = table.querySelectorAll("tbody tr");
+    trs.forEach(tr => {
+      const text = tr.cells[0]?.innerText.toLowerCase() || "";
+      tr.style.display = text.includes(filter) ? "" : "none";
+    });
+  });
+});
 </script>
