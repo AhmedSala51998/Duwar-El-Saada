@@ -279,7 +279,7 @@ $stocks = $pdo->query("
       </div>
       <div class="modal-body">
         <div class="mb-3">
-          <input type="text" id="stockSearch" class="form-control" placeholder="ابحث عن منتج..." onkeyup="filterStocks()">
+          <input type="text" id="stockSearch" class="form-control" placeholder="ابحث عن منتج...">
         </div>
         <div class="table-responsive">
           <table class="table table-bordered align-middle mb-0">
