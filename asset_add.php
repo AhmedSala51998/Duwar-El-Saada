@@ -91,23 +91,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
                 exit;
             }
 
-            foreach($custodies as $custody){
-                if($amountToDeduct <= 0) break;
+            foreach ($custodies as $custody) {
+                if ($amountToDeduct <= 0) break;
 
-                $deduct = min($custody['amount'], $amountToDeduct);
-                $newAmount = $custody['amount'] - $deduct;
-                $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
-                $notes = "شراء " . $name;
+                if ($custody['amount'] >= $amountToDeduct) {
+                    // العهدة الحالية تكفي المبلغ بالكامل
+                    $newAmount = $custody['amount'] - $amountToDeduct;
+                    $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
 
-                // سجل العملية في custody_transactions
-                $stmtTx = $pdo->prepare("
-                    INSERT INTO custody_transactions (type, type_id, custody_id, amount , notes, created_at)
-                    VALUES (?, ?, ?, ?,?, NOW())
-                ");
-                $stmtTx->execute(['asset', $asset_id, $custody['id'], $deduct, $notes]);
+                    $notes = "شراء " . $name;
+                    $pdo->prepare("
+                        INSERT INTO custody_transactions (type, type_id, custody_id, amount, notes, created_at)
+                        VALUES (?, ?, ?, ?, ?, NOW())
+                    ")->execute(['asset', $asset_id, $custody['id'], $amountToDeduct, $notes]);
 
-                $amountToDeduct -= $deduct;
+                    $amountToDeduct = 0; // تم تغطية المبلغ بالكامل
+                } else {
+                    // العهدة لا تكفي، خذ كل اللي فيها وكمّل من اللي بعدها
+                    $amountDeducted = $custody['amount'];
+                    $pdo->prepare("UPDATE custodies SET amount=0 WHERE id=?")->execute([$custody['id']]);
+
+                    $notes = "شراء " . $name;
+                    $pdo->prepare("
+                        INSERT INTO custody_transactions (type, type_id, custody_id, amount, notes, created_at)
+                        VALUES (?, ?, ?, ?, ?, NOW())
+                    ")->execute(['asset', $asset_id, $custody['id'], $amountDeducted, $notes]);
+
+                    $amountToDeduct -= $amountDeducted;
+                }
             }
+
         }
 
         $_SESSION['toast'] = ['type'=>'success','msg'=>'تمت العملية بنجاح'];

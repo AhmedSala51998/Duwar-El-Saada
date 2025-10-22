@@ -74,24 +74,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
         $notes = "مصروفات " . $main_expense . "-" . $sub_expense . "-" . $expense_desc;
 
         $amountToDeduct = $expense_amount + $vat_value;
-        foreach($custodies as $custody){
-            if($amountToDeduct <= 0) break;
+        foreach ($custodies as $custody) {
+            if ($amountToDeduct <= 0) break;
 
-            $deduct = min($custody['amount'], $amountToDeduct);
-            $newAmount = $custody['amount'] - $deduct;
-            $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
+            if ($custody['amount'] >= $amountToDeduct) {
+                // العهدة تكفي المبلغ المطلوب بالكامل
+                $newAmount = $custody['amount'] - $amountToDeduct;
+                $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
 
-            // تسجيل المعاملة في الجدول الوسيط
-            $stmtTx = $pdo->prepare("
-                INSERT INTO custody_transactions (type, type_id, custody_id, amount , notes, created_at)
-                VALUES (?, ?, ?, ?,?, NOW())
-            ");
-            $stmtTx->execute(['expense', $expense_id, $custody['id'], $deduct , $notes]);
+                // تسجيل الحركة في جدول المعاملات
+                $pdo->prepare("
+                    INSERT INTO custody_transactions (type, type_id, custody_id, amount, notes, created_at)
+                    VALUES (?, ?, ?, ?, ?, NOW())
+                ")->execute(['expense', $expense_id, $custody['id'], $amountToDeduct, $notes]);
 
-            $amountToDeduct -= $deduct;
+                $amountToDeduct = 0; // تم تغطية المبلغ بالكامل
+            } else {
+                // العهدة لا تكفي، خذ كامل رصيدها وكمّل من اللي بعدها
+                $amountDeducted = $custody['amount'];
+                $pdo->prepare("UPDATE custodies SET amount=0 WHERE id=?")->execute([$custody['id']]);
+
+                // تسجيل الحركة في جدول المعاملات
+                $pdo->prepare("
+                    INSERT INTO custody_transactions (type, type_id, custody_id, amount, notes, created_at)
+                    VALUES (?, ?, ?, ?, ?, NOW())
+                ")->execute(['expense', $expense_id, $custody['id'], $amountDeducted, $notes]);
+
+                $amountToDeduct -= $amountDeducted;
+            }
         }
 
-        if($amountToDeduct > 0){
+        if ($amountToDeduct > 0) {
             $_SESSION['toast'] = ['type'=>'danger','msg'=>'رصيد العهدة غير كافي'];
             header('Location: ' . BASE_URL . '/expenses.php');
             exit;

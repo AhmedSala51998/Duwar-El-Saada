@@ -125,23 +125,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
                 foreach ($custodies as $custody) {
                     if ($amountNeeded <= 0) break;
 
-                    $deduct = min($custody['amount'], $amountNeeded);
-                    $newAmount = $custody['amount'] - $deduct;
-                    $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
+                    if ($custody['amount'] >= $amountNeeded) {
+                        // العهدة الحالية تكفي المبلغ بالكامل
+                        $newAmount = $custody['amount'] - $amountNeeded;
+                        $pdo->prepare("UPDATE custodies SET amount=? WHERE id=?")->execute([$newAmount, $custody['id']]);
 
-                    // سجل المعاملة
-                    $stmtTx = $pdo->prepare("
-                        INSERT INTO custody_transactions (type, type_id, custody_id, amount , notes, created_at)
-                        VALUES (?, ?, ?, ?,?, NOW())
-                    ");
-                    $stmtTx->execute(['asset', $oldData['id'], $custody['id'], $deduct , $notes]);
+                        $pdo->prepare("
+                            INSERT INTO custody_transactions (type, type_id, custody_id, amount, notes, created_at)
+                            VALUES (?, ?, ?, ?, ?, NOW())
+                        ")->execute(['asset', $oldData['id'], $custody['id'], $amountNeeded, $notes]);
 
-                    $amountNeeded -= $deduct;
+                        $amountNeeded = 0; // تم تغطية المبلغ بالكامل
+                    } else {
+                        // العهدة لا تكفي، خذ كل اللي فيها وكمّل من اللي بعدها
+                        $amountDeducted = $custody['amount'];
+                        $pdo->prepare("UPDATE custodies SET amount=0 WHERE id=?")->execute([$custody['id']]);
+
+                        $pdo->prepare("
+                            INSERT INTO custody_transactions (type, type_id, custody_id, amount, notes, created_at)
+                            VALUES (?, ?, ?, ?, ?, NOW())
+                        ")->execute(['asset', $oldData['id'], $custody['id'], $amountDeducted, $notes]);
+
+                        $amountNeeded -= $amountDeducted;
+                    }
                 }
 
                 if ($amountNeeded > 0) {
-                    $_SESSION['toast'] = ['type'=>'danger','msg'=>'رصيد العهدة غير كافي'];
-                    header('Location: ' . BASE_URL . '/assetes.php'); 
+                    $_SESSION['toast'] = ['type' => 'danger', 'msg' => 'رصيد العهدة غير كافي'];
+                    header('Location: ' . BASE_URL . '/assets.php');
                     exit;
                 }
             }
