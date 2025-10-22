@@ -277,12 +277,15 @@ $stocks = $pdo->query("
         <h5 class="modal-title"><i class="bi bi-box-seam"></i> المخزون الحالي</h5>
         <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
       </div>
+
       <div class="modal-body">
+        <!-- 🔍 مربع البحث -->
         <div class="mb-3">
           <input type="text" id="stockSearch" class="form-control" placeholder="ابحث عن منتج...">
         </div>
+
         <div class="table-responsive">
-          <table class="table table-bordered align-middle mb-0">
+          <table class="table table-bordered align-middle mb-0" id="stocksTable">
             <thead class="table-light">
               <tr>
                 <th>اسم الصنف</th>
@@ -304,6 +307,7 @@ $stocks = $pdo->query("
           </table>
         </div>
       </div>
+
       <div class="modal-footer">
         <button class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
       </div>
