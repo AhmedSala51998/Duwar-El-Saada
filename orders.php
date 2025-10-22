@@ -344,3 +344,18 @@ $stocks = $pdo->query("
 <?php endif; ?>
 
 <?php require __DIR__.'/partials/footer.php'; ?>
+<!-- استدعاء مكتبة Select2 -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  // تطبيق البحث على القائمة
+  $('select[name="purchase_id"]').select2({
+    width: '100%',
+    placeholder: 'ابحث عن المنتج...',
+    allowClear: true,
+    dropdownParent: $('#addOrder') // عشان يشتغل جوه الـ modal
+  });
+});
+</script>
