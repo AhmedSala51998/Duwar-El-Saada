@@ -284,7 +284,7 @@ $stocks = $pdo->query("
           <input type="text" id="stockSearch" class="form-control" placeholder="ابحث عن منتج...">
         </div>
 
-        <div class="table-responsive">
+        <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
           <table class="table table-bordered align-middle mb-0" id="stocksTable">
             <thead class="table-light">
               <tr>
