@@ -72,7 +72,7 @@ $rentalsByPayer = $pdo->query("SELECT payer, COUNT(*) c FROM rentals GROUP BY pa
 
     <!-- أصناف -->
     <div class="col-md-4 col-lg-3">
-      <a href="items.php" class="text-decoration-none text-dark">
+      <a href="purchases.php" class="text-decoration-none text-dark">
         <div class="card p-3 text-center h-100"
              style="cursor:pointer;border:2px solid #ff6a00;border-radius:15px;box-shadow:0 4px 12px rgba(255,106,0,0.3);transition:transform 0.2s;">
           <div class="fs-2 mb-2 text-orange"><i class="bi bi-bag"></i></div>
@@ -96,7 +96,7 @@ $rentalsByPayer = $pdo->query("SELECT payer, COUNT(*) c FROM rentals GROUP BY pa
 
     <!-- الأصول -->
     <div class="col-md-4 col-lg-3">
-      <a href="assets.php" class="text-decoration-none text-dark">
+      <a href="assetes.php" class="text-decoration-none text-dark">
         <div class="card p-3 text-center h-100"
              style="cursor:pointer;border:2px solid #ff6a00;border-radius:15px;box-shadow:0 4px 12px rgba(255,106,0,0.3);transition:transform 0.2s;">
           <div class="fs-2 mb-2 text-success"><i class="bi bi-building"></i></div>
