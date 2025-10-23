@@ -20,7 +20,7 @@ $purchasesByMonth = $pdo->query("
   SELECT 
     DATE_FORMAT(op.created_at, '%Y-%m') AS m,
     COUNT(DISTINCT op.id) AS c
-  FROM order_purchases op
+  FROM orders_purchases op
   INNER JOIN purchases p ON op.id = p.order_id
   GROUP BY m
   ORDER BY m DESC
