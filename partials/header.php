@@ -152,7 +152,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
       color: #fff !important;
     }
   </style>
-  <link href="https://fonts.googleapis.com/css2?family=Amiri&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
 </head>
 <body>
   <div class="loader">
@@ -179,7 +179,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
     <!-- اللوجو -->
     <a class="navbar-brand d-flex align-items-center gap-2 fw-bold text-orange" href="<?= BASE_URL ?>/home.php">
       <img src="<?= BASE_URL ?>/assets/logo.png" width="65" height="65" alt="logo" class="rounded shadow-sm">
-      <span class="fs-5" style="font-family: 'Amiri', serif; font-weight: bold; letter-spacing: 0.5px;">
+      <span class="fs-5" style="font-family: 'Scheherazade New', serif; font-size: 1.4rem; font-weight: 700;">
         <?= esc(APP_NAME) ?>
       </span>
     </a>
