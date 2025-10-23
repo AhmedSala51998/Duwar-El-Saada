@@ -1,7 +1,12 @@
 <?php require __DIR__.'/partials/header.php'; ?>
 <style>
+  .card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
   .card:hover {
     transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(255,106,0,0.4);
   }
 </style>
 <?php
