@@ -1,5 +1,9 @@
 <?php require __DIR__.'/partials/header.php'; ?>
-
+<style>
+  .card:hover {
+    transform: scale(1.05);
+  }
+</style>
 <?php
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -63,91 +67,107 @@ $rentalsByPayer = $pdo->query("SELECT payer, COUNT(*) c FROM rentals GROUP BY pa
   </div>
 
   <!-- كروت الإحصائيات -->
-  <div class="col-lg-8">
-    <div class="row g-3">
+<div class="col-lg-8">
+  <div class="row g-3">
 
-      <!-- أصناف -->
-      <div class="col-md-4 col-lg-3">
+    <!-- أصناف -->
+    <div class="col-md-4 col-lg-3">
+      <a href="items.php" class="text-decoration-none text-dark">
         <div class="card p-3 text-center h-100"
-             style="border:2px solid #ff6a00;border-radius:15px;box-shadow:0 4px 12px rgba(255,106,0,0.3);">
+             style="cursor:pointer;border:2px solid #ff6a00;border-radius:15px;box-shadow:0 4px 12px rgba(255,106,0,0.3);transition:transform 0.2s;">
           <div class="fs-2 mb-2 text-orange"><i class="bi bi-bag"></i></div>
           <div class="text-muted small">الأصناف</div>
           <div class="fw-bold fs-4"><?= $pc ?></div>
         </div>
-      </div>
+      </a>
+    </div>
 
-      <!-- أوامر -->
-      <div class="col-md-4 col-lg-3">
+    <!-- أوامر -->
+    <div class="col-md-4 col-lg-3">
+      <a href="orders.php" class="text-decoration-none text-dark">
         <div class="card p-3 text-center h-100"
-             style="border:2px solid #ff6a00;border-radius:15px;box-shadow:0 4px 12px rgba(255,106,0,0.3);">
+             style="cursor:pointer;border:2px solid #ff6a00;border-radius:15px;box-shadow:0 4px 12px rgba(255,106,0,0.3);transition:transform 0.2s;">
           <div class="fs-2 mb-2 text-primary"><i class="bi bi-gear"></i></div>
           <div class="text-muted small">الأوامر</div>
           <div class="fw-bold fs-4"><?= $oc ?></div>
         </div>
-      </div>
+      </a>
+    </div>
 
-      <!-- الأصول -->
-      <div class="col-md-4 col-lg-3">
+    <!-- الأصول -->
+    <div class="col-md-4 col-lg-3">
+      <a href="assets.php" class="text-decoration-none text-dark">
         <div class="card p-3 text-center h-100"
-             style="border:2px solid #ff6a00;border-radius:15px;box-shadow:0 4px 12px rgba(255,106,0,0.3);">
+             style="cursor:pointer;border:2px solid #ff6a00;border-radius:15px;box-shadow:0 4px 12px rgba(255,106,0,0.3);transition:transform 0.2s;">
           <div class="fs-2 mb-2 text-success"><i class="bi bi-building"></i></div>
           <div class="text-muted small">الأصول</div>
           <div class="fw-bold fs-4"><?= $ac ?></div>
         </div>
-      </div>
+      </a>
+    </div>
 
-      <!-- العهد -->
-      <div class="col-md-4 col-lg-3">
+    <!-- العهد -->
+    <div class="col-md-4 col-lg-3">
+      <a href="custodies.php" class="text-decoration-none text-dark">
         <div class="card p-3 text-center h-100"
-             style="border:2px solid #ff6a00;border-radius:15px;box-shadow:0 4px 12px rgba(255,106,0,0.3);">
+             style="cursor:pointer;border:2px solid #ff6a00;border-radius:15px;box-shadow:0 4px 12px rgba(255,106,0,0.3);transition:transform 0.2s;">
           <div class="fs-2 mb-2 text-dark"><i class="bi bi-shield-check"></i></div>
           <div class="text-muted small">العُهد</div>
           <div class="fw-bold fs-4"><?= $cc ?></div>
         </div>
+      </a>
+    </div>
+
+    <!-- الرسوم الحكومية -->
+    <!--
+    <div class="col-md-4 col-lg-2">
+      <div class="card p-3 text-center h-100"
+           style="border:2px solid #ff6a00;border-radius:15px;box-shadow:0 4px 12px rgba(255,106,0,0.3);">
+        <div class="fs-2 mb-2 text-danger"><i class="bi bi-file-earmark-text"></i></div>
+        <div class="text-muted small">الرسوم</div>
+        <div class="fw-bold fs-4"><?= $gf_count ?></div>
       </div>
+    </div>
+    -->
 
-      <!-- الرسوم الحكومية 
-      <div class="col-md-4 col-lg-2">
-        <div class="card p-3 text-center h-100"
-             style="border:2px solid #ff6a00;border-radius:15px;box-shadow:0 4px 12px rgba(255,106,0,0.3);">
-          <div class="fs-2 mb-2 text-danger"><i class="bi bi-file-earmark-text"></i></div>
-          <div class="text-muted small">الرسوم</div>
-          <div class="fw-bold fs-4"><?= $gf_count ?></div>
-        </div>
-      </div>-->
+    <!-- الاشتراكات -->
+    <!--
+    <div class="col-md-4 col-lg-2">
+      <div class="card p-3 text-center h-100"
+           style="border:2px solid #ff6a00;border-radius:15px;box-shadow:0 4px 12px rgba(255,106,0,0.3);">
+        <div class="fs-2 mb-2 text-info"><i class="bi bi-journal-bookmark"></i></div>
+        <div class="text-muted small">الاشتراكات</div>
+        <div class="fw-bold fs-4"><?= $subs_count ?></div>
+      </div>
+    </div>
+    -->
 
-      <!-- الاشتراكات 
-      <div class="col-md-4 col-lg-2">
-        <div class="card p-3 text-center h-100"
-             style="border:2px solid #ff6a00;border-radius:15px;box-shadow:0 4px 12px rgba(255,106,0,0.3);">
-          <div class="fs-2 mb-2 text-info"><i class="bi bi-journal-bookmark"></i></div>
-          <div class="text-muted small">الاشتراكات</div>
-          <div class="fw-bold fs-4"><?= $subs_count ?></div>
-        </div>
-      </div>-->
+    <!-- الإيجارات -->
+    <!--
+    <div class="col-md-4 col-lg-2">
+      <div class="card p-3 text-center h-100"
+           style="border:2px solid #ff6a00;border-radius:15px;box-shadow:0 4px 12px rgba(255,106,0,0.3);">
+        <div class="fs-2 mb-2 text-warning"><i class="bi bi-house-door"></i></div>
+        <div class="text-muted small">الإيجارات</div>
+        <div class="fw-bold fs-4"><?= $rentals_count ?></div>
+      </div>
+    </div>
+    -->
 
-      <!-- الإيجارات 
-      <div class="col-md-4 col-lg-2">
+    <!-- المصروفات -->
+    <div class="col-md-4 col-lg-3">
+      <a href="expenses.php" class="text-decoration-none text-dark">
         <div class="card p-3 text-center h-100"
-             style="border:2px solid #ff6a00;border-radius:15px;box-shadow:0 4px 12px rgba(255,106,0,0.3);">
-          <div class="fs-2 mb-2 text-warning"><i class="bi bi-house-door"></i></div>
-          <div class="text-muted small">الإيجارات</div>
-          <div class="fw-bold fs-4"><?= $rentals_count ?></div>
-        </div>
-      </div>-->
-
-      <!-- المصروفات -->
-      <div class="col-md-4 col-lg-3">
-        <div class="card p-3 text-center h-100"
-             style="border:2px solid #ff6a00;border-radius:15px;box-shadow:0 4px 12px rgba(255,106,0,0.3);">
+             style="cursor:pointer;border:2px solid #ff6a00;border-radius:15px;box-shadow:0 4px 12px rgba(255,106,0,0.3);transition:transform 0.2s;">
           <div class="fs-2 mb-2 text-secondary"><i class="bi bi-cash-stack"></i></div>
           <div class="text-muted small">المصروفات</div>
           <div class="fw-bold fs-4"><?= $expenses_count ?></div>
         </div>
-      </div>
-
+      </a>
     </div>
+
   </div>
+</div>
 </div>
 
 <hr>
