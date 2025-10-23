@@ -82,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
             $amountToDeduct = ($price * $quantity) + $vat_value;
 
             // جلب كل العهد للشخص، الأقدم أولاً
-            $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? ORDER BY taken_at ASC");
+            $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? AND amount > 0 ORDER BY taken_at ASC");
             $stmtC->execute([$payer]);
             $custodies = $stmtC->fetchAll(PDO::FETCH_ASSOC);
 
