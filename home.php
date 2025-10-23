@@ -35,7 +35,7 @@ $expensesByMonth = $pdo->query("
 
 // العهد (custodies) بالشهور
 $custodiesByMonth = $pdo->query("
-  SELECT DATE_FORMAT(created_at,'%Y-%m') m, COUNT(*) c 
+  SELECT DATE_FORMAT(taken_at,'%Y-%m') m, COUNT(*) c 
   FROM custodies GROUP BY m ORDER BY m DESC LIMIT 6
 ")->fetchAll(PDO::FETCH_KEY_PAIR);
 
