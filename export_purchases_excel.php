@@ -78,7 +78,7 @@ foreach ($rows as $r) {
 
     // تحديد هل الفاتورة فيها ضريبة أم لا
     if (!empty($r['order_vat']) && $r['order_vat'] > 0) {
-        $vat = $total * 0.15;
+        $vat = $r['unit_vat'];
         $total_with_vat = $r['unit_all_total'];
         $price1 = 0;
     } else {

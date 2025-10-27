@@ -188,7 +188,7 @@ foreach($rows as $r):
 
   // لو الفاتورة فيها ضريبة فعلية نحسب الضريبة للمنتجات
   if (!empty($r['order_vat']) && $r['order_vat'] > 0) {
-      $vat  = $before * 0.15;
+      $vat  = $r['unit_vat'];
       $after = $r['unit_all_total'];
       $price = $r['price'];
   } else {
