@@ -138,7 +138,7 @@ $stmt = $pdo->prepare("
         op.created_at,
 
         CASE 
-            WHEN p.unit_vat > 0 THEN (p.total_price * p.total_packages)
+            WHEN p.unit_vat > 0 THEN p.unit_total
             ELSE p.unit_all_total
         END AS `before`,
 
