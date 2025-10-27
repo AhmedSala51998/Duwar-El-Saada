@@ -188,10 +188,39 @@ $total_balance = $total_in - $total_out;
         <td><?= number_format($current_balance,2) ?></td>
         <td><?= esc($r['taken_at']) ?></td>
         <td><?= esc($r['notes']) ?></td>
-        <td>
+        <!--<td>
           <a class="btn btn-sm btn-outline-primary" href="invoice_custody?id=<?= $r['id'] ?>"><i class="bi bi-printer"></i></a>
           <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#e<?= $r['id'] ?>"><i class="bi bi-pencil"></i></button>
           <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#del<?= $r['id'] ?>"><i class="bi bi-trash"></i></button>
+        </td>-->
+        <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#actions<?= $r['id'] ?>">
+            <i class="bi bi-gear"></i>
+          </button>
+
+          <!-- مودال العمليات -->
+          <div class="modal fade" id="actions<?= $r['id'] ?>" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">العمليات على العهدة رقم <?= $r['id'] ?></h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center">
+                  <div class="d-grid gap-2">
+                    <a href="invoice_custody?id=<?= $r['id'] ?>" class="btn btn-outline-primary">
+                      <i class="bi bi-printer me-1"></i> طباعة
+                    </a>
+                    <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#e<?= $r['id'] ?>" data-bs-dismiss="modal">
+                      <i class="bi bi-pencil me-1"></i> تعديل
+                    </button>
+                    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#del<?= $r['id'] ?>" data-bs-dismiss="modal">
+                      <i class="bi bi-trash me-1"></i> حذف
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </td>
     </tr>
 
