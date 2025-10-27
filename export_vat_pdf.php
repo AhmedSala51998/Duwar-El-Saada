@@ -178,6 +178,18 @@ $stmt = $pdo->prepare("
 $stmt->execute($paramsExpenses);
 $expenses = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+/*$stmt = $pdo->prepare("
+    SELECT 
+        a.name,
+        a.quantity,
+        a.type,
+        a.created_at,
+        (CASE WHEN a.has_vat=1 THEN (a.price * a.quantity) ELSE a.price * a.quantity * 1.15 END) AS `before`,
+        (CASE WHEN a.has_vat=1 THEN a.price * a.quantity * 0.15 ELSE 0 END) AS `vat`,
+        (CASE WHEN a.has_vat=1 THEN a.price * a.quantity * 1.15 ELSE a.price * a.quantity * 1.15 END) AS `after`
+    FROM assets a
+    WHERE 1=1 $dateFilterAssets
+");*/
 $stmt = $pdo->prepare("
     SELECT 
         a.name,

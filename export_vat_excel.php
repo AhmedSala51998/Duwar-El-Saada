@@ -101,7 +101,7 @@ $stmt->execute($params);
 $expenses = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // ---------------------------- الأصول ----------------------------
-$stmt = $pdo->prepare("
+/*$stmt = $pdo->prepare("
     SELECT 
         name,
         quantity,
@@ -111,6 +111,31 @@ $stmt = $pdo->prepare("
         ROUND(CASE WHEN has_vat=1 THEN price * quantity * 0.15 ELSE 0 END, 2) AS `vat`,
         ROUND(CASE WHEN has_vat=1 THEN price * quantity * 1.15 ELSE price * quantity * 1.15 END, 2) AS `after`
     FROM assets
+    WHERE 1=1 $assetsFilter
+");*/
+$stmt = $pdo->prepare("
+    SELECT 
+        a.name,
+        a.quantity,
+        a.type,
+        a.created_at,
+
+        CASE 
+            WHEN a.has_vat = 1 THEN (a.price * a.quantity)
+            ELSE a.total_amount
+        END AS `before`,
+
+        CASE 
+            WHEN a.has_vat = 1 THEN (a.price * a.quantity * 0.15)
+            ELSE 0
+        END AS `vat`,
+
+        CASE 
+            WHEN a.has_vat = 1 THEN (a.price * a.quantity * 1.15)
+            ELSE a.total_amount
+        END AS `after`
+
+    FROM assets a
     WHERE 1=1 $assetsFilter
 ");
 $stmt->execute($params);
