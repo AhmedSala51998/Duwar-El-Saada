@@ -111,6 +111,7 @@ function renderSection($title, $rows, $columns, &$totalBefore, &$totalVat, &$tot
             <td>".number_format($sectionBefore,3)."</td>
             <td>".number_format($sectionVat,3)."</td>
             <td>".number_format($sectionAfter,3)."</td>
+            <td>-</td>
           </tr></tbody></table>";
 
     $totalBefore += $sectionBefore;
@@ -137,22 +138,22 @@ $stmt = $pdo->prepare("
         op.created_at,
 
         CASE 
-            WHEN op.vat > 0 THEN (p.total_price * p.total_packages)
+            WHEN p.unit_vat > 0 THEN (p.total_price * p.total_packages)
             ELSE p.unit_all_total
         END AS `before`,
 
         CASE 
-            WHEN op.vat > 0 THEN (p.total_price * p.total_packages * 0.15)
+            WHEN p.unit_vat > 0 THEN (p.total_price * p.total_packages * 0.15)
             ELSE 0
         END AS `vat`,
 
         CASE 
-            WHEN op.vat > 0 THEN p.unit_all_total
+            WHEN p.unit_vat > 0 THEN p.unit_all_total
             ELSE p.unit_all_total
         END AS `after`,
 
         CASE 
-            WHEN op.vat > 0 THEN p.price
+            WHEN p.unit_vat > 0 THEN p.price
             ELSE p.price + (p.price * 0.15)
         END AS `price`
 
