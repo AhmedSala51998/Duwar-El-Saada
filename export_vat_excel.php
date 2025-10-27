@@ -39,7 +39,7 @@ if($to_date) {
 }
 
 // ---------------------------- المشتريات ----------------------------
-$stmt = $pdo->prepare("
+/*$stmt = $pdo->prepare("
     SELECT 
         p.name,
         o.supplier_name,
@@ -49,6 +49,36 @@ $stmt = $pdo->prepare("
         ROUND(CASE WHEN p.unit_vat=0 THEN (p.total_price * p.total_packages * 1.15) ELSE (p.total_price * p.total_packages * 1.15) END, 2) AS `after`
     FROM purchases p
     LEFT JOIN orders_purchases o ON p.order_id = o.id
+    WHERE 1=1 $purchasesFilter
+");*/
+$stmt = $pdo->prepare("
+    SELECT 
+        p.name,
+        op.supplier_name,
+        op.created_at,
+
+        CASE 
+            WHEN op.order_vat > 0 THEN (p.total_price * p.total_packages)
+            ELSE p.unit_all_total
+        END AS `before`,
+
+        CASE 
+            WHEN op.order_vat > 0 THEN (p.total_price * p.total_packages * 0.15)
+            ELSE 0
+        END AS `vat`,
+
+        CASE 
+            WHEN op.order_vat > 0 THEN p.unit_all_total
+            ELSE p.unit_all_total
+        END AS `after`,
+
+        CASE 
+            WHEN op.order_vat > 0 THEN p.price
+            ELSE p.price + (p.price * 0.15)
+        END AS `price`
+
+    FROM purchases p
+    LEFT JOIN orders_purchases op ON p.order_id = op.id
     WHERE 1=1 $purchasesFilter
 ");
 $stmt->execute($params);
