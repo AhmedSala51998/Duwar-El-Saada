@@ -56,25 +56,24 @@ $stmt = $pdo->prepare("
         p.name,
         op.supplier_name,
         op.created_at,
-        op.order_vat,
 
         CASE 
-            WHEN op.order_vat > 0 THEN (p.total_price * p.total_packages)
+            WHEN op.vat > 0 THEN (p.total_price * p.total_packages)
             ELSE p.unit_all_total
         END AS `before`,
 
         CASE 
-            WHEN op.order_vat > 0 THEN (p.total_price * p.total_packages * 0.15)
+            WHEN op.vat > 0 THEN (p.total_price * p.total_packages * 0.15)
             ELSE 0
         END AS `vat`,
 
         CASE 
-            WHEN op.order_vat > 0 THEN p.unit_all_total
+            WHEN op.vat > 0 THEN p.unit_all_total
             ELSE p.unit_all_total
         END AS `after`,
 
         CASE 
-            WHEN op.order_vat > 0 THEN p.price
+            WHEN op.vat > 0 THEN p.price
             ELSE p.price + (p.price * 0.15)
         END AS `price`
 
