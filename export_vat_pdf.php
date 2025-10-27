@@ -28,11 +28,11 @@ if ($date_type === 'today') {
 
 // فلترة المشتريات (p.created_at)
 if($from_date) { 
-    $dateFilterPurchases .= " AND DATE(o.created_at) >= ?"; 
+    $dateFilterPurchases .= " AND DATE(op.created_at) >= ?"; 
     $paramsPurchases[] = $from_date; 
 }
 if($to_date) { 
-    $dateFilterPurchases .= " AND DATE(o.created_at) <= ?"; 
+    $dateFilterPurchases .= " AND DATE(op.created_at) <= ?"; 
     $paramsPurchases[] = $to_date; 
 }
 
@@ -90,6 +90,10 @@ function renderSection($title, $rows, $columns, &$totalBefore, &$totalVat, &$tot
                 case 'الإجمالي بعد':
                     echo "<td>".number_format($r['after'] ?? 0,3)."</td>";
                     break;
+                case 'التاريخ':
+                    $dateOnly = explode(' ', $r['created_at'] ?? '')[0] ?? '-';
+                    echo "<td>" . htmlspecialchars($dateOnly ?: '-') . "</td>";
+                    break;
                 default:
                     echo "<td>-</td>";
                     break;
@@ -118,9 +122,10 @@ $stmt = $pdo->prepare("
     SELECT 
         p.name,
         op.supplier_name,
-        (CASE WHEN p.unit_vat=0 THEN (p.price * p.quantity * 1.15) ELSE (p.price * p.quantity) END) AS `before`, 
-        (CASE WHEN p.unit_vat=0 THEN 0 ELSE (p.price * p.quantity * 0.15) END) AS `vat`, 
-        (CASE WHEN p.unit_vat=0 THEN (p.price * p.quantity * 1.15) ELSE (p.price * p.quantity * 1.15) END) AS `after` 
+        op.created_at,
+        (CASE WHEN p.unit_vat=0 THEN (p.total_price * p.total_packages * 1.15) ELSE (p.total_price * p.total_packages) END) AS `before`, 
+        (CASE WHEN p.unit_vat=0 THEN 0 ELSE (p.total_price * p.total_packages * 0.15) END) AS `vat`, 
+        (CASE WHEN p.unit_vat=0 THEN (p.total_price * p.total_packages * 1.15) ELSE (p.total_price * p.total_packages * 1.15) END) AS `after` 
     FROM purchases p
     LEFT JOIN orders_purchases op ON p.order_id = op.id
     WHERE 1=1 $dateFilterPurchases
@@ -137,7 +142,8 @@ $stmt = $pdo->prepare("
         END AS name, 
         (CASE WHEN has_vat=1 THEN expense_amount ELSE expense_amount * 1.15 END) AS `before`, 
         (CASE WHEN has_vat=1 THEN expense_amount * 0.15 ELSE 0 END) AS `vat`, 
-        (CASE WHEN has_vat=1 THEN expense_amount * 1.15 ELSE expense_amount * 1.15 END) AS `after` 
+        (CASE WHEN has_vat=1 THEN expense_amount * 1.15 ELSE expense_amount * 1.15 END) AS `after`,
+        created_at 
     FROM expenses e
     WHERE 1=1 $dateFilterExpenses
 ");
@@ -149,6 +155,7 @@ $stmt = $pdo->prepare("
         a.name,
         a.quantity,
         a.type,
+        a.created_at,
         (CASE WHEN a.has_vat=1 THEN (a.price * a.quantity) ELSE a.price * a.quantity * 1.15 END) AS `before`,
         (CASE WHEN a.has_vat=1 THEN a.price * a.quantity * 0.15 ELSE 0 END) AS `vat`,
         (CASE WHEN a.has_vat=1 THEN a.price * a.quantity * 1.15 ELSE a.price * a.quantity * 1.15 END) AS `after`
@@ -195,9 +202,9 @@ if ($date_type === 'today') {
     echo "<p style='text-align:center;font-weight:bold'>كل التقرير</p>";
 }
 
-renderSection("المشتريات", $purchases, ['الاسم','المورد','الإجمالي قبل الضريبة','الضريبة','الإجمالي بعد'], $totalBefore,$totalVat,$totalAfter);
-renderSection("المصروفات", $expenses, ['الاسم','الإجمالي قبل الضريبة','الضريبة','الإجمالي بعد'], $totalBefore,$totalVat,$totalAfter);
-renderSection("الأصول", $assets, ['الأصل','الكمية','النوع','الإجمالي قبل الضريبة','الضريبة','الإجمالي بعد'], $totalBefore,$totalVat,$totalAfter);
+renderSection("المشتريات", $purchases, ['الاسم','المورد','الإجمالي قبل الضريبة','الضريبة','الإجمالي بعد','التاريخ'], $totalBefore,$totalVat,$totalAfter);
+renderSection("المصروفات", $expenses, ['الاسم','الإجمالي قبل الضريبة','الضريبة','الإجمالي بعد','التاريخ'], $totalBefore,$totalVat,$totalAfter);
+renderSection("الأصول", $assets, ['الأصل','الكمية','النوع','الإجمالي قبل الضريبة','الضريبة','الإجمالي بعد','التاريخ'], $totalBefore,$totalVat,$totalAfter);
 ?>
 
 <div id="printBtnContainer" style="text-align:center;margin:20px 0; display: flex; justify-content: center; gap: 15px;">

@@ -43,9 +43,10 @@ $stmt = $pdo->prepare("
     SELECT 
         p.name,
         o.supplier_name,
-        ROUND(CASE WHEN p.unit_vat=0 THEN (p.price * p.quantity * 1.15) ELSE (p.price * p.quantity) END, 2) AS `before`,
-        ROUND(CASE WHEN p.unit_vat=0 THEN 0 ELSE (p.price * p.quantity * 0.15) END, 2) AS `vat`,
-        ROUND(CASE WHEN p.unit_vat=0 THEN (p.price * p.quantity * 1.15) ELSE (p.price * p.quantity * 1.15) END, 2) AS `after`
+        o.created_at,
+        ROUND(CASE WHEN p.unit_vat=0 THEN (p.total_price * p.total_packages * 1.15) ELSE (p.total_price * p.total_packages) END, 2) AS `before`,
+        ROUND(CASE WHEN p.unit_vat=0 THEN 0 ELSE (p.total_price * p.total_packages * 0.15) END, 2) AS `vat`,
+        ROUND(CASE WHEN p.unit_vat=0 THEN (p.total_price * p.total_packages * 1.15) ELSE (p.total_price * p.total_packages * 1.15) END, 2) AS `after`
     FROM purchases p
     LEFT JOIN orders_purchases o ON p.order_id = o.id
     WHERE 1=1 $purchasesFilter
@@ -63,7 +64,8 @@ $stmt = $pdo->prepare("
         END AS name,
         ROUND(CASE WHEN has_vat=1 THEN expense_amount ELSE expense_amount * 1.15 END , 2) AS `before`,
         ROUND(CASE WHEN has_vat=1 THEN expense_amount * 0.15 ELSE 0 END, 2) AS `vat`,
-        ROUND(CASE WHEN has_vat=1 THEN expense_amount * 1.15 ELSE expense_amount * 1.15 END, 2) AS `after`
+        ROUND(CASE WHEN has_vat=1 THEN expense_amount * 1.15 ELSE expense_amount * 1.15 END, 2) AS `after`,
+        created_at
     FROM expenses
     WHERE 1=1 $expensesFilter
 ");
@@ -76,6 +78,7 @@ $stmt = $pdo->prepare("
         name,
         quantity,
         type,
+        created_at,
         ROUND(CASE WHEN has_vat=1 THEN (price * quantity) ELSE price * quantity * 1.15 END, 2) AS `before`,
         ROUND(CASE WHEN has_vat=1 THEN price * quantity * 0.15 ELSE 0 END, 2) AS `vat`,
         ROUND(CASE WHEN has_vat=1 THEN price * quantity * 1.15 ELSE price * quantity * 1.15 END, 2) AS `after`
@@ -87,14 +90,14 @@ $assets = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // ---------------------------- تجميع البيانات في ملف Excel ----------------------------
 $data = [];
-$data[] = ["المصدر", "الاسم", "اسم المورد / العدد والنوع", "الإجمالي قبل الضريبة", "الضريبة", "الإجمالي بعد"];
+$data[] = ["المصدر", "الاسم", "اسم المورد / العدد والنوع", "الإجمالي قبل الضريبة", "الضريبة", "الإجمالي بعد","التاريخ"];
 
 $totalBefore = $totalVat = $totalAfter = 0;
 
 // المشتريات
 foreach ($purchases as $r) {
     $beforeValue = ($r['vat'] == 0) ? $r['after'] : $r['before'];
-    $data[] = ["المشتريات", $r['name'], $r['supplier_name'], $beforeValue, $r['vat'], $r['after']];
+    $data[] = ["المشتريات", $r['name'], $r['supplier_name'], $beforeValue, $r['vat'], $r['after'], $r['created_at']];
     $totalBefore += $beforeValue;
     $totalVat += $r['vat'];
     $totalAfter += $r['after'];
@@ -103,7 +106,7 @@ foreach ($purchases as $r) {
 // المصروفات
 foreach ($expenses as $r) {
     $beforeValue = ($r['vat'] == 0) ? $r['after'] : $r['before'];
-    $data[] = ["المصروفات", $r['name'], "", $beforeValue, $r['vat'], $r['after']];
+    $data[] = ["المصروفات", $r['name'], "", $beforeValue, $r['vat'], $r['after'], $r['created_at']];
 
     $totalBefore += $beforeValue;
     $totalVat += $r['vat'];
@@ -114,7 +117,7 @@ foreach ($expenses as $r) {
 foreach ($assets as $r) {
     $typeInfo = trim(($r['quantity'] ?? '') . '-' . ($r['type'] ?? ''));
     $beforeValue = ($r['vat'] == 0) ? $r['after'] : $r['before'];
-    $data[] = ["الأصول", $r['name'], $typeInfo, $beforeValue, $r['vat'], $r['after']];
+    $data[] = ["الأصول", $r['name'], $typeInfo, $beforeValue, $r['vat'], $r['after'], $r['created_at']];
 
     $totalBefore += $beforeValue;
     $totalVat += $r['vat'];
