@@ -107,11 +107,10 @@ function renderSection($title, $rows, $columns, &$totalBefore, &$totalVat, &$tot
     }
 
     echo "<tr style='font-weight:bold;background:#f1f1f1'>
-            <td colspan='".(count($columns)-3)."'>الإجمالي الفرعي</td>
+            <td colspan='".(count($columns)-2)."'>الإجمالي الفرعي</td>
             <td>".number_format($sectionBefore,3)."</td>
             <td>".number_format($sectionVat,3)."</td>
             <td>".number_format($sectionAfter,3)."</td>
-            <td>-</td>
           </tr></tbody></table>";
 
     $totalBefore += $sectionBefore;
