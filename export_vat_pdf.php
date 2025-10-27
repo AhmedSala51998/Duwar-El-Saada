@@ -133,6 +133,20 @@ $stmt = $pdo->prepare("
 $stmt->execute($paramsPurchases);
 $purchases = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+/*$stmt = $pdo->prepare("
+    SELECT 
+        CASE 
+            WHEN sub_expense = 'أخرى' OR sub_expense IS NULL OR sub_expense = '' 
+            THEN CONCAT(main_expense, ' - ', expense_desc)
+            ELSE CONCAT(main_expense, ' - ', sub_expense)
+        END AS name, 
+        (CASE WHEN has_vat=1 THEN expense_amount ELSE expense_amount * 1.15 END) AS `before`, 
+        (CASE WHEN has_vat=1 THEN expense_amount * 0.15 ELSE 0 END) AS `vat`, 
+        (CASE WHEN has_vat=1 THEN expense_amount * 1.15 ELSE expense_amount * 1.15 END) AS `after`,
+        created_at 
+    FROM expenses e
+    WHERE 1=1 $dateFilterExpenses
+");*/
 $stmt = $pdo->prepare("
     SELECT 
         CASE 
@@ -170,9 +184,22 @@ $stmt = $pdo->prepare("
         a.quantity,
         a.type,
         a.created_at,
-        (CASE WHEN a.has_vat=1 THEN (a.price * a.quantity) ELSE a.price * a.quantity * 1.15 END) AS `before`,
-        (CASE WHEN a.has_vat=1 THEN a.price * a.quantity * 0.15 ELSE 0 END) AS `vat`,
-        (CASE WHEN a.has_vat=1 THEN a.price * a.quantity * 1.15 ELSE a.price * a.quantity * 1.15 END) AS `after`
+
+        CASE 
+            WHEN a.has_vat = 1 THEN (a.price * a.quantity)
+            ELSE a.total_amount
+        END AS `before`,
+
+        CASE 
+            WHEN a.has_vat = 1 THEN (a.price * a.quantity * 0.15)
+            ELSE 0
+        END AS `vat`,
+
+        CASE 
+            WHEN a.has_vat = 1 THEN (a.price * a.quantity * 1.15)
+            ELSE a.total_amount
+        END AS `after`
+
     FROM assets a
     WHERE 1=1 $dateFilterAssets
 ");
