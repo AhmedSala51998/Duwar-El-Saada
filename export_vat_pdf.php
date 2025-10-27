@@ -135,6 +135,7 @@ $stmt = $pdo->prepare("
         p.name,
         op.supplier_name,
         op.created_at,
+        op.order_vat,
 
         CASE 
             WHEN op.order_vat > 0 THEN (p.total_price * p.total_packages)
