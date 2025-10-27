@@ -119,7 +119,7 @@ function renderSection($title, $rows, $columns, &$totalBefore, &$totalVat, &$tot
     $totalAfter  += $sectionAfter;
 }
 
-/*$stmt = $pdo->prepare("
+$stmt = $pdo->prepare("
     SELECT 
         p.name,
         op.supplier_name,
@@ -130,20 +130,20 @@ function renderSection($title, $rows, $columns, &$totalBefore, &$totalVat, &$tot
     FROM purchases p
     LEFT JOIN orders_purchases op ON p.order_id = op.id
     WHERE 1=1 $dateFilterPurchases
-");*/
-$stmt = $pdo->prepare("
+");
+/*$stmt = $pdo->prepare("
     SELECT 
         p.name,
         op.supplier_name,
         op.created_at,
 
         CASE 
-            WHEN p.unit_vat > 0 THEN (p.price * p.quantity)
+            WHEN p.unit_vat > 0 THEN (p.total_price * p.total_packages)
             ELSE p.unit_all_total
         END AS `before`,
 
         CASE 
-            WHEN p.unit_vat > 0 THEN (p.price * p.quantity * 0.15)
+            WHEN p.unit_vat > 0 THEN (p.total_price * p.total_packages * 0.15)
             ELSE 0
         END AS `vat`,
 
@@ -160,7 +160,7 @@ $stmt = $pdo->prepare("
     FROM purchases p
     LEFT JOIN orders_purchases op ON p.order_id = op.id
     WHERE 1=1 $dateFilterPurchases
-");
+");*/
 $stmt->execute($paramsPurchases);
 $purchases = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
