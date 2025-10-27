@@ -234,14 +234,45 @@ $can_edit = in_array(current_role(), ['admin','manager']);
       <td><?= esc($r['payer_name']) ?></td>
       <td><?= esc($r['payment_source'] ?? '-') ?></td>
       <?php if($can_edit): ?>
-      <td class="table-actions">
-        <a class="btn btn-sm btn-outline-primary" href="invoice?id=<?= $r['id'] ?>"><i class="bi bi-printer"></i></a>
-        <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#e<?= $r['id'] ?>"><i class="bi bi-pencil"></i></button>
-        <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#del<?= $r['id'] ?>">
-          <i class="bi bi-trash"></i>
-        </button>
-      </td>
-      <?php endif; ?>
+        <td class="table-actions text-center">
+          <!-- زر الفتح -->
+          <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#actions<?= $r['id'] ?>">
+            <i class="bi bi-gear-fill"></i>
+          </button>
+
+          <!-- مودال العمليات -->
+          <div class="modal fade" id="actions<?= $r['id'] ?>" tabindex="-1" aria-labelledby="actionsLabel<?= $r['id'] ?>" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-light">
+                  <h5 class="modal-title" id="actionsLabel<?= $r['id'] ?>">
+                    <i class="bi bi-gear-fill me-1"></i> العمليات
+                  </h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="إغلاق"></button>
+                </div>
+                <div class="modal-body text-center">
+
+                  <!-- زر الطباعة -->
+                  <a class="btn btn-outline-primary w-100 mb-2" href="invoice?id=<?= $r['id'] ?>">
+                    <i class="bi bi-printer me-2"></i> طباعة
+                  </a>
+
+                  <!-- زر التعديل -->
+                  <button class="btn btn-outline-warning w-100 mb-2" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#e<?= $r['id'] ?>">
+                    <i class="bi bi-pencil me-2"></i> تعديل
+                  </button>
+
+                  <!-- زر الحذف -->
+                  <button class="btn btn-outline-danger w-100" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#del<?= $r['id'] ?>">
+                    <i class="bi bi-trash me-2"></i> حذف
+                  </button>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </td>
+        <?php endif; ?>
     </tr>
 
     <!-- Modal تعديل -->
