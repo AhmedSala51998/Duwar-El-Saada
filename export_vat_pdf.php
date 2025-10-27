@@ -119,7 +119,7 @@ function renderSection($title, $rows, $columns, &$totalBefore, &$totalVat, &$tot
     $totalAfter  += $sectionAfter;
 }
 
-/*$stmt = $pdo->prepare("
+$stmt = $pdo->prepare("
     SELECT 
         p.name,
         op.supplier_name,
@@ -130,8 +130,8 @@ function renderSection($title, $rows, $columns, &$totalBefore, &$totalVat, &$tot
     FROM purchases p
     LEFT JOIN orders_purchases op ON p.order_id = op.id
     WHERE 1=1 $dateFilterPurchases
-");*/
-$stmt = $pdo->prepare("
+");
+/*$stmt = $pdo->prepare("
     SELECT 
         p.name,
         op.supplier_name,
@@ -160,7 +160,7 @@ $stmt = $pdo->prepare("
     FROM purchases p
     LEFT JOIN orders_purchases op ON p.order_id = op.id
     WHERE 1=1 $dateFilterPurchases
-");
+");*/
 $stmt->execute($paramsPurchases);
 $purchases = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
