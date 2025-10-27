@@ -26,13 +26,13 @@ if ($date_type === 'today') {
 }
 
 if($from_date) {
-    $purchasesFilter .= " AND DATE(o.created_at) >= ?";
+    $purchasesFilter .= " AND DATE(op.created_at) >= ?";
     $expensesFilter  .= " AND DATE(expenses.created_at) >= ?";
     $assetsFilter    .= " AND DATE(assets.created_at) >= ?";
     $params[] = $from_date;
 }
 if($to_date) {
-    $purchasesFilter .= " AND DATE(o.created_at) <= ?";
+    $purchasesFilter .= " AND DATE(op.created_at) <= ?";
     $expensesFilter  .= " AND DATE(expenses.created_at) <= ?";
     $assetsFilter    .= " AND DATE(assets.created_at) <= ?";
     $params[] = $to_date;
