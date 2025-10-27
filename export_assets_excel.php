@@ -18,7 +18,7 @@ if ($date_type === 'today') {
 }
 
 // استعلام الأصول
-$q = "SELECT id, name, type, quantity, price, has_vat, payer_name, payment_source,total_amount, created_at FROM assets WHERE 1";
+$q = "SELECT id, name, type, quantity, price, has_vat,vat_value, payer_name, payment_source,total_amount, created_at FROM assets WHERE 1";
 $params = [];
 
 // فلترة بالكلمة المفتاحية
