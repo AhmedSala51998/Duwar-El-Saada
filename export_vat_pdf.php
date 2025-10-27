@@ -111,6 +111,7 @@ function renderSection($title, $rows, $columns, &$totalBefore, &$totalVat, &$tot
             <td>".number_format($sectionBefore,3)."</td>
             <td>".number_format($sectionVat,3)."</td>
             <td>".number_format($sectionAfter,3)."</td>
+            <td>-</td>
           </tr></tbody></table>";
 
     $totalBefore += $sectionBefore;
