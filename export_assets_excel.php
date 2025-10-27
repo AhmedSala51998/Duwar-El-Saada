@@ -55,7 +55,7 @@ foreach ($rows as $r) {
     $price1 = 0;
 
     if (!empty($r['has_vat']) && $r['has_vat'] == 1) {
-        $vat = $total * 0.15;
+        $vat = (float)$r['vat_value'];
         $total_with_vat = $total + $vat;
         $price1 = $r['price'];
     } else {
