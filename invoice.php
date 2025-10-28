@@ -177,6 +177,21 @@ th, td {
   font-size: 0.9em;
 }
 
+/* صف الصنف المميز */
+.highlighted-row {
+  background-color: #fff3cd !important; /* لون أصفر فاتح */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 0 10px rgba(255, 193, 7, 0.6);
+  position: relative;
+  z-index: 1;
+}
+
+/* حركة البربشة */
+.blinking {
+  transform: scale(1.03);
+  box-shadow: 0 0 15px rgba(255, 193, 7, 0.9);
+}
+
 
 </style>
 
@@ -389,6 +404,45 @@ dateInput.addEventListener('change', function() {
       headers: {'Content-Type': 'application/x-www-form-urlencoded'},
       body: `order_id=${this.dataset.orderId}&date=${newDate}`
     }).then(res => res.text()).then(console.log).catch(console.error);
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const highlightName = urlParams.get('highlight');
+
+  if (!highlightName) return; // لو مفيش هايلايت خلاص
+
+  // نجيب كل الصفوف
+  const rows = document.querySelectorAll('#invoiceTable tbody tr');
+  if (rows.length <= 1) return; // لو مفيش غير صف واحد ما نعملش حاجة
+
+  rows.forEach(tr => {
+    const cellText = tr.cells[0].innerText.trim().replace(/\s+/g, ''); // العمود الأول (الاسم)
+    const targetName = highlightName.trim().replace(/\s+/g, '');
+    if (cellText === targetName) {
+      tr.classList.add('highlighted-row');
+
+      // نحط تركيز عليه في الشاشة
+      tr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+      // نعمل فلاش بسيط متكرر
+      let blinkCount = 0;
+      const blinkInterval = setInterval(() => {
+        tr.classList.toggle('blinking');
+        blinkCount++;
+        if (blinkCount > 6) { // 3 مرات تقريبًا
+          clearInterval(blinkInterval);
+          tr.classList.remove('blinking');
+        }
+      }, 300);
+
+      // لما المستخدم يمر عليه بالماوس يرجع طبيعي
+      tr.addEventListener('mouseenter', () => {
+        tr.classList.remove('highlighted-row', 'blinking');
+      });
+    }
+  });
 });
 </script>
 

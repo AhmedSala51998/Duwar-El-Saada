@@ -309,7 +309,7 @@ $stocks = $pdo->query("
             </thead>
             <tbody>
               <?php foreach($stocks as $s): ?>
-              <tr class="clickable-row" data-href="invoice?id=<?= $s['id'] ?>" title="عرض فاتورة <?= esc($s['name']) ?>">
+              <tr class="clickable-row"  data-href="invoice?id=<?= $s['id'] ?>&highlight=<?= urlencode(trim($s['name'])) ?>" title="عرض فاتورة <?= esc($s['name']) ?>">
                 <td><?= esc($s['name']) ?></td>
                 <td><?= number_format($s['total_qty'], 2) ?></td>
                 <td><?= esc($s['unit']) ?></td>
