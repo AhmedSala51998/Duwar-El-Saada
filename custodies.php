@@ -87,6 +87,36 @@
     font-size: 0.75rem;
 }
 
+
+/* الأعمدة الأولى (#) عرض ثابت وصغير */
+.custom-table th:first-child,
+.custom-table td:first-child {
+    width: 60px;
+    font-size: 0.75rem;
+    text-align: center;
+}
+
+/* زيادة عرض الأعمدة المهمة */
+.custom-table th:nth-child(2),
+.custom-table td:nth-child(2) {
+    width: 180px; /* البيان */
+}
+
+.custom-table th:nth-child(3),
+.custom-table td:nth-child(3),
+.custom-table th:nth-child(4),
+.custom-table td:nth-child(4),
+.custom-table th:nth-child(5),
+.custom-table td:nth-child(5) {
+    width: 120px; /* الوارد، الصادر، الرصيد */
+}
+
+.custom-table th:last-child,
+.custom-table td:last-child {
+    width: 110px; /* عمود العمليات */
+}
+
+
 </style>
 <?php
 // توست الرسائل
