@@ -99,7 +99,7 @@
 .custom-table th:nth-child(1),
 .custom-table td:nth-child(1) { width: 10px; } /* # */
 .custom-table th:nth-child(2),
-.custom-table td:nth-child(2) { width: 10%; } /* البيان */
+.custom-table td:nth-child(2) { width: 15%; } /* البيان */
 .custom-table th:nth-child(3),
 .custom-table td:nth-child(3) { width: 10%; } /* الوارد */
 .custom-table th:nth-child(4),
@@ -111,7 +111,7 @@
 .custom-table th:nth-child(7),
 .custom-table td:nth-child(7) { width: 40%; } /* الملاحظات */
 .custom-table th:nth-child(8),
-.custom-table td:nth-child(8) { width: 60px; } /* العمليات */
+.custom-table td:nth-child(8) { width: 20%; } /* العمليات */
 
 
 </style>
