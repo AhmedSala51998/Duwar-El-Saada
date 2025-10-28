@@ -131,6 +131,15 @@ input[type="file"]{display:none}
   border-radius: 0.75rem;
 }
 
+.custom-table th:first-child {
+    width: 50px; /* عرض ثابت */
+    font-size: 0.75rem; /* تصغير الخط */
+    text-align: center;
+}
+.custom-table td:first-child {
+    text-align: center;
+    font-size: 0.75rem;
+}
 
 </style>
 
