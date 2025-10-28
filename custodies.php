@@ -88,54 +88,6 @@
 }
 
 
-/* الأعمدة الأولى (#) */
-/* الأعمدة الأولى (#) */
-.custom-table th:first-child,
-.custom-table td:first-child {
-    width: 60px;
-    font-size: 0.75rem;
-    text-align: center;
-}
-
-/* البيان */
-.custom-table th:nth-child(2),
-.custom-table td:nth-child(2) {
-    width: 180px;
-}
-
-/* الوارد، الصادر، الرصيد */
-.custom-table th:nth-child(3),
-.custom-table td:nth-child(3),
-.custom-table th:nth-child(4),
-.custom-table td:nth-child(4),
-.custom-table th:nth-child(5),
-.custom-table td:nth-child(5) {
-    width: 120px;
-}
-
-/* التاريخ */
-.custom-table th:nth-child(6),
-.custom-table td:nth-child(6) {
-    width: 140px;
-}
-
-/* الملاحظات - مرنة لتملأ الباقي */
-.custom-table th:nth-child(7),
-.custom-table td:nth-child(7) {
-    min-width: 300px;       /* أقل عرض */
-    width: auto;            /* ياخد الباقي */
-    max-width: none;        /* إزالة أي قيود */
-    white-space: normal !important;
-}
-
-/* عمليات المودال */
-.custom-table th:last-child,
-.custom-table td:last-child {
-    width: 110px;
-}
-
-
-
 </style>
 <?php
 // توست الرسائل
