@@ -190,34 +190,35 @@ $can_edit = in_array(current_role(), ['admin','manager']);
   <h3 class="mb-0">تهيئة المشتريات</h3>
 
   <div class="d-flex flex-wrap align-items-center gap-2">
-    <form class="d-flex align-items-center gap-2" method="get">
-      <input class="form-control" name="kw" placeholder="بحث بالاسم" value="<?= esc($kw) ?>" style="min-width:200px;">
-      <button class="btn btn-outline-secondary">بحث</button>
+    <form class="d-flex align-items-center gap-2 mb-0" method="get" style="height:40px;">
+      <input class="form-control" name="kw" placeholder="بحث بالاسم" value="<?= esc($kw) ?>" style="height:40px; min-width:200px;">
+      <button class="btn btn-outline-secondary" style="height:40px;">بحث</button>
     </form>
 
-    <a class="btn btn-outline-dark" href="export_purchases_excel.php?kw=<?= urlencode($kw) ?>">
+    <a class="btn btn-outline-dark" href="export_purchases_excel.php?kw=<?= urlencode($kw) ?>" style="height:40px;">
       <i class="bi bi-file-earmark-spreadsheet"></i> Excel
     </a>
 
-    <a class="btn btn-outline-dark" href="export_purchases_pdf.php?kw=<?= urlencode($kw) ?>">
+    <a class="btn btn-outline-dark" href="export_purchases_pdf.php?kw=<?= urlencode($kw) ?>" style="height:40px;">
       <i class="bi bi-filetype-pdf"></i> PDF
     </a>
 
     <?php if($can_edit): ?>
-      <button class="btn btn-orange" data-bs-toggle="modal" data-bs-target="#addM">
-        <i class="bi bi-plus-lg"></i> إضافة
+      <button class="btn btn-orange d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#addM" style="height:40px;">
+        <i class="bi bi-plus-lg me-1"></i> إضافة
       </button>
     <?php endif; ?>
 
-    <a class="btn btn-outline-success" href="uploads/purchases_sample_template.xlsx" download>
-      <i class="bi bi-download"></i> تحميل نموذج Excel
+    <a class="btn btn-outline-success d-flex align-items-center" href="uploads/purchases_sample_template.xlsx" download style="height:40px;">
+      <i class="bi bi-download me-1"></i> تحميل نموذج Excel
     </a>
 
-    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#importExcel">
-      <i class="bi bi-file-text"></i> إضافة أصناف عبر Excel
+    <button class="btn btn-success d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#importExcel" style="height:40px;">
+      <i class="bi bi-file-text me-1"></i> إضافة أصناف عبر Excel
     </button>
   </div>
 </div>
+
 
 
 <div class="table-responsive">
