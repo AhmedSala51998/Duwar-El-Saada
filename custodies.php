@@ -88,6 +88,32 @@
 }
 
 
+.custom-table th,
+.custom-table td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 0.5rem 0.6rem;
+}
+
+/* عرض الأعمدة */
+.custom-table th:nth-child(1),
+.custom-table td:nth-child(1) { width: 10px; } /* # */
+.custom-table th:nth-child(2),
+.custom-table td:nth-child(2) { width: 30%; } /* البيان */
+.custom-table th:nth-child(3),
+.custom-table td:nth-child(3) { width: 12%; } /* الوارد */
+.custom-table th:nth-child(4),
+.custom-table td:nth-child(4) { width: 12%; } /* الصادر */
+.custom-table th:nth-child(5),
+.custom-table td:nth-child(5) { width: 12%; } /* الرصيد */
+.custom-table th:nth-child(6),
+.custom-table td:nth-child(6) { width: 12%; } /* التاريخ */
+.custom-table th:nth-child(7),
+.custom-table td:nth-child(7) { width: 62%; } /* الملاحظات */
+.custom-table th:nth-child(8),
+.custom-table td:nth-child(8) { width: 20px; } /* العمليات */
+
+
 </style>
 <?php
 // توست الرسائل
