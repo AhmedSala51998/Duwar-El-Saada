@@ -109,9 +109,9 @@
 .custom-table th:nth-child(6),
 .custom-table td:nth-child(6) { width: 12%; } /* التاريخ */
 .custom-table th:nth-child(7),
-.custom-table td:nth-child(7) { width: 62%; } /* الملاحظات */
+.custom-table td:nth-child(7) { width: 12%; } /* الملاحظات */
 .custom-table th:nth-child(8),
-.custom-table td:nth-child(8) { width: 20px; } /* العمليات */
+.custom-table td:nth-child(8) { width: 50px; } /* العمليات */
 
 
 </style>
