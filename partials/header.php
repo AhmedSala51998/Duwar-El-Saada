@@ -151,6 +151,29 @@ $current_page = basename($_SERVER['PHP_SELF']);
       box-shadow: 0 6px 15px rgba(255,106,0,.4);
       color: #fff !important;
     }
+
+    .custom-navbar {
+        padding-top: 0.25rem !important;  /* تقليل الحشوة العلوية */
+        padding-bottom: 0.25rem !important; /* تقليل الحشوة السفلية */
+      }
+
+      .custom-navbar .navbar-brand img {
+        height: 65px !important; /* نفس حجم اللوجو */
+        width: 65px !important;
+      }
+
+      .custom-navbar .navbar-brand span {
+        font-size: 1.3rem !important;
+        line-height: 1;
+      }
+
+      @media (max-width: 768px) {
+        .custom-navbar {
+          padding-top: 0.35rem !important;
+          padding-bottom: 0.35rem !important;
+        }
+      }
+
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
 </head>
