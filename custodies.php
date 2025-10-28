@@ -99,17 +99,17 @@
 .custom-table th:nth-child(1),
 .custom-table td:nth-child(1) { width: 10px; } /* # */
 .custom-table th:nth-child(2),
-.custom-table td:nth-child(2) { width: 30%; } /* البيان */
+.custom-table td:nth-child(2) { width: 10%; } /* البيان */
 .custom-table th:nth-child(3),
-.custom-table td:nth-child(3) { width: 12%; } /* الوارد */
+.custom-table td:nth-child(3) { width: 5%; } /* الوارد */
 .custom-table th:nth-child(4),
-.custom-table td:nth-child(4) { width: 12%; } /* الصادر */
+.custom-table td:nth-child(4) { width: 5%; } /* الصادر */
 .custom-table th:nth-child(5),
-.custom-table td:nth-child(5) { width: 12%; } /* الرصيد */
+.custom-table td:nth-child(5) { width: 5%; } /* الرصيد */
 .custom-table th:nth-child(6),
-.custom-table td:nth-child(6) { width: 12%; } /* التاريخ */
+.custom-table td:nth-child(6) { width: 6%; } /* التاريخ */
 .custom-table th:nth-child(7),
-.custom-table td:nth-child(7) { width: 12%; } /* الملاحظات */
+.custom-table td:nth-child(7) { width: 40%; } /* الملاحظات */
 .custom-table th:nth-child(8),
 .custom-table td:nth-child(8) { width: 50px; } /* العمليات */
 
