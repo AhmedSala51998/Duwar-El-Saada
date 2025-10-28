@@ -160,21 +160,6 @@
     font-size: 0.75rem;
 }
 
-/* العمود الأول (#) */
-.custom-table th:nth-child(1),
-.custom-table td:nth-child(1) {
-  width: 4%;
-}
-
-/* 👇 توسيع الرقم التسلسلي */
-.custom-table th:nth-child(2),
-.custom-table td:nth-child(2) {
-  width: 12%;          /* كان مثلاً 8% أو 10% — زوّدناه بسيط */
-  min-width: 130px;    /* عشان الأكواد الطويلة تبان */
-  white-space: nowrap; /* يمنع النزول لسطر تاني */
-  text-align: center;
-}
-
 
 </style>
 
