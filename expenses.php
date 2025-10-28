@@ -143,7 +143,7 @@ input[type="file"]{display:none}
 
 .custom-table th:nth-child(9),
 .custom-table td:nth-child(9) {
-    width: 60px; /* عرض ثابت */
+    width: 80px; /* عرض ثابت */
     font-size: 0.75rem; /* تصغير الخط */
     text-align: center;
 }
