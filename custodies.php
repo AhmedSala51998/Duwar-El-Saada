@@ -118,10 +118,13 @@
     width: 140px;
 }
 
-/* الملاحظات */
+/* الملاحظات - تجعل مرنة وتاخذ الباقي */
 .custom-table th:nth-child(7),
 .custom-table td:nth-child(7) {
-    width: 250px;
+    min-width: 250px;   /* أقل عرض */
+    max-width: auto;    /* ياخد الباقي */
+    width: auto;
+    white-space: normal !important; /* للسطر الطويل */
 }
 
 /* عمليات المودال */
