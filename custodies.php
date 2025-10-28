@@ -89,6 +89,7 @@
 
 
 /* الأعمدة الأولى (#) */
+/* الأعمدة الأولى (#) */
 .custom-table th:first-child,
 .custom-table td:first-child {
     width: 60px;
@@ -99,7 +100,7 @@
 /* البيان */
 .custom-table th:nth-child(2),
 .custom-table td:nth-child(2) {
-    width: 180px;
+    width: 160px;
 }
 
 /* الوارد، الصادر، الرصيد */
@@ -109,28 +110,29 @@
 .custom-table td:nth-child(4),
 .custom-table th:nth-child(5),
 .custom-table td:nth-child(5) {
-    width: 120px;
+    width: 110px;
 }
 
 /* التاريخ */
 .custom-table th:nth-child(6),
 .custom-table td:nth-child(6) {
-    width: 140px;
+    width: 130px;
+    white-space: nowrap;
 }
 
-/* الملاحظات - تجعل مرنة وتاخذ الباقي */
+/* الملاحظات — ياخد كل المساحة المتبقية */
 .custom-table th:nth-child(7),
 .custom-table td:nth-child(7) {
-    min-width: 250px;   /* أقل عرض */
-    max-width: auto;    /* ياخد الباقي */
-    width: auto;
-    white-space: normal !important; /* للسطر الطويل */
+    width: 100%;
+    min-width: 300px;
+    white-space: normal !important;
 }
 
-/* عمليات المودال */
+/* عمليات */
 .custom-table th:last-child,
 .custom-table td:last-child {
-    width: 110px;
+    width: 90px;
+    text-align: center;
 }
 
 
