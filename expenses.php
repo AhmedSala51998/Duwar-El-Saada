@@ -132,7 +132,7 @@ input[type="file"]{display:none}
 }
 
 .custom-table th:first-child {
-    width: 50px; /* عرض ثابت */
+    width: 60px; /* عرض ثابت */
     font-size: 0.75rem; /* تصغير الخط */
     text-align: center;
 }
