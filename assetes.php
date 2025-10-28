@@ -125,56 +125,6 @@ input[type="file"] {
 }
 
 
-/* عرض الأعمدة في جدول الفواتير أو التفاصيل */
-.custom-table th:nth-child(1),
-.custom-table td:nth-child(1) { width: 4%; } /* # */
-
-.custom-table th:nth-child(2),
-.custom-table td:nth-child(2) { width: 10%; } /* الرقم التسلسلي */
-
-.custom-table th:nth-child(3),
-.custom-table td:nth-child(3) { width: 18%; } /* الاسم */
-
-.custom-table th:nth-child(4),
-.custom-table td:nth-child(4) { width: 10%; } /* النوع */
-
-.custom-table th:nth-child(5),
-.custom-table td:nth-child(5) { width: 6%; } /* العدد */
-
-.custom-table th:nth-child(6),
-.custom-table td:nth-child(6) { width: 9%; } /* السعر */
-
-.custom-table th:nth-child(7),
-.custom-table td:nth-child(7) { width: 9%; } /* الضريبة */
-
-.custom-table th:nth-child(8),
-.custom-table td:nth-child(8) { width: 11%; } /* الإجمالي بعد الضريبة */
-
-/* 👇 تعديل حقل الدافع */
-.custom-table th:nth-child(9),
-.custom-table td:nth-child(9) {
-  width: 9%;                /* أوسع من قبل */
-  min-width: 110px;         /* علشان يكون مريح */
-  white-space: normal !important; /* يسمح بالنزول للسطر */
-  word-break: break-word;   /* يكسر الكلمة الطويلة */
-  text-align: center;
-  vertical-align: middle;
-}
-
-/* مصدر الدفع */
-.custom-table th:nth-child(10),
-.custom-table td:nth-child(10) {
-  width: 9%;
-  text-align: center;
-}
-
-/* العمليات */
-.custom-table th:last-child,
-.custom-table td:last-child {
-  width: 6%;
-  text-align: center;
-}
-
 
 </style>
 
