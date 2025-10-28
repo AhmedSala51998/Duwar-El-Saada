@@ -232,7 +232,6 @@ $can_edit = in_array(current_role(), ['admin','manager']);
       <tr>
         <th>#</th>
         <th>الرقم التسلسلي</th>
-        <th>صورة</th>
         <th>الاسم</th>
         <th>النوع</th>
         <th>العدد</th>
@@ -249,11 +248,11 @@ $can_edit = in_array(current_role(), ['admin','manager']);
       <tr class="text-center">
         <td class="fw-bold text-muted"><?= $r['id'] ?></td>
         <td><?= esc($r['invoice_serial']) ?></td>
-        <td>
+        <!--<td>
           <?php if($r['image']): ?>
             <img src="uploads/<?= esc($r['image']) ?>" width="44" class="rounded">
           <?php endif; ?>
-        </td>
+        </td>-->
         <td><?= esc($r['name']) ?></td>
         <td><?= esc($r['type']) ?></td>
         <td><?= (int)$r['quantity'] ?></td>
