@@ -160,13 +160,6 @@
     font-size: 0.75rem;
 }
 
-.custom-table th:nth-child(2),
-.custom-table td:nth-child(2) {
-    width: 80px; /* أكبر مساحة للرقم أو التسلسل */
-    text-align: center; /* حسب رغبتك */
-    font-size: 0.85rem; /* تكبير الخط لو تحب */
-}
-
 
 </style>
 
