@@ -50,7 +50,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
     GROUP BY name, unit
     ORDER BY name
 ")->fetchAll(PDO::FETCH_ASSOC);*/
-$stocks = $pdo->query("
+/*$stocks = $pdo->query("
     SELECT 
         id,
         name,
@@ -59,6 +59,19 @@ $stocks = $pdo->query("
         MAX(created_at) AS last_added
     FROM purchases
     GROUP BY name, unit
+    ORDER BY name
+")->fetchAll(PDO::FETCH_ASSOC);*/
+$stocks = $pdo->query("
+    SELECT 
+        MIN(id) AS id,
+        TRIM(REPLACE(REPLACE(LOWER(name), ' ', ''), ' ', '')) AS name,
+        TRIM(REPLACE(REPLACE(LOWER(unit), ' ', ''), ' ', '')) AS unit,
+        SUM(quantity) AS total_qty,
+        MAX(created_at) AS last_added
+    FROM purchases
+    GROUP BY 
+        TRIM(REPLACE(REPLACE(LOWER(name), ' ', ''), ' ', '')),
+        TRIM(REPLACE(REPLACE(LOWER(unit), ' ', ''), ' ', ''))
     ORDER BY name
 ")->fetchAll(PDO::FETCH_ASSOC);
 ?>
