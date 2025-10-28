@@ -101,13 +101,13 @@
 .custom-table th:nth-child(2),
 .custom-table td:nth-child(2) { width: 10%; } /* البيان */
 .custom-table th:nth-child(3),
-.custom-table td:nth-child(3) { width: 5%; } /* الوارد */
+.custom-table td:nth-child(3) { width: 10%; } /* الوارد */
 .custom-table th:nth-child(4),
-.custom-table td:nth-child(4) { width: 5%; } /* الصادر */
+.custom-table td:nth-child(4) { width: 10%; } /* الصادر */
 .custom-table th:nth-child(5),
-.custom-table td:nth-child(5) { width: 5%; } /* الرصيد */
+.custom-table td:nth-child(5) { width: 10%; } /* الرصيد */
 .custom-table th:nth-child(6),
-.custom-table td:nth-child(6) { width: 6%; } /* التاريخ */
+.custom-table td:nth-child(6) { width: 15%; } /* التاريخ */
 .custom-table th:nth-child(7),
 .custom-table td:nth-child(7) { width: 40%; } /* الملاحظات */
 .custom-table th:nth-child(8),
