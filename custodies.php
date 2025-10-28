@@ -22,6 +22,71 @@
     border-color: #ccc;
 }
 
+
+.custom-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.9rem; /* تصغير النص قليلاً للراحة البصرية */
+}
+
+.custom-table thead th {
+  background: #f8f9fa;
+  color: #495057;
+  font-weight: 600;
+  border-bottom: 2px solid #dee2e6;
+  vertical-align: middle;
+  font-size: 0.85rem; /* تصغير الخط في العناوين */
+  white-space: nowrap; /* منع كسر السطر في العناوين */
+}
+
+.custom-table tbody tr {
+  transition: all 0.2s ease-in-out;
+}
+
+.custom-table tbody tr:hover {
+  background-color: #f1f5ff;
+  box-shadow: inset 0 0 0 9999px rgba(0,0,0,0.02);
+}
+
+
+.custom-table td,
+.custom-table th {
+  padding: 0.6rem 0.75rem;
+  vertical-align: middle;
+}
+
+.custom-table .badge {
+  font-size: 0.8rem;
+  border-radius: 0.5rem;
+  background: #f0f2f5;
+}
+
+.custom-table td {
+  white-space: normal !important; /* السماح بالنزول للسطر */
+  word-break: break-word; /* كسر الكلمات الطويلة */
+  vertical-align: top; /* خليه يبدأ من فوق */
+  line-height: 1.4;
+}
+
+.small-header th {
+  padding: 0.5rem 0.6rem;
+}
+
+/* جعل الجدول أنحف وأنيق */
+.table-responsive {
+  border-radius: 0.75rem;
+}
+
+.custom-table th:first-child {
+    width: 60px; /* عرض ثابت */
+    font-size: 0.75rem; /* تصغير الخط */
+    text-align: center;
+}
+.custom-table td:first-child {
+    text-align: center;
+    font-size: 0.75rem;
+}
+
 </style>
 <?php
 // توست الرسائل
@@ -130,79 +195,60 @@ foreach($rowsa as $f) {
 $total_balance = $total_in - $total_out;
 ?>
 
-<div class="table-responsive">
-<table class="table table-hover align-middle">
-<thead>
-    <!-- صف الإجماليات -->
-    <tr class="fw-bold text-center">
-      <th colspan="2" style="background:#f0f0f0;">الرصيد</th>
-      <th style="background:#d4edda;">الصادر</th>
-      <th style="background:#fff3cd;">الوارد</th>
-    </tr>
-    <tr class="fw-bold text-center">
-      <th colspan="2" style="background:#e9ecef;"><?= number_format($total_balance, 2) ?></th>
-      <th style="background:#d4edda;"><?= number_format($total_out, 2) ?></th>
-      <th style="background:#fff3cd;"><?= number_format($total_in, 2) ?></th>
-    </tr>
+<div class="table-responsive shadow-sm rounded-3 border bg-white p-2">
+  <table class="table table-hover align-middle mb-0 custom-table">
+    <thead class="small-header text-center text-secondary fw-semibold">
+      <!-- صف الإجماليات -->
+      <tr class="fw-bold">
+        <th colspan="2" style="background:#f0f0f0;">الرصيد</th>
+        <th style="background:#d4edda;">الصادر</th>
+        <th style="background:#fff3cd;">الوارد</th>
+      </tr>
+      <tr class="fw-bold">
+        <th colspan="2" style="background:#e9ecef;"><?= number_format($total_balance, 2) ?></th>
+        <th style="background:#d4edda;"><?= number_format($total_out, 2) ?></th>
+        <th style="background:#fff3cd;"><?= number_format($total_in, 2) ?></th>
+      </tr>
 
-    <!-- عناوين الأعمدة -->
-    <tr class="table-light">
-      <th>#</th>
-      <th>البيان</th>
-      <th>الوارد</th>
-      <th>الصادر</th>
-      <th>الرصيد</th>
-      <th>التاريخ</th>
-      <th>ملاحظات</th>
-      <?php if($can_edit): ?><th>عمليات</th><?php endif; ?>
-    </tr>
+      <!-- عناوين الأعمدة -->
+      <tr class="table-light">
+        <th>#</th>
+        <th>البيان</th>
+        <th>الوارد</th>
+        <th>الصادر</th>
+        <th>الرصيد</th>
+        <th>التاريخ</th>
+        <th>ملاحظات</th>
+        <?php if($can_edit): ?><th>عمليات</th><?php endif; ?>
+      </tr>
     </thead>
-    <tbody>
-    <?php
-    foreach($rows as $r): 
-        $in = (float)$r['main_amount'];  // الوارد
-        $remain = (float)$r['sub_amount'];   // المتبقي
-        $out = $in - $remain;            // المصروف
-        if($out < 0) $out = 0;
-
-        // جلب الحركات المرتبطة بالعهدة
+    <tbody class="text-center">
+    <?php foreach($rows as $r): 
+        $in = (float)$r['main_amount'];  
+        $remain = (float)$r['sub_amount'];  
+        $out = $in - $remain; if($out < 0) $out = 0;
         $transactions_stmt->execute([$r['id']]);
         $transactions = $transactions_stmt->fetchAll();
-
-        if(count($transactions) > 0){
-            // لو فيه حركة، الرصيد يبدأ من الوارد - الصادر
-            $current_balance = $in - $out;
-        } else {
-            // لو مفيش حركة، الرصيد يعتمد على آخر رصيد محسوب
-            $current_balance = $last_balance + $in - $out;
-        }
-
-        // تحديث الرصيد الأخير للصفوف التالية
+        if(count($transactions) > 0) $current_balance = $in - $out; 
+        else $current_balance = $last_balance + $in - $out;
         $last_balance = $current_balance;
     ?>
-    <tr class="table-primary">
-        <td><?= $r['id'] ?></td>
+      <tr class="table-primary">
+        <td class="fw-bold text-muted"><?= $r['id'] ?></td>
         <td><?= esc($r['person_name']) ?></td>
         <td><?= number_format($in,2) ?></td>
         <td><?= number_format($out,2) ?></td>
         <td><?= number_format($current_balance,2) ?></td>
         <td><?= esc($r['taken_at']) ?></td>
         <td><?= esc($r['notes']) ?></td>
-        <!--<td>
-          <a class="btn btn-sm btn-outline-primary" href="invoice_custody?id=<?= $r['id'] ?>"><i class="bi bi-printer"></i></a>
-          <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#e<?= $r['id'] ?>"><i class="bi bi-pencil"></i></button>
-          <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#del<?= $r['id'] ?>"><i class="bi bi-trash"></i></button>
-        </td>-->
         <td class="text-center">
-        <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#actions<?= $r['id'] ?>">
+          <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#actions<?= $r['id'] ?>">
             <i class="bi bi-gear"></i>
           </button>
-
-          <!-- مودال العمليات -->
           <div class="modal fade" id="actions<?= $r['id'] ?>" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
-              <div class="modal-content">
-                <div class="modal-header">
+              <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-light">
                   <h5 class="modal-title">العمليات على العهدة رقم <?= $r['id'] ?></h5>
                   <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
@@ -223,19 +269,12 @@ $total_balance = $total_in - $total_out;
             </div>
           </div>
         </td>
-    </tr>
+      </tr>
 
-    <?php 
-    // استعراض الحركات
-    foreach($transactions as $t):
+      <?php foreach($transactions as $t):
         $trans_amount = (float)$t['amount'];
-
-        // خصم الحركة من الرصيد الحالي
         $current_balance -= $trans_amount;
-
-        // تحديث آخر رصيد بعد كل حركة
         $last_balance = $current_balance;
-
         $type_ar = '';
         switch($t['type']) {
             case 'asset': $type_ar = 'أصول'; break;
@@ -243,8 +282,8 @@ $total_balance = $total_in - $total_out;
             case 'purchase': $type_ar = 'مشتريات'; break;
             default: $type_ar = esc($t['type']); 
         }
-    ?>
-    <tr>
+      ?>
+      <tr>
         <td></td>
         <td><?= esc($r['person_name']) ?> -- <?= $type_ar ?></td>
         <td></td>
@@ -254,9 +293,8 @@ $total_balance = $total_in - $total_out;
         <td><?= esc($t['notes'] ?? '') ?></td>
         <td><?= $type_ar ?></td>
         <?php if($can_edit): ?><td></td><?php endif; ?>
-    </tr>
-
-    <?php endforeach; ?>
+      </tr>
+      <?php endforeach; ?>
 
     <!-- تعديل -->
     <div class="modal fade" id="e<?= $r['id'] ?>">
