@@ -141,6 +141,19 @@ input[type="file"]{display:none}
     font-size: 0.75rem;
 }
 
+.custom-table th:nth-child(9),
+.custom-table td:nth-child(9) {
+    width: 60px; /* عرض ثابت */
+    font-size: 0.75rem; /* تصغير الخط */
+    text-align: center;
+}
+
+.custom-table th:nth-child(9),
+.custom-table td:nth-child(9) {
+    text-align: center;
+    font-size: 0.75rem;
+}
+
 </style>
 
 <?php if(!empty($_SESSION['toast'])): $toast=$_SESSION['toast']; unset($_SESSION['toast']); ?>
