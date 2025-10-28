@@ -228,7 +228,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
             <option <?= $r['main_expense']=="سكن"?"selected":"" ?>>سكن</option>
             <option <?= $r['main_expense']=="مصروفات تشغيلية"?"selected":"" ?>>مصروفات تشغيلية</option>
             <option <?= $r['main_expense']=="مصروفات تأسيس"?"selected":"" ?>>مصروفات تأسيس</option>
-            <option <?= $r['main_expense']=="مصروفات اخرى"?"selected":"" ?>>مصروفات اخرى</option>
+            <option <?= $r['main_expense']=="مصروفات متنوعة"?"selected":"" ?>>مصروفات متنوعة</option>
           </select>
 
           <label>نوع المصروف</label>
@@ -393,7 +393,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
             <option value="سكن">سكن</option>
             <option value="مصروفات تشغيلية">مصروفات تشغيلية</option>
             <option value="مصروفات تأسيس">مصروفات تأسيس</option>
-            <option value="مصروفات اخرى">مصروفات اخرى</option>
+            <option value="مصروفات متنوعة">مصروفات متنوعة</option>
           </select>
 
           <label>نوع المصروف</label>
@@ -463,7 +463,7 @@ const expenseTypes = {
   "مرافق وخدمات": ["كهرباء","مياه","غاز","هاتف وانترنت","أخرى"],
   "رواتب": ["رواتب موظفين","أخرى"],
   "سكن": ["سكن وإعاشة","كهرباء","مياه","أخرى"],
-  "مصروفات اخرى": ["أخرى"],
+  "مصروفات متنوعة": ["أخرى"],
   "مصروفات تشغيلية": ["أخرى"],
   "مصروفات تأسيس": ["أخرى"]
 };
