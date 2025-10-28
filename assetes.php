@@ -140,22 +140,22 @@ $can_edit = in_array(current_role(), ['admin','manager']);
   <h3 class="mb-0">الأصول</h3>
 
   <div class="d-flex flex-wrap align-items-center gap-2">
-    <form class="d-flex align-items-center gap-2" method="get">
-      <input class="form-control" name="kw" placeholder="بحث بالاسم" value="<?= esc($kw) ?>" style="min-width:200px;">
-      <button class="btn btn-outline-secondary">بحث</button>
+    <form class="d-flex align-items-center gap-2 mb-0" method="get" style="height:40px;">
+      <input class="form-control" name="kw" placeholder="بحث بالاسم" value="<?= esc($kw) ?>" style="height:40px; min-width:200px;">
+      <button class="btn btn-outline-secondary" style="height:40px;">بحث</button>
     </form>
 
-    <a class="btn btn-outline-dark" href="export_assets_excel.php?kw=<?= urlencode($kw) ?>">
+    <a class="btn btn-outline-dark" href="export_assets_excel.php?kw=<?= urlencode($kw) ?>" style="height:40px;">
       <i class="bi bi-file-earmark-spreadsheet"></i> Excel
     </a>
 
-    <a class="btn btn-outline-dark" href="export_assets_pdf.php?kw=<?= urlencode($kw) ?>">
+    <a class="btn btn-outline-dark" href="export_assets_pdf.php?kw=<?= urlencode($kw) ?>" style="height:40px;">
       <i class="bi bi-filetype-pdf"></i> PDF
     </a>
 
     <?php if($can_edit): ?>
-      <button class="btn btn-orange" data-bs-toggle="modal" data-bs-target="#add">
-        <i class="bi bi-plus-lg"></i> إضافة
+      <button class="btn btn-orange d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#add" style="height:40px;">
+        <i class="bi bi-plus-lg me-1"></i> إضافة
       </button>
     <?php endif; ?>
   </div>
