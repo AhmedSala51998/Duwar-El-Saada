@@ -107,11 +107,15 @@
 .custom-table th:nth-child(5),
 .custom-table td:nth-child(5) { width: 10%; } /* الرصيد */
 .custom-table th:nth-child(6),
-.custom-table td:nth-child(6) { width: 15%; } /* التاريخ */
+.custom-table td:nth-child(6) { width: 14%; } /* التاريخ */
 .custom-table th:nth-child(7),
-.custom-table td:nth-child(7) { width: 40%; } /* الملاحظات */
+.custom-table td:nth-child(7) { width: 32%; } /* الملاحظات */
 .custom-table th:nth-child(8),
-.custom-table td:nth-child(8) { width: 6%; } /* العمليات */
+.custom-table td:nth-child(8) { 
+  width: 6%;   /* زوّدها شوية */
+  min-width: 90px;  /* تأكد إن المساحة كافية للزر */
+  text-align: center;
+}
 
 
 </style>
