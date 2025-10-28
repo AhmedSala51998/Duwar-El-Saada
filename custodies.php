@@ -89,6 +89,7 @@
 
 
 /* الأعمدة الأولى (#) */
+/* الأعمدة الأولى (#) */
 .custom-table th:first-child,
 .custom-table td:first-child {
     width: 60px;
@@ -118,13 +119,13 @@
     width: 140px;
 }
 
-/* الملاحظات - تجعل مرنة وتاخذ الباقي */
+/* الملاحظات - مرنة لتملأ الباقي */
 .custom-table th:nth-child(7),
 .custom-table td:nth-child(7) {
-    min-width: 300px;   /* أقل عرض */
-    max-width: auto;    /* ياخد الباقي */
-    width: auto;
-    white-space: normal !important; /* للسطر الطويل */
+    min-width: 300px;       /* أقل عرض */
+    width: auto;            /* ياخد الباقي */
+    max-width: none;        /* إزالة أي قيود */
+    white-space: normal !important;
 }
 
 /* عمليات المودال */
@@ -132,6 +133,7 @@
 .custom-table td:last-child {
     width: 110px;
 }
+
 
 
 </style>
