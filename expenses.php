@@ -76,6 +76,46 @@ input[type="file"]{display:none}
     border-color: #ccc;
 }
 
+.custom-table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.custom-table thead th {
+  background: #f8f9fa;
+  color: #495057;
+  font-weight: 600;
+  border-bottom: 2px solid #dee2e6;
+  vertical-align: middle;
+}
+
+.custom-table tbody tr {
+  transition: all 0.2s ease-in-out;
+}
+
+.custom-table tbody tr:hover {
+  background-color: #f1f5ff;
+  transform: scale(1.01);
+}
+
+.custom-table td, 
+.custom-table th {
+  padding: 0.75rem 1rem;
+  vertical-align: middle;
+}
+
+.custom-table .badge {
+  font-size: 0.85rem;
+  border-radius: 0.5rem;
+}
+
+.custom-table .text-truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
 </style>
 
 <?php if(!empty($_SESSION['toast'])): $toast=$_SESSION['toast']; unset($_SESSION['toast']); ?>
