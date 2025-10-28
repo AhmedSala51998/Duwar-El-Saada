@@ -97,7 +97,7 @@
 
 /* عرض الأعمدة */
 .custom-table th:nth-child(1),
-.custom-table td:nth-child(1) { width: 10px; } /* # */
+.custom-table td:nth-child(1) { width: 5px; } /* # */
 .custom-table th:nth-child(2),
 .custom-table td:nth-child(2) { width: 10%; } /* البيان */
 .custom-table th:nth-child(3),
@@ -109,9 +109,9 @@
 .custom-table th:nth-child(6),
 .custom-table td:nth-child(6) { width: 15%; } /* التاريخ */
 .custom-table th:nth-child(7),
-.custom-table td:nth-child(7) { width: 40%; } /* الملاحظات */
+.custom-table td:nth-child(7) { width: 30%; } /* الملاحظات */
 .custom-table th:nth-child(8),
-.custom-table td:nth-child(8) { width: 50px; } /* العمليات */
+.custom-table td:nth-child(8) { width: 10px; } /* العمليات */
 
 
 </style>
