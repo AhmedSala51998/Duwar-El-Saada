@@ -160,13 +160,6 @@
     font-size: 0.75rem;
 }
 
-.custom-table th:nth-child(2),
-.custom-table td:nth-child(2) {
-    width: 60px; /* عرض ثابت */
-    font-size: 0.75rem; /* تصغير الخط */
-    text-align: center;
-}
-
 
 </style>
 
