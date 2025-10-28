@@ -76,6 +76,60 @@ input[type="file"]{display:none}
     border-color: #ccc;
 }
 
+/* --- تحسين مظهر الجدول --- */
+.custom-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.9rem; /* تصغير النص قليلاً للراحة البصرية */
+}
+
+.custom-table thead th {
+  background: #f8f9fa;
+  color: #495057;
+  font-weight: 600;
+  border-bottom: 2px solid #dee2e6;
+  vertical-align: middle;
+  font-size: 0.85rem; /* تصغير الخط في العناوين */
+  white-space: nowrap; /* منع كسر السطر في العناوين */
+}
+
+.custom-table tbody tr {
+  transition: all 0.2s ease-in-out;
+}
+
+.custom-table tbody tr:hover {
+  background-color: #f1f5ff;
+  transform: scale(1.01);
+}
+
+.custom-table td,
+.custom-table th {
+  padding: 0.6rem 0.75rem;
+  vertical-align: middle;
+}
+
+.custom-table .badge {
+  font-size: 0.8rem;
+  border-radius: 0.5rem;
+  background: #f0f2f5;
+}
+
+.custom-table .text-truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.small-header th {
+  padding: 0.5rem 0.6rem;
+}
+
+/* جعل الجدول أنحف وأنيق */
+.table-responsive {
+  border-radius: 0.75rem;
+}
+
+
 </style>
 
 <?php if(!empty($_SESSION['toast'])): $toast=$_SESSION['toast']; unset($_SESSION['toast']); ?>
@@ -103,105 +157,82 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
   </div>
 </div>
 
-<div class="table-responsive">
-<table class="table table-hover align-middle">
-<thead class="table-light">
-<tr>
-<th>#</th>
-<th>الرقم التسلسلي</th>
-<th>المصروفات</th>
-<th>نوع المصروف</th>
-<th>بيان المصروف</th>
-<th>قيمة المصروف</th>
-<th>الضريبة (15%)</th>
-<th>الإجمالي بعد الضريبة</th>
-<th>الدافع</th>
-<th>مصدر الدفع</th>
-<?php if($can_edit): ?><th>عمليات</th><?php endif; ?>
-</tr>
-</thead>
-<tbody>
-<?php foreach($rows as $r): ?>
-<tr>
-<td><?= $r['id'] ?></td>
-<td><?= esc($r['invoice_serial']) ?></td>
-<td><?= esc($r['main_expense']) ?></td>
-<td><?= esc($r['sub_expense']) ?></td>
-<td><?= esc($r['expense_desc']) ?></td>
-<td><?= number_format((float)$r['expense_amount'], 2) ?></td>
+<div class="table-responsive shadow-sm rounded-3 border bg-white p-2">
+  <table class="table table-hover align-middle mb-0 custom-table">
+    <thead class="table-light border-bottom border-2 small-header">
+      <tr class="text-center text-secondary fw-semibold">
+        <th>#</th>
+        <th>الرقم التسلسلي</th>
+        <th>المصروفات</th>
+        <th style="width: 180px;">نوع المصروف</th>
+        <th style="width: 300px;">بيان المصروف</th>
+        <th>قيمة المصروف</th>
+        <th>الضريبة (15%)</th>
+        <th>الإجمالي بعد الضريبة</th>
+        <th>الدافع</th>
+        <th>مصدر الدفع</th>
+        <?php if($can_edit): ?><th>عمليات</th><?php endif; ?>
+      </tr>
+    </thead>
 
-<td>
-  <?php if (!empty($r['has_vat']) && $r['has_vat'] == 1): ?>
-    <?= number_format((float)$r['vat_value'], 2) ?>
-  <?php else: ?>
-    <span class="text-muted small">بدون</span>
-  <?php endif; ?>
-</td>
+    <tbody>
+      <?php foreach($rows as $r): ?>
+      <tr class="text-center">
+        <td class="fw-bold text-muted"><?= $r['id'] ?></td>
+        <td><?= esc($r['invoice_serial']) ?></td>
+        <td><span class="badge bg-light text-dark px-3 py-2"><?= esc($r['main_expense']) ?></span></td>
+        <td class="text-truncate" style="max-width: 180px;" title="<?= esc($r['sub_expense']) ?>">
+          <?= esc($r['sub_expense']) ?>
+        </td>
+        <td class="text-truncate" style="max-width: 300px;" title="<?= esc($r['expense_desc']) ?>">
+          <?= esc($r['expense_desc']) ?>
+        </td>
+        <td class="text-success fw-semibold"><?= number_format((float)$r['expense_amount'], 2) ?></td>
 
-<td>
-  <?php if (!empty($r['has_vat']) && $r['has_vat'] == 1): ?>
-    <?= number_format((float)$r['total_amount'], 2) ?>
-  <?php else: ?>
-    <?= number_format((float)$r['expense_amount'], 2) ?>
-  <?php endif; ?>
-</td>
-<td><?= esc($r['payer_name'] ?? '') ?></td>
-<td><?= esc($r['payment_source'] ?? '') ?></td>
-<!--<td><?php if($r['expense_file']): ?><img src="uploads/<?= esc($r['expense_file']) ?>" width="50"><?php endif; ?></td>-->
-<?php if($can_edit): ?>
-<!--<td>
-<a class="btn btn-sm btn-outline-primary" href="invoice_expense?id=<?= $r['id'] ?>"><i class="bi bi-printer"></i></a>
-<button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#edit<?= $r['id'] ?>"><i class="bi bi-pencil"></i></button>
-<button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" 
-        data-id="<?= $r['id'] ?>" data-name="<?= esc($r['main_expense']) ?>">
-    <i class="bi bi-trash"></i>
-</button>
-</td>-->
-<td class="text-center">
-  <!-- زر الترس -->
-  <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#actionsExpense<?= $r['id'] ?>">
-    <i class="bi bi-gear-fill"></i>
-  </button>
+        <td>
+          <?php if (!empty($r['has_vat']) && $r['has_vat'] == 1): ?>
+            <span class="text-primary fw-semibold"><?= number_format((float)$r['vat_value'], 2) ?></span>
+          <?php else: ?>
+            <span class="text-muted small">بدون</span>
+          <?php endif; ?>
+        </td>
 
-  <!-- مودال العمليات -->
-  <div class="modal fade" id="actionsExpense<?= $r['id'] ?>" tabindex="-1" aria-labelledby="actionsExpenseLabel<?= $r['id'] ?>" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content border-0 shadow">
-        <div class="modal-header bg-light">
-          <h5 class="modal-title" id="actionsExpenseLabel<?= $r['id'] ?>">
-            <i class="bi bi-gear-fill me-1"></i> العمليات
-          </h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="إغلاق"></button>
-        </div>
-        <div class="modal-body text-center">
+        <td class="fw-bold text-dark">
+          <?php if (!empty($r['has_vat']) && $r['has_vat'] == 1): ?>
+            <?= number_format((float)$r['total_amount'], 2) ?>
+          <?php else: ?>
+            <?= number_format((float)$r['expense_amount'], 2) ?>
+          <?php endif; ?>
+        </td>
 
-          <!-- زر الطباعة -->
-          <a class="btn btn-outline-primary w-100 mb-2" href="invoice_expense?id=<?= $r['id'] ?>">
-            <i class="bi bi-printer me-2"></i> طباعة
-          </a>
+        <td><?= esc($r['payer_name'] ?? '') ?></td>
+        <td><?= esc($r['payment_source'] ?? '') ?></td>
 
-          <!-- زر التعديل -->
-          <button class="btn btn-outline-warning w-100 mb-2" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#edit<?= $r['id'] ?>">
-            <i class="bi bi-pencil me-2"></i> تعديل
+        <?php if($can_edit): ?>
+        <td class="text-center">
+          <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#actionsExpense<?= $r['id'] ?>">
+            <i class="bi bi-gear-fill"></i>
           </button>
+          <!-- المودال -->
+          <div class="modal fade" id="actionsExpense<?= $r['id'] ?>" tabindex="-1" aria-labelledby="actionsExpenseLabel<?= $r['id'] ?>" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-light">
+                  <h5 class="modal-title"><i class="bi bi-gear-fill me-1"></i> العمليات</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center">
+                  <a class="btn btn-outline-primary w-100 mb-2" href="invoice_expense?id=<?= $r['id'] ?>"><i class="bi bi-printer me-2"></i> طباعة</a>
+                  <button class="btn btn-outline-warning w-100 mb-2" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#edit<?= $r['id'] ?>"><i class="bi bi-pencil me-2"></i> تعديل</button>
+                  <button class="btn btn-outline-danger w-100" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="<?= $r['id'] ?>" data-name="<?= esc($r['main_expense']) ?>"><i class="bi bi-trash me-2"></i> حذف</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </td>
+        <?php endif; ?>
+      </tr>
 
-          <!-- زر الحذف -->
-          <button class="btn btn-outline-danger w-100" 
-                  data-bs-dismiss="modal" 
-                  data-bs-toggle="modal" 
-                  data-bs-target="#deleteModal"
-                  data-id="<?= $r['id'] ?>" 
-                  data-name="<?= esc($r['main_expense']) ?>">
-            <i class="bi bi-trash me-2"></i> حذف
-          </button>
-
-        </div>
-      </div>
-    </div>
-  </div>
-</td>
-<?php endif; ?>
-</tr>
 
 <!-- مودال التعديل -->
 <?php if($can_edit): ?>
