@@ -167,11 +167,6 @@
     text-align: center;
 }
 
-.custom-table th:nth-child(2),
-.custom-table td:nth-child(2) {
-    text-align: center;
-    font-size: 0.75rem;
-}
 
 </style>
 
