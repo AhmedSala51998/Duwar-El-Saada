@@ -99,8 +99,9 @@ input[type="file"]{display:none}
 
 .custom-table tbody tr:hover {
   background-color: #f1f5ff;
-  transform: scale(1.01);
+  box-shadow: inset 0 0 0 9999px rgba(0,0,0,0.02);
 }
+
 
 .custom-table td,
 .custom-table th {
@@ -114,10 +115,11 @@ input[type="file"]{display:none}
   background: #f0f2f5;
 }
 
-.custom-table .text-truncate {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.custom-table td {
+  white-space: normal !important; /* السماح بالنزول للسطر */
+  word-break: break-word; /* كسر الكلمات الطويلة */
+  vertical-align: top; /* خليه يبدأ من فوق */
+  line-height: 1.4;
 }
 
 .small-header th {
