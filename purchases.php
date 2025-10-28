@@ -162,7 +162,7 @@
 
 .custom-table th:nth-child(2),
 .custom-table td:nth-child(2) {
-    width: 100px; /* عرض ثابت */
+    width: 60px; /* عرض ثابت */
     font-size: 0.75rem; /* تصغير الخط */
     text-align: center;
 }
