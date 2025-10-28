@@ -64,8 +64,8 @@ $can_edit = in_array(current_role(), ['admin','manager']);
 $stocks = $pdo->query("
     SELECT 
         MIN(id) AS id,
-        TRIM(REPLACE(REPLACE(LOWER(name), ' ', ''), ' ', '')) AS name,
-        TRIM(REPLACE(REPLACE(LOWER(unit), ' ', ''), ' ', '')) AS unit,
+        name,
+        unit,
         SUM(quantity) AS total_qty,
         MAX(created_at) AS last_added
     FROM purchases
