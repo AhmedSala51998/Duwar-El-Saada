@@ -155,8 +155,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
     .custom-navbar {
       padding-top: 0.05rem !important;   /* أقل ارتفاع ممكن بدون تشويه */
       padding-bottom: 0.05rem !important;
-      border-bottom:1px solid #e0e0e0;
-      box-shadow:0 1px 3px rgba(0,0,0,0.05);
     }
 
     .custom-navbar .navbar-brand img {
