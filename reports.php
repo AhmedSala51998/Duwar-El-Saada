@@ -163,12 +163,12 @@
     <form method="GET" class="row g-3 align-items-end filter-form mx-md-0 px-md-3">
       <div class="col-md-4">
         <label class="form-label">من تاريخ</label>
-        <input type="date" name="from_date" class="form-control" value="<?= $_GET['from_date'] ?? '' ?>">
+        <input type="date" name="from_date" required class="form-control" value="<?= $_GET['from_date'] ?? '' ?>">
       </div>
 
       <div class="col-md-4">
         <label class="form-label">إلى تاريخ</label>
-        <input type="date" name="to_date" class="form-control" value="<?= $_GET['to_date'] ?? '' ?>">
+        <input type="date" name="to_date" required class="form-control" value="<?= $_GET['to_date'] ?? '' ?>">
       </div>
 
       <div class="col-md-4 d-flex align-items-end">
