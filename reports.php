@@ -194,7 +194,7 @@ if (!empty($_GET['date_type'])) $filterParams .= '&date_type=' . $_GET['date_typ
     ['title'=>'المشتريات','desc'=>'تصدير كامل المشتريات','excel'=>'export_purchases_excel.php','pdf'=>'export_purchases_pdf.php','icon'=>'bi-cart-check'],
     ['title'=>'أوامر التشغيل','desc'=>'تصدير آخر الأوامر','excel'=>'export_orders_excel.php','pdf'=>'export_orders_pdf.php','icon'=>'bi-gear-wide-connected'],
     ['title'=>'الأصول','desc'=>'تصدير الأصول','excel'=>'export_assets_excel.php','pdf'=>'export_assets_pdf.php','icon'=>'bi-building'],
-    ['title'=>'العُهد','desc'=>'تصدير جميع العُهد','excel'=>'export_custodies_excel.php','pdf'=>'export_custodies_pdf.php','icon'=>'bi-person-badge'],
+    ['title'=>'العُهد','desc'=>'تصدير جميع العُهد','excel'=>'export_custodies_excel.php','pdf'=>'export_custodies_pdf.php','icon'=>'bi-wallet2'],
     ['title'=>'المصروفات','desc'=>'تصدير جميع المصروفات','excel'=>'export_expenses_excel.php','pdf'=>'export_expenses_pdf.php','icon'=>'bi-cash-stack'],
     ['title'=>'تقرير الضريبة','desc'=>'حساب ضريبة المشتريات، المصروفات، والأصول','excel'=>'export_vat_excel.php','pdf'=>'export_vat_pdf.php','icon'=>'bi-receipt'],
   ];
