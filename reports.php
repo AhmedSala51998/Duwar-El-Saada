@@ -12,17 +12,55 @@
   justify-content: center;
   border-radius: 50%;
   font-size: 1.6rem;
-  margin-right: 10px; /* شوية مسافة بين الدائرة والنص */
+  margin-right: 10px;
+  position: relative;
+  transition: transform 0.6s ease; /* لتدوير الأيقونة عند hover */
 }
+
+/* حركة التدوير عند hover */
+.stat-icon:hover {
+  transform: rotate(360deg);
+}
+
+/* النبض المستمر */
+.stat-icon::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: rgba(255, 106, 0, 0.2);
+  animation: pulse 1.5s infinite;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+/* تعريف النبض */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+}
+
+/* ترتيب العنوان مع الدائرة */
 .page-title {
   font-weight: 700;
   color: #2c3e50;
   display: flex;
-  align-items: center; /* يخلّي الدائرة والنص متراصفين */
-  gap: 10px; /* مسافة بين الدائرة والنص */
+  align-items: center;
+  gap: 10px;
   margin-bottom: 1.5rem;
 }
-
 
 /* 🔘 أزرار التاريخ السريعة */
 .quick-buttons .btn {
