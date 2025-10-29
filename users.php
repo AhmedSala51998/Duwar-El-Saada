@@ -134,7 +134,6 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
   margin-bottom: 1.5rem;
 }
 
-
 </style>
 <?php endif; ?>
 <?php $rows=$pdo->query("SELECT * FROM users ORDER BY id DESC")->fetchAll(); $can_edit = in_array(current_role(), ['admin','manager']); ?>
