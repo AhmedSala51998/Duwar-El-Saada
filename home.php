@@ -160,7 +160,7 @@ $assetsByPayer = $pdo->query("SELECT payer_name, COUNT(*) c FROM assets GROUP BY
 <div class="dashboard-card position-relative p-4 mb-4">
   <!-- الأيقونة البارزة -->
   <div class="chef-icon">
-    <img src="<?= BASE_URL ?>/assets/chef.png" alt="Chef" />
+    <img src="<?= BASE_URL ?>/assets/logo.png" alt="Chef" />
   </div>
 
   <!-- محتوى الهيدر -->
