@@ -73,7 +73,7 @@
   color: white;
   position: relative;
   overflow: visible;
-  padding-top: 60px; /* مسافة من فوق علشان الصورة تبان */
+  padding-top: 100px !important; /* مسافة من فوق علشان الصورة تبان */
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
@@ -167,8 +167,8 @@ $assetsByPayer = $pdo->query("SELECT payer_name, COUNT(*) c FROM assets GROUP BY
 
   <!-- الهيدر -->
   <div class="dashboard-header text-end">
-    <h3 class="fw-bold mb-2">👋 أهلًا <?= esc(current_user()) ?></h3>
-    <p class="mb-0 fs-6">أدِر المشتريات، الأوامر، العُهد، والمصروفات بسهولة واحترافية.</p>
+    <h3 style="text-align:right !important" class="fw-bold mb-2">👋 أهلًا <?= esc(current_user()) ?></h3>
+    <p style="text-align:right !important"  class="mb-0 fs-6">أدِر المشتريات، الأوامر، العُهد، والمصروفات بسهولة واحترافية.</p>
   </div>
 </div>
 
