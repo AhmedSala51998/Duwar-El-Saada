@@ -1,8 +1,82 @@
 <?php require __DIR__.'/partials/header.php'; ?>
-<h3 class="mb-3">التقارير والتصدير</h3>
 
-<!-- ✅ أزرار سريعة لاختيار التاريخ -->
-<div class="mb-3">
+<style>
+/* 🎨 تنسيق عام */
+.page-title {
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+}
+
+/* 🔘 أزرار التاريخ السريعة */
+.quick-buttons .btn {
+  border-radius: 0.6rem;
+  font-weight: 500;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+  transition: 0.2s ease-in-out;
+}
+.quick-buttons .btn:hover {
+  transform: translateY(-2px);
+}
+
+/* 📅 نموذج الفلترة */
+.filter-form {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.8rem;
+  padding: 1rem 1.5rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+}
+.filter-form label {
+  font-weight: 500;
+  color: #555;
+}
+.filter-form button {
+  font-weight: 600;
+  border-radius: 0.5rem;
+  transition: 0.2s;
+}
+.filter-form button:hover {
+  opacity: 0.9;
+}
+
+/* 📊 بطاقات التصدير */
+.report-card {
+  border: none;
+  border-radius: 1rem;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+  transition: all 0.25s ease-in-out;
+  overflow: hidden;
+}
+.report-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+}
+.report-card h5 {
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 0.4rem;
+}
+.report-card p {
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+.report-card .btn {
+  width: 48%;
+  font-weight: 500;
+  border-radius: 0.5rem;
+}
+.report-card .btn i {
+  margin-left: 0.25rem;
+}
+</style>
+
+<h3 class="page-title">
+  <i class="bi bi-graph-up-arrow text-primary"></i> التقارير والتصدير
+</h3>
+
+<!-- ✅ أزرار التاريخ السريعة -->
+<div class="mb-4 quick-buttons">
   <a href="?date_type=today" class="btn btn-success me-2">
     <i class="bi bi-calendar-day"></i> تقرير اليوم
   </a>
@@ -10,25 +84,25 @@
     <i class="bi bi-calendar2-minus"></i> تقرير أمس
   </a>
   <a href="?" class="btn btn-outline-dark">
-    <i class="bi bi-calendar-x"></i> إلغاء الفلتر
+    <i class="bi bi-x-circle"></i> إلغاء الفلتر
   </a>
 </div>
 
-<!-- فلترة بالتاريخ -->
-<form method="GET" class="row g-3 mb-4 align-items-end">
-  <div class="col-md-3">
+<!-- 🗓️ نموذج الفلترة -->
+<form method="GET" class="row g-3 mb-5 align-items-end filter-form">
+  <div class="col-md-4">
     <label class="form-label">من تاريخ</label>
     <input type="date" name="from_date" class="form-control" value="<?= $_GET['from_date'] ?? '' ?>">
   </div>
 
-  <div class="col-md-3">
+  <div class="col-md-4">
     <label class="form-label">إلى تاريخ</label>
     <input type="date" name="to_date" class="form-control" value="<?= $_GET['to_date'] ?? '' ?>">
   </div>
 
-  <div class="col-md-2 d-flex">
-    <button type="submit" class="btn w-100" style="background-color: #ff6a00; border: 1px solid #ff6a00; color: white;">
-      تطبيق الفلتر
+  <div class="col-md-4 d-flex align-items-end">
+    <button type="submit" class="btn btn-warning w-100" style="background-color: #ff6a00; border: none;">
+      <i class="bi bi-funnel"></i> تطبيق الفلتر
     </button>
   </div>
 </form>
@@ -41,60 +115,36 @@ if (!empty($_GET['to_date'])) $filterParams .= '&to_date=' . $_GET['to_date'];
 if (!empty($_GET['date_type'])) $filterParams .= '&date_type=' . $_GET['date_type'];
 ?>
 
-<div class="row g-3">
-  <div class="col-md-4">
-    <div class="card p-3 h-100">
-      <h5>المشتريات</h5>
-      <p class="text-muted small">تصدير كامل المشتريات.</p>
-      <a style="margin-bottom:5px" class="btn btn-outline-dark" href="export_purchases_excel.php?1=1<?= $filterParams ?>"><i class="bi bi-file-earmark-spreadsheet"></i> Excel</a>
-      <a class="btn btn-outline-dark" href="export_purchases_pdf.php?1=1<?= $filterParams ?>"><i class="bi bi-filetype-pdf"></i> PDF</a>
+<!-- 📦 بطاقات التصدير -->
+<div class="row g-4">
+  <?php
+  $reports = [
+    ['title'=>'المشتريات','desc'=>'تصدير كامل المشتريات','excel'=>'export_purchases_excel.php','pdf'=>'export_purchases_pdf.php','icon'=>'bi-cart-check'],
+    ['title'=>'أوامر التشغيل','desc'=>'تصدير آخر الأوامر','excel'=>'export_orders_excel.php','pdf'=>'export_orders_pdf.php','icon'=>'bi-gear-wide-connected'],
+    ['title'=>'الأصول','desc'=>'تصدير الأصول','excel'=>'export_assets_excel.php','pdf'=>'export_assets_pdf.php','icon'=>'bi-building'],
+    ['title'=>'العُهد','desc'=>'تصدير جميع العُهد','excel'=>'export_custodies_excel.php','pdf'=>'export_custodies_pdf.php','icon'=>'bi-person-badge'],
+    ['title'=>'المصروفات','desc'=>'تصدير جميع المصروفات','excel'=>'export_expenses_excel.php','pdf'=>'export_expenses_pdf.php','icon'=>'bi-cash-stack'],
+    ['title'=>'تقريب الضريبة','desc'=>'حساب ضريبة المشتريات، المصروفات، والأصول','excel'=>'export_vat_excel.php','pdf'=>'export_vat_pdf.php','icon'=>'bi-receipt'],
+  ];
+  foreach($reports as $r): ?>
+  <div class="col-md-4 col-sm-6">
+    <div class="card report-card p-4 text-center">
+      <div class="mb-3 text-primary fs-3">
+        <i class="bi <?= $r['icon'] ?>"></i>
+      </div>
+      <h5><?= $r['title'] ?></h5>
+      <p><?= $r['desc'] ?></p>
+      <div class="d-flex justify-content-between mt-3">
+        <a class="btn btn-outline-success" href="<?= $r['excel'] ?>?1=1<?= $filterParams ?>">
+          <i class="bi bi-file-earmark-spreadsheet"></i> Excel
+        </a>
+        <a class="btn btn-outline-danger" href="<?= $r['pdf'] ?>?1=1<?= $filterParams ?>">
+          <i class="bi bi-filetype-pdf"></i> PDF
+        </a>
+      </div>
     </div>
   </div>
-
-  <div class="col-md-4">
-    <div class="card p-3 h-100">
-      <h5>أوامر التشغيل</h5>
-      <p class="text-muted small">تصدير آخر الأوامر.</p>
-      <a style="margin-bottom:5px" class="btn btn-outline-dark" href="export_orders_excel.php?1=1<?= $filterParams ?>"><i class="bi bi-file-earmark-spreadsheet"></i> Excel</a>
-      <a class="btn btn-outline-dark" href="export_orders_pdf.php?1=1<?= $filterParams ?>"><i class="bi bi-filetype-pdf"></i> PDF</a>
-    </div>
-  </div>
-
-  <div class="col-md-4">
-    <div class="card p-3 h-100">
-      <h5>الأصول</h5>
-      <p class="text-muted small">تصدير الأصول.</p>
-      <a style="margin-bottom:5px" class="btn btn-outline-dark" href="export_assets_excel.php?1=1<?= $filterParams ?>"><i class="bi bi-file-earmark-spreadsheet"></i> Excel</a>
-      <a class="btn btn-outline-dark" href="export_assets_pdf.php?1=1<?= $filterParams ?>"><i class="bi bi-filetype-pdf"></i> PDF</a>
-    </div>
-  </div>
-
-  <div class="col-md-4">
-    <div class="card p-3 h-100">
-      <h5>العُهد</h5>
-      <p class="text-muted small">تصدير جميع العُهد.</p>
-      <a style="margin-bottom:5px" class="btn btn-outline-dark" href="export_custodies_excel.php?1=1<?= $filterParams ?>"><i class="bi bi-file-earmark-spreadsheet"></i> Excel</a>
-      <a class="btn btn-outline-dark" href="export_custodies_pdf.php?1=1<?= $filterParams ?>"><i class="bi bi-filetype-pdf"></i> PDF</a>
-    </div>
-  </div>
-
-  <div class="col-md-4">
-    <div class="card p-3 h-100">
-      <h5>المصروفات</h5>
-      <p class="text-muted small">تصدير جميع المصروفات.</p>
-      <a style="margin-bottom:5px" class="btn btn-outline-dark" href="export_expenses_excel.php?1=1<?= $filterParams ?>"><i class="bi bi-file-earmark-spreadsheet"></i> Excel</a>
-      <a class="btn btn-outline-dark" href="export_expenses_pdf.php?1=1<?= $filterParams ?>"><i class="bi bi-filetype-pdf"></i> PDF</a>
-    </div>
-  </div>
-
-  <div class="col-md-4">
-    <div class="card p-3 h-100">
-      <h5>تقريب الضريبة</h5>
-      <p class="text-muted small">حساب ضريبة المشتريات، المصروفات، والأصول.</p>
-      <a style="margin-bottom:5px" class="btn btn-outline-dark" href="export_vat_excel.php?1=1<?= $filterParams ?>"><i class="bi bi-file-earmark-spreadsheet"></i> Excel</a>
-      <a class="btn btn-outline-dark" href="export_vat_pdf.php?1=1<?= $filterParams ?>"><i class="bi bi-filetype-pdf"></i> PDF</a>
-    </div>
-  </div>
+  <?php endforeach; ?>
 </div>
 
 <?php require __DIR__.'/partials/footer.php'; ?>
