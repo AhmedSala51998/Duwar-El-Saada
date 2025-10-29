@@ -202,5 +202,3 @@ $current_page = basename($_SERVER['PHP_SELF']);
     document.getElementById('page-wrapper').style.opacity='1';
   });
 </script>
-</body>
-</html>
