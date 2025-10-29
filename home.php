@@ -72,15 +72,16 @@
   border-radius: 25px;
   color: white;
   position: relative;
-  overflow: visible; /* ضروري عشان الأيقونة تطلع برّه */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  overflow: visible;
+  padding-top: 60px; /* مسافة من فوق علشان الصورة تبان */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 /* الأيقونة */
 .chef-icon {
   position: absolute;
-  top: -30px;
-  left: -30px;
+  top: -35px; /* نازل شوية علشان يبين */
+  left: 20px; /* moved a bit to the right */
   width: 90px;
   height: 90px;
   border-radius: 50%;
@@ -95,8 +96,8 @@
 }
 
 .chef-icon img {
-  width: 70%;
-  height: 70%;
+  width: 75%;
+  height: 75%;
   object-fit: contain;
 }
 
@@ -112,6 +113,7 @@
     box-shadow: 0 0 0 0 rgba(255, 148, 77, 0);
   }
 }
+
 
 </style>
 
@@ -158,12 +160,12 @@ $assetsByPayer = $pdo->query("SELECT payer_name, COUNT(*) c FROM assets GROUP BY
 </div>-->
 
 <div class="dashboard-card position-relative p-4 mb-4">
-  <!-- الأيقونة البارزة -->
+  <!-- الأيقونة -->
   <div class="chef-icon">
     <img src="<?= BASE_URL ?>/assets/logo.png" alt="Chef" />
   </div>
 
-  <!-- محتوى الهيدر -->
+  <!-- الهيدر -->
   <div class="dashboard-header text-end">
     <h3 class="fw-bold mb-2">👋 أهلًا <?= esc(current_user()) ?></h3>
     <p class="mb-0 fs-6">أدِر المشتريات، الأوامر، العُهد، والمصروفات بسهولة واحترافية.</p>
