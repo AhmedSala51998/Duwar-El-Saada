@@ -245,7 +245,12 @@ $options = ['بسام','فيصل المطيري','مؤسسة','شركة'];
 ?>
 
 <div class="d-flex flex-wrap gap-2 justify-content-between align-items-center mb-3">
-  <h3 class="mb-0">العُهد</h3>
+    <h3 class="page-title">
+      <span class="stat-icon">
+        <i class="bi bi-shield-check"></i>
+      </span>
+      العُهد
+    </h3>
   <div class="d-flex gap-2">
     <form class="d-flex gap-2" method="get">
       <select name="kw" class="form-select">

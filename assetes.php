@@ -284,8 +284,12 @@ $can_edit = in_array(current_role(), ['admin','manager']);
 </div>-->
 
 <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-3">
-  <h3 class="mb-0">الأصول</h3>
-
+  <h3 class="page-title">
+  <span class="stat-icon">
+    <i class="bi bi-building"></i>
+  </span>
+   الأصول
+ </h3>
   <div class="d-flex flex-wrap align-items-center gap-2">
     <form class="d-flex align-items-center gap-2 mb-0" method="get" style="height:40px;">
       <input class="form-control" name="kw" placeholder="بحث بالاسم" value="<?= esc($kw) ?>" style="height:40px; min-width:200px;">

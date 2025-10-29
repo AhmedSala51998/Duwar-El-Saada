@@ -228,8 +228,6 @@
   margin-bottom: 1.5rem;
 }
 
-
-
 </style>
 
 <?php require __DIR__.'/partials/header.php'; ?>
@@ -321,7 +319,12 @@ $can_edit = in_array(current_role(), ['admin','manager']);
   </div>
 </div>-->
 <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-3">
-  <h3 class="mb-0">تهيئة المشتريات</h3>
+      <h3 class="page-title">
+      <span class="stat-icon">
+        <i class="bi bi-bag"></i>
+      </span>
+      تهيئة المشتريات
+    </h3>
 
   <div class="d-flex flex-wrap align-items-center gap-2">
     <form class="d-flex align-items-center gap-2 mb-0" method="get" style="height:40px;">

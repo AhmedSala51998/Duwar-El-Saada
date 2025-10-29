@@ -141,7 +141,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 <div class="d-flex justify-content-between align-items-center mb-3">
   <h3 class="page-title">
   <span class="stat-icon">
-    <i class="bi bi-users"></i>
+    <i class="bi bi-people"></i>
   </span>
    المستخدمون
  </h3>

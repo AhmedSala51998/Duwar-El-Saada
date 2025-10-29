@@ -180,7 +180,7 @@ $assetsByPayer = $pdo->query("SELECT payer_name, COUNT(*) c FROM assets GROUP BY
   $reports_count = 6;
   $cards = [
     ["الأصناف", $pc, "bi-bag", "text-warning", "purchases.php"],
-    ["الأوامر", $oc, "bi-gear", "text-primary", "orders.php"],
+    ["أوامر التشغيل", $oc, "bi-gear", "text-primary", "orders.php"],
     ["الأصول", $ac, "bi-building", "text-success", "assetes.php"],
     ["العهد", $cc, "bi-shield-check", "text-dark", "custodies.php"],
     ["المصروفات", $expenses_count, "bi-cash-stack", "text-secondary", "expenses.php"],
