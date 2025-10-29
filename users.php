@@ -80,7 +80,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
         <th>اسم المستخدم</th>
         <th>الدور</th>
         <th>تاريخ الإنشاء</th>
-        <th>عمليات</th>
+        <?php if($can_edit): ?><th>عمليات</th><?php endif; ?>
       </tr>
     </thead>
     <tbody class="text-center">
@@ -94,19 +94,36 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
           </span>
         </td>
         <td class="text-secondary small"><?= esc($r['created_at']) ?></td>
-        <td>
-          <!-- زر التعديل -->
-          <button class="btn btn-sm btn-outline-warning me-1" data-bs-toggle="modal" data-bs-target="#e<?= $r['id'] ?>">
-            <i class="bi bi-pencil"></i>
+        <?php if($can_edit): ?>
+        <td class="text-center">
+          <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#actionsUser<?= $r['id'] ?>">
+            <i class="bi bi-gear-fill"></i>
           </button>
 
-          <!-- زر الحذف -->
-          <?php if($r['id']!=$_SESSION['user_id']): ?>
-          <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#d<?= $r['id'] ?>">
-            <i class="bi bi-trash"></i>
-          </button>
-          <?php endif; ?>
+          <div class="modal fade" id="actionsUser<?= $r['id'] ?>" tabindex="-1" aria-labelledby="actionsUserLabel<?= $r['id'] ?>" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-light">
+                  <h5 class="modal-title" id="actionsUserLabel<?= $r['id'] ?>">
+                    <i class="bi bi-gear-fill me-1"></i> العمليات
+                  </h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="إغلاق"></button>
+                </div>
+                <div class="modal-body text-center">
+                  <button class="btn btn-outline-warning w-100 mb-2" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#e<?= $r['id'] ?>">
+                    <i class="bi bi-pencil me-2"></i> تعديل
+                  </button>
+                  <?php if($r['id'] != $_SESSION['user_id']): ?>
+                  <button class="btn btn-outline-danger w-100" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#d<?= $r['id'] ?>">
+                    <i class="bi bi-trash me-2"></i> حذف
+                  </button>
+                  <?php endif; ?>
+                </div>
+              </div>
+            </div>
+          </div>
         </td>
+        <?php endif; ?>
       </tr>
 
 <!-- مودال تعديل -->
