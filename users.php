@@ -84,7 +84,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 
 <div class="table-responsive shadow-sm rounded-3 border bg-white p-2">
   <table class="table table-hover align-middle mb-0 custom-table">
-    <thead class="table-light border-bottom small-header text-center text-secondary fw-semibold">
+    <thead class="table-light border-bottom small-header text-center text-secondary">
       <tr>
         <th>#</th>
         <th>اسم المستخدم</th>
