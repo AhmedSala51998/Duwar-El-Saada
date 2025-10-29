@@ -115,35 +115,6 @@
 }
 
 
-.stat-icon::after {
-  content: '';
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  background: rgba(255, 106, 0, 0.2);
-  animation: pulse 1.5s infinite;
-  top: 0;
-  left: 0;
-  z-index: -1;
-}
-
-/* تعريف النبض */
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-    opacity: 0.6;
-  }
-  50% {
-    transform: scale(1.4);
-    opacity: 0;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 0.6;
-  }
-}
-
 </style>
 
 <?php
