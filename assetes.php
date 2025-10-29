@@ -137,6 +137,13 @@ input[type="file"] {
     font-size: 0.75rem;
 }
 
+.custom-table th:nth-child(6),
+.custom-table td:nth-child(6) {
+  width: 95px; /* عرض أكبر للسعر */
+  white-space: nowrap;
+  text-align: center;
+}
+
 
 
 </style>
