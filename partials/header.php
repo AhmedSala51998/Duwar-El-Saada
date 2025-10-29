@@ -175,6 +175,190 @@ $current_page = basename($_SERVER['PHP_SELF']);
     }
 
 
+      body {
+    font-family: "Cairo", sans-serif;
+    background: #f7f8fa;
+    color: #333;
+  }
+
+  /* اللودر الجديد */
+  .loader {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background: linear-gradient(135deg, #fff 0%, #fdf4ee 100%);
+    z-index: 9999;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+  }
+  .loader.hidden {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .circle {
+    position: relative;
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    border: 3px solid rgba(255, 126, 35, 0.15);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: spin 2.5s linear infinite;
+  }
+
+  .circle::after {
+    content: "";
+    position: absolute;
+    inset: 8px;
+    border-radius: 50%;
+    border: 3px solid rgba(255, 126, 35, 0.4);
+  }
+
+  .loader-text {
+    color: #ff7f32;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-shadow: 0 0 6px rgba(255, 126, 35, 0.6);
+    animation: pulse 1.6s ease-in-out infinite;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.08); opacity: 0.9; }
+  }
+
+  /* النافبار */
+  .custom-navbar {
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+    padding: 0.5rem 1.2rem;
+  }
+  .custom-navbar .navbar-brand {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #ff6a00 !important;
+  }
+  .custom-navbar .navbar-brand img {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+  }
+
+  /* الروابط */
+  .navbar .nav-link {
+    color: #555 !important;
+    font-weight: 500;
+    padding: 0.6rem 1.2rem;
+    border-radius: 10px;
+    transition: all 0.25s ease;
+  }
+  .navbar .nav-link:hover {
+    background: rgba(255, 106, 0, 0.1);
+    color: #ff6a00 !important;
+    transform: translateY(-1px);
+  }
+  .navbar .nav-link.active {
+    background: linear-gradient(135deg, #ff6a00, #ff944d);
+    color: #fff !important;
+    box-shadow: 0 3px 8px rgba(255, 106, 0, 0.3);
+  }
+
+  /* زر الخروج */
+  .btn-logout {
+    background: linear-gradient(135deg, #ff6a00, #ff944d);
+    color: #fff;
+    font-weight: 600;
+    padding: 0.55rem 1.4rem;
+    border-radius: 50px;
+    box-shadow: 0 3px 10px rgba(255, 106, 0, 0.3);
+    transition: all 0.3s ease;
+  }
+  .btn-logout:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 106, 0, 0.45);
+  }
+
+  /* البادج (الدور) */
+  .role-badge {
+    background: #fff3e6;
+    color: #ff6a00;
+    font-weight: 600;
+    border-radius: 50px;
+    padding: 0.5rem 1.2rem;
+    box-shadow: 0 2px 5px rgba(255, 106, 0, 0.15);
+  }
+
+  /* السايدبار */
+  aside {
+    background: #fff;
+    border-left: 1px solid #eee;
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.03);
+  }
+
+  .sidebar-link {
+    display: block;
+    color: #555;
+    text-decoration: none;
+    padding: 0.6rem 1rem;
+    border-radius: 10px;
+    font-weight: 500;
+    transition: all 0.25s ease;
+  }
+
+  .sidebar-link:hover {
+    background: rgba(255, 106, 0, 0.08);
+    color: #ff6a00;
+    transform: translateX(-3px);
+  }
+
+  .sidebar-link.active {
+    background: linear-gradient(135deg, #ff6a00, #ff944d);
+    color: #fff;
+    box-shadow: 0 3px 10px rgba(255, 106, 0, 0.25);
+  }
+
+  /* الفلاش */
+  .flash {
+    background: linear-gradient(135deg, #ffefdf, #fff);
+    border: 1px solid #ffd1a4;
+    color: #ff6a00;
+    padding: 0.9rem 1.2rem;
+    border-radius: 10px;
+    font-weight: 500;
+    box-shadow: 0 2px 6px rgba(255, 106, 0, 0.1);
+  }
+
+  /* أنميشن دخول المحتوى */
+  #page-wrapper {
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  #page-wrapper.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (max-width: 768px) {
+    .custom-navbar {
+      padding: 0.4rem 0.8rem;
+    }
+    .navbar .nav-link {
+      padding: 0.5rem 1rem;
+    }
+  }
+
+
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
 </head>
@@ -307,3 +491,14 @@ $current_page = basename($_SERVER['PHP_SELF']);
       }
     });
   </script>
+  <script>
+  window.addEventListener("load", () => {
+    const loader = document.querySelector(".loader");
+    const page = document.getElementById("page-wrapper");
+
+    loader.classList.add("hidden");
+    setTimeout(() => {
+      page.classList.add("visible");
+    }, 400);
+  });
+</script>
