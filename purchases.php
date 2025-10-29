@@ -156,7 +156,7 @@
 
 .custom-table th:nth-child(2),
 .custom-table td:nth-child(2) {
-    width: 140px; /* زِد العرض كما يناسبك */
+    width: 100px; /* زِد العرض كما يناسبك */
     white-space: nowrap; /* حتى لا يكسر النص */
 }
 
