@@ -133,24 +133,27 @@
 }
 </style>
 
-<h3 class="page-title">
-  <span class="stat-icon">
-    <i class="bi bi-graph-up-arrow"></i>
-  </span>
-  التقارير والتصدير
-</h3>
+<!-- 🔹 العنوان + الأزرار في صف واحد -->
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+  <h3 class="page-title mb-0 d-flex align-items-center">
+    <span class="stat-icon me-2">
+      <i class="bi bi-graph-up-arrow"></i>
+    </span>
+    التقارير والتصدير
+  </h3>
 
-<!-- ✅ أزرار التاريخ السريعة -->
-<div class="mb-4 quick-buttons">
-  <a href="?date_type=today" class="btn btn-success me-2">
-    <i class="bi bi-calendar-day"></i> تقرير اليوم
-  </a>
-  <a href="?date_type=yesterday" class="btn btn-secondary me-2">
-    <i class="bi bi-calendar2-minus"></i> تقرير أمس
-  </a>
-  <a href="?" class="btn btn-outline-dark">
-    <i class="bi bi-x-circle"></i> إلغاء الفلتر
-  </a>
+  <!-- ✅ أزرار التاريخ السريعة -->
+  <div class="quick-buttons mt-3 mt-md-0">
+    <a href="?date_type=today" class="btn btn-success me-2">
+      <i class="bi bi-calendar-day"></i> تقرير اليوم
+    </a>
+    <a href="?date_type=yesterday" class="btn btn-secondary me-2">
+      <i class="bi bi-calendar2-minus"></i> تقرير أمس
+    </a>
+    <a href="<?= basename($_SERVER['PHP_SELF']); ?>" class="btn btn-outline-dark">
+      <i class="bi bi-x-circle"></i> إلغاء الفلتر
+    </a>
+  </div>
 </div>
 
 <!-- 🗓️ نموذج الفلترة بنفس عرض الكروت -->
