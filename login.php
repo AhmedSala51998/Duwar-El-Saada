@@ -22,7 +22,7 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
 <body class="d-flex align-items-center justify-content-center" style="min-height:100vh;background:#fff7f0">
 <div class="card p-4 shadow" style="min-width:360px">
   <div class="text-center mb-3">
-    <img src="assets/logo.svg" width="70" class="mb-2"><h3 class="mb-0">دوار السعادة</h3><div class="text-muted small">تسجيل الدخول</div>
+    <img src="assets/logo.png" width="70" class="mb-2"><h3 class="mb-0">دوار السعادة</h3><div class="text-muted small">تسجيل الدخول</div>
   </div>
   <?php if($error): ?><div class="alert alert-danger"><?= esc($error) ?></div><?php endif; ?>
   <form method="post" class="vstack gap-3">
