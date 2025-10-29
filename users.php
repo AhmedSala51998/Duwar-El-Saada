@@ -21,7 +21,6 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
   background: #f8f9fa;
   color: #495057;
   font-weight: 600;
-  border-bottom: 2px solid #dee2e6;
   vertical-align: middle;
   font-size: 0.85rem; /* تصغير الخط في العناوين */
   white-space: nowrap; /* منع كسر السطر في العناوين */
