@@ -74,11 +74,77 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
     font-size: 0.75rem;
 }
 
+.stat-icon {
+  width: 50px;
+  height: 50px;
+  background: rgba(255, 106, 0, 0.1);
+  color: #ff6a00;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 1.6rem;
+  margin-right: 10px;
+  position: relative;
+  transition: transform 0.6s ease; /* لتدوير الأيقونة عند hover */
+}
+
+/* حركة التدوير عند hover */
+.stat-icon:hover {
+  transform: rotate(360deg);
+}
+
+/* النبض المستمر */
+.stat-icon::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: rgba(255, 106, 0, 0.2);
+  animation: pulse 1.5s infinite;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+/* تعريف النبض */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+}
+
+/* ترتيب العنوان مع الدائرة */
+.page-title {
+  font-weight: 700;
+  color: #2c3e50;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 1.5rem;
+}
+
+
 </style>
 <?php endif; ?>
 <?php $rows=$pdo->query("SELECT * FROM users ORDER BY id DESC")->fetchAll(); $can_edit = in_array(current_role(), ['admin','manager']); ?>
 <div class="d-flex justify-content-between align-items-center mb-3">
-  <h3 class="mb-0">المستخدمون</h3>
+  <h3 class="page-title">
+  <span class="stat-icon">
+    <i class="bi bi-users"></i>
+  </span>
+   المستخدمون
+ </h3>
   <button class="btn btn-orange" data-bs-toggle="modal" data-bs-target="#add"><i class="bi bi-plus-lg"></i> مستخدم</button>
 </div>
 
