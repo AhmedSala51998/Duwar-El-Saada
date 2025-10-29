@@ -242,7 +242,9 @@
     box-shadow: 0 0 0 0 rgba(255, 148, 77, 0);
   }
 }
-
+.text-purple {
+  color: #6f42c1 !important;
+}
 
 </style>
 
@@ -313,7 +315,7 @@ $assetsByPayer = $pdo->query("SELECT payer_name, COUNT(*) c FROM assets GROUP BY
     ["الأصول", $ac, "bi-building", "text-success", "assetes.php"],
     ["العهد", $cc, "bi-wallet2", "text-dark", "custodies.php"],
     ["المصروفات", $expenses_count, "bi-cash-stack", "text-secondary", "expenses.php"],
-    ["التقارير", $reports_count, "bi bi-graph-up-arrow", "text-secondary", "reports.php"],
+    ["التقارير", $reports_count, "bi bi-graph-up-arrow", "text-purple", "reports.php"],
   ];
   foreach ($cards as $c): ?>
     <div class="col-6 col-md-4 col-lg-2">
