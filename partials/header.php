@@ -155,6 +155,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
     .custom-navbar {
       padding-top: 0.05rem !important;   /* أقل ارتفاع ممكن بدون تشويه */
       padding-bottom: 0.05rem !important;
+      display: flex;
+      align-items: center;
     }
 
     .custom-navbar .navbar-brand img {
@@ -172,6 +174,27 @@ $current_page = basename($_SERVER['PHP_SELF']);
         padding-top: 0.1rem !important;
         padding-bottom: 0.1rem !important;
       }
+    }
+
+
+    .custom-navbar .navbar-brand {
+        display: flex;
+        align-items: center; /* ⬅ يوسّط اللوجو والنص رأسياً */
+        gap: 0.5rem;
+      }
+
+      .custom-navbar .navbar-brand img {
+        height:50px !important;
+        width:50px !important;
+      }
+
+      .custom-navbar .navbar-brand span {
+        font-family: 'Scheherazade New', serif;
+        font-size: 1.25rem !important;
+        font-weight: 700;
+        line-height: 1;
+        display: flex;
+        align-items: center; /* ⬅ يوسّط النص رأسياً مع اللوجو */
     }
 
   </style>
