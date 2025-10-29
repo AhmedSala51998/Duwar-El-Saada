@@ -73,7 +73,7 @@
   color: white;
   position: relative;
   overflow: visible;
-  padding-top: 100px !important; /* مسافة من فوق علشان الصورة تبان */
+  margin-top: 60px !important; /* مسافة من فوق علشان الصورة تبان */
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
