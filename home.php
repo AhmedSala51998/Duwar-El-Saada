@@ -167,7 +167,7 @@ $assetsByPayer = $pdo->query("SELECT payer_name, COUNT(*) c FROM assets GROUP BY
 
   <!-- الهيدر -->
   <div class="dashboard-header text-end">
-    <h3 style="text-align:right !important" class="fw-bold mb-2">👋 أهلًا <?= esc(current_user()) ?></h3>
+    <h3 style="text-align:right !important" class="fw-bold mb-2"> أهلًا <?= esc(current_user()) ?> 👋</h3>
     <p style="text-align:right !important"  class="mb-0 fs-6">أدِر المشتريات، الأوامر، العُهد، والمصروفات بسهولة واحترافية.</p>
   </div>
 </div>
