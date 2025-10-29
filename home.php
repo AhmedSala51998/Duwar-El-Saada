@@ -255,7 +255,7 @@ $assetsByPayer = $pdo->query("SELECT payer_name, COUNT(*) c FROM assets GROUP BY
 
   <div class="col-md-6">
     <div class="chart-card">
-      <h5 class="mb-3"><i class="bi bi-shield-check text-success me-1"></i> العهد (آخر 6 شهور)</h5>
+      <h5 class="mb-3"><i class="bi bi-wallet2 text-success me-1"></i> العهد (آخر 6 شهور)</h5>
       <canvas id="custodiesChart" height="200"></canvas>
     </div>
   </div>
