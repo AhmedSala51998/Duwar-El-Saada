@@ -91,7 +91,7 @@
 </div>
 
 <!-- 🗓️ نموذج الفلترة بنفس عرض الكروت -->
-<div class="row g-4">
+<div class="row justify-content-center mb-5">
   <div class="col-md-12 col-lg-12">
     <form method="GET" class="row g-3 align-items-end filter-form">
       <div class="col-md-4">
