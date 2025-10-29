@@ -91,9 +91,10 @@
 </div>
 
 <!-- 🗓️ نموذج الفلترة بنفس عرض الكروت -->
-<div class="row justify-content-center mb-5">
-  <div class="col-md-12 col-lg-12">
-    <form method="GET" class="row g-3 align-items-end filter-form">
+<!-- 🗓️ نموذج الفلترة بنفس محاذاة الكروت -->
+<div class="row g-4 mb-4">
+  <div class="col-md-12">
+    <form method="GET" class="row g-3 align-items-end filter-form mx-1 mx-md-2">
       <div class="col-md-4">
         <label class="form-label">من تاريخ</label>
         <input type="date" name="from_date" class="form-control" value="<?= $_GET['from_date'] ?? '' ?>">
