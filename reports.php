@@ -73,13 +73,9 @@
 }
 
 .filter-form {
-  background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.8rem;
-  padding: 1rem 1.5rem;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-  margin-right: 0;
-  margin-left: 0;
+  max-width: 100%;
+  width: 98%; /* 👈 خليه أعرض بنسبة بسيطة */
+  margin: 0 auto; /* 👈 يوسّطه */
 }
 
 </style>
@@ -103,25 +99,26 @@
 
 <!-- 🗓️ نموذج الفلترة بنفس عرض الكروت -->
 <!-- 🗓️ نموذج الفلترة بنفس محاذاة الكروت -->
-<!-- 🗓️ نموذج الفلترة بنفس محاذاة الكروت تمامًا -->
-<div class="container-fluid px-md-4 px-2">
-  <form method="GET" class="row g-3 mb-5 align-items-end filter-form mx-0">
-    <div class="col-md-4">
-      <label class="form-label">من تاريخ</label>
-      <input type="date" name="from_date" class="form-control" value="<?= $_GET['from_date'] ?? '' ?>">
-    </div>
+<div class="row g-4 mb-4">
+  <div class="col-md-12">
+    <form method="GET" class="row g-3 align-items-end filter-form mx-md-0 px-md-3">
+      <div class="col-md-4">
+        <label class="form-label">من تاريخ</label>
+        <input type="date" name="from_date" class="form-control" value="<?= $_GET['from_date'] ?? '' ?>">
+      </div>
 
-    <div class="col-md-4">
-      <label class="form-label">إلى تاريخ</label>
-      <input type="date" name="to_date" class="form-control" value="<?= $_GET['to_date'] ?? '' ?>">
-    </div>
+      <div class="col-md-4">
+        <label class="form-label">إلى تاريخ</label>
+        <input type="date" name="to_date" class="form-control" value="<?= $_GET['to_date'] ?? '' ?>">
+      </div>
 
-    <div class="col-md-4 d-flex align-items-end">
-      <button type="submit" class="btn btn-warning w-100" style="background-color: #ff6a00; border: none;">
-        <i class="bi bi-funnel"></i> تطبيق الفلتر
-      </button>
-    </div>
-  </form>
+      <div class="col-md-4 d-flex align-items-end">
+        <button type="submit" class="btn btn-warning w-100" style="background-color: #ff6a00; border: none; color:#FFF">
+          <i class="bi bi-funnel"></i> تطبيق الفلتر
+        </button>
+      </div>
+    </form>
+  </div>
 </div>
 
 <?php
