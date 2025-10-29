@@ -327,7 +327,6 @@ $stocks = $pdo->query("
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 1.5rem;
 }
 
 </style>

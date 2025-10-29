@@ -59,7 +59,6 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 1.5rem;
 }
 
 /* 🔘 أزرار التاريخ السريعة */
