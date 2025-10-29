@@ -69,6 +69,44 @@
 .report-card .btn i {
   margin-left: 0.25rem;
 }
+
+/* 📊 بطاقات التصدير */
+.report-card {
+  border: 1px solid #e6e9ef; /* 👈 حدود خفيفة وواضحة */
+  border-radius: 1rem;
+  background-color: #fff;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05); /* 👈 ظل ناعم أنيق */
+  transition: all 0.25s ease-in-out;
+  overflow: hidden;
+}
+
+.report-card:hover {
+  transform: translateY(-4px);
+  border-color: #d0d4da; /* 👈 عند التحويم: حدود أوضح */
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08); /* 👈 ظل أقوى قليلًا */
+}
+
+.report-card h5 {
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 0.4rem;
+}
+
+.report-card p {
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+
+.report-card .btn {
+  width: 48%;
+  font-weight: 500;
+  border-radius: 0.5rem;
+}
+
+.report-card .btn i {
+  margin-left: 0.25rem;
+}
+
 </style>
 
 <h3 class="page-title">
