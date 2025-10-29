@@ -74,51 +74,6 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
     font-size: 0.75rem;
 }
 
-.custom-table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  border: 1px solid #e5e7eb;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  direction: rtl;
-  background-color: #fff;
-}
-
-/* رأس الجدول */
-.custom-table thead {
-  background-color: #f8f9fa !important; /* لون فاتح أنيق */
-  color: #212529;
-  font-weight: 600;
-  border-bottom: 2px solid #dee2e6;
-}
-
-.custom-table th {
-  padding: 12px 10px;
-  text-align: center;
-  font-weight: 600;
-  white-space: nowrap;
-}
-
-/* صفوف الجدول */
-.custom-table td {
-  padding: 10px;
-  text-align: center;
-  border-top: 1px solid #f1f1f1;
-  color: #444;
-}
-
-/* تأثير عند المرور */
-.custom-table tr:hover td {
-  background-color: #fafafa;
-}
-
-/* الأزرار داخل الجدول */
-.custom-table button {
-  border-radius: 8px;
-}
-
 </style>
 <?php endif; ?>
 <?php $rows=$pdo->query("SELECT * FROM users ORDER BY id DESC")->fetchAll(); $can_edit = in_array(current_role(), ['admin','manager']); ?>
