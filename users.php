@@ -9,6 +9,62 @@
 <script>
 document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById("liveToast");if(el){new bootstrap.Toast(el,{delay:2500}).show();}});
 </script>
+<style>
+  /* --- تحسين مظهر الجدول --- */
+.custom-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.9rem; /* تصغير النص قليلاً للراحة البصرية */
+}
+
+.custom-table thead th {
+  background: #f8f9fa;
+  color: #495057;
+  font-weight: 600;
+  border-bottom: 2px solid #dee2e6;
+  vertical-align: middle;
+  font-size: 0.85rem; /* تصغير الخط في العناوين */
+  white-space: nowrap; /* منع كسر السطر في العناوين */
+}
+
+.custom-table tbody tr {
+  transition: all 0.2s ease-in-out;
+}
+
+.custom-table tbody tr:hover {
+  background-color: #f1f5ff;
+  box-shadow: inset 0 0 0 9999px rgba(0,0,0,0.02);
+}
+
+
+.custom-table td,
+.custom-table th {
+  padding: 0.6rem 0.75rem;
+  vertical-align: middle;
+}
+
+.custom-table .badge {
+  font-size: 0.8rem;
+  border-radius: 0.5rem;
+  background: #f0f2f5;
+}
+
+.custom-table td {
+  white-space: normal !important; /* السماح بالنزول للسطر */
+  word-break: break-word; /* كسر الكلمات الطويلة */
+  vertical-align: top; /* خليه يبدأ من فوق */
+  line-height: 1.4;
+}
+
+.small-header th {
+  padding: 0.5rem 0.6rem;
+}
+
+/* جعل الجدول أنحف وأنيق */
+.table-responsive {
+  border-radius: 0.75rem;
+}
+</style>
 <?php endif; ?>
 <?php $rows=$pdo->query("SELECT * FROM users ORDER BY id DESC")->fetchAll(); ?>
 <div class="d-flex justify-content-between align-items-center mb-3">
@@ -16,32 +72,42 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
   <button class="btn btn-orange" data-bs-toggle="modal" data-bs-target="#add"><i class="bi bi-plus-lg"></i> مستخدم</button>
 </div>
 
-<table class="table table-hover">
-  <thead class="table-light">
-    <tr>
-      <th>#</th><th>اسم المستخدم</th><th>الدور</th><th>إنشاء</th><th>عمليات</th>
-    </tr>
-  </thead>
-  <tbody>
-<?php foreach($rows as $r): ?>
-<tr>
-  <td><?= $r['id'] ?></td>
-  <td><?= esc($r['username']) ?></td>
-  <td><?= esc($r['role']) ?></td>
-  <td><?= esc($r['created_at']) ?></td>
-  <td>
-    <!-- زر التعديل -->
-    <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#e<?= $r['id'] ?>">
-      <i class="bi bi-pencil"></i>
-    </button>
-    <!-- زر الحذف -->
-    <?php if($r['id']!=$_SESSION['user_id']): ?>
-      <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#d<?= $r['id'] ?>">
-        <i class="bi bi-trash"></i>
-      </button>
-    <?php endif; ?>
-  </td>
-</tr>
+<div class="table-responsive shadow-sm rounded-3 border bg-white p-2">
+  <table class="table table-hover align-middle mb-0 custom-table">
+    <thead class="table-light border-bottom border-2 small-header text-center text-secondary fw-semibold">
+      <tr>
+        <th>#</th>
+        <th>اسم المستخدم</th>
+        <th>الدور</th>
+        <th>تاريخ الإنشاء</th>
+        <th>عمليات</th>
+      </tr>
+    </thead>
+    <tbody class="text-center">
+      <?php foreach($rows as $r): ?>
+      <tr>
+        <td class="fw-bold text-muted"><?= $r['id'] ?></td>
+        <td><?= esc($r['username']) ?></td>
+        <td>
+          <span class="badge bg-light text-dark border fw-semibold px-3 py-2">
+            <i class="bi bi-person-badge me-1"></i> <?= esc($r['role']) ?>
+          </span>
+        </td>
+        <td class="text-secondary small"><?= esc($r['created_at']) ?></td>
+        <td>
+          <!-- زر التعديل -->
+          <button class="btn btn-sm btn-outline-warning me-1" data-bs-toggle="modal" data-bs-target="#e<?= $r['id'] ?>">
+            <i class="bi bi-pencil"></i>
+          </button>
+
+          <!-- زر الحذف -->
+          <?php if($r['id']!=$_SESSION['user_id']): ?>
+          <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#d<?= $r['id'] ?>">
+            <i class="bi bi-trash"></i>
+          </button>
+          <?php endif; ?>
+        </td>
+      </tr>
 
 <!-- مودال تعديل -->
 <div class="modal fade" id="e<?= $r['id'] ?>">
