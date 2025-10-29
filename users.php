@@ -10,59 +10,7 @@
 document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById("liveToast");if(el){new bootstrap.Toast(el,{delay:2500}).show();}});
 </script>
 <style>
-.custom-table {
-  border-collapse: separate;
-  border-spacing: 0;
-  font-size: 0.9rem; /* تصغير النص قليلاً للراحة البصرية */
-}
 
-.custom-table tbody tr {
-  transition: all 0.2s ease-in-out;
-}
-
-.custom-table tbody tr:hover {
-  background-color: #f1f5ff;
-  box-shadow: inset 0 0 0 9999px rgba(0,0,0,0.02);
-}
-
-
-.custom-table td,
-.custom-table th {
-  padding: 0.6rem 0.75rem;
-  vertical-align: middle;
-}
-
-.custom-table .badge {
-  font-size: 0.8rem;
-  border-radius: 0.5rem;
-  background: #f0f2f5;
-}
-
-.custom-table td {
-  white-space: normal !important; /* السماح بالنزول للسطر */
-  word-break: break-word; /* كسر الكلمات الطويلة */
-  vertical-align: top; /* خليه يبدأ من فوق */
-  line-height: 1.4;
-}
-
-.small-header th {
-  padding: 0.5rem 0.6rem;
-}
-
-/* جعل الجدول أنحف وأنيق */
-.table-responsive {
-  border-radius: 0.75rem;
-}
-
-.custom-table th:first-child {
-    width: 60px; /* عرض ثابت */
-    font-size: 0.75rem; /* تصغير الخط */
-    text-align: center;
-}
-.custom-table td:first-child {
-    text-align: center;
-    font-size: 0.75rem;
-}
 
 </style>
 <?php endif; ?>
