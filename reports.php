@@ -77,6 +77,10 @@
   width: 98%; /* 👈 خليه أعرض بنسبة بسيطة */
   margin: 0 auto; /* 👈 يوسّطه */
 }
+.filter-form {
+  margin-right: 0 !important;   /* 👈 يلتصق باليمين */
+  margin-left: 0.5rem !important; /* 👈 مسافة بسيطة من الشمال للتوازن */
+}
 
 </style>
 
@@ -101,7 +105,7 @@
 <!-- 🗓️ نموذج الفلترة بنفس محاذاة الكروت -->
 <div class="row g-4 mb-4">
   <div class="col-md-12">
-    <form method="GET" class="row g-3 align-items-end filter-form pe-md-0 ps-md-2">
+    <form method="GET" class="row g-3 align-items-end filter-form mx-md-0 px-md-3">
       <div class="col-md-4">
         <label class="form-label">من تاريخ</label>
         <input type="date" name="from_date" class="form-control" value="<?= $_GET['from_date'] ?? '' ?>">
