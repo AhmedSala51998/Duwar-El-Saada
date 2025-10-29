@@ -99,7 +99,7 @@
 .custom-table {
   border-collapse: separate;
   border-spacing: 0;
-  font-size: 0.9rem; /* تصغير النص قليلاً للراحة البصرية */
+  font-size: 0.9rem;
 }
 
 .custom-table thead th {
@@ -108,8 +108,8 @@
   font-weight: 600;
   border-bottom: 2px solid #dee2e6;
   vertical-align: middle;
-  font-size: 0.85rem; /* تصغير الخط في العناوين */
-  white-space: nowrap; /* منع كسر السطر في العناوين */
+  font-size: 0.85rem;
+  white-space: nowrap;
 }
 
 .custom-table tbody tr {
@@ -120,7 +120,6 @@
   background-color: #f1f5ff;
   box-shadow: inset 0 0 0 9999px rgba(0,0,0,0.02);
 }
-
 
 .custom-table td,
 .custom-table th {
@@ -135,9 +134,9 @@
 }
 
 .custom-table td {
-  white-space: normal !important; /* السماح بالنزول للسطر */
-  word-break: break-word; /* كسر الكلمات الطويلة */
-  vertical-align: top; /* خليه يبدأ من فوق */
+  white-space: normal !important;
+  word-break: break-word;
+  vertical-align: top;
   line-height: 1.4;
 }
 
@@ -150,15 +149,26 @@
   border-radius: 0.75rem;
 }
 
+/* العمود الأول (#) */
 .custom-table th:first-child {
-    width: 60px;
+  width: 60px;
 }
 
+/* العمود الثاني (رقم تسلسلي) */
 .custom-table th:nth-child(2),
 .custom-table td:nth-child(2) {
-    width: 100px; /* زِد العرض كما يناسبك */
-    white-space: nowrap; /* حتى لا يكسر النص */
+  width: 120px; /* زِد العرض كما يناسبك */
+  white-space: nowrap;
 }
+
+/* العمود السادس (السعر) */
+.custom-table th:nth-child(6),
+.custom-table td:nth-child(6) {
+  width: 100px; /* عرض أكبر للسعر */
+  white-space: nowrap;
+  text-align: center;
+}
+
 
 </style>
 
