@@ -36,6 +36,39 @@
   z-index: -1;
 }
 
+.stat-icon1 {
+  width: 50px;
+  height: 50px;
+  background: rgba(255, 106, 0, 0.1);
+  color: #ff6a00;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 1.6rem;
+  position: relative;
+  transition: transform 0.6s ease; /* لتدوير الأيقونة عند hover */
+}
+
+/* حركة التدوير عند hover */
+.stat-icon1:hover {
+  transform: rotate(360deg);
+}
+
+/* النبض المستمر */
+.stat-icon1::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: rgba(255, 106, 0, 0.2);
+  animation: pulse 1.5s infinite;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
 /* تعريف النبض */
 @keyframes pulse {
   0% {
