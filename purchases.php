@@ -164,7 +164,7 @@
 /* العمود السادس (السعر) */
 .custom-table th:nth-child(6),
 .custom-table td:nth-child(6) {
-  width: 100px; /* عرض أكبر للسعر */
+  width: 90px; /* عرض أكبر للسعر */
   white-space: nowrap;
   text-align: center;
 }
