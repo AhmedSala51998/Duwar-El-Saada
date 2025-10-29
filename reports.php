@@ -91,8 +91,8 @@
 </div>
 
 <!-- 🗓️ نموذج الفلترة بنفس عرض الكروت -->
-<div class="row justify-content-center mb-5">
-  <div class="col-md-11 col-lg-11">
+<div class="row g-4">
+  <div class="col-md-12 col-lg-12">
     <form method="GET" class="row g-3 align-items-end filter-form">
       <div class="col-md-4">
         <label class="form-label">من تاريخ</label>
