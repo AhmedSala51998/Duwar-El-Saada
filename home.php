@@ -182,7 +182,7 @@ $assetsByPayer = $pdo->query("SELECT payer_name, COUNT(*) c FROM assets GROUP BY
     ["الأصناف", $pc, "bi-bag", "text-warning", "purchases.php"],
     ["أوامر التشغيل", $oc, "bi-gear", "text-primary", "orders.php"],
     ["الأصول", $ac, "bi-building", "text-success", "assetes.php"],
-    ["العهد", $cc, "bi-shield-check", "text-dark", "custodies.php"],
+    ["العهد", $cc, "bi-wallet2", "text-dark", "custodies.php"],
     ["المصروفات", $expenses_count, "bi-cash-stack", "text-secondary", "expenses.php"],
     ["التقارير", $reports_count, "bi bi-graph-up-arrow", "text-secondary", "reports.php"],
   ];

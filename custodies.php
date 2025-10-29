@@ -247,7 +247,7 @@ $options = ['بسام','فيصل المطيري','مؤسسة','شركة'];
 <div class="d-flex flex-wrap gap-2 justify-content-between align-items-center mb-3">
     <h3 class="page-title">
       <span class="stat-icon">
-        <i class="bi bi-shield-check"></i>
+        <i class="bi bi-wallet2"></i>
       </span>
       العُهد
     </h3>
