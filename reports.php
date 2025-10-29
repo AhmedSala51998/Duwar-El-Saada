@@ -162,7 +162,7 @@ if (!empty($_GET['date_type'])) $filterParams .= '&date_type=' . $_GET['date_typ
     ['title'=>'الأصول','desc'=>'تصدير الأصول','excel'=>'export_assets_excel.php','pdf'=>'export_assets_pdf.php','icon'=>'bi-building'],
     ['title'=>'العُهد','desc'=>'تصدير جميع العُهد','excel'=>'export_custodies_excel.php','pdf'=>'export_custodies_pdf.php','icon'=>'bi-person-badge'],
     ['title'=>'المصروفات','desc'=>'تصدير جميع المصروفات','excel'=>'export_expenses_excel.php','pdf'=>'export_expenses_pdf.php','icon'=>'bi-cash-stack'],
-    ['title'=>'تقريب الضريبة','desc'=>'حساب ضريبة المشتريات، المصروفات، والأصول','excel'=>'export_vat_excel.php','pdf'=>'export_vat_pdf.php','icon'=>'bi-receipt'],
+    ['title'=>'تقرير الضريبة','desc'=>'حساب ضريبة المشتريات، المصروفات، والأصول','excel'=>'export_vat_excel.php','pdf'=>'export_vat_pdf.php','icon'=>'bi-receipt'],
   ];
   foreach($reports as $r): ?>
   <div class="col-md-4 col-sm-6">
