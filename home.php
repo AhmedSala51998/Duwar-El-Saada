@@ -36,6 +36,11 @@
     border-radius: 50%;
     font-size: 1.6rem;
     margin: 0 auto 10px;
+    transition: transform 0.6s ease;
+  }
+
+  .stat-icon:hover {
+      transform: rotate(360deg);
   }
 
   .stat-icon::after {
@@ -45,14 +50,14 @@
     height: 100%;
     border-radius: 50%;
     background: rgba(255, 106, 0, 0.2);
-    animation: pulse2 1.5s infinite;
+    animation: pulse_edit 1.5s infinite;
     top: 0;
     left: 0;
     z-index: -1;
   }
 
   /* تعريف النبض */
-  @keyframes pulse2 {
+  @keyframes pulse_edit {
     0% {
       transform: scale(1);
       opacity: 0.6;
@@ -67,9 +72,6 @@
     }
   }
 
-  .stat-icon:hover {
-      transform: rotate(360deg);
-  }
 
   .stat-title {
     font-size: 0.9rem;
