@@ -177,12 +177,14 @@ $assetsByPayer = $pdo->query("SELECT payer_name, COUNT(*) c FROM assets GROUP BY
 <div class="row g-4">
   <!-- الكروت الإحصائية -->
   <?php
+  $reports_count = 6;
   $cards = [
     ["الأصناف", $pc, "bi-bag", "text-warning", "purchases.php"],
     ["الأوامر", $oc, "bi-gear", "text-primary", "orders.php"],
     ["الأصول", $ac, "bi-building", "text-success", "assetes.php"],
     ["العهد", $cc, "bi-shield-check", "text-dark", "custodies.php"],
     ["المصروفات", $expenses_count, "bi-cash-stack", "text-secondary", "expenses.php"],
+    ["التقارير", $reports_count, "bi bi-graph-up-arrow", "text-secondary", "reports.php"],
   ];
   foreach ($cards as $c): ?>
     <div class="col-6 col-md-4 col-lg-2">
