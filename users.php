@@ -11,68 +11,46 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 </script>
 <style>
 .custom-table {
+  width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  font-size: 0.9rem; /* تصغير النص قليلاً للراحة البصرية */
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  direction: rtl;
 }
 
-.custom-table thead th {
-  background: #f8f9fa;
-  color: #495057;
-  font-weight: 600;
-  border-bottom: 2px solid #dee2e6;
-  vertical-align: middle;
-  font-size: 0.85rem; /* تصغير الخط في العناوين */
-  white-space: nowrap; /* منع كسر السطر في العناوين */
+.custom-table thead {
+  background-color: #f8f9fa;
 }
 
-.custom-table tbody tr {
-  transition: all 0.2s ease-in-out;
-}
-
-.custom-table tbody tr:hover {
-  background-color: #f1f5ff;
-  box-shadow: inset 0 0 0 9999px rgba(0,0,0,0.02);
-}
-
-
-.custom-table td,
 .custom-table th {
-  padding: 0.6rem 0.75rem;
-  vertical-align: middle;
-}
-
-.custom-table .badge {
-  font-size: 0.8rem;
-  border-radius: 0.5rem;
-  background: #f0f2f5;
+  font-weight: 700;
+  color: #212529;
+  border-bottom: 2px solid #e9ecef;
+  padding: 12px;
+  text-align: right;
+  white-space: nowrap;
 }
 
 .custom-table td {
-  white-space: normal !important; /* السماح بالنزول للسطر */
-  word-break: break-word; /* كسر الكلمات الطويلة */
-  vertical-align: top; /* خليه يبدأ من فوق */
-  line-height: 1.4;
+  border-bottom: 1px solid #f0f0f0;
+  padding: 10px;
+  text-align: right;
+  color: #444;
+  background-color: #fff;
+  transition: background-color 0.2s ease;
 }
 
-.small-header th {
-  padding: 0.5rem 0.6rem;
+.custom-table tr:hover td {
+  background-color: #f9fafb;
 }
 
-/* جعل الجدول أنحف وأنيق */
-.table-responsive {
-  border-radius: 0.75rem;
+.custom-table button {
+  border-radius: 8px;
 }
 
-.custom-table th:first-child {
-    width: 60px; /* عرض ثابت */
-    font-size: 0.75rem; /* تصغير الخط */
-    text-align: center;
-}
-.custom-table td:first-child {
-    text-align: center;
-    font-size: 0.75rem;
-}
 </style>
 <?php endif; ?>
 <?php $rows=$pdo->query("SELECT * FROM users ORDER BY id DESC")->fetchAll(); $can_edit = in_array(current_role(), ['admin','manager']); ?>
