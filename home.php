@@ -39,10 +39,6 @@
     transition: transform 0.6s ease;
   }
 
-  .stat-icon:hover {
-      transform: rotate(360deg);
-  }
-
   .stat-icon::after {
     content: '';
     position: absolute;
@@ -50,14 +46,14 @@
     height: 100%;
     border-radius: 50%;
     background: rgba(255, 106, 0, 0.2);
-    animation: pulse_edit 1.5s infinite;
+    animation: pulse_stat 1.5s infinite;
     top: 0;
     left: 0;
     z-index: -1;
   }
 
-  /* تعريف النبض */
-  @keyframes pulse_edit {
+  /* تعريف نبض stat-icon */
+  @keyframes pulse_stat {
     0% {
       transform: scale(1);
       opacity: 0.6;
@@ -70,6 +66,11 @@
       transform: scale(1);
       opacity: 0.6;
     }
+  }
+
+  /* التدوير عند hover */
+  .stat-icon:hover {
+    transform: rotate(360deg);
   }
 
 
@@ -127,7 +128,7 @@
   align-items: center;
   justify-content: center;
   box-shadow: 0 0 0 0 rgba(255, 148, 77, 0.6);
-  animation: pulse 2s infinite;
+  animation: pulse_chef 2s infinite;
 }
 
 .chef-icon img {
@@ -137,7 +138,7 @@
 }
 
 /* تأثير النبض */
-@keyframes pulse {
+@keyframes pulse_chef {
   0% {
     box-shadow: 0 0 0 0 rgba(255, 148, 77, 0.6);
   }
