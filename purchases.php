@@ -151,13 +151,13 @@
 }
 
 .custom-table th:first-child {
-    width: 60px; /* عرض ثابت */
-    font-size: 0.75rem; /* تصغير الخط */
-    text-align: center;
+    width: 60px;
 }
-.custom-table td:first-child {
-    text-align: center;
-    font-size: 0.75rem;
+
+.custom-table th:nth-child(2),
+.custom-table td:nth-child(2) {
+    width: 140px; /* زِد العرض كما يناسبك */
+    white-space: nowrap; /* حتى لا يكسر النص */
 }
 
 
