@@ -38,10 +38,6 @@
     margin: 0 auto 10px;
   }
 
-  .stat-icon:hover {
-      transform: rotate(360deg);
-  }
-
   .stat-icon::after {
     content: '';
     position: absolute;
@@ -69,6 +65,10 @@
       transform: scale(1);
       opacity: 0.6;
     }
+  }
+
+  .stat-icon:hover {
+      transform: rotate(360deg);
   }
 
   .stat-title {
