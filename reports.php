@@ -2,11 +2,27 @@
 
 <style>
 /* 🎨 تنسيق عام */
+.stat-icon {
+  width: 50px;
+  height: 50px;
+  background: rgba(255, 106, 0, 0.1);
+  color: #ff6a00;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 1.6rem;
+  margin-right: 10px; /* شوية مسافة بين الدائرة والنص */
+}
 .page-title {
   font-weight: 700;
   color: #2c3e50;
+  display: flex;
+  align-items: center; /* يخلّي الدائرة والنص متراصفين */
+  gap: 10px; /* مسافة بين الدائرة والنص */
   margin-bottom: 1.5rem;
 }
+
 
 /* 🔘 أزرار التاريخ السريعة */
 .quick-buttons .btn {
@@ -80,7 +96,10 @@
 </style>
 
 <h3 class="page-title">
-  <i class="bi bi-graph-up-arrow text-primary"></i> التقارير والتصدير
+  <span class="stat-icon">
+    <i class="bi bi-graph-up-arrow"></i>
+  </span>
+  التقارير والتصدير
 </h3>
 
 <!-- ✅ أزرار التاريخ السريعة -->

@@ -116,6 +116,26 @@
   min-width: 90px;  /* تأكد إن المساحة كافية للزر */
   text-align: center;
 }
+.stat-icon {
+  width: 50px;
+  height: 50px;
+  background: rgba(255, 106, 0, 0.1);
+  color: #ff6a00;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 1.6rem;
+  margin-right: 10px; /* شوية مسافة بين الدائرة والنص */
+}
+.page-title {
+  font-weight: 700;
+  color: #2c3e50;
+  display: flex;
+  align-items: center; /* يخلّي الدائرة والنص متراصفين */
+  gap: 10px; /* مسافة بين الدائرة والنص */
+  margin-bottom: 1.5rem;
+}
 
 
 </style>
