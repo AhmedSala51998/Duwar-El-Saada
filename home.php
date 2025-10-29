@@ -65,6 +65,54 @@
     color: #333;
     font-weight: 600;
   }
+
+
+.dashboard-card {
+  background: linear-gradient(90deg, #ff6a00, #ff944d);
+  border-radius: 25px;
+  color: white;
+  position: relative;
+  overflow: visible; /* ضروري عشان الأيقونة تطلع برّه */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* الأيقونة */
+.chef-icon {
+  position: absolute;
+  top: -30px;
+  left: -30px;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: #fff;
+  border: 5px solid #ff944d;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 0 0 rgba(255, 148, 77, 0.6);
+  animation: pulse 2s infinite;
+}
+
+.chef-icon img {
+  width: 70%;
+  height: 70%;
+  object-fit: contain;
+}
+
+/* تأثير النبض */
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 148, 77, 0.6);
+  }
+  70% {
+    box-shadow: 0 0 0 15px rgba(255, 148, 77, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 148, 77, 0);
+  }
+}
+
 </style>
 
 <?php
@@ -104,9 +152,22 @@ $custodiesByMonth = $pdo->query("
 $assetsByPayer = $pdo->query("SELECT payer_name, COUNT(*) c FROM assets GROUP BY payer_name")->fetchAll(PDO::FETCH_KEY_PAIR);
 ?>
 
-<div class="dashboard-header mb-4">
+<!--<div class="dashboard-header mb-4">
   <h3 class="fw-bold mb-2">👋 أهلًا <?= esc(current_user()) ?></h3>
   <p class="mb-0 fs-6">أدِر المشتريات، الأوامر، العُهد، والمصروفات بسهولة واحترافية.</p>
+</div>-->
+
+<div class="dashboard-card position-relative p-4 mb-4">
+  <!-- الأيقونة البارزة -->
+  <div class="chef-icon">
+    <img src="<?= BASE_URL ?>/assets/logo.png" alt="Chef" />
+  </div>
+
+  <!-- محتوى الهيدر -->
+  <div class="dashboard-header text-end">
+    <h3 class="fw-bold mb-2">👋 أهلًا <?= esc(current_user()) ?></h3>
+    <p class="mb-0 fs-6">أدِر المشتريات، الأوامر، العُهد، والمصروفات بسهولة واحترافية.</p>
+  </div>
 </div>
 
 <div class="row g-4">
