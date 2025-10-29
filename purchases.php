@@ -160,15 +160,6 @@
     white-space: nowrap; /* حتى لا يكسر النص */
 }
 
-.custom-table th:nth-child(6),
-.custom-table td:nth-child(6) {
-    width: 90px; /* خليه أوسع شوية لو محتوى طويل */
-    text-align: center;
-    font-size: 0.85rem;
-    white-space: nowrap; /* يمنع النزول لسطر تاني */
-}
-
-
 </style>
 
 <?php require __DIR__.'/partials/header.php'; ?>
