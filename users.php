@@ -10,7 +10,6 @@
 document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById("liveToast");if(el){new bootstrap.Toast(el,{delay:2500}).show();}});
 </script>
 <style>
-  /* --- تحسين مظهر الجدول --- */
 .custom-table {
   border-collapse: separate;
   border-spacing: 0;
@@ -64,9 +63,19 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 .table-responsive {
   border-radius: 0.75rem;
 }
+
+.custom-table th:first-child {
+    width: 60px; /* عرض ثابت */
+    font-size: 0.75rem; /* تصغير الخط */
+    text-align: center;
+}
+.custom-table td:first-child {
+    text-align: center;
+    font-size: 0.75rem;
+}
 </style>
 <?php endif; ?>
-<?php $rows=$pdo->query("SELECT * FROM users ORDER BY id DESC")->fetchAll(); ?>
+<?php $rows=$pdo->query("SELECT * FROM users ORDER BY id DESC")->fetchAll(); $can_edit = in_array(current_role(), ['admin','manager']); ?>
 <div class="d-flex justify-content-between align-items-center mb-3">
   <h3 class="mb-0">المستخدمون</h3>
   <button class="btn btn-orange" data-bs-toggle="modal" data-bs-target="#add"><i class="bi bi-plus-lg"></i> مستخدم</button>
