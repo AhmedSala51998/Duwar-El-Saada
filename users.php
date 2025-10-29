@@ -16,16 +16,6 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
   font-size: 0.9rem; /* تصغير النص قليلاً للراحة البصرية */
 }
 
-.custom-table thead th {
-  background: #f8f9fa;
-  color: #495057;
-  font-weight: 600;
-  border-bottom: 2px solid #dee2e6;
-  vertical-align: middle;
-  font-size: 0.85rem; /* تصغير الخط في العناوين */
-  white-space: nowrap; /* منع كسر السطر في العناوين */
-}
-
 .custom-table tbody tr {
   transition: all 0.2s ease-in-out;
 }
