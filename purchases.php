@@ -160,13 +160,6 @@
     white-space: nowrap; /* حتى لا يكسر النص */
 }
 
-.custom-table th:nth-child(6),
-.custom-table td:nth-child(6) {
-  width: 100px; /* عرض أكبر للسعر */
-  white-space: nowrap;
-  text-align: center;
-}
-
 </style>
 
 <?php require __DIR__.'/partials/header.php'; ?>
