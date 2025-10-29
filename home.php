@@ -1,10 +1,6 @@
 <?php require __DIR__.'/partials/header.php'; ?>
 
 <style>
-  body {
-    background: #f4f6f9;
-    font-family: "Cairo", sans-serif;
-  }
 
   .dashboard-header {
     background: linear-gradient(135deg, #ff6a00, #ffb478);
