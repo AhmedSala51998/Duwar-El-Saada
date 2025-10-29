@@ -42,71 +42,35 @@
 
 /* 📊 بطاقات التصدير */
 .report-card {
-  border: none;
-  border-radius: 1rem;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.05);
-  transition: all 0.25s ease-in-out;
-  overflow: hidden;
-}
-.report-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-}
-.report-card h5 {
-  font-weight: 700;
-  color: #333;
-  margin-bottom: 0.4rem;
-}
-.report-card p {
-  font-size: 0.9rem;
-  color: #6c757d;
-}
-.report-card .btn {
-  width: 48%;
-  font-weight: 500;
-  border-radius: 0.5rem;
-}
-.report-card .btn i {
-  margin-left: 0.25rem;
-}
-
-/* 📊 بطاقات التصدير */
-.report-card {
-  border: 1px solid #e6e9ef; /* 👈 حدود خفيفة وواضحة */
+  border: 1px solid #e6e9ef;
   border-radius: 1rem;
   background-color: #fff;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.05); /* 👈 ظل ناعم أنيق */
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
   transition: all 0.25s ease-in-out;
   overflow: hidden;
 }
-
 .report-card:hover {
   transform: translateY(-4px);
-  border-color: #d0d4da; /* 👈 عند التحويم: حدود أوضح */
-  box-shadow: 0 8px 20px rgba(0,0,0,0.08); /* 👈 ظل أقوى قليلًا */
+  border-color: #d0d4da;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
 }
-
 .report-card h5 {
   font-weight: 700;
   color: #333;
   margin-bottom: 0.4rem;
 }
-
 .report-card p {
   font-size: 0.9rem;
   color: #6c757d;
 }
-
 .report-card .btn {
   width: 48%;
   font-weight: 500;
   border-radius: 0.5rem;
 }
-
 .report-card .btn i {
   margin-left: 0.25rem;
 }
-
 </style>
 
 <h3 class="page-title">
@@ -126,27 +90,30 @@
   </a>
 </div>
 
-<!-- 🗓️ نموذج الفلترة -->
-<form method="GET" class="row g-3 mb-5 align-items-end filter-form">
-  <div class="col-md-4">
-    <label class="form-label">من تاريخ</label>
-    <input type="date" name="from_date" class="form-control" value="<?= $_GET['from_date'] ?? '' ?>">
-  </div>
+<!-- 🗓️ نموذج الفلترة بنفس عرض الكروت -->
+<div class="row justify-content-center mb-5">
+  <div class="col-md-10 col-lg-8">
+    <form method="GET" class="row g-3 align-items-end filter-form">
+      <div class="col-md-4">
+        <label class="form-label">من تاريخ</label>
+        <input type="date" name="from_date" class="form-control" value="<?= $_GET['from_date'] ?? '' ?>">
+      </div>
 
-  <div class="col-md-4">
-    <label class="form-label">إلى تاريخ</label>
-    <input type="date" name="to_date" class="form-control" value="<?= $_GET['to_date'] ?? '' ?>">
-  </div>
+      <div class="col-md-4">
+        <label class="form-label">إلى تاريخ</label>
+        <input type="date" name="to_date" class="form-control" value="<?= $_GET['to_date'] ?? '' ?>">
+      </div>
 
-  <div class="col-md-4 d-flex align-items-end">
-    <button type="submit" class="btn btn-warning w-100" style="background-color: #ff6a00; border: none;">
-      <i class="bi bi-funnel"></i> تطبيق الفلتر
-    </button>
+      <div class="col-md-4 d-flex align-items-end">
+        <button type="submit" class="btn btn-warning w-100" style="background-color: #ff6a00; border: none;">
+          <i class="bi bi-funnel"></i> تطبيق الفلتر
+        </button>
+      </div>
+    </form>
   </div>
-</form>
+</div>
 
 <?php
-// إعداد متغير الفلترة للروابط
 $filterParams = '';
 if (!empty($_GET['from_date'])) $filterParams .= '&from_date=' . $_GET['from_date'];
 if (!empty($_GET['to_date'])) $filterParams .= '&to_date=' . $_GET['to_date'];
