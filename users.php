@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 .custom-table thead th {
   background: #f8f9fa;
   color: #495057;
-  font-weight: 600;
+  font-weight: 300 !important;
   border-bottom: 2px solid #dee2e6;
   vertical-align: middle;
   font-size: 0.85rem; /* تصغير الخط في العناوين */
