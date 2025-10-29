@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 .custom-table thead th {
   background: #f8f9fa;
   color: #495057;
-  font-weight: 300 !important;
+  font-weight: 600 !important;
   border-bottom: 2px solid #dee2e6;
   vertical-align: middle;
   font-size: 0.85rem; /* تصغير الخط في العناوين */
@@ -84,7 +84,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 
 <div class="table-responsive shadow-sm rounded-3 border bg-white p-2">
   <table class="table table-hover align-middle mb-0 custom-table">
-    <thead class="table-light border-bottom small-header text-center text-secondary">
+    <thead class="border-bottom small-header text-center text-secondary">
       <tr>
         <th>#</th>
         <th>اسم المستخدم</th>
