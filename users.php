@@ -11,10 +11,106 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 </script>
 <style>
   /* --- تحسين مظهر الجدول --- */
+  .custom-file-upload {
+    border: 2px dashed #ccc;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 20px;
+    text-align: center;
+    transition: all 0.3s ease-in-out;
+    background: #f9f9f9;
+  }
+  .custom-file-upload:hover {
+    border-color: #0d6efd;
+    background: #eef5ff;
+  }
+  .custom-file-upload i {
+    font-size: 40px;
+    color: #0d6efd;
+    margin-bottom: 10px;
+  }
+  .custom-file-upload span {
+    font-size: 14px;
+    color: #666;
+  }
+  .custom-file-upload img {
+    max-height: 120px;
+    margin-top: 10px;
+    border-radius: 8px;
+  }
+  input[type="file"] {
+    display: none;
+  }
+  /* لجعل الصور ثابتة الحجم في الجدول */
+/* لجعل الصور في الجدول بحجم ثابت وصندوق موحد */
+.table td label.custom-file-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 130px;        /* عرض الصندوق */
+  height: 100px;       /* ارتفاع الصندوق */
+  border: 1px dashed #ccc;
+  padding: 5px;
+  cursor: pointer;
+  overflow: hidden;
+  box-sizing: border-box;
+  border-radius: 8px;  /* اختياري: حواف مدورة */
+  background-color: #f9f9f9;
+}
+
+/* الصورة نفسها */
+.table td label.custom-file-upload img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* يجعل الصورة تظهر كاملة داخل الصندوق بدون قص */
+  border-radius: 4px;
+}
+
+/* أيقونة ونص قبل رفع الصورة */
+.table td label.custom-file-upload i,
+.table td label.custom-file-upload span {
+  position: absolute;   /* تظهر فوق الصورة قبل الاختيار */
+  pointer-events: none; /* لا تمنع النقر على input */
+}
+
+/* إخفاء النص والأيقونة بعد رفع الصورة */
+.table td label.custom-file-upload img[src] ~ i,
+.table td label.custom-file-upload img[src] ~ span {
+  display: none;
+}
+/* ألوان pagination مخصصة */
+.pagination .page-link {
+    color: #ff6a00;
+    border-color: #ff6a00;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #ff6a00;
+    border-color: #ff6a00;
+    color: #fff;
+}
+
+.pagination .page-link:hover {
+    background-color: #ff6a00;
+    color: #fff;
+    border-color: #ff6a00;
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #ccc;
+    border-color: #ccc;
+}
+
+
 .custom-table {
   border-collapse: separate;
   border-spacing: 0;
-  font-size: 0.9rem; /* تصغير النص قليلاً للراحة البصرية */
+  font-size: 0.9rem;
 }
 
 .custom-table thead th {
@@ -23,8 +119,8 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
   font-weight: 600;
   border-bottom: 2px solid #dee2e6;
   vertical-align: middle;
-  font-size: 0.85rem; /* تصغير الخط في العناوين */
-  white-space: nowrap; /* منع كسر السطر في العناوين */
+  font-size: 0.85rem;
+  white-space: nowrap;
 }
 
 .custom-table tbody tr {
@@ -35,7 +131,6 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
   background-color: #f1f5ff;
   box-shadow: inset 0 0 0 9999px rgba(0,0,0,0.02);
 }
-
 
 .custom-table td,
 .custom-table th {
@@ -50,9 +145,9 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 }
 
 .custom-table td {
-  white-space: normal !important; /* السماح بالنزول للسطر */
-  word-break: break-word; /* كسر الكلمات الطويلة */
-  vertical-align: top; /* خليه يبدأ من فوق */
+  white-space: normal !important;
+  word-break: break-word;
+  vertical-align: top;
   line-height: 1.4;
 }
 
