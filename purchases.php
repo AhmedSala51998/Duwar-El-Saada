@@ -160,6 +160,12 @@
     white-space: nowrap; /* حتى لا يكسر النص */
 }
 
+.custom-table th:nth-child(6),
+.custom-table td:nth-child(6) {
+    width: 90px; /* زِد العرض كما يناسبك */
+    white-space: nowrap; /* حتى لا يكسر النص */
+}
+
 
 </style>
 
