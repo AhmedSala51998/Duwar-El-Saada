@@ -36,36 +36,54 @@
   z-index: -1;
 }
 
-.report-card .btn .stat-icon1 {
-  width: 50px;
-  height: 50px;
+.report-card .stat-icon1 {
+  width: 60px;
+  height: 60px;
   background: rgba(255, 106, 0, 0.1);
   color: #ff6a00;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  font-size: 1.6rem;
-  transition: transform 0.6s ease; /* لتدوير الأيقونة عند hover */
+  font-size: 1.8rem;
+  margin: 0 auto 10px; /* يخليها في النص */
+  position: relative;
+  transition: transform 0.6s ease;
 }
 
 /* حركة التدوير عند hover */
-.report-card .btn .stat-icon1:hover {
+.report-card .stat-icon1:hover {
   transform: rotate(360deg);
 }
 
 /* النبض المستمر */
-.report-card .btn .stat-icon1::after {
+.report-card .stat-icon1::after {
   content: '';
   position: absolute;
   width: 100%;
   height: 100%;
   border-radius: 50%;
   background: rgba(255, 106, 0, 0.2);
-  animation: pulse 1.5s infinite;
+  animation: pulse_report 1.5s infinite;
   top: 0;
   left: 0;
   z-index: -1;
+}
+
+/* تعريف النبض */
+@keyframes pulse_report {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
 }
 
 /* تعريف النبض */
