@@ -17,209 +17,204 @@ $current_page = basename($_SERVER['PHP_SELF']);
   <link href="<?= BASE_URL ?>/assets/css/theme.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <style>
+    /* -----------------------------
+      ⚙️ Loader Style (احترافي متطور)
+    ------------------------------ */
+    .loader {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      background: linear-gradient(135deg, #fff8f3 0%, #ffffff 100%);
+      z-index: 9999;
+      transition: opacity 0.8s ease, visibility 0.8s ease;
+    }
+    .loader.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
 
+    .circle {
+      position: relative;
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      border: 3px solid rgba(255, 128, 0, 0.25);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      animation: spin 3.2s linear infinite;
+    }
+
+    .loader-text {
+      color: #ff6a00;
+      font-size: 22px;
+      font-weight: 700;
+      text-shadow: 0 0 6px rgba(255, 128, 0, 0.6);
+      animation: pulse 2s ease-in-out infinite;
+      letter-spacing: 1px;
+    }
+
+    .pulse-dot {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #ff6a00;
+      opacity: 0.8;
+      transform: scale(0);
+      animation: dotPulse 1.5s infinite ease-in-out;
+    }
+    .pulse-dot:nth-child(2){ top:0; left:50%; animation-delay:0s;}
+    .pulse-dot:nth-child(3){ top:15%; right:0; animation-delay:0.1s;}
+    .pulse-dot:nth-child(4){ bottom:15%; right:0; animation-delay:0.2s;}
+    .pulse-dot:nth-child(5){ bottom:0; left:50%; animation-delay:0.3s;}
+    .pulse-dot:nth-child(6){ bottom:15%; left:0; animation-delay:0.4s;}
+    .pulse-dot:nth-child(7){ top:15%; left:0; animation-delay:0.5s;}
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); filter: blur(0); }
+      50% { transform: scale(1.15); filter: blur(1px); }
+    }
+    @keyframes dotPulse {
+      0%, 100% { transform: scale(0); opacity: 0; }
+      50% { transform: scale(1); opacity: 1; }
+    }
 
     /* -----------------------------
-   ⚙️ Loader Style (احترافي متطور)
------------------------------- */
-.loader {
-  position: fixed;
-  inset: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  background: linear-gradient(135deg, #fff8f3 0%, #ffffff 100%);
-  z-index: 9999;
-  transition: opacity 0.8s ease, visibility 0.8s ease;
-}
-.loader.hidden {
-  opacity: 0;
-  visibility: hidden;
-}
+      🌈 Navbar (مظهر زجاجي أنيق)
+    ------------------------------ */
+    .custom-navbar {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      padding: 0.5rem 1rem;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+    }
+    .custom-navbar:hover {
+      background: rgba(255, 255, 255, 0.95);
+    }
 
-.circle {
-  position: relative;
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  border: 3px solid rgba(255, 128, 0, 0.25);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  animation: spin 3.2s linear infinite;
-}
+    .navbar-brand img {
+      height: 65px !important;
+      width: 65px !important;
+      transition: transform 0.3s ease;
+    }
+    .navbar-brand img:hover {
+      transform: rotate(-3deg) scale(1.05);
+    }
 
-.loader-text {
-  color: #ff6a00;
-  font-size: 22px;
-  font-weight: 700;
-  text-shadow: 0 0 6px rgba(255, 128, 0, 0.6);
-  animation: pulse 2s ease-in-out infinite;
-  letter-spacing: 1px;
-}
+    .navbar-brand span {
+      font-family: 'Scheherazade New', serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #ff6a00;
+    }
 
-.pulse-dot {
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: #ff6a00;
-  opacity: 0.8;
-  transform: scale(0);
-  animation: dotPulse 1.5s infinite ease-in-out;
-}
-.pulse-dot:nth-child(2){ top:0; left:50%; animation-delay:0s;}
-.pulse-dot:nth-child(3){ top:15%; right:0; animation-delay:0.1s;}
-.pulse-dot:nth-child(4){ bottom:15%; right:0; animation-delay:0.2s;}
-.pulse-dot:nth-child(5){ bottom:0; left:50%; animation-delay:0.3s;}
-.pulse-dot:nth-child(6){ bottom:15%; left:0; animation-delay:0.4s;}
-.pulse-dot:nth-child(7){ top:15%; left:0; animation-delay:0.5s;}
+    /* -----------------------------
+      🔶 الروابط في Navbar
+    ------------------------------ */
+    .navbar .nav-link {
+      font-weight: 500;
+      padding: 0.6rem 1.1rem;
+      border-radius: 12px;
+      color: #555 !important;
+      transition: all 0.25s ease;
+    }
+    .navbar .nav-link:hover {
+      background: rgba(255, 106, 0, 0.08);
+      color: #ff6a00 !important;
+    }
+    .navbar .nav-link.active {
+      background: rgba(255, 106, 0, 0.15);
+      color: #ff6a00 !important;
+      font-weight: 600;
+    }
 
-@keyframes spin { to { transform: rotate(360deg); } }
-@keyframes pulse {
-  0%, 100% { transform: scale(1); filter: blur(0); }
-  50% { transform: scale(1.15); filter: blur(1px); }
-}
-@keyframes dotPulse {
-  0%, 100% { transform: scale(0); opacity: 0; }
-  50% { transform: scale(1); opacity: 1; }
-}
+    /* -----------------------------
+      🧿 زر تسجيل الخروج
+    ------------------------------ */
+    .btn-logout {
+      background: linear-gradient(135deg, #ff6a00, #ff944d);
+      color: #fff;
+      font-weight: 600;
+      padding: 0.6rem 1.4rem;
+      border-radius: 50px;
+      box-shadow: 0 4px 12px rgba(255, 106, 0, 0.25);
+      transition: all 0.3s ease;
+    }
+    .btn-logout:hover {
+      background: linear-gradient(135deg, #e65a00, #ff7a1f);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(255, 106, 0, 0.35);
+      color: #fff !important;
+    }
 
-/* -----------------------------
-   🌈 Navbar (مظهر زجاجي أنيق)
------------------------------- */
-.custom-navbar {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-  padding: 0.5rem 1rem;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-  transition: all 0.3s ease;
-}
-.custom-navbar:hover {
-  background: rgba(255, 255, 255, 0.95);
-}
+    /* -----------------------------
+      🎖️ بادج الدور
+    ------------------------------ */
+    .role-badge {
+      background: #fff3e6;
+      color: #ff6a00;
+      font-weight: 600;
+      border-radius: 50px;
+      padding: 0.45rem 1rem;
+      box-shadow: 0 2px 6px rgba(255, 106, 0, 0.15);
+    }
 
-.navbar-brand img {
-  height: 65px !important;
-  width: 65px !important;
-  transition: transform 0.3s ease;
-}
-.navbar-brand img:hover {
-  transform: rotate(-3deg) scale(1.05);
-}
+    /* -----------------------------
+      📚 القائمة الجانبية (Side)
+    ------------------------------ */
+    .sidebar-link {
+      display: block;
+      color: #555;
+      padding: 0.55rem 1rem;
+      border-radius: 8px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.25s ease;
+    }
+    .sidebar-link:hover {
+      background: rgba(255, 106, 0, 0.08);
+      color: #ff6a00;
+      transform: translateX(-2px);
+    }
+    .sidebar-link.active {
+      background: linear-gradient(90deg, #ff6a00 0%, #ff944d 100%);
+      color: #fff !important;
+      box-shadow: 0 3px 10px rgba(255, 106, 0, 0.25);
+    }
 
-.navbar-brand span {
-  font-family: 'Scheherazade New', serif;
-  font-size: 1.4rem;
-  font-weight: 700;
-  color: #ff6a00;
-}
+    /* -----------------------------
+      🖥️ Sidebar in desktop
+    ------------------------------ */
+    aside {
+      background: #fff;
+      box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.05);
+    }
+    aside .text-muted {
+      font-weight: 600;
+      color: #999 !important;
+    }
 
-/* -----------------------------
-   🔶 الروابط في Navbar
------------------------------- */
-.navbar .nav-link {
-  font-weight: 500;
-  padding: 0.6rem 1.1rem;
-  border-radius: 12px;
-  color: #555 !important;
-  transition: all 0.25s ease;
-}
-.navbar .nav-link:hover {
-  background: rgba(255, 106, 0, 0.08);
-  color: #ff6a00 !important;
-}
-.navbar .nav-link.active {
-  background: rgba(255, 106, 0, 0.15);
-  color: #ff6a00 !important;
-  font-weight: 600;
-}
-
-/* -----------------------------
-   🧿 زر تسجيل الخروج
------------------------------- */
-.btn-logout {
-  background: linear-gradient(135deg, #ff6a00, #ff944d);
-  color: #fff;
-  font-weight: 600;
-  padding: 0.6rem 1.4rem;
-  border-radius: 50px;
-  box-shadow: 0 4px 12px rgba(255, 106, 0, 0.25);
-  transition: all 0.3s ease;
-}
-.btn-logout:hover {
-  background: linear-gradient(135deg, #e65a00, #ff7a1f);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(255, 106, 0, 0.35);
-  color: #fff !important;
-}
-
-/* -----------------------------
-   🎖️ بادج الدور
------------------------------- */
-.role-badge {
-  background: #fff3e6;
-  color: #ff6a00;
-  font-weight: 600;
-  border-radius: 50px;
-  padding: 0.45rem 1rem;
-  box-shadow: 0 2px 6px rgba(255, 106, 0, 0.15);
-}
-
-/* -----------------------------
-   📚 القائمة الجانبية (Side)
------------------------------- */
-.sidebar-link {
-  display: block;
-  color: #555;
-  padding: 0.55rem 1rem;
-  border-radius: 8px;
-  font-weight: 500;
-  text-decoration: none;
-  transition: all 0.25s ease;
-}
-.sidebar-link:hover {
-  background: rgba(255, 106, 0, 0.08);
-  color: #ff6a00;
-  transform: translateX(-2px);
-}
-.sidebar-link.active {
-  background: linear-gradient(90deg, #ff6a00 0%, #ff944d 100%);
-  color: #fff !important;
-  box-shadow: 0 3px 10px rgba(255, 106, 0, 0.25);
-}
-
-/* -----------------------------
-   🖥️ Sidebar in desktop
------------------------------- */
-aside {
-  background: #fff;
-  box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.05);
-}
-aside .text-muted {
-  font-weight: 600;
-  color: #999 !important;
-}
-
-/* -----------------------------
-   ⚡ General
------------------------------- */
-body {
-  font-family: 'Cairo', sans-serif;
-  background-color: #fafafa;
-}
-.flash {
-  background: #fff4e6;
-  color: #ff6a00;
-  border: 1px solid #ffd6b3;
-  border-radius: 10px;
-  padding: 0.75rem 1.25rem;
-  box-shadow: 0 3px 6px rgba(255, 106, 0, 0.1);
-}
-
-
+    /* -----------------------------
+      ⚡ General
+    ------------------------------ */
+    body {
+      font-family: 'Cairo', sans-serif;
+    }
+    .flash {
+      background: #fff4e6;
+      color: #ff6a00;
+      border: 1px solid #ffd6b3;
+      border-radius: 10px;
+      padding: 0.75rem 1.25rem;
+      box-shadow: 0 3px 6px rgba(255, 106, 0, 0.1);
+    }
 
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
