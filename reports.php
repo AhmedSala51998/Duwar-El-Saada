@@ -36,7 +36,7 @@
   z-index: -1;
 }
 
-.stat-icon1 {
+.report-card .btn .stat-icon1 {
   width: 50px;
   height: 50px;
   background: rgba(255, 106, 0, 0.1);
@@ -46,17 +46,16 @@
   justify-content: center;
   border-radius: 50%;
   font-size: 1.6rem;
-  position: relative;
   transition: transform 0.6s ease; /* لتدوير الأيقونة عند hover */
 }
 
 /* حركة التدوير عند hover */
-.stat-icon1:hover {
+.report-card .btn .stat-icon1:hover {
   transform: rotate(360deg);
 }
 
 /* النبض المستمر */
-.stat-icon1::after {
+.report-card .btn .stat-icon1::after {
   content: '';
   position: absolute;
   width: 100%;
