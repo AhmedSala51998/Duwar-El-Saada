@@ -231,7 +231,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
       display: flex;
       align-items: center;
       gap: 10px;
-      margin-bottom: 1.5rem;
+  
     }
 
   </style>
