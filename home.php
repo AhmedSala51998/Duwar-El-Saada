@@ -165,7 +165,7 @@
   justify-content: center;
   border-radius: 50%;
   font-size: 1.6rem;
-  margin-right: 10px;
+  margin: 0 auto 10px;
   transition: transform 0.6s ease;
 }
 
