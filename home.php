@@ -151,6 +151,99 @@
 }
 
 
+
+
+/* نبض stat-icon */
+.stat-icon {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  background: rgba(255, 106, 0, 0.1);
+  color: #ff6a00;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 1.6rem;
+  margin-right: 10px;
+  transition: transform 0.6s ease;
+}
+
+/* النبض الخاص بـ stat-icon */
+.stat-icon::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: rgba(255, 106, 0, 0.2);
+  animation: pulse_stat 1.5s infinite;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+/* تعريف نبض stat-icon */
+@keyframes pulse_stat {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+}
+
+/* التدوير عند hover */
+.stat-icon:hover {
+  transform: rotate(360deg);
+}
+
+/* ============================= */
+/* نبض chef-icon منفصل تمامًا */
+/* ============================= */
+.chef-icon {
+  position: absolute;
+  top: -35px;
+  left: 20px;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: #fff;
+  border: 5px solid #ff944d;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 0 0 rgba(255, 148, 77, 0.6);
+  animation: pulse_chef 2s infinite;
+}
+
+.chef-icon img {
+  width: 75%;
+  height: 75%;
+  object-fit: contain;
+}
+
+/* تعريف نبض chef-icon */
+@keyframes pulse_chef {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 148, 77, 0.6);
+  }
+  70% {
+    box-shadow: 0 0 0 15px rgba(255, 148, 77, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 148, 77, 0);
+  }
+}
+
+
 </style>
 
 <?php
