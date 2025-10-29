@@ -234,7 +234,7 @@ if (!empty($_GET['date_type'])) $filterParams .= '&date_type=' . $_GET['date_typ
   <div class="col-md-4 col-sm-6">
     <div class="card report-card p-4 text-center">
       <div class="mb-3 text-primary fs-3">
-        <i class="bi <?= $r['icon'] ?> stat-icon"></i>
+        <i class="bi <?= $r['icon'] ?> stat-icon1"></i>
       </div>
       <h5><?= $r['title'] ?></h5>
       <p><?= $r['desc'] ?></p>
