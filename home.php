@@ -15,7 +15,7 @@
     border-radius: 16px;
     background: #fff;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.09);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
     position: relative;
     overflow: hidden;
   }
