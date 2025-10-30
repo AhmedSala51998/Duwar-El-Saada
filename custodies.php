@@ -367,41 +367,27 @@ $total_balance = $total_in - $total_out;
       </tr>
 
       <?php foreach($transactions as $t):
-          $trans_amount = (float)$t['amount'];
-          $current_balance -= $trans_amount;
-          $type_ar = '';
-          switch($t['type']) {
-              case 'asset': $type_ar = 'أصول'; break;
-              case 'expense': $type_ar = 'مصروفات'; break;
-              case 'purchase': $type_ar = 'مشتريات'; break;
-              default: $type_ar = esc($t['type']); 
-          }
-
-          // هنا من الأفضل نحتفظ بنسخة من الرصيد قبل التعديل
-          $adjusted_balance = $current_balance;
-
-          // الشرط المعدل
-          if ($current_balance >= 0.20) {
-              $display_balance = number_format($current_balance, 2);
-          } else {
-              // في حالة else: نضيف أو نطرح من الرصيد اللي فوق
-              if ($current_balance >= 0) {
-                  $display_balance = number_format($last_balance + $current_balance, 2);
-              } else {
-                  $display_balance = number_format($last_balance + $current_balance, 2); 
-                  // نفس المعادلة لأن current_balance بالسالب فهي فعلياً هتطرح
-              }
-          }
-
-          // بعد ما نحسب الرصيد الجديد نحدث المتغير العام
-          $last_balance = $adjusted_balance;
+        $trans_amount = (float)$t['amount'];
+        $current_balance -= $trans_amount;
+        $last_balance = $current_balance;
+        $type_ar = '';
+        switch($t['type']) {
+            case 'asset': $type_ar = 'أصول'; break;
+            case 'expense': $type_ar = 'مصروفات'; break;
+            case 'purchase': $type_ar = 'مشتريات'; break;
+            default: $type_ar = esc($t['type']); 
+        }
       ?>
       <tr>
         <td></td>
         <td><?= esc($r['person_name']) ?> -- <?= $type_ar ?></td>
         <td></td>
         <td><?= number_format($trans_amount,2) ?></td>
-        <td><?= $display_balance ?></td>
+        <?php if($current_balance >= 0.20){ ?>
+          <td><?= number_format($current_balance,2) ?></td>
+        <?php }else{ ?>
+          <td>0.00</td>
+        <?php } ?>
         <td><?= esc($t['created_at']) ?></td>
         <td><?= esc($t['notes'] ?? '') ?></td>
         <td><?= $type_ar ?></td>
