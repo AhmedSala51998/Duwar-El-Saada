@@ -383,7 +383,11 @@ $total_balance = $total_in - $total_out;
         <td><?= esc($r['person_name']) ?> -- <?= $type_ar ?></td>
         <td></td>
         <td><?= number_format($trans_amount,2) ?></td>
-        <td><?= number_format($current_balance,2) ?></td>
+        <?php if($current_balance >= 0.20){ ?>
+          <td><?= number_format($current_balance,2) ?></td>
+        <?php }else{ ?>
+          <td>0.00</td>
+        <?php } ?>
         <td><?= esc($t['created_at']) ?></td>
         <td><?= esc($t['notes'] ?? '') ?></td>
         <td><?= $type_ar ?></td>
