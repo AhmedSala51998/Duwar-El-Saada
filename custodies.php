@@ -367,7 +367,7 @@ $total_balance = $total_in - $total_out;
       </tr>
 
       <?php foreach($transactions as $t):
-        $trans_amount = (float)$t['amount'];
+        $trans_amount = round((float)$t['amount'], 2);
         $current_balance -= $trans_amount;
         $last_balance = $current_balance;
         $type_ar = '';
@@ -383,11 +383,7 @@ $total_balance = $total_in - $total_out;
         <td><?= esc($r['person_name']) ?> -- <?= $type_ar ?></td>
         <td></td>
         <td><?= number_format($trans_amount,2) ?></td>
-        <?php if($current_balance >= 0.20){ ?>
-          <td><?= number_format($current_balance,2) ?></td>
-        <?php }else{ ?>
-          <td>0.00</td>
-        <?php } ?>
+        <td><?= number_format($current_balance,2) ?></td>
         <td><?= esc($t['created_at']) ?></td>
         <td><?= esc($t['notes'] ?? '') ?></td>
         <td><?= $type_ar ?></td>
