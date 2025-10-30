@@ -377,6 +377,7 @@ $total_balance = $total_in - $total_out;
             case 'purchase': $type_ar = 'مشتريات'; break;
             default: $type_ar = esc($t['type']); 
         }
+        if($current_balance >= 0.50){
       ?>
       <tr>
         <td></td>
@@ -389,6 +390,7 @@ $total_balance = $total_in - $total_out;
         <td><?= $type_ar ?></td>
         <?php if($can_edit): ?><td></td><?php endif; ?>
       </tr>
+      <?php } ?>
       <?php endforeach; ?>
 
     <!-- تعديل -->
