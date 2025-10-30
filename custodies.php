@@ -383,11 +383,25 @@ $total_balance = $total_in - $total_out;
         <td><?= esc($r['person_name']) ?> -- <?= $type_ar ?></td>
         <td></td>
         <td><?= number_format($trans_amount,2) ?></td>
-        <?php if($current_balance >= 0.20){ ?>
-          <td><?= number_format($current_balance,2) ?></td>
-        <?php }else{ ?>
-          <td>0.00</td>
-        <?php } ?>
+        <?php
+          // في حالة الرصيد أقل من 0.20، نحدّد اتجاه التأثير
+          if ($current_balance >= 0.20) {
+              echo '<td>' . number_format($current_balance, 2) . '</td>';
+          } else {
+              // لو السالب - نخصمه من الرصيد السابق
+              if ($trans_amount < 0) {
+                  $current_balance = $last_balance + abs($trans_amount);
+              } else {
+                  // لو موجب - نضيفه على الرصيد السابق
+                  $current_balance = $last_balance - abs($trans_amount);
+              }
+
+              // نضمن ألا ينزل تحت الصفر أبدًا
+              if ($current_balance < 0) $current_balance = 0;
+
+              echo '<td>' . number_format($current_balance, 2) . '</td>';
+          }
+          ?>
         <td><?= esc($t['created_at']) ?></td>
         <td><?= esc($t['notes'] ?? '') ?></td>
         <td><?= $type_ar ?></td>
