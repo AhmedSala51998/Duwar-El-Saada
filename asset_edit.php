@@ -129,7 +129,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
                 }
 
                 if ($amountNeeded > 0) {
-                    throw new Exception('رصيد العهدة غير كافي');
+                    //throw new Exception('رصيد العهدة غير كافي');
+                    $pdo->rollBack();
+                    $_SESSION['toast'] = [
+                    'type' => 'danger',
+                    'msg'  => 'رصيد العهدة غير كافٍ للشخص: ' . htmlspecialchars($newData['payer_name'])
+                    ];
+                    header('Location: ' . BASE_URL . '/assetes.php');
+                    exit;
                 }
             }
 

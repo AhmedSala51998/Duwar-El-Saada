@@ -98,7 +98,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
             }
 
             if ($amountToDeduct > 0) {
-                throw new Exception('رصيد العهدة غير كافي');
+                //throw new Exception('رصيد العهدة غير كافي');
+                $pdo->rollBack();
+                $_SESSION['toast'] = [
+                'type' => 'danger',
+                'msg'  => 'رصيد العهدة غير كافٍ للشخص: ' . htmlspecialchars($payer_name)
+                ];
+                header('Location: ' . BASE_URL . '/expenses.php');
+                exit;
             }
         }
 

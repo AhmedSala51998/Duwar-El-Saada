@@ -88,7 +88,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
 
             $totalAvailable = array_sum(array_column($custodies, 'amount'));
             if($totalAvailable < $amountToDeduct){
-                throw new Exception('رصيد العهدة غير كافي');
+                //throw new Exception('رصيد العهدة غير كافي');
+                $pdo->rollBack();
+                $_SESSION['toast'] = [
+                'type' => 'danger',
+                'msg'  => 'رصيد العهدة غير كافٍ للشخص: ' . htmlspecialchars($payer)
+                ];
+                header('Location: ' . BASE_URL . '/assetes.php');
+                exit;
             }
 
             foreach ($custodies as $custody) {
