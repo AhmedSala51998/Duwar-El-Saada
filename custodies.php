@@ -324,8 +324,9 @@ $total_balance = $total_in - $total_out;
         $out = $in - $remain; if($out < 0) $out = 0;
         $transactions_stmt->execute([$r['id']]);
         $transactions = $transactions_stmt->fetchAll();
-        if(count($transactions) > 0) $current_balance = $in - $out; 
-        else $current_balance = $last_balance + $in - $out;
+        /*if(count($transactions) > 0) $current_balance = $in - $out; 
+        else $current_balance = $last_balance + $in - $out;*/
+        $current_balance = $last_balance + $in - $out;
         $last_balance = $current_balance;
     ?>
       <tr class="table-primary">
