@@ -321,7 +321,7 @@ $total_balance = $total_in - $total_out;
     <?php foreach($rows as $r): 
         $in = (float)$r['main_amount'];  
         $remain = (float)$r['sub_amount'];  
-        $out = $in - $remain; if($out <= 0) $out = 0;
+        $out = $in - $remain; if($out < 0) $out = 0;
         $transactions_stmt->execute([$r['id']]);
         $transactions = $transactions_stmt->fetchAll();
         if(count($transactions) > 0) $current_balance = $in - $out; 
@@ -367,7 +367,7 @@ $total_balance = $total_in - $total_out;
       </tr>
 
       <?php foreach($transactions as $t):
-        $trans_amount = round((float)$t['amount'], 2);
+        $trans_amount = (float)$t['amount'];
         $current_balance -= $trans_amount;
         $last_balance = $current_balance;
         $type_ar = '';
