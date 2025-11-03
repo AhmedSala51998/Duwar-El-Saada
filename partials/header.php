@@ -233,6 +233,52 @@ $current_page = basename($_SERVER['PHP_SELF']);
       gap: 10px;
     }
 
+
+
+    /* تصميم الدور */
+    .role-badge {
+      background-color: #fff3e0; /* خلفية فاتحة */
+      color: #ff8800; /* نص برتقالي */
+      border: 1px solid #ff8800;
+      border-radius: 50px;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+    }
+
+    .role-badge:hover {
+      background-color: #ff8800;
+      color: #fff;
+      box-shadow: 0 0 10px rgba(255,136,0,0.6);
+    }
+
+    /* النقطة البوليتية */
+    .role-bullet {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      background-color: #ff8800;
+      border-radius: 50%;
+      margin-right: 8px;
+      animation: pulse_bullet 1.5s infinite;
+    }
+
+    @keyframes pulse_bullet {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.4); opacity: 0.7; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* إضافة bullet قبل النص */
+    .role-badge .bullet {
+      width: 10px;
+      height: 10px;
+      background-color: #ff8800;
+      border-radius: 50%;
+      margin-right: 8px;
+      display: inline-block;
+      animation: pulse 1.5s infinite;
+    }
+
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
 </head>
