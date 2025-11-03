@@ -136,7 +136,13 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 
 </style>
 <?php endif; ?>
-<?php $rows=$pdo->query("SELECT * FROM users ORDER BY id DESC")->fetchAll(); $can_edit = in_array(current_role(), ['admin','manager']); ?>
+<?php $rows = $pdo->query("
+  SELECT users.*, roles.name AS role_name 
+  FROM users 
+  LEFT JOIN roles ON users.role_id = roles.id 
+  ORDER BY users.id DESC
+")->fetchAll();
+$can_edit = in_array(current_role(), ['admin','manager']); ?>
 <div class="d-flex justify-content-between align-items-center mb-3">
   <h3 class="page-title">
   <span class="stat-icon">
@@ -165,7 +171,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
         <td><?= esc($r['username']) ?></td>
         <td>
           <span class="badge bg-light text-dark border fw-semibold px-3 py-2">
-            <i class="bi bi-person-badge me-1"></i> <?= esc($r['role']) ?>
+            <i class="bi bi-person-badge me-1"></i> <?= esc($r['role_name'] ?? '-') ?>
           </span>
         </td>
         <td class="text-secondary small"><?= esc($r['created_at']) ?></td>

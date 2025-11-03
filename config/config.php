@@ -84,6 +84,36 @@ if (!function_exists('flash')) {
     }
 }
 
+// 🔹 دالة تتحقق هل المستخدم عنده صلاحية معينة
+function has_permission($perm_code) {
+    global $pdo;
+
+    if (!isset($_SESSION['user_id'])) return false;
+
+    // جلب الدور
+    $user_id = $_SESSION['user_id'];
+    $role_id = $pdo->query("SELECT role_id FROM users WHERE id=$user_id")->fetchColumn();
+    if (!$role_id) return false;
+
+    // تحقق من وجود العلاقة بين الدور والصلاحية
+    $stmt = $pdo->prepare("
+        SELECT COUNT(*) FROM role_permissions rp
+        JOIN permissions p ON p.id = rp.permission_id
+        WHERE rp.role_id = ? AND p.code = ?
+    ");
+    $stmt->execute([$role_id, $perm_code]);
+    return $stmt->fetchColumn() > 0;
+}
+
+// 🔹 دالة تمنع الوصول في حالة عدم وجود صلاحية
+function require_permission($perm_code) {
+    if (!has_permission($perm_code)) {
+        $_SESSION['toast'] = ['type'=>'danger','msg'=>'ليس لديك صلاحية للوصول إلى هذه الصفحة.'];
+        redirect('dashboard');
+        exit;
+    }
+}
+
 // ---- Schema (auto-bootstrap) ----
 $pdo->exec("CREATE TABLE IF NOT EXISTS users(
   id INT AUTO_INCREMENT PRIMARY KEY,
