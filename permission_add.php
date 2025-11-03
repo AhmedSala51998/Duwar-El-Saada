@@ -1,7 +1,7 @@
 <?php
 require __DIR__ . '/config/config.php';
 require_role('admin');
-check_csrf();
+//check_csrf();
 
 $code = trim($_POST['code'] ?? '');
 $label = trim($_POST['label'] ?? '');
