@@ -158,10 +158,10 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
   background-color: #ff8800;
   border-radius: 50%;
   margin-right: 8px;
-  animation: pulse 1.5s infinite;
+  animation: pulse_bullet 1.5s infinite;
 }
 
-@keyframes pulse {
+@keyframes pulse_bullet {
   0% { transform: scale(1); opacity: 1; }
   50% { transform: scale(1.4); opacity: 0.7; }
   100% { transform: scale(1); opacity: 1; }
