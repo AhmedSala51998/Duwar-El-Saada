@@ -6,7 +6,7 @@ require_role('admin');
 $id = (int)($_GET['id'] ?? 0);
 if (!$id) {
     $_SESSION['toast'] = ['type' => 'danger', 'msg' => 'لم يتم تحديد الدور المطلوب.'];
-    redirect('roles');
+    header('Location: '.BASE_URL.'/roles.php');
 }
 
 try {
@@ -32,4 +32,4 @@ try {
     $_SESSION['toast'] = ['type' => 'danger', 'msg' => 'حدث خطأ أثناء الحذف: ' . $e->getMessage()];
 }
 
-redirect('roles');
+header('Location: '.BASE_URL.'/roles.php');

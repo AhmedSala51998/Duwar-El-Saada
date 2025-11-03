@@ -3,7 +3,7 @@ require __DIR__ . '/config/config.php';
 require_role('admin');
 
 $id = (int)($_GET['id'] ?? 0);
-if (!$id) redirect('permissions');
+if (!$id) header('Location: '.BASE_URL.'/permissions.php');
 
 try {
     $pdo->beginTransaction();
@@ -21,4 +21,4 @@ try {
     $_SESSION['toast'] = ['type' => 'danger', 'msg' => 'حدث خطأ أثناء الحذف.'];
 }
 
-redirect('permissions');
+header('Location: '.BASE_URL.'/permissions.php');

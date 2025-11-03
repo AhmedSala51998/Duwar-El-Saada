@@ -13,6 +13,28 @@ foreach ($permissions as $p) {
   $grouped_perms[$group][] = $p;
 }
 ?>
+<style>
+  /* ✅ خلي لون الـ checkbox برتقالي عند التحديد */
+  .form-check-input:checked {
+    background-color: #ff8800;
+    border-color: #ff8800;
+  }
+</style>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // 🔸 كل النماذج الخاصة بالأدوار (إضافة + تعديل)
+  document.querySelectorAll('form[action="role_add"], form[action="role_edit"]').forEach(form => {
+    form.addEventListener('submit', function(e) {
+      // احسب عدد الـ checkboxes المتعلّمة داخل النموذج الحالي
+      const checked = form.querySelectorAll('input[type="checkbox"][name="permissions[]"]:checked').length;
+      if (checked === 0) {
+        e.preventDefault(); // امنع الإرسال
+        alert('يجب اختيار صلاحية واحدة على الأقل قبل الحفظ.');
+      }
+    });
+  });
+});
+</script>
 
 <div class="d-flex justify-content-between align-items-center mb-3">
   <h3 class="page-title">

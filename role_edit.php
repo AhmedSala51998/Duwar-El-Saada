@@ -10,7 +10,7 @@ $perms = $_POST['permissions'] ?? [];
 
 if (!$id || $name === '') {
     $_SESSION['toast'] = ['type' => 'danger', 'msg' => 'جميع الحقول مطلوبة.'];
-    redirect('roles');
+    header('Location: '.BASE_URL.'/roles.php');
 }
 
 try {
@@ -36,4 +36,4 @@ try {
     $_SESSION['toast'] = ['type' => 'danger', 'msg' => 'حدث خطأ أثناء التحديث.'];
 }
 
-redirect('roles');
+header('Location: '.BASE_URL.'/roles.php');

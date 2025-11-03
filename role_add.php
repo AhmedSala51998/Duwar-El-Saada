@@ -13,7 +13,7 @@ $perms = $_POST['permissions'] ?? [];
 
 if ($name === '') {
     $_SESSION['toast'] = ['type' => 'danger', 'msg' => 'اسم الدور مطلوب.'];
-    redirect('roles');
+    header('Location: '.BASE_URL.'/roles.php');
 }
 
 try {
@@ -37,4 +37,4 @@ try {
     $_SESSION['toast'] = ['type' => 'danger', 'msg' => 'حدث خطأ أثناء الإضافة.'];
 }
 
-redirect('roles');
+header('Location: '.BASE_URL.'/roles.php');
