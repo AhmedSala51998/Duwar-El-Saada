@@ -1,7 +1,31 @@
 <?php
 require __DIR__.'/partials/header.php';
-require_role('admin');
-
+require_role('admin');?>
+<?php if(!empty($_SESSION['toast'])): 
+  $toast = $_SESSION['toast'];
+  unset($_SESSION['toast']); 
+?>
+<div class="position-fixed top-0 end-0 p-3" style="z-index: 2000">
+  <div id="liveToast" class="toast align-items-center text-bg-<?= $toast['type'] ?> border-0 show fade" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="d-flex">
+      <div class="toast-body">
+        <?= esc($toast['msg']) ?>
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+    </div>
+  </div>
+</div>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    let el = document.getElementById("liveToast");
+    if(el){
+      let toast = new bootstrap.Toast(el, { delay: 2500 });
+      toast.show();
+    }
+  });
+</script>
+<?php endif; ?>
+<?php
 // جلب الصلاحيات
 $permissions = $pdo->query("SELECT * FROM permissions ORDER BY code ASC")->fetchAll();
 ?>
