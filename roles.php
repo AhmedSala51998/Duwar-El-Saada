@@ -46,11 +46,13 @@ foreach ($permissions as $p) {
 </style>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  // 🔸 كل النماذج الخاصة بالأدوار (إضافة + تعديل)
   document.querySelectorAll('form[action="role_add"], form[action="role_edit"]').forEach(form => {
     form.addEventListener('submit', function(e) {
-      // احسب عدد الـ checkboxes المتعلّمة داخل النموذج الحالي
-      const checked = form.querySelectorAll('input[type="checkbox"][name="permissions[]"]:checked').length;
+      // اختر كل checkboxes ضمن هذا النموذج بغض النظر عن كونها مخفية
+      const checkboxes = form.querySelectorAll('input[name="permissions[]"]');
+      let checked = 0;
+      checkboxes.forEach(cb => { if(cb.checked) checked++; });
+
       if (checked === 0) {
         e.preventDefault(); // امنع الإرسال
         alert('يجب اختيار صلاحية واحدة على الأقل قبل الحفظ.');
