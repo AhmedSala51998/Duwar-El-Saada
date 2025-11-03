@@ -1,6 +1,6 @@
 <?php
 require __DIR__.'/partials/header.php';
-require_role('admin'); ?>
+require_role('admin'); require_permission('roles.view'); ?>
 <?php if(!empty($_SESSION['toast'])): 
   $toast = $_SESSION['toast'];
   unset($_SESSION['toast']); 
