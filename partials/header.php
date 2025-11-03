@@ -329,11 +329,13 @@ $current_page = basename($_SERVER['PHP_SELF']);
         </li>
 
         <!-- المستخدمون -->
+        <?php if(has_permission('users.view')): ?>
         <li class="nav-item">
           <a class="nav-link <?= $current_page=='users.php'?'active':'' ?>" href="<?= BASE_URL ?>/users.php">
             <i class="bi bi-people me-1"></i> المستخدمون
           </a>
         </li>
+        <?php endif ?>
 
         <!-- خروج -->
         <li class="nav-item">
