@@ -167,8 +167,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     <?php foreach($grouped_perms as $group => $items): ?>
                       <div class="accordion-item">
                         <h2 class="accordion-header" id="heading<?= $group.$r['id'] ?>">
+                            <?php
+                            $group_names = [
+                            'users' => 'المستخدمين',
+                            'roles' => 'الأدوار',
+                            'settings' => 'الإعدادات',
+                            'permissions' => 'الصلاحيات'
+                            ];
+                            ?>
                           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<?= $group.$r['id'] ?>">
-                            <i class="bi bi-folder me-2 text-orange"></i><?= strtoupper($group) ?>
+                            <i class="bi bi-folder me-2 text-orange"></i><?= $group_names[strtolower($group)] ?? $group ?>
                           </button>
                         </h2>
                         <div id="collapse<?= $group.$r['id'] ?>" class="accordion-collapse collapse" data-bs-parent="#permAccordion<?= $r['id'] ?>">
@@ -291,8 +299,16 @@ document.addEventListener('DOMContentLoaded', function() {
               <?php foreach($grouped_perms as $group => $items): ?>
                 <div class="accordion-item">
                   <h2 class="accordion-header" id="headingAdd<?= $group ?>">
+                    <?php
+                    $group_names = [
+                    'users' => 'المستخدمين',
+                    'roles' => 'الأدوار',
+                    'settings' => 'الإعدادات',
+                    'permissions' => 'الصلاحيات'
+                    ];
+                    ?>
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAdd<?= $group ?>">
-                      <i class="bi bi-folder me-2 text-orange"></i><?= strtoupper($group) ?>
+                      <i class="bi bi-folder me-2 text-orange"></i><?= $group_names[strtolower($group)] ?? $group ?>
                     </button>
                   </h2>
                   <div id="collapseAdd<?= $group ?>" class="accordion-collapse collapse" data-bs-parent="#permAccordionAdd">
