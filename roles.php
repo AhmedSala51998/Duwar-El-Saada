@@ -48,12 +48,10 @@ foreach ($permissions as $p) {
 document.addEventListener('DOMContentLoaded', function() {
   document.querySelectorAll('form[action="role_add"], form[action="role_edit"]').forEach(form => {
     form.addEventListener('submit', function(e) {
-      // اختر كل checkboxes ضمن هذا النموذج بغض النظر عن كونها مخفية
-      const checkboxes = form.querySelectorAll('input[name="permissions[]"]');
-      let checked = 0;
-      checkboxes.forEach(cb => { if(cb.checked) checked++; });
+      const formData = new FormData(form);
+      const permissions = formData.getAll('permissions[]'); // جلب كل القيم المختارة
 
-      if (checked === 0) {
+      if (permissions.length === 0) {
         e.preventDefault(); // امنع الإرسال
         alert('يجب اختيار صلاحية واحدة على الأقل قبل الحفظ.');
       }
@@ -189,47 +187,47 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
       </div>
 
+    <!-- مودال عرض الصلاحيات -->
+    <div class="modal fade" id="viewPerms<?= $r['id'] ?>">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+        <div class="modal-header bg-light">
+            <h5 class="modal-title">صلاحيات الدور: <?= esc($r['name']) ?></h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+            <?php
+            // جلب صلاحيات الدور
+            $stmt = $pdo->prepare("
+            SELECT p.code, p.label
+            FROM permissions p
+            JOIN role_permissions rp ON rp.permission_id = p.id
+            WHERE rp.role_id = ?
+            ORDER BY p.code ASC
+            ");
+            $stmt->execute([$r['id']]);
+            $role_perms_list = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            ?>
+            <?php if($role_perms_list): ?>
+            <ul class="list-group">
+                <?php foreach($role_perms_list as $perm): ?>
+                <li class="list-group-item"><code class="text-orange"><?= esc($perm['code']) ?></code> - <?= esc($perm['label']) ?></li>
+                <?php endforeach; ?>
+            </ul>
+            <?php else: ?>
+            <p class="text-warning">لا توجد صلاحيات لهذا الدور.</p>
+            <?php endif; ?>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+        </div>
+        </div>
+    </div>
+    </div>
+
       <?php endforeach; ?>
     </tbody>
   </table>
-</div>
-
-<!-- مودال عرض الصلاحيات -->
-<div class="modal fade" id="viewPerms<?= $r['id'] ?>">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header bg-light">
-        <h5 class="modal-title">صلاحيات الدور: <?= esc($r['name']) ?></h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <?php
-        // جلب صلاحيات الدور
-        $stmt = $pdo->prepare("
-          SELECT p.code, p.label
-          FROM permissions p
-          JOIN role_permissions rp ON rp.permission_id = p.id
-          WHERE rp.role_id = ?
-          ORDER BY p.code ASC
-        ");
-        $stmt->execute([$r['id']]);
-        $role_perms_list = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        ?>
-        <?php if($role_perms_list): ?>
-          <ul class="list-group">
-            <?php foreach($role_perms_list as $perm): ?>
-              <li class="list-group-item"><code class="text-orange"><?= esc($perm['code']) ?></code> - <?= esc($perm['label']) ?></li>
-            <?php endforeach; ?>
-          </ul>
-        <?php else: ?>
-          <p class="text-warning">لا توجد صلاحيات لهذا الدور.</p>
-        <?php endif; ?>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
-      </div>
-    </div>
-  </div>
 </div>
 
 
