@@ -33,7 +33,24 @@ if (!function_exists('current_user')) {
 }
 
 if (!function_exists('current_role')) {
-    function current_role(){ return $_SESSION['role'] ?? 'staff'; }
+    function current_role() {
+        global $pdo;
+        if (empty($_SESSION['user_id'])) return 'guest';
+
+        $user_id = $_SESSION['user_id'];
+
+        // استعلام يجلب اسم الدور من جدول roles
+        $stmt = $pdo->prepare("
+            SELECT r.name 
+            FROM users u
+            JOIN roles r ON r.id = u.role_id
+            WHERE u.id = ?
+        ");
+        $stmt->execute([$user_id]);
+        $role_name = $stmt->fetchColumn();
+
+        return $role_name ?: 'staff';
+    }
 }
 
 if (!function_exists('require_auth')) {
