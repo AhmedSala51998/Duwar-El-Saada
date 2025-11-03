@@ -53,7 +53,31 @@ document.addEventListener('DOMContentLoaded', function() {
 
       if (permissions.length === 0) {
         e.preventDefault(); // امنع الإرسال
-        alert('يجب اختيار صلاحية واحدة على الأقل قبل الحفظ.');
+
+        // إنشاء Toast ديناميكي
+        const toastContainer = document.createElement('div');
+        toastContainer.className = 'position-fixed top-0 end-0 p-3';
+        toastContainer.style.zIndex = 2000;
+
+        toastContainer.innerHTML = `
+          <div class="toast align-items-center text-bg-warning border-0 show fade" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+              <div class="toast-body">
+                يجب اختيار صلاحية واحدة على الأقل قبل الحفظ.
+              </div>
+              <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+          </div>
+        `;
+
+        document.body.appendChild(toastContainer);
+
+        const toastEl = toastContainer.querySelector('.toast');
+        const bsToast = new bootstrap.Toast(toastEl, { delay: 2500 });
+        bsToast.show();
+
+        // إزالة الـ container بعد انتهاء Toast
+        toastEl.addEventListener('hidden.bs.toast', () => toastContainer.remove());
       }
     });
   });
