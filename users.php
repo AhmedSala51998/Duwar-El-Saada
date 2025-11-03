@@ -134,6 +134,50 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
   margin-bottom: 1.5rem;
 }
 
+/* تصميم الدور */
+.role-badge {
+  background-color: #fff3e0; /* خلفية فاتحة */
+  color: #ff8800; /* نص برتقالي */
+  border: 1px solid #ff8800;
+  border-radius: 50px;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.role-badge:hover {
+  background-color: #ff8800;
+  color: #fff;
+  box-shadow: 0 0 10px rgba(255,136,0,0.6);
+}
+
+/* النقطة البوليتية */
+.role-bullet {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background-color: #ff8800;
+  border-radius: 50%;
+  margin-right: 8px;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.4); opacity: 0.7; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* إضافة bullet قبل النص */
+.role-badge .bullet {
+  width: 10px;
+  height: 10px;
+  background-color: #ff8800;
+  border-radius: 50%;
+  margin-right: 8px;
+  display: inline-block;
+  animation: pulse 1.5s infinite;
+}
+
 </style>
 <?php endif; ?>
 <?php $rows = $pdo->query("
@@ -171,9 +215,15 @@ $can_edit = in_array(current_role(), ['admin','manager']); ?>
       <tr>
         <td class="fw-bold text-muted"><?= $r['id'] ?></td>
         <td><?= esc($r['username']) ?></td>
-        <td>
+        <!--<td>
           <span class="badge bg-light text-dark border fw-semibold px-3 py-2">
             <i class="bi bi-person-badge me-1"></i> <?= esc($r['role_name'] ?? '-') ?>
+          </span>
+        </td>-->
+        <td>
+          <span class="role-badge position-relative d-inline-flex align-items-center px-3 py-2 fw-semibold">
+            <span class="bullet"></span>
+            <i class="bi bi-person-badge me-2"></i> <?= esc($r['role_name'] ?? '-') ?>
           </span>
         </td>
         <td class="text-secondary small"><?= esc($r['created_at']) ?></td>
