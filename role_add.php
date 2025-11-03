@@ -2,6 +2,10 @@
 require __DIR__ . '/config/config.php';
 require_role('admin');
 check_csrf();
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 
 $name = trim($_POST['name'] ?? '');
 $desc = trim($_POST['description'] ?? '');
