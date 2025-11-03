@@ -223,11 +223,23 @@ $can_edit = in_array(current_role(), ['admin','manager']); ?>
             <label class="form-label">اسم المستخدم</label>
             <input name="username" class="form-control" value="<?= esc($r['username']) ?>" required>
           </div>
-          <div>
+          <!--<div>
             <label class="form-label">الدور</label>
             <select name="role" class="form-select">
               <?php foreach(['admin','manager','staff'] as $ro): ?>
                 <option <?= $r['role']===$ro?'selected':'' ?>><?= $ro ?></option>
+              <?php endforeach; ?>
+            </select>
+          </div>-->
+          <div>
+            <label class="form-label">الدور</label>
+            <?php $roles = $pdo->query("SELECT * FROM roles ORDER BY id")->fetchAll(); ?>
+            <select name="role_id" class="form-select" required>
+              <option value="">اختر الدور</option>
+              <?php foreach ($roles as $ro): ?>
+                <option value="<?= $ro['id'] ?>" <?= $r['role_id'] == $ro['id'] ? 'selected' : '' ?>>
+                  <?= esc($ro['name']) ?>
+                </option>
               <?php endforeach; ?>
             </select>
           </div>
@@ -291,10 +303,16 @@ $can_edit = in_array(current_role(), ['admin','manager']); ?>
           </div>
           <div>
             <label class="form-label">الدور</label>
-            <select name="role" class="form-select">
+            <!--<select name="role" class="form-select">
               <option>admin</option>
               <option>manager</option>
               <option>staff</option>
+            </select>-->
+            <?php $roles = $pdo->query("SELECT * FROM roles ORDER BY id")->fetchAll(); ?>
+            <select name="role_id" class="form-select">
+              <?php foreach($roles as $ro): ?>
+                <option value="<?= $ro['id'] ?>"><?= esc($ro['name']) ?></option>
+              <?php endforeach; ?>
             </select>
           </div>
         </div>

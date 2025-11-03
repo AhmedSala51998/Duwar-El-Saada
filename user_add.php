@@ -1,33 +1,59 @@
 <?php
-require __DIR__.'/config/config.php'; 
+require __DIR__ . '/config/config.php'; 
 require_role('admin');
 
-if($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? '')) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? '')) {
     $u = trim($_POST['username']); 
     $p = (string)($_POST['password']); 
-    $r = $_POST['role'] ?? 'staff';
+    $role_id = (int)($_POST['role_id'] ?? 0);
 
-    // التحقق من وجود مستخدم بنفس الاسم
-    $check = $pdo->prepare("SELECT COUNT(*) FROM users WHERE username=?");
-    $check->execute([$u]);
-    $exists = $check->fetchColumn();
-
-    if ($exists > 0) {
+    // تحقق من القيم المطلوبة
+    if ($u === '' || $p === '' || $role_id === 0) {
         $_SESSION['toast'] = [
-            'type' => 'warning',
-            'msg'  => 'هناك مستخدم بنفس الاسم موجود بالفعل'
+            'type' => 'danger',
+            'msg'  => 'جميع الحقول مطلوبة.'
         ];
-    } else {
-        // إنشاء المستخدم
-        $pdo->prepare("INSERT INTO users(username,password_hash,role) VALUES(?,?,?)")
-            ->execute([$u, password_hash($p, PASSWORD_DEFAULT), $r]);
+        header('Location: ' . BASE_URL . '/users.php');
+        exit;
+    }
 
+    try {
+        // التحقق من وجود مستخدم بنفس الاسم
+        $check = $pdo->prepare("SELECT COUNT(*) FROM users WHERE username = ?");
+        $check->execute([$u]);
+        $exists = $check->fetchColumn();
+
+        if ($exists > 0) {
+            $_SESSION['toast'] = [
+                'type' => 'warning',
+                'msg'  => 'هناك مستخدم بنفس الاسم موجود بالفعل.'
+            ];
+        } else {
+            // إنشاء المستخدم داخل معاملة (Transaction)
+            $pdo->beginTransaction();
+
+            $stmt = $pdo->prepare("INSERT INTO users (username, password_hash, role_id) VALUES (?, ?, ?)");
+            $stmt->execute([
+                $u,
+                password_hash($p, PASSWORD_DEFAULT),
+                $role_id
+            ]);
+
+            $pdo->commit();
+
+            $_SESSION['toast'] = [
+                'type' => 'success',
+                'msg'  => 'تم إنشاء المستخدم بنجاح.'
+            ];
+        }
+    } catch (PDOException $e) {
+        $pdo->rollBack();
         $_SESSION['toast'] = [
-            'type' => 'success',
-            'msg'  => 'تم إنشاء المستخدم'
+            'type' => 'danger',
+            'msg'  => 'حدث خطأ أثناء إضافة المستخدم.'
         ];
     }
 }
 
-header('Location: '.BASE_URL.'/users.php');
+header('Location: ' . BASE_URL . '/users.php');
 exit;
