@@ -1,6 +1,6 @@
 <?php
 require __DIR__ . '/config/config.php';
-require_role('admin');
+require_permission('permissions.add');
 // check_csrf();
 
 $code  = trim($_POST['code'] ?? '');

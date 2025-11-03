@@ -1,6 +1,6 @@
 <?php
 require __DIR__ . '/config/config.php';
-require_role('admin');
+require_permission('permissions.delete');
 
 $id = (int)($_GET['id'] ?? 0);
 if (!$id) header('Location: '.BASE_URL.'/permissions.php');

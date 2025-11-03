@@ -1,6 +1,6 @@
 <?php
 require __DIR__ . '/config/config.php';
-require_role('admin');
+require_permission('roles.delete');
 
 // جلب معرف الدور
 $id = (int)($_GET['id'] ?? 0);

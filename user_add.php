@@ -1,6 +1,6 @@
 <?php
 require __DIR__ . '/config/config.php'; 
-require_role('admin');
+require_permission('users.add');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? '')) {
     $u = trim($_POST['username']); 

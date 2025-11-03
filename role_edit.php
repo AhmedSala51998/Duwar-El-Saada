@@ -1,6 +1,6 @@
 <?php
 require __DIR__ . '/config/config.php';
-require_role('admin');
+require_permission('roles.edit');
 //check_csrf();
 
 $id = (int)($_POST['id'] ?? 0);
