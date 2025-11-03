@@ -116,7 +116,6 @@ document.addEventListener('DOMContentLoaded', function() {
         <td><?= esc($r['description'] ?? '-') ?></td>
         <td><span class="badge bg-light text-dark"><?= $count ?></span></td>
         <td class="text-secondary small"><?= esc($r['created_at']) ?></td>
-        <?php if(has_permission('roles.processes')): ?>
         <td>
             <?php if(has_permission('roles.view_row')): ?>
             <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#viewPerms<?= $r['id'] ?>">
@@ -130,7 +129,7 @@ document.addEventListener('DOMContentLoaded', function() {
           <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete<?= $r['id'] ?>"><i class="bi bi-trash"></i></button>
           <?php endif ?>
         </td>
-        <?php endif ?>
+        
       </tr>
 
       <!-- مودال تعديل -->
