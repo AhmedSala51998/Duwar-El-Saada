@@ -126,7 +126,7 @@ function has_permission($perm_code) {
 function require_permission($perm_code) {
     if (!has_permission($perm_code)) {
         $_SESSION['toast'] = ['type'=>'danger','msg'=>'ليس لديك صلاحية للوصول إلى هذه الصفحة.'];
-        redirect('dashboard');
+        header('Location: ' . BASE_URL . '/home.php');
         exit;
     }
 }
