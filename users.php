@@ -150,7 +150,9 @@ $can_edit = in_array(current_role(), ['admin','manager']); ?>
   </span>
    المستخدمون
  </h3>
+  <?php if(has_permission('users.add')): ?>
   <button class="btn btn-orange" data-bs-toggle="modal" data-bs-target="#add"><i class="bi bi-plus-lg"></i> مستخدم</button>
+  <?php endif ?>
 </div>
 
 <div class="table-responsive shadow-sm rounded-3 border bg-white p-2">
@@ -161,7 +163,7 @@ $can_edit = in_array(current_role(), ['admin','manager']); ?>
         <th>اسم المستخدم</th>
         <th>الدور</th>
         <th>تاريخ الإنشاء</th>
-        <?php if($can_edit): ?><th>عمليات</th><?php endif; ?>
+        <?php if(has_permission('users.processes')): ?><th>عمليات</th><?php endif; ?>
       </tr>
     </thead>
     <tbody class="text-center">
@@ -175,7 +177,7 @@ $can_edit = in_array(current_role(), ['admin','manager']); ?>
           </span>
         </td>
         <td class="text-secondary small"><?= esc($r['created_at']) ?></td>
-        <?php if($can_edit): ?>
+        <?php if(has_permission('users.processes')): ?>
         <td class="text-center">
           <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#actionsUser<?= $r['id'] ?>">
             <i class="bi bi-gear-fill"></i>
@@ -191,13 +193,17 @@ $can_edit = in_array(current_role(), ['admin','manager']); ?>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="إغلاق"></button>
                 </div>
                 <div class="modal-body text-center">
+                  <?php if(has_permission('users.edit')): ?>
                   <button class="btn btn-outline-warning w-100 mb-2" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#e<?= $r['id'] ?>">
                     <i class="bi bi-pencil me-2"></i> تعديل
                   </button>
+                  <?php endif; ?>
+                  <?php if(has_permission('users.delete')): ?>
                   <?php if($r['id'] != $_SESSION['user_id']): ?>
                   <button class="btn btn-outline-danger w-100" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#d<?= $r['id'] ?>">
                     <i class="bi bi-trash me-2"></i> حذف
                   </button>
+                  <?php endif; ?>
                   <?php endif; ?>
                 </div>
               </div>

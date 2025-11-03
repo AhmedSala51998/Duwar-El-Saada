@@ -35,7 +35,9 @@ $permissions = $pdo->query("SELECT * FROM permissions ORDER BY code ASC")->fetch
     <span class="stat-icon"><i class="bi bi-lock"></i></span>
     إدارة الصلاحيات
   </h3>
+  <?php if(has_permission('permissions.add')): ?>
   <button class="btn btn-orange" data-bs-toggle="modal" data-bs-target="#addPerm"><i class="bi bi-plus-lg"></i> إضافة صلاحية</button>
+  <?php endif ?>
 </div>
 
 <div class="table-responsive shadow-sm rounded-3 border bg-white p-2">
@@ -46,7 +48,7 @@ $permissions = $pdo->query("SELECT * FROM permissions ORDER BY code ASC")->fetch
         <th>الكود</th>
         <th>الاسم الظاهر</th>
         <th>الوصف</th>
-        <th>عمليات</th>
+        <?php if(has_permission('permissions.processes')): ?><th>عمليات</th><?php endif ?>
       </tr>
     </thead>
     <tbody>
@@ -56,10 +58,16 @@ $permissions = $pdo->query("SELECT * FROM permissions ORDER BY code ASC")->fetch
         <td><code class="text-orange"><?= esc($p['code']) ?></code></td>
         <td><?= esc($p['label']) ?></td>
         <td><?= esc($p['description'] ?? '-') ?></td>
+        <?php if(has_permission('permissions.processes')): ?>
         <td>
+          <?php if(has_permission('permissions.edit')): ?>
           <button class="btn btn-sm btn-outline-warning" data-bs-toggle="modal" data-bs-target="#edit<?= $p['id'] ?>"><i class="bi bi-pencil"></i></button>
+          <?php endif ?>
+          <?php if(has_permission('permissions.delete')): ?>
           <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete<?= $p['id'] ?>"><i class="bi bi-trash"></i></button>
+          <?php endif ?>
         </td>
+        <?php endif ?>
       </tr>
 
       <!-- مودال تعديل -->

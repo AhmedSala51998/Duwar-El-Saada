@@ -89,7 +89,9 @@ document.addEventListener('DOMContentLoaded', function() {
     <span class="stat-icon"><i class="bi bi-shield-lock"></i></span>
     الأدوار والصلاحيات
   </h3>
+  <?php if(has_permission('roles.add')): ?>
   <button class="btn btn-orange" data-bs-toggle="modal" data-bs-target="#addRole"><i class="bi bi-plus-lg"></i> إضافة دور</button>
+  <?php endif ?>
 </div>
 
 <div class="table-responsive shadow-sm rounded-3 border bg-white p-2">
@@ -101,7 +103,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <th>الوصف</th>
         <th>عدد الصلاحيات</th>
         <th>تاريخ الإنشاء</th>
-        <th>عمليات</th>
+        <?php if(has_permission('roles.processes')): ?><th>عمليات</th><?php endif ?>
       </tr>
     </thead>
     <tbody>
@@ -114,13 +116,21 @@ document.addEventListener('DOMContentLoaded', function() {
         <td><?= esc($r['description'] ?? '-') ?></td>
         <td><span class="badge bg-light text-dark"><?= $count ?></span></td>
         <td class="text-secondary small"><?= esc($r['created_at']) ?></td>
+        <?php if(has_permission('roles.processes')): ?>
         <td>
+            <?php if(has_permission('roles.view_row')): ?>
             <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#viewPerms<?= $r['id'] ?>">
                 <i style="color:#FFF" class="bi bi-eye"></i>
             </button>
+            <?php endif ?>
+          <?php if(has_permission('roles.edit')): ?>
           <button class="btn btn-sm btn-outline-warning" data-bs-toggle="modal" data-bs-target="#edit<?= $r['id'] ?>"><i class="bi bi-pencil"></i></button>
+          <?php endif ?>
+          <?php if(has_permission('roles.delete')): ?>
           <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete<?= $r['id'] ?>"><i class="bi bi-trash"></i></button>
+          <?php endif ?>
         </td>
+        <?php endif ?>
       </tr>
 
       <!-- مودال تعديل -->
