@@ -5,7 +5,7 @@ require_permission('permissions.add');
 
 $code  = trim($_POST['code'] ?? '');
 $label = trim($_POST['label'] ?? '');
-$desc  = trim($_POST['description'] ?? '');
+$desc  = trim($_POST['description'] ?? 'NULL');
 
 if ($code === '' || $label === '') {
     $_SESSION['toast'] = ['type' => 'danger', 'msg' => 'الرجاء إدخال الكود والاسم.'];

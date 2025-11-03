@@ -6,7 +6,7 @@ require_permission('permissions.edit');
 $id    = (int)($_POST['id'] ?? 0);
 $code  = trim($_POST['code'] ?? '');
 $label = trim($_POST['label'] ?? '');
-$desc  = trim($_POST['description'] ?? '');
+$desc  = trim($_POST['description'] ?? 'NULL');
 
 if (!$id || $code === '' || $label === '') {
     $_SESSION['toast'] = ['type' => 'danger', 'msg' => 'جميع الحقول مطلوبة.'];
