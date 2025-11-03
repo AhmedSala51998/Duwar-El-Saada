@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <td class="text-secondary small"><?= esc($r['created_at']) ?></td>
         <td>
             <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#viewPerms<?= $r['id'] ?>">
-                <i class="bi bi-eye"></i>
+                <i style="color:#FFF" class="bi bi-eye"></i>
             </button>
           <button class="btn btn-sm btn-outline-warning" data-bs-toggle="modal" data-bs-target="#edit<?= $r['id'] ?>"><i class="bi bi-pencil"></i></button>
           <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete<?= $r['id'] ?>"><i class="bi bi-trash"></i></button>
