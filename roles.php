@@ -367,5 +367,24 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
   </div>
 </div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // عند الضغط على زر "تحديد الكل"
+  document.querySelectorAll('.select-all').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const target = document.getElementById(this.dataset.target);
+      target.querySelectorAll('input[type="checkbox"]').forEach(chk => chk.checked = true);
+    });
+  });
+
+  // عند الضغط على زر "إلغاء الكل"
+  document.querySelectorAll('.unselect-all').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const target = document.getElementById(this.dataset.target);
+      target.querySelectorAll('input[type="checkbox"]').forEach(chk => chk.checked = false);
+    });
+  });
+});
+</script>
 
 <?php require __DIR__.'/partials/footer.php'; ?>
