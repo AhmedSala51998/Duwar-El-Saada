@@ -175,7 +175,7 @@ $permissions = $pdo->query("SELECT * FROM permissions ORDER BY code ASC")->fetch
 <div class="modal fade" id="addPermGroup">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
-      <form method="post" action="permission_add_group.php">
+      <form method="post" action="permission_add_group">
         <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
         <div class="modal-header bg-light">
           <h5 class="modal-title"><i class="bi bi-plus-square-dotted me-1"></i> إضافة مجموعة صلاحيات</h5>
