@@ -11,10 +11,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $descriptions = $_POST['descriptions'] ?? [];
     $csrf = $_POST['_csrf'] ?? '';
 
-    if (!verify_csrf($csrf)) {
+    /*if (!verify_csrf($csrf)) {
         $_SESSION['toast'] = ['type'=>'danger','msg'=>'رمز الأمان غير صالح.'];
         header('Location: ' . BASE_URL . '/permissions.php');
-    }
+    }*/
 
     $count = 0;
     $stmt = $pdo->prepare("INSERT INTO permissions (code, label, description) VALUES (?, ?, ?)");
