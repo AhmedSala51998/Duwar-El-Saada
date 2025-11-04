@@ -36,6 +36,7 @@ $permissions = $pdo->query("SELECT * FROM permissions ORDER BY code ASC")->fetch
     إدارة الصلاحيات
   </h3>
   <div class="d-flex gap-2">
+    <input type="text" id="searchInput" class="form-control form-control-sm" placeholder="بحث عن صلاحية..." style="width: 220px;">
     <?php if(has_permission('permissions.add')): ?>
     <button class="btn btn-orange" data-bs-toggle="modal" data-bs-target="#addPerm">
       <i class="bi bi-plus-lg"></i> إضافة صلاحية
@@ -241,6 +242,21 @@ document.addEventListener('DOMContentLoaded', function() {
       const row = e.target.closest('tr');
       if(permTable.rows.length > 1) row.remove();
     }
+  });
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const searchInput = document.getElementById("searchInput");
+  const tableRows = document.querySelectorAll("tbody tr");
+
+  searchInput.addEventListener("keyup", function() {
+    const term = this.value.toLowerCase().trim();
+
+    tableRows.forEach(row => {
+      const text = row.textContent.toLowerCase();
+      row.style.display = text.includes(term) ? "" : "none";
+    });
   });
 });
 </script>
