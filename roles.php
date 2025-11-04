@@ -169,10 +169,16 @@ document.addEventListener('DOMContentLoaded', function() {
                         <h2 class="accordion-header" id="heading<?= $group.$r['id'] ?>">
                             <?php
                             $group_names = [
-                            'users' => 'المستخدمين',
-                            'roles' => 'الأدوار',
-                            'settings' => 'الإعدادات',
-                            'permissions' => 'الصلاحيات'
+                                'users' => 'المستخدمين',
+                                'roles' => 'الأدوار',
+                                'settings' => 'الإعدادات',
+                                'permissions' => 'الصلاحيات',
+                                'purchases' => 'المشتريات',
+                                'orders' => 'الطلبات',
+                                'custodies' => 'العهد',
+                                'assets' => 'الأصول',
+                                'expenses' => 'المصروفات',
+                                'reports' => 'التقارير',
                             ];
                             ?>
                           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<?= $group.$r['id'] ?>">
@@ -301,10 +307,16 @@ document.addEventListener('DOMContentLoaded', function() {
                   <h2 class="accordion-header" id="headingAdd<?= $group ?>">
                     <?php
                     $group_names = [
-                    'users' => 'المستخدمين',
-                    'roles' => 'الأدوار',
-                    'settings' => 'الإعدادات',
-                    'permissions' => 'الصلاحيات'
+                        'users' => 'المستخدمين',
+                        'roles' => 'الأدوار',
+                        'settings' => 'الإعدادات',
+                        'permissions' => 'الصلاحيات',
+                        'purchases' => 'المشتريات',
+                        'orders' => 'الطلبات',
+                        'custodies' => 'العهد',
+                        'assets' => 'الأصول',
+                        'expenses' => 'المصروفات',
+                        'reports' => 'التقارير',
                     ];
                     ?>
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAdd<?= $group ?>">
