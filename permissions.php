@@ -36,7 +36,14 @@ $permissions = $pdo->query("SELECT * FROM permissions ORDER BY code ASC")->fetch
     إدارة الصلاحيات
   </h3>
   <?php if(has_permission('permissions.add')): ?>
-  <button class="btn btn-orange" data-bs-toggle="modal" data-bs-target="#addPerm"><i class="bi bi-plus-lg"></i> إضافة صلاحية</button>
+  <div class="d-flex gap-2">
+    <button class="btn btn-orange" data-bs-toggle="modal" data-bs-target="#addPerm">
+      <i class="bi bi-plus-lg"></i> إضافة صلاحية
+    </button>
+    <button class="btn btn-outline-orange" data-bs-toggle="modal" data-bs-target="#addPermGroup">
+      <i class="bi bi-plus-square-dotted"></i> إضافة مجموعة صلاحيات
+    </button>
+  </div>
   <?php endif ?>
 </div>
 
@@ -162,4 +169,77 @@ $permissions = $pdo->query("SELECT * FROM permissions ORDER BY code ASC")->fetch
   </div>
 </div>
 
+<!-- مودال إضافة مجموعة صلاحيات -->
+<div class="modal fade" id="addPermGroup">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form method="post" action="permission_add_group.php">
+        <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
+        <div class="modal-header bg-light">
+          <h5 class="modal-title"><i class="bi bi-plus-square-dotted me-1"></i> إضافة مجموعة صلاحيات</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+          <p class="small text-muted mb-3">
+            يمكنك إضافة عدة صلاحيات دفعة واحدة. استخدم زر <strong>+</strong> لإضافة صف جديد.
+          </p>
+
+          <div class="table-responsive">
+            <table class="table table-bordered align-middle text-center mb-0" id="permTable">
+              <thead class="table-light">
+                <tr>
+                  <th style="width:25%">الكود (code)</th>
+                  <th style="width:25%">الاسم الظاهر (label)</th>
+                  <th style="width:40%">الوصف</th>
+                  <th style="width:10%">إزالة</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><input type="text" name="codes[]" class="form-control" placeholder="مثال: users.create" required></td>
+                  <td><input type="text" name="labels[]" class="form-control" placeholder="مثال: إنشاء مستخدم" required></td>
+                  <td><input type="text" name="descriptions[]" class="form-control" placeholder="اختياري..."></td>
+                  <td><button type="button" class="btn btn-outline-danger btn-sm remove-row"><i class="bi bi-x-lg"></i></button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="text-end mt-3">
+            <button type="button" class="btn btn-sm btn-outline-success" id="addRow"><i class="bi bi-plus-lg"></i> إضافة صف جديد</button>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-orange">حفظ جميع الصلاحيات</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const addRowBtn = document.getElementById('addRow');
+  const permTable = document.getElementById('permTable').querySelector('tbody');
+
+  addRowBtn.addEventListener('click', () => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td><input type="text" name="codes[]" class="form-control" placeholder="مثال: users.edit" required></td>
+      <td><input type="text" name="labels[]" class="form-control" placeholder="مثال: تعديل مستخدم" required></td>
+      <td><input type="text" name="descriptions[]" class="form-control" placeholder="اختياري..."></td>
+      <td><button type="button" class="btn btn-outline-danger btn-sm remove-row"><i class="bi bi-x-lg"></i></button></td>
+    `;
+    permTable.appendChild(row);
+  });
+
+  permTable.addEventListener('click', function(e) {
+    if(e.target.closest('.remove-row')) {
+      const row = e.target.closest('tr');
+      if(permTable.rows.length > 1) row.remove();
+    }
+  });
+});
+</script>
 <?php require __DIR__.'/partials/footer.php'; ?>
