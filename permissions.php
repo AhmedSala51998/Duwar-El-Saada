@@ -40,7 +40,7 @@ $permissions = $pdo->query("SELECT * FROM permissions ORDER BY code ASC")->fetch
     <button class="btn btn-orange" data-bs-toggle="modal" data-bs-target="#addPerm">
       <i class="bi bi-plus-lg"></i> إضافة صلاحية
     </button>
-    <button class="btn btn-outline-orange" data-bs-toggle="modal" data-bs-target="#addPermGroup">
+    <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#addPermGroup">
       <i class="bi bi-plus-square-dotted"></i> إضافة مجموعة صلاحيات
     </button>
   </div>
