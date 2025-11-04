@@ -48,7 +48,6 @@ foreach($rows as $r){
   ];
 }
 ?>
-<?php require __DIR__.'/partials/header.php'; ?>
 
 <style>
 .custom-file-upload{border:2px dashed #ccc;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;padding:20px;text-align:center;transition:all .3s;background:#f9f9f9}
