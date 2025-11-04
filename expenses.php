@@ -1,6 +1,9 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 require __DIR__.'/config/config.php';
-//require_role(['admin','manager']);
+require_role(['admin','manager']);
 
 // جلب العهد
 $custodies = $pdo->query("SELECT person_name, SUM(amount) as balance FROM custodies GROUP BY person_name")->fetchAll(PDO::FETCH_KEY_PAIR);
