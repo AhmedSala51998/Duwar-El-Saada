@@ -1,6 +1,7 @@
 <?php
 require __DIR__.'/config/config.php'; 
 require_auth();
+require_permission('purchases.print_pdf');
 
 ini_set('display_errors', 1);
 error_reporting(E_ALL);

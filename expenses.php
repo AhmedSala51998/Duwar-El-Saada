@@ -3,7 +3,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 require __DIR__.'/partials/header.php';
-require_role(['admin','manager']);
+require_permission('expenses.view');
 
 // جلب العهد
 $custodies = $pdo->query("SELECT person_name, SUM(amount) as balance FROM custodies GROUP BY person_name")->fetchAll(PDO::FETCH_KEY_PAIR);
@@ -34,7 +34,7 @@ $stmt = $pdo->prepare($q);
 $stmt->execute($params); 
 $rows = $stmt->fetchAll();
 
-$can_edit = in_array(current_role(), ['admin','manager']);
+//$can_edit = in_array(current_role(), ['admin','manager']);
 
 // تحضير JS لحقول التعديل
 $editRowsJs = [];
@@ -241,7 +241,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
       <input class="form-control" name="kw" placeholder="بحث بالمصروفات" value="<?= esc($kw) ?>">
       <button class="btn btn-outline-secondary">بحث</button>
     </form>
-    <?php if($can_edit): ?>
+    <?php if(has_permission('expenses.add')): ?>
       <button class="btn btn-orange" data-bs-toggle="modal" data-bs-target="#addExpense"><i class="bi bi-plus-lg"></i> إضافة</button>
     <?php endif; ?>
   </div>
@@ -261,7 +261,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
         <th>الإجمالي بعد الضريبة</th>
         <th>الدافع</th>
         <th>مصدر الدفع</th>
-        <?php if($can_edit): ?><th>عمليات</th><?php endif; ?>
+        <?php if(has_permission('expenses.processes')): ?><th>عمليات</th><?php endif; ?>
       </tr>
     </thead>
 
@@ -298,7 +298,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
         <td><?= esc($r['payer_name'] ?? '') ?></td>
         <td><?= esc($r['payment_source'] ?? '') ?></td>
 
-        <?php if($can_edit): ?>
+        <?php if(has_permission('expenses.processes')): ?>
         <td class="text-center">
           <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#actionsExpense<?= $r['id'] ?>">
             <i class="bi bi-gear-fill"></i>
@@ -312,9 +312,15 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
                   <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body text-center">
+                  <?php if(has_permission('custodies.print')): ?>
                   <a class="btn btn-outline-primary w-100 mb-2" href="invoice_expense?id=<?= $r['id'] ?>"><i class="bi bi-printer me-2"></i> طباعة</a>
+                  <?php endif ?>
+                  <?php if(has_permission('custodies.edit')): ?>
                   <button class="btn btn-outline-warning w-100 mb-2" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#edit<?= $r['id'] ?>"><i class="bi bi-pencil me-2"></i> تعديل</button>
+                  <?php endif ?>
+                  <?php if(has_permission('custodies.delete')): ?>
                   <button class="btn btn-outline-danger w-100" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="<?= $r['id'] ?>" data-name="<?= esc($r['main_expense']) ?>"><i class="bi bi-trash me-2"></i> حذف</button>
+                  <?php endif ?>
                 </div>
               </div>
             </div>
@@ -325,7 +331,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 
 
 <!-- مودال التعديل -->
-<?php if($can_edit): ?>
+<?php if(has_permission('expenses.edit')): ?>
 <div class="modal fade" id="edit<?= $r['id'] ?>">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -468,7 +474,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 <?php endif; ?>
 
 <!-- مودال الحذف -->
-<?php if($can_edit): ?>
+<?php if(has_permission('expenses.delete')): ?>
 <!-- مودال واحد فقط -->
 <div class="modal fade" id="deleteModal" tabindex="-1">
   <div class="modal-dialog">
@@ -494,7 +500,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 <?php endif; ?>
 
 <!-- مودال الإضافة -->
-<?php if($can_edit): ?>
+<?php if(has_permission('expenses.add')): ?>
 <div class="modal fade" id="addExpense">
   <div class="modal-dialog">
     <div class="modal-content">

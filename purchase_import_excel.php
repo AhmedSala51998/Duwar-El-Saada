@@ -2,7 +2,7 @@
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 require __DIR__ . '/config/config.php';
-require_role(['admin','manager']);
+require_permission('purchases.addExcel');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? '')) {
 

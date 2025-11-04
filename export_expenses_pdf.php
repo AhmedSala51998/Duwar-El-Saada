@@ -1,6 +1,7 @@
 <?php
 require __DIR__.'/config/config.php'; 
 require_auth();
+require_permission('reports.report_expenses_pdf');
 
 $date_type = $_GET['date_type'] ?? '';
 $from_date = $_GET['from_date'] ?? '';

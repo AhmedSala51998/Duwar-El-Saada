@@ -1,4 +1,4 @@
-<?php require __DIR__.'/partials/header.php'; ?>
+<?php require __DIR__.'/partials/header.php'; require_permission('custodies.view'); ?>
 <style>
   .pagination .page-link {
     color: #ff6a00;
@@ -239,7 +239,7 @@ $rows=$s->fetchAll();
 // جلب الحركات لكل عهدة
 $transactions_stmt = $pdo->prepare("SELECT * FROM custody_transactions WHERE custody_id=? ORDER BY created_at ASC");
 
-$can_edit = in_array(current_role(), ['admin','manager']);
+//$can_edit = in_array(current_role(), ['admin','manager']);
 $options = ['بسام','فيصل المطيري','مؤسسة','شركة'];
 ?>
 
@@ -260,9 +260,13 @@ $options = ['بسام','فيصل المطيري','مؤسسة','شركة'];
       </select>
       <button class="btn btn-outline-secondary">بحث</button>
     </form>
+    <?php if(has_permission('custodies.print_excel')): ?>
     <a class="btn btn-outline-dark" href="export_custodies_excel.php?kw=<?=urlencode($kw)?>"><i class="bi bi-file-earmark-spreadsheet"></i> Excel</a>
+    <?php endif ?>
+    <?php if(has_permission('custodies.print_pdf')): ?>
     <a class="btn btn-outline-dark" href="export_custodies_pdf.php?kw=<?=urlencode($kw)?>"><i class="bi bi-filetype-pdf"></i> PDF</a>
-    <?php if($can_edit): ?>
+    <?php endif ?>
+    <?php if(has_permission('custodies.add')): ?>
       <button class="btn btn-orange" data-bs-toggle="modal" data-bs-target="#add"><i class="bi bi-plus-lg"></i> إضافة</button>
     <?php endif; ?>
   </div>
@@ -314,7 +318,7 @@ $total_balance = $total_in - $total_out;
         <th>الرصيد</th>
         <th>التاريخ</th>
         <th>ملاحظات</th>
-        <?php if($can_edit): ?><th>عمليات</th><?php endif; ?>
+        <?php if(has_permission('custodies.processes')): ?><th>عمليات</th><?php endif; ?>
       </tr>
     </thead>
     <tbody class="text-center">
@@ -336,6 +340,7 @@ $total_balance = $total_in - $total_out;
         <td><?= number_format($current_balance,2) ?></td>
         <td><?= esc($r['taken_at']) ?></td>
         <td><?= esc($r['notes']) ?></td>
+        <?php if(has_permission('custodies.processes')): ?>
         <td class="text-center">
           <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#actions<?= $r['id'] ?>">
             <i class="bi bi-gear"></i>
@@ -349,21 +354,28 @@ $total_balance = $total_in - $total_out;
                 </div>
                 <div class="modal-body text-center">
                   <div class="d-grid gap-2">
+                    <?php if(has_permission('custodies.print')): ?>
                     <a href="invoice_custody?id=<?= $r['id'] ?>" class="btn btn-outline-primary">
                       <i class="bi bi-printer me-1"></i> طباعة
                     </a>
+                    <?php endif ?>
+                    <?php if(has_permission('custodies.edit')): ?>
                     <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#e<?= $r['id'] ?>" data-bs-dismiss="modal">
                       <i class="bi bi-pencil me-1"></i> تعديل
                     </button>
+                    <?php endif ?>
+                    <?php if(has_permission('custodies.delete')): ?>
                     <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#del<?= $r['id'] ?>" data-bs-dismiss="modal">
                       <i class="bi bi-trash me-1"></i> حذف
                     </button>
+                    <?php endif ?>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </td>
+        <?php endif ?>
       </tr>
 
       <?php foreach($transactions as $t):
@@ -479,7 +491,7 @@ $total_balance = $total_in - $total_out;
 
 
 <!-- إضافة -->
-<?php if($can_edit): ?>
+<?php if(has_permission('custodies.add')): ?>
 <div class="modal fade" id="add">
   <div class="modal-dialog">
     <div class="modal-content">

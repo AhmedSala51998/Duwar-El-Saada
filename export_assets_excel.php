@@ -2,6 +2,7 @@
 require __DIR__.'/config/config.php'; 
 require_auth();
 require_once __DIR__.'/libs/SimpleXLSXGen.php';
+require_permission('assets.print_excel');
 
 $date_type = $_GET['date_type'] ?? '';
 $from_date = $_GET['from_date'] ?? '';

@@ -146,7 +146,7 @@ input[type="file"] {
 
 </style>
 
-<?php require __DIR__.'/partials/header.php'; ?>
+<?php require __DIR__.'/partials/header.php'; require_permission('assets.view'); ?>
 
 <?php if(!empty($_SESSION['toast'])): 
 $toast = $_SESSION['toast'];
@@ -203,7 +203,7 @@ $q.=" ORDER BY id DESC LIMIT $perPage OFFSET $offset";
 $s=$pdo->prepare($q);
 $s->execute($ps);
 $rows=$s->fetchAll();
-$can_edit = in_array(current_role(), ['admin','manager']);
+//$can_edit = in_array(current_role(), ['admin','manager']);
 ?>
 
 <!--<div class="d-flex flex-wrap gap-2 justify-content-between align-items-center mb-3">
@@ -233,16 +233,17 @@ $can_edit = in_array(current_role(), ['admin','manager']);
       <input class="form-control" name="kw" placeholder="بحث بالاسم" value="<?= esc($kw) ?>" style="height:40px; min-width:200px;">
       <button class="btn btn-outline-secondary" style="height:40px;">بحث</button>
     </form>
-
+   <?php if(has_permission('assets.print_excel')): ?>
     <a class="btn btn-outline-dark" href="export_assets_excel.php?kw=<?= urlencode($kw) ?>" style="height:40px;">
       <i class="bi bi-file-earmark-spreadsheet"></i> Excel
     </a>
-
+   <?php endif ?>
+   <?php if(has_permission('assets.print_pdf')): ?>
     <a class="btn btn-outline-dark" href="export_assets_pdf.php?kw=<?= urlencode($kw) ?>" style="height:40px;">
       <i class="bi bi-filetype-pdf"></i> PDF
     </a>
-
-    <?php if($can_edit): ?>
+    <?php endif ?>
+    <?php if(has_permission('assets.add')): ?>
       <button class="btn btn-orange d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#add" style="height:40px;">
         <i class="bi bi-plus-lg me-1"></i> إضافة
       </button>
@@ -264,7 +265,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
         <th>الإجمالي بعد الضريبة</th>
         <th>الدافع</th>
         <th>مصدر الدفع</th>
-        <?php if($can_edit): ?><th>عمليات</th><?php endif; ?>
+        <?php if(has_permission('assets.processes')): ?><th>عمليات</th><?php endif; ?>
       </tr>
     </thead>
     <tbody>
@@ -292,7 +293,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
         <td><?= esc($r['payer_name'] ?? '-') ?></td>
         <td><?= esc($r['payment_source'] ?? '-') ?></td>
 
-        <?php if($can_edit): ?>
+        <?php if(has_permission('assets.processes')): ?>
         <td class="text-center">
           <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#actionsAsset<?= $r['id'] ?>">
             <i class="bi bi-gear-fill"></i>
@@ -308,15 +309,21 @@ $can_edit = in_array(current_role(), ['admin','manager']);
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="إغلاق"></button>
                 </div>
                 <div class="modal-body text-center">
+                  <?php if(has_permission('assets.print')): ?>
                   <a class="btn btn-outline-primary w-100 mb-2" href="invoice_assest?id=<?= $r['id'] ?>">
                     <i class="bi bi-printer me-2"></i> طباعة
                   </a>
+                  <?php endif ?>
+                  <?php if(has_permission('assets.edit')): ?>
                   <button class="btn btn-outline-warning w-100 mb-2" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#e<?= $r['id'] ?>">
                     <i class="bi bi-pencil me-2"></i> تعديل
                   </button>
+                  <?php endif ?>
+                  <?php if(has_permission('assets.delete')): ?>
                   <button class="btn btn-outline-danger w-100" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#del<?= $r['id'] ?>">
                     <i class="bi bi-trash me-2"></i> حذف
                   </button>
+                  <?php endif ?>
                 </div>
               </div>
             </div>
@@ -327,7 +334,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
 
 
     <!-- Modal تعديل -->
-    <?php if($can_edit): ?>
+    <?php if(has_permission('assets.edit')): ?>
     <div class="modal fade" id="e<?= $r['id'] ?>">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -422,7 +429,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
     <?php endif; ?>
 
     <!-- Modal الحذف -->
-    <?php if($can_edit): ?>
+    <?php if(has_permission('assets.delete')): ?>
     <div class="modal fade" id="del<?= $r['id'] ?>" tabindex="-1">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -488,7 +495,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
 <?php endif; ?>
 
 
-<?php if($can_edit): ?>
+<?php if(has_permission('assets.add')): ?>
 <div class="modal fade" id="add">
   <div class="modal-dialog">
     <div class="modal-content">

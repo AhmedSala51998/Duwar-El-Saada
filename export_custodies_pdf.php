@@ -1,6 +1,7 @@
 <?php 
 require __DIR__.'/config/config.php'; 
 require_auth();
+require_permission('custodies.print_pdf');
 
 $kw        = trim($_GET['kw'] ?? ''); 
 $date_type = $_GET['date_type'] ?? '';

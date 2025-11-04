@@ -1,5 +1,6 @@
 <?php 
 require __DIR__.'/partials/header.php'; 
+require_permission('expenses.print');
 
 $expenseId = (int)($_GET['id'] ?? 0);
 $expenseStmt = $pdo->prepare("SELECT * FROM expenses WHERE id=?");

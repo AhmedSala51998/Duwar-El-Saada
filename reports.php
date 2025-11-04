@@ -1,4 +1,4 @@
-<?php require __DIR__.'/partials/header.php'; ?>
+<?php require __DIR__.'/partials/header.php'; require_permission('reports.view'); ?>
 
 <style>
 /* 🎨 تنسيق عام */
@@ -192,6 +192,7 @@
   </h3>
 
   <!-- ✅ أزرار التاريخ السريعة -->
+  <?php if(has_permission('reports.filter')): ?>
   <div class="quick-buttons mt-3 mt-md-0">
     <a href="?date_type=today" class="btn btn-success me-2">
       <i class="bi bi-calendar-day"></i> تقرير اليوم
@@ -203,10 +204,12 @@
       <i class="bi bi-x-circle"></i> إلغاء الفلتر
     </a>
   </div>
+  <?php endif ?>
 </div>
 
 <!-- 🗓️ نموذج الفلترة بنفس عرض الكروت -->
 <!-- 🗓️ نموذج الفلترة بنفس محاذاة الكروت -->
+<?php if(has_permission('reports.filter')): ?> 
 <div class="row g-4 mb-4">
   <div class="col-md-12">
     <form method="GET" class="row g-3 align-items-end filter-form mx-md-0 px-md-3">
@@ -228,6 +231,7 @@
     </form>
   </div>
 </div>
+<?php endif ?>
 
 <?php
 $filterParams = '';
@@ -240,14 +244,71 @@ if (!empty($_GET['date_type'])) $filterParams .= '&date_type=' . $_GET['date_typ
 <div class="row g-4">
   <?php
   $reports = [
-    ['title'=>'المشتريات','desc'=>'تصدير كامل المشتريات','excel'=>'export_purchases_excel.php','pdf'=>'export_purchases_pdf.php','icon'=>'bi-cart-check'],
-    ['title'=>'أوامر التشغيل','desc'=>'تصدير آخر الأوامر','excel'=>'export_orders_excel.php','pdf'=>'export_orders_pdf.php','icon'=>'bi-gear-wide-connected'],
-    ['title'=>'الأصول','desc'=>'تصدير الأصول','excel'=>'export_assets_excel.php','pdf'=>'export_assets_pdf.php','icon'=>'bi-building'],
-    ['title'=>'العُهد','desc'=>'تصدير جميع العُهد','excel'=>'export_custodies_excel.php','pdf'=>'export_custodies_pdf.php','icon'=>'bi-wallet2'],
-    ['title'=>'المصروفات','desc'=>'تصدير جميع المصروفات','excel'=>'export_expenses_excel.php','pdf'=>'export_expenses_pdf.php','icon'=>'bi-cash-stack'],
-    ['title'=>'تقرير الضريبة','desc'=>'حساب ضريبة المشتريات، المصروفات، والأصول','excel'=>'export_vat_excel.php','pdf'=>'export_vat_pdf.php','icon'=>'bi-receipt'],
+    [
+      'title' => 'المشتريات',
+      'desc'  => 'تصدير كامل المشتريات',
+      'excel' => 'export_purchases_excel.php',
+      'pdf'   => 'export_purchases_pdf.php',
+      'icon'  => 'bi-cart-check',
+      'view_perm'  => 'reports.purchases_view',
+      'excel_perm' => 'reports.report_purchases_excel',
+      'pdf_perm'   => 'reports.report_purchases_pdf',
+    ],
+    [
+      'title' => 'أوامر التشغيل',
+      'desc'  => 'تصدير آخر الأوامر',
+      'excel' => 'export_orders_excel.php',
+      'pdf'   => 'export_orders_pdf.php',
+      'icon'  => 'bi-gear-wide-connected',
+      'view_perm'  => 'reports.orders_view',
+      'excel_perm' => 'reports.report_orders_excel',
+      'pdf_perm'   => 'reports.report_orders_pdf',
+    ],
+    [
+      'title' => 'الأصول',
+      'desc'  => 'تصدير الأصول',
+      'excel' => 'export_assets_excel.php',
+      'pdf'   => 'export_assets_pdf.php',
+      'icon'  => 'bi-building',
+      'view_perm'  => 'reports.report_assets_pdf', // مافيش عرض صريح فخلينا على pdf كحد أدنى
+      'excel_perm' => 'reports.report_assets_excel',
+      'pdf_perm'   => 'reports.report_assets_pdf',
+    ],
+    [
+      'title' => 'العُهد',
+      'desc'  => 'تصدير جميع العُهد',
+      'excel' => 'export_custodies_excel.php',
+      'pdf'   => 'export_custodies_pdf.php',
+      'icon'  => 'bi-wallet2',
+      'view_perm'  => 'reports.report_assets_pdf', // لو مافيش صلاحية عرض خاصة بالعهد
+      'excel_perm' => 'reports.report_assets_excel', // أو غيّرها لاحقاً لو فيه كود خاص
+      'pdf_perm'   => 'reports.report_assets_pdf',
+    ],
+    [
+      'title' => 'المصروفات',
+      'desc'  => 'تصدير جميع المصروفات',
+      'excel' => 'export_expenses_excel.php',
+      'pdf'   => 'export_expenses_pdf.php',
+      'icon'  => 'bi-cash-stack',
+      'view_perm'  => 'reports.report_expenses_pdf',
+      'excel_perm' => 'reports.report_expenses_excel',
+      'pdf_perm'   => 'reports.report_expenses_pdf',
+    ],
+    [
+      'title' => 'تقرير الضريبة',
+      'desc'  => 'حساب ضريبة المشتريات، المصروفات، والأصول',
+      'excel' => 'export_vat_excel.php',
+      'pdf'   => 'export_vat_pdf.php',
+      'icon'  => 'bi-receipt',
+      'view_perm'  => 'reports.vat_view',
+      'excel_perm' => 'reports.report_vat_excel',
+      'pdf_perm'   => 'reports.report_vat_pdf',
+    ],
   ];
-  foreach($reports as $r): ?>
+
+  foreach($reports as $r):
+    if (has_permission($r['view_perm'])):
+  ?>
   <div class="col-md-4 col-sm-6">
     <div class="card report-card p-4 text-center">
       <div class="mb-3 text-primary fs-3">
@@ -256,16 +317,24 @@ if (!empty($_GET['date_type'])) $filterParams .= '&date_type=' . $_GET['date_typ
       <h5><?= $r['title'] ?></h5>
       <p><?= $r['desc'] ?></p>
       <div class="d-flex justify-content-between mt-3">
+        <?php if(has_permission($r['excel_perm'])): ?>
         <a class="btn btn-outline-success" href="<?= $r['excel'] ?>?1=1<?= $filterParams ?>">
           <i class="bi bi-file-earmark-spreadsheet"></i> Excel
         </a>
+        <?php endif; ?>
+
+        <?php if(has_permission($r['pdf_perm'])): ?>
         <a class="btn btn-outline-danger" href="<?= $r['pdf'] ?>?1=1<?= $filterParams ?>">
           <i class="bi bi-filetype-pdf"></i> PDF
         </a>
+        <?php endif; ?>
       </div>
     </div>
   </div>
-  <?php endforeach; ?>
+  <?php 
+    endif;
+  endforeach; 
+  ?>
 </div>
 
 <?php require __DIR__.'/partials/footer.php'; ?>

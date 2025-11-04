@@ -1,5 +1,6 @@
 <?php 
 require __DIR__.'/partials/header.php'; 
+require_permission('custodies.print');
 
 $custodyId = (int)($_GET['id'] ?? 0);
 $custodyStmt = $pdo->prepare("SELECT * FROM custodies WHERE id = ?");

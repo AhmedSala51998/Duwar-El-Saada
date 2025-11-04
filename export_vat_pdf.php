@@ -5,6 +5,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 require_auth();
+require_permission('reports.report_vat_pdf');
 
 $date_type = $_GET['date_type'] ?? '';
 $from_date = $_GET['from_date'] ?? '';

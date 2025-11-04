@@ -1,5 +1,6 @@
 <?php 
 require __DIR__.'/partials/header.php'; 
+require_permission('purchases.print');
 
 $purchaseId = (int)($_GET['id'] ?? 0);
 $purchaseStmt = $pdo->prepare("SELECT * FROM purchases WHERE id=?");

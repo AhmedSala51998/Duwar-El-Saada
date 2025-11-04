@@ -1,6 +1,6 @@
 <?php
 require __DIR__.'/config/config.php';
-require_role(['admin','manager']);
+require_permission('purchases.add');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? '')) {
 

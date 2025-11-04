@@ -1,5 +1,6 @@
 <?php 
 require __DIR__.'/partials/header.php'; 
+require_permission('assets.print');
 
 $assetId = (int)($_GET['id'] ?? 0);
 $assetStmt = $pdo->prepare("SELECT * FROM assets WHERE id=?");

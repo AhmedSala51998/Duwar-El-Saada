@@ -1,6 +1,6 @@
 <?php
 require __DIR__.'/config/config.php';
-require_role(['admin','manager']);
+require_permission('purchases.delete');
 
 $id = (int)($_GET['id'] ?? 0);
 

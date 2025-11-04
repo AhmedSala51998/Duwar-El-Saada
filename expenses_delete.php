@@ -1,6 +1,6 @@
 <?php
 require __DIR__.'/config/config.php';
-require_role(['admin','manager']);
+require_permission('expenses.delete');
 
 $id = (int)($_POST['id'] ?? $_GET['id'] ?? 0);
 if($id){

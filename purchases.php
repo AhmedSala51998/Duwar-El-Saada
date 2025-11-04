@@ -178,7 +178,7 @@
 
 </style>
 
-<?php require __DIR__.'/partials/header.php'; ?>
+<?php require __DIR__.'/partials/header.php'; require_permission('purchases.view'); ?>
 
 <?php if(!empty($_SESSION['toast'])): 
   $toast = $_SESSION['toast'];
@@ -242,7 +242,7 @@ $stmt = $pdo->prepare($q);
 $stmt->execute($params); 
 $rows = $stmt->fetchAll();
 
-$can_edit = in_array(current_role(), ['admin','manager']);
+//$can_edit = in_array(current_role(), ['admin','manager']);
 
 ?>
 
@@ -255,7 +255,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
     </form>
     <a class="btn btn-outline-dark" href="export_purchases_excel.php?kw=<?= urlencode($kw) ?>"><i class="bi bi-file-earmark-spreadsheet"></i> Excel</a>
     <a class="btn btn-outline-dark" href="export_purchases_pdf.php?kw=<?= urlencode($kw) ?>"><i class="bi bi-filetype-pdf"></i> PDF</a>
-    <?php if($can_edit): ?><button class="btn btn-orange" data-bs-toggle="modal" data-bs-target="#addM"><i class="bi bi-plus-lg"></i> إضافة</button><?php endif; ?>
+    <button class="btn btn-orange" data-bs-toggle="modal" data-bs-target="#addM"><i class="bi bi-plus-lg"></i> إضافة</button>
     <div class="d-flex gap-2">
         <a class="btn btn-outline-success" href="uploads/purchases_sample_template.xlsx" download>
             <i class="bi bi-download"></i> تحميل نموذج Excel
@@ -278,28 +278,32 @@ $can_edit = in_array(current_role(), ['admin','manager']);
       <input class="form-control" name="kw" placeholder="بحث بالاسم" value="<?= esc($kw) ?>" style="height:40px; min-width:200px;">
       <button class="btn btn-outline-secondary" style="height:40px;">بحث</button>
     </form>
-
+   <?php if(has_permission('purchases.print_excel')): ?>
     <a class="btn btn-outline-dark" href="export_purchases_excel.php?kw=<?= urlencode($kw) ?>" style="height:40px;">
       <i class="bi bi-file-earmark-spreadsheet"></i> Excel
     </a>
-
+   <?php endif ?>
+   <?php if(has_permission('purchases.print_pdf')): ?>
     <a class="btn btn-outline-dark" href="export_purchases_pdf.php?kw=<?= urlencode($kw) ?>" style="height:40px;">
       <i class="bi bi-filetype-pdf"></i> PDF
     </a>
+    <?php endif ?>
 
-    <?php if($can_edit): ?>
+    <?php if(has_permission('purchases.add')): ?>
       <button class="btn btn-orange d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#addM" style="height:40px;">
         <i class="bi bi-plus-lg me-1"></i> إضافة
       </button>
     <?php endif; ?>
-
+   <?php if(has_permission('purchases.download_sample')): ?>
     <a class="btn btn-outline-success d-flex align-items-center" href="uploads/purchases_sample_template.xlsx" download style="height:40px;">
       <i class="bi bi-download me-1"></i> تحميل نموذج Excel
     </a>
-
+    <?php endif ?>
+    <?php if(has_permission('purchases.addExcel')): ?>
     <button class="btn btn-success d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#importExcel" style="height:40px;">
       <i class="bi bi-file-text me-1"></i> إضافة أصناف عبر Excel
     </button>
+    <?php endif ?>
   </div>
 </div>
 
@@ -321,7 +325,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
         <th>التاريخ</th>
         <th>الدافع</th>
         <th>مصدر الدفع</th>
-        <?php if($can_edit): ?><th>عمليات</th><?php endif; ?>
+        <?php if(has_permission('purchases.processes')): ?><th>عمليات</th><?php endif; ?>
       </tr>
     </thead>
     <tbody>
@@ -349,7 +353,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
         <td><?= esc($r['payer_name']) ?></td>
         <td><?= esc($r['payment_source'] ?? '-') ?></td>
 
-        <?php if($can_edit): ?>
+        <?php if(has_permission('purchases.processes')): ?>
         <td class="text-center">
           <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#actions<?= $r['id'] ?>">
             <i class="bi bi-gear-fill"></i>
@@ -365,15 +369,21 @@ $can_edit = in_array(current_role(), ['admin','manager']);
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="إغلاق"></button>
                 </div>
                 <div class="modal-body text-center">
+                  <?php if(has_permission('purchases.print')): ?>
                   <a class="btn btn-outline-primary w-100 mb-2" href="invoice?id=<?= $r['id'] ?>">
                     <i class="bi bi-printer me-2"></i> طباعة
                   </a>
+                  <?php endif ?>
+                  <?php if(has_permission('purchases.edit')): ?>
                   <button class="btn btn-outline-warning w-100 mb-2" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#e<?= $r['id'] ?>">
                     <i class="bi bi-pencil me-2"></i> تعديل
                   </button>
+                  <?php endif ?>
+                  <?php if(has_permission('purchases.delete')): ?>
                   <button class="btn btn-outline-danger w-100" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#del<?= $r['id'] ?>">
                     <i class="bi bi-trash me-2"></i> حذف
                   </button>
+                  <?php endif ?>
                 </div>
               </div>
             </div>
@@ -384,7 +394,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
 
 
     <!-- Modal تعديل -->
-    <?php if($can_edit): ?>
+    <?php if(has_permission('purchases.edit')): ?>
       <div class="modal fade" id="e<?= $r['id'] ?>">
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
@@ -496,7 +506,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
     <?php endif; ?>
 
     <!-- Modal الحذف -->
-    <?php if($can_edit): ?>
+    <?php if(has_permission('purchases.delete')): ?>
     <div class="modal fade" id="del<?= $r['id'] ?>" tabindex="-1">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -567,7 +577,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
 <?php endif; ?>
 
 
-<?php if($can_edit): ?>
+<?php if(has_permission('purchases.add')): ?>
 <div class="modal fade" id="addM">
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
@@ -703,7 +713,7 @@ $can_edit = in_array(current_role(), ['admin','manager']);
 </div>
 <?php endif; ?>
 
-<?php if($can_edit): ?>
+<?php if(has_permission('purchases.addExcel')): ?>
 <div class="modal fade" id="importExcel">
   <div class="modal-dialog modal-xl">
     <div class="modal-content">

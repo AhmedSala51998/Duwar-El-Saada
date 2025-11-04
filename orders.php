@@ -1,4 +1,4 @@
-<?php require __DIR__.'/partials/header.php'; ?>
+<?php require __DIR__.'/partials/header.php'; require_permission('orders.view'); ?>
 <?php if(!empty($_SESSION['toast'])): 
   $toast = $_SESSION['toast'];
   unset($_SESSION['toast']); 
@@ -39,7 +39,7 @@ $q.=" ORDER BY o.id DESC";
 $s=$pdo->prepare($q); 
 $s->execute($params);
 $orders=$s->fetchAll();
-$can_edit = in_array(current_role(), ['admin','manager']);
+//$can_edit = in_array(current_role(), ['admin','manager']);
 
 /*$stocks = $pdo->query("
     SELECT 
@@ -344,12 +344,18 @@ $stocks = $pdo->query("
       <input class="form-control" name="kw" placeholder="بحث باسم المنتج" value="<?= esc($kw) ?>">
       <button class="btn btn-outline-secondary">بحث</button>
     </form>
+    <?php if(has_permission('orders.print_excel')): ?>
     <a class="btn btn-outline-dark" href="export_orders_excel.php?kw=<?= urlencode($kw) ?>"><i class="bi bi-file-earmark-spreadsheet"></i> Excel</a>
+    <?php endif ?>
+    <?php if(has_permission('orders.print_pdf')): ?>
     <a class="btn btn-outline-dark" href="export_orders_pdf.php?kw=<?= urlencode($kw) ?>"><i class="bi bi-filetype-pdf"></i> PDF</a>
-    <?php if($can_edit): ?>
+    <?php endif ?>
+    <?php if(has_permission('orders.view_inventory')): ?>
       <button class="btn btn-orange" data-bs-toggle="modal" data-bs-target="#stocksModal">
         <i class="bi bi-box-seam"></i> المخزون
       </button>
+      <?php endif ?>
+      <?php if(has_permission('orders.add')): ?>
       <button class="btn btn-orange" data-bs-toggle="modal" data-bs-target="#addOrder">
         <i class="bi bi-plus-lg"></i> إنشاء أمر
       </button>
@@ -367,7 +373,7 @@ $stocks = $pdo->query("
         <th>الوحدة</th>
         <th>ملاحظة</th>
         <th>التاريخ</th>
-        <?php if($can_edit): ?><th>حذف</th><?php endif; ?>
+        <?php if(has_permission('orders.processes')): ?><th>حذف</th><?php endif; ?>
       </tr>
     </thead>
     <tbody>
@@ -379,16 +385,18 @@ $stocks = $pdo->query("
         <td><?= esc($o['unit']) ?></td>
         <td><?= esc($o['note']) ?></td>
         <td><?= esc($o['created_at']) ?></td>
-        <?php if($can_edit): ?>
+        <?php if(has_permission('orders.processes')): ?>
         <td class="text-center">
+          <?php if(has_permission('orders.delete')): ?>
           <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#del<?= $o['id'] ?>">
             <i class="bi bi-trash"></i>
           </button>
+          <?php endif ?>
         </td>
         <?php endif; ?>
       </tr>
 
-    <?php if($can_edit): ?>
+    <?php if(has_permission('orders.delete')): ?>
     <!-- Modal تأكيد الحذف -->
     <div class="modal fade" id="del<?= $o['id'] ?>" tabindex="-1">
       <div class="modal-dialog">
@@ -482,7 +490,7 @@ $stocks = $pdo->query("
 </style>
 
 
-<?php if($can_edit): ?>
+<?php if(has_permission('orders.add')): ?>
 <div class="modal fade" id="addOrder"><div class="modal-dialog"><div class="modal-content">
   <form method="post" action="order_add">
     <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
