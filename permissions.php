@@ -35,16 +35,18 @@ $permissions = $pdo->query("SELECT * FROM permissions ORDER BY code ASC")->fetch
     <span class="stat-icon"><i class="bi bi-lock"></i></span>
     إدارة الصلاحيات
   </h3>
-  <?php if(has_permission('permissions.add')): ?>
   <div class="d-flex gap-2">
+    <?php if(has_permission('permissions.add')): ?>
     <button class="btn btn-orange" data-bs-toggle="modal" data-bs-target="#addPerm">
       <i class="bi bi-plus-lg"></i> إضافة صلاحية
     </button>
+    <?php endif ?>
+    <?php if(has_permission('permissions.add_group')): ?>
     <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#addPermGroup">
       <i class="bi bi-plus-square-dotted"></i> إضافة مجموعة صلاحيات
     </button>
+    <?php endif ?>
   </div>
-  <?php endif ?>
 </div>
 
 <div class="table-responsive shadow-sm rounded-3 border bg-white p-2">
