@@ -162,47 +162,57 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
 
                 <div>
-                  <label class="form-label fw-semibold text-orange">الصلاحيات</label>
-                  <div class="accordion" id="permAccordion<?= $r['id'] ?>">
+                <label class="form-label fw-semibold text-orange">الصلاحيات</label>
+                <div class="accordion" id="permAccordion<?= $r['id'] ?>">
                     <?php foreach($grouped_perms as $group => $items): ?>
-                      <div class="accordion-item">
+                    <div class="accordion-item">
                         <h2 class="accordion-header" id="heading<?= $group.$r['id'] ?>">
-                            <?php
-                            $group_names = [
-                                'users' => 'المستخدمين',
-                                'roles' => 'الأدوار',
-                                'settings' => 'الإعدادات',
-                                'permissions' => 'الصلاحيات',
-                                'purchases' => 'المشتريات',
-                                'orders' => 'أوامر التشغيل',
-                                'custodies' => 'العهد',
-                                'assets' => 'الأصول',
-                                'expenses' => 'المصروفات',
-                                'reports' => 'التقارير',
-                            ];
-                            ?>
-                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<?= $group.$r['id'] ?>">
+                        <?php
+                        $group_names = [
+                            'users' => 'المستخدمين',
+                            'roles' => 'الأدوار',
+                            'settings' => 'الإعدادات',
+                            'permissions' => 'الصلاحيات',
+                            'purchases' => 'المشتريات',
+                            'orders' => 'أوامر التشغيل',
+                            'custodies' => 'العهد',
+                            'assets' => 'الأصول',
+                            'expenses' => 'المصروفات',
+                            'reports' => 'التقارير',
+                        ];
+                        ?>
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<?= $group.$r['id'] ?>">
                             <i class="bi bi-folder me-2 text-orange"></i><?= $group_names[strtolower($group)] ?? $group ?>
-                          </button>
+                        </button>
                         </h2>
+
                         <div id="collapse<?= $group.$r['id'] ?>" class="accordion-collapse collapse" data-bs-parent="#permAccordion<?= $r['id'] ?>">
-                          <div class="accordion-body row">
+                        <div class="accordion-body">
+                            <!-- أزرار تحديد الكل / إلغاء التحديد -->
+                            <div class="mb-2 text-end">
+                            <button type="button" class="btn btn-sm btn-outline-success me-1 select-all" data-target="collapse<?= $group.$r['id'] ?>">تحديد الكل</button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary unselect-all" data-target="collapse<?= $group.$r['id'] ?>">إلغاء الكل</button>
+                            </div>
+
+                            <div class="row">
                             <?php foreach($items as $p): ?>
-                              <div class="col-md-6 mb-1">
+                                <div class="col-md-6 mb-1">
                                 <div class="form-check">
-                                  <input class="form-check-input" type="checkbox" name="permissions[]" value="<?= $p['id'] ?>"
+                                    <input class="form-check-input" type="checkbox" name="permissions[]" value="<?= $p['id'] ?>"
                                     id="perm<?= $r['id'].'_'.$p['id'] ?>"
                                     <?= in_array($p['id'], $role_perms) ? 'checked' : '' ?>>
-                                  <label class="form-check-label" for="perm<?= $r['id'].'_'.$p['id'] ?>"><?= esc($p['label']) ?></label>
+                                    <label class="form-check-label" for="perm<?= $r['id'].'_'.$p['id'] ?>"><?= esc($p['label']) ?></label>
                                 </div>
-                              </div>
+                                </div>
                             <?php endforeach; ?>
-                          </div>
+                            </div>
                         </div>
-                      </div>
+                        </div>
+                    </div>
                     <?php endforeach; ?>
-                  </div>
                 </div>
+                </div>
+
               </div>
 
               <div class="modal-footer">
@@ -302,9 +312,9 @@ document.addEventListener('DOMContentLoaded', function() {
           <div>
             <label class="form-label fw-semibold text-orange">الصلاحيات</label>
             <div class="accordion" id="permAccordionAdd">
-              <?php foreach($grouped_perms as $group => $items): ?>
+                <?php foreach($grouped_perms as $group => $items): ?>
                 <div class="accordion-item">
-                  <h2 class="accordion-header" id="headingAdd<?= $group ?>">
+                    <h2 class="accordion-header" id="headingAdd<?= $group ?>">
                     <?php
                     $group_names = [
                         'users' => 'المستخدمين',
@@ -320,25 +330,34 @@ document.addEventListener('DOMContentLoaded', function() {
                     ];
                     ?>
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAdd<?= $group ?>">
-                      <i class="bi bi-folder me-2 text-orange"></i><?= $group_names[strtolower($group)] ?? $group ?>
+                        <i class="bi bi-folder me-2 text-orange"></i><?= $group_names[strtolower($group)] ?? $group ?>
                     </button>
-                  </h2>
-                  <div id="collapseAdd<?= $group ?>" class="accordion-collapse collapse" data-bs-parent="#permAccordionAdd">
-                    <div class="accordion-body row">
-                      <?php foreach($items as $p): ?>
-                        <div class="col-md-6 mb-1">
-                          <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="permissions[]" value="<?= $p['id'] ?>" id="addperm<?= $p['id'] ?>">
-                            <label class="form-check-label" for="addperm<?= $p['id'] ?>"><?= esc($p['label']) ?></label>
-                          </div>
+                    </h2>
+
+                    <div id="collapseAdd<?= $group ?>" class="accordion-collapse collapse" data-bs-parent="#permAccordionAdd">
+                    <div class="accordion-body">
+                        <!-- أزرار تحديد الكل / إلغاء التحديد -->
+                        <div class="mb-2 text-end">
+                        <button type="button" class="btn btn-sm btn-outline-success me-1 select-all" data-target="collapseAdd<?= $group ?>">تحديد الكل</button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary unselect-all" data-target="collapseAdd<?= $group ?>">إلغاء الكل</button>
                         </div>
-                      <?php endforeach; ?>
+
+                        <div class="row">
+                        <?php foreach($items as $p): ?>
+                            <div class="col-md-6 mb-1">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="permissions[]" value="<?= $p['id'] ?>" id="addperm<?= $p['id'] ?>">
+                                <label class="form-check-label" for="addperm<?= $p['id'] ?>"><?= esc($p['label']) ?></label>
+                            </div>
+                            </div>
+                        <?php endforeach; ?>
+                        </div>
                     </div>
-                  </div>
+                    </div>
                 </div>
-              <?php endforeach; ?>
+                <?php endforeach; ?>
             </div>
-          </div>
+            </div>
         </div>
 
         <div class="modal-footer">
