@@ -1,6 +1,6 @@
 <?php
 require __DIR__.'/config/config.php';
-require_permission('permissions.add');
+require_permission('permissions.add_group');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $codes = $_POST['codes'] ?? [];
