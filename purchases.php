@@ -169,6 +169,13 @@
   text-align: center;
 }
 
+.custom-table th:nth-child(11),
+.custom-table td:nth-child(11) {
+  width: 95px; /* عرض أكبر للسعر */
+  white-space: nowrap;
+  text-align: center;
+}
+
 </style>
 
 <?php require __DIR__.'/partials/header.php'; ?>
