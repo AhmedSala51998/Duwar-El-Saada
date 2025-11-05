@@ -185,7 +185,7 @@ $permissions = $pdo->query("SELECT * FROM permissions ORDER BY code ASC")->fetch
 
         <div class="modal-body">
           <p class="small text-muted mb-3">
-            يمكنك إضافة عدة صلاحيات دفعة واحدة. استخدم زر <strong>+</strong> لإضافة صف جديد.
+            يمكنك إضافة عدة صلاحيات دفعة واحدة. استخدم زر <strong>+</strong> اضافة صف جديد.
           </p>
 
           <div class="table-responsive">
