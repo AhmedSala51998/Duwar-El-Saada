@@ -68,35 +68,6 @@ require_permission('permissions.view');?>
         margin-inline-end: 6px;
     }
     }
-    .page-title {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  font-weight: 600;
-  color: #333;
-  white-space: nowrap;
-}
-
-.page-title .stat-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-color: #fff4ec; /* خلفية برتقالية فاتحة */
-  color: #ff7a00;
-  font-size: 1.2rem;
-}
-
-.page-title .stat-icon i {
-  line-height: 1;
-}
-
-@media (max-width: 767.98px) {
-  .page-title {
-    justify-content: center;
-    text-align: center;
-  }
-}
-
 </style>
 <?php endif; ?>
 <?php
