@@ -25,32 +25,40 @@ require_permission('permissions.view');?>
   });
 </script>
 <style>
-/* تحسين مظهر الشريط العلوي في الشاشات الصغيرة */
 @media (max-width: 768px) {
-  .page-title {
-    font-size: 1.1rem;
-    margin-bottom: .5rem;
-  }
 
-  .d-flex.justify-content-between.align-items-center.mb-3 {
-    flex-direction: column;
+  /* غلاف الهيدر */
+  .page-header-wrap {
+    display: flex !important;
+    flex-direction: column !important;
     align-items: stretch !important;
-    gap: .75rem;
+    gap: .75rem !important;
   }
 
-  .d-flex.gap-2 {
-    flex-wrap: wrap;
-    justify-content: center;
+  /* العنوان */
+  .page-header-wrap .page-title {
+    font-size: 1.1rem !important;
+    text-align: center !important;
+    margin-bottom: 0 !important;
+  }
+
+  /* مجموعة البحث والأزرار */
+  .page-header-wrap .d-flex.gap-2 {
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    width: 100% !important;
     gap: .5rem !important;
   }
 
-  #searchInput {
+  /* مربع البحث */
+  .page-header-wrap #searchInput {
     width: 100% !important;
   }
 
-  .btn {
-    flex: 1 1 45%;
-    min-width: 130px;
+  /* الأزرار */
+  .page-header-wrap .btn {
+    flex: 1 1 45% !important;
+    min-width: 140px !important;
   }
 }
 </style>
