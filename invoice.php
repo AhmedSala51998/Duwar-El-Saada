@@ -244,6 +244,13 @@ th, td {
 /* ======== الطباعة فقط ======== */
 @media print {
 
+  /* الجدول */
+  .table-responsive {
+    overflow: visible !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+
   /* طباعة بلون النصوص الأسود فقط */
   @page {
     size: A4 portrait; /* يمكن تغييرها إلى landscape */
