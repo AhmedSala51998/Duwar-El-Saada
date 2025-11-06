@@ -193,6 +193,52 @@ th, td {
   box-shadow: 0 0 15px rgba(255, 193, 7, 0.9);
 }
 
+/* ===== شاشة الموبايل ===== */
+@media (max-width: 768px) {
+  .print-area {
+    padding: 10px;
+    border: none;
+    border-radius: 0;
+    font-size: 14px;
+  }
+
+  .invoice-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .invoice-info {
+    width: 100%;
+    text-align: right;
+    margin-bottom: 10px;
+  }
+
+  .invoice-image {
+    width: 100%;
+    max-width: 200px;
+    margin-left: 0;
+    margin-bottom: 10px;
+  }
+
+  table#invoiceTable {
+    font-size: 12px;
+  }
+
+  table#invoiceTable th,
+  table#invoiceTable td {
+    padding: 6px 3px;
+  }
+
+  .invoice-summary {
+    text-align: right;
+    font-size: 13px;
+  }
+
+  .invoice-summary div {
+    margin-bottom: 6px;
+  }
+}
+
 
 </style>
 
