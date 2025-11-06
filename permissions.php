@@ -24,6 +24,37 @@ require_permission('permissions.view');?>
     }
   });
 </script>
+<style>
+/* تحسين مظهر الشريط العلوي في الشاشات الصغيرة */
+@media (max-width: 768px) {
+  .page-title {
+    font-size: 1.1rem;
+    margin-bottom: .5rem;
+  }
+
+  .d-flex.justify-content-between.align-items-center.mb-3 {
+    flex-direction: column;
+    align-items: stretch !important;
+    gap: .75rem;
+  }
+
+  .d-flex.gap-2 {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: .5rem !important;
+  }
+
+  #searchInput {
+    width: 100% !important;
+  }
+
+  .btn {
+    flex: 1 1 45%;
+    min-width: 130px;
+  }
+}
+</style>
+
 <?php endif; ?>
 <?php
 // جلب الصلاحيات
