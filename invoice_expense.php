@@ -109,57 +109,43 @@ select#vatRate {
 }
 
 /* ===== شاشة الموبايل ===== */
-@media (max-width: 768px) {
-  .print-area {
-    padding: 10px;
-    border: none;
-    border-radius: 0;
-    font-size: 14px;
-  }
-
-  .invoice-header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .invoice-info {
-    width: 100%;
-    text-align: right;
-    margin-bottom: 10px;
-  }
-
-  .invoice-image {
-    width: 100%;
-    max-width: 200px;
-    margin-left: 0;
-    margin-bottom: 10px;
-  }
-
-  /* ===== إضافة تمرير أفقي للجدول ===== */
+/* ======= فقط على الشاشات (وليس الطباعة) ======= */
+@media screen and (max-width: 768px) {
   .table-responsive {
-    overflow-x: auto;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch; /* تمرير سلس على الموبايل */
   }
 
   table#invoiceTable {
+    min-width: 800px; /* يجعل الجدول أعرض من الشاشة لتفعيل الاسكرول */
     font-size: 12px;
-    min-width: 800px; /* إجبار الجدول على أن يكون أعرض من الشاشة على الموبايل */
   }
 
   table#invoiceTable th,
   table#invoiceTable td {
+    white-space: nowrap;
     padding: 6px 3px;
-    white-space: nowrap; /* منع تقسيم النصوص الطويلة داخل الخلية */
+  }
+}
+
+/* ======= عند الطباعة (اخفاء الاسكرول نهائيًا) ======= */
+@media print {
+  .table-responsive {
+    overflow: visible !important;
   }
 
-  .invoice-summary {
-    text-align: right;
+  table#invoiceTable {
+    width: 100% !important;
+    min-width: auto !important;
+    table-layout: auto;
     font-size: 13px;
   }
 
-  .invoice-summary div {
-    margin-bottom: 6px;
+  th, td {
+    white-space: normal !important;
   }
 }
+
 
 </style>
 
@@ -195,6 +181,7 @@ select#vatRate {
   </div>
 
   <!-- جدول المصروف -->
+  <div class="table-responsive shadow-sm rounded-3 border bg-white p-2">
   <table id="invoiceTable">
     <thead>
       <tr>
@@ -221,7 +208,7 @@ select#vatRate {
         <td class="total"><?= number_format($total,7) ?> ريال</td>
       </tr>
     </tbody>
-  </table>
+  </table></div>
 
   <!-- الملخص -->
   <div class="invoice-summary">
