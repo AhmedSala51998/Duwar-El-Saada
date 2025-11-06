@@ -472,6 +472,60 @@ $current_page = basename($_SERVER['PHP_SELF']);
       }
     }
 
+    @media (max-width: 768px) {
+      .responsive-table table,
+      .responsive-table thead,
+      .responsive-table tbody,
+      .responsive-table th,
+      .responsive-table td,
+      .responsive-table tr {
+        display: block;
+        width: 100%;
+      }
+
+      .responsive-table thead {
+        display: none; /* نخفي رؤوس الأعمدة */
+      }
+
+      .responsive-table tr {
+        background: #f8f9fa;
+        margin-bottom: 1rem;
+        border-radius: 0.75rem;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        padding: 0.75rem 1rem;
+      }
+
+      .responsive-table td {
+        display: flex;
+        justify-content: space-between;
+        text-align: left;
+        padding: 6px 0;
+        border: none;
+        border-bottom: 1px dashed #ddd;
+      }
+
+      .responsive-table td:last-child {
+        border-bottom: none;
+      }
+
+      .responsive-table td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #666;
+        flex-basis: 40%;
+        text-align: right;
+        padding-left: 10px;
+      }
+
+      .responsive-table td span,
+      .responsive-table td div,
+      .responsive-table td small {
+        flex-basis: 55%;
+        text-align: left;
+      }
+    }
+
+
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
 </head>
