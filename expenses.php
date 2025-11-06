@@ -213,32 +213,6 @@ input[type="file"]{display:none}
   align-items: center;
   gap: 10px;
 }
-@media (max-width: 768px) {
-
-  /* الأعمدة 4 و5 في صفحة المصروفات */
-  .custom-table td:nth-child(4),
-  .custom-table th:nth-child(4),
-  .custom-table td:nth-child(5),
-  .custom-table th:nth-child(5) {
-    width: auto !important;
-    white-space: normal !important;
-    word-break: break-word !important;
-    text-align: left !important;
-    direction: ltr !important; /* خلي الاتجاه شمالي فعلي */
-    display: block !important;
-  }
-
-  /* تحسين العرض داخل الكارت */
-  .responsive-table td {
-    text-align: left !important;
-    direction: ltr !important;
-  }
-
-  .responsive-table td::before {
-    text-align: right !important;
-    direction: rtl !important; /* التسمية (label) تفضل يمين */
-  }
-}
 </style>
 
 <?php if(!empty($_SESSION['toast'])): $toast=$_SESSION['toast']; unset($_SESSION['toast']); ?>
@@ -278,8 +252,8 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
         <th>#</th>
         <th>الرقم التسلسلي</th>
         <th>المصروفات</th>
-        <th style="width: 180px;">نوع المصروف</th>
-        <th style="width: 300px;">بيان المصروف</th>
+        <th>نوع المصروف</th>
+        <th>بيان المصروف</th>
         <th>قيمة المصروف</th>
         <th>الضريبة (15%)</th>
         <th>الإجمالي بعد الضريبة</th>
@@ -292,18 +266,18 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
     <tbody>
       <?php foreach($rows as $r): ?>
       <tr class="text-center">
-        <td class="fw-bold text-muted"><?= $r['id'] ?></td>
-        <td><?= esc($r['invoice_serial']) ?></td>
-        <td><span class="badge bg-light text-dark px-3 py-2"><?= esc($r['main_expense']) ?></span></td>
-        <td class="text-truncate" style="max-width: 180px;" title="<?= esc($r['sub_expense']) ?>">
+        <td data-label="#" class="fw-bold text-muted"><?= $r['id'] ?></td>
+        <td data-label="رقم تسلسلي"><?= esc($r['invoice_serial']) ?></td>
+        <td data-label="المصروفات"><span class="badge bg-light text-dark px-3 py-2"><?= esc($r['main_expense']) ?></span></td>
+        <td data-label="نوع المصروف" class="text-truncate" style="max-width: 180px;" title="<?= esc($r['sub_expense']) ?>">
           <?= esc($r['sub_expense']) ?>
         </td>
-        <td class="text-truncate" style="max-width: 300px;" title="<?= esc($r['expense_desc']) ?>">
+        <td data-label="بيان المصروف" class="text-truncate" style="max-width: 300px;" title="<?= esc($r['expense_desc']) ?>">
           <?= esc($r['expense_desc']) ?>
         </td>
-        <td class="text-success fw-semibold"><?= number_format((float)$r['expense_amount'], 2) ?></td>
+        <td data-label="قيمة المصروف" class="text-success fw-semibold"><?= number_format((float)$r['expense_amount'], 2) ?></td>
 
-        <td>
+        <td data-label="الضريبه">
           <?php if (!empty($r['has_vat']) && $r['has_vat'] == 1): ?>
             <span class="text-primary fw-semibold"><?= number_format((float)$r['vat_value'], 2) ?></span>
           <?php else: ?>
@@ -311,7 +285,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
           <?php endif; ?>
         </td>
 
-        <td class="fw-bold text-dark">
+        <td data-label="الاجمالي بعد الضريبة" class="fw-bold text-dark">
           <?php if (!empty($r['has_vat']) && $r['has_vat'] == 1): ?>
             <?= number_format((float)$r['total_amount'], 2) ?>
           <?php else: ?>
@@ -319,8 +293,8 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
           <?php endif; ?>
         </td>
 
-        <td><?= esc($r['payer_name'] ?? '') ?></td>
-        <td><?= esc($r['payment_source'] ?? '') ?></td>
+        <td data-label="الدافع"><?= esc($r['payer_name'] ?? '') ?></td>
+        <td data-label="مصدر الدفع"><?= esc($r['payment_source'] ?? '') ?></td>
 
         <?php if(has_permission('expenses.processes')): ?>
         <td class="text-center">
