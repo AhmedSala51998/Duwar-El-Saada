@@ -176,6 +176,203 @@
   text-align: center;
 }
 
+
+/*****************/
+/* ============================= */
+/* 📱 تصميم ريسبونسف للشاشات المختلفة */
+/* ============================= */
+
+/* الشاشات الكبيرة (اللابتوب والديسكتوب) */
+@media (min-width: 992px) {
+  .page-title {
+    font-size: 1.5rem;
+  }
+  .custom-table {
+    font-size: 0.9rem;
+  }
+  .d-flex.flex-wrap.justify-content-between {
+    flex-wrap: nowrap !important;
+  }
+}
+
+/* الشاشات المتوسطة (التابلت) */
+@media (min-width: 768px) and (max-width: 991px) {
+  .page-title {
+    font-size: 1.3rem;
+    text-align: center;
+    width: 100%;
+  }
+  .d-flex.flex-wrap.align-items-center.gap-2 {
+    justify-content: center;
+  }
+  .form-control {
+    width: 100% !important;
+  }
+  .btn {
+    width: auto;
+    font-size: 0.9rem;
+  }
+  .table-responsive {
+    overflow-x: auto;
+  }
+  .custom-file-upload {
+    padding: 15px;
+  }
+  .custom-file-upload i {
+    font-size: 32px;
+  }
+}
+
+/* الشاشات الصغيرة (الموبايل) */
+@media (max-width: 767px) {
+  .page-title {
+    font-size: 1.1rem;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  /* أزرار البحث والتصدير */
+  .d-flex.flex-wrap.align-items-center.gap-2 {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  form.d-flex.align-items-center {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  form.d-flex.align-items-center input,
+  form.d-flex.align-items-center button {
+    width: 100%;
+    margin-bottom: 5px;
+  }
+
+  .btn {
+    width: 100%;
+    font-size: 0.85rem;
+  }
+
+  .table-responsive {
+    border: none;
+    padding: 0;
+  }
+
+  .custom-table thead {
+    display: none;
+  }
+
+  .custom-table tbody tr {
+    display: block;
+    margin-bottom: 15px;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    padding: 10px;
+    background: #fff;
+  }
+
+  .custom-table td {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 5px;
+    border: none;
+    font-size: 0.85rem;
+  }
+
+  .custom-table td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: #555;
+  }
+
+  /* تحسين عرض مكون رفع الصور */
+  .custom-file-upload {
+    width: 100%;
+    height: auto;
+    padding: 15px;
+  }
+
+  .custom-file-upload img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .pagination {
+    flex-wrap: wrap;
+  }
+
+  .pagination .page-link {
+    font-size: 0.85rem;
+    padding: 6px 10px;
+  }
+}
+
+
+/*************/
+/* 🌐 تحسين الجدول ليصبح ريسبونسف بشكل جذاب */
+
+/* الوضع العادي - الأجهزة الكبيرة */
+@media (min-width: 768px) {
+  .custom-table td,
+  .custom-table th {
+    white-space: nowrap;
+  }
+}
+
+/* 📱 الموبايل */
+@media (max-width: 767px) {
+  /* إخفاء رؤوس الأعمدة في الموبايل */
+  .custom-table thead {
+    display: none;
+  }
+
+  /* تحويل الصفوف إلى كروت */
+  .custom-table tbody tr {
+    display: block;
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    padding: 10px 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    text-align: right;
+  }
+
+  .custom-table tbody tr td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: none !important;
+    padding: 6px 5px;
+    font-size: 0.9rem;
+  }
+
+  /* عرض اسم العمود قبل القيمة */
+  .custom-table tbody tr td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: #555;
+  }
+
+  /* أيقونات وأزرار العمليات */
+  .custom-table td .btn {
+    width: 100%;
+    margin-top: 5px;
+  }
+
+  /* إزالة التوسيط الإجباري */
+  .custom-table .text-center {
+    text-align: right !important;
+  }
+
+  /* تحسين الشارات */
+  .badge {
+    font-size: 0.8rem;
+    padding: 4px 6px;
+  }
+}
+
+
 </style>
 
 <?php require __DIR__.'/partials/header.php'; require_permission('purchases.view'); ?>
@@ -331,30 +528,30 @@ $rows = $stmt->fetchAll();
     <tbody>
       <?php foreach($rows as $r): ?>
       <tr class="text-center">
-        <td class="fw-bold text-muted"><?= $r['id'] ?></td>
-        <td><?= esc($r['invoice_serial'] ?? '-') ?></td>
-        <td><?= esc($r['name']) ?></td>
-        <td><?= esc($r['unit']) ?></td>
-        <td>
+        <td class="fw-bold text-muted" data-label="#"> <?= $r['id'] ?> </td>
+        <td data-label="رقم تسلسلي"> <?= esc($r['invoice_serial'] ?? '-') ?> </td>
+        <td data-label="البيان"> <?= esc($r['name']) ?> </td>
+        <td data-label="نوع الوحدة"> <?= esc($r['unit']) ?> </td>
+        <td data-label="الكمية">
           <span class="badge bg-light text-dark">
             <?= htmlspecialchars($r['total_packages']) ?>
             <?php if (!empty($r['package'])): ?> × <?= htmlspecialchars($r['package']) ?><?php endif; ?>
           </span>
         </td>
-        <td><?= number_format((float)$r['total_price'],7) ?></td>
-        <td>
+        <td data-label="السعر"> <?= number_format((float)$r['total_price'],7) ?> </td>
+        <td data-label="الكميات بالوحدة">
           <span class="badge bg-light text-dark"><?= htmlspecialchars($r['single_package']) ?></span>
         </td>
-        <td>
+        <td data-label="اجمالي الكميات">
           <span class="badge bg-light text-dark"><?= htmlspecialchars($r['quantity']) ?></span>
         </td>
-        <td><?= number_format((float)$r['price'],7) ?></td>
-        <td><?= esc($r['created_at']) ?></td>
-        <td><?= esc($r['payer_name']) ?></td>
-        <td><?= esc($r['payment_source'] ?? '-') ?></td>
+        <td data-label="السعر الافرادي"> <?= number_format((float)$r['price'],7) ?> </td>
+        <td data-label="التاريخ"> <?= esc($r['created_at']) ?> </td>
+        <td data-label="الدافع"> <?= esc($r['payer_name']) ?> </td>
+        <td data-label="مصدر الدفع"> <?= esc($r['payment_source'] ?? '-') ?> </td>
 
         <?php if(has_permission('purchases.processes')): ?>
-        <td class="text-center">
+        <td class="text-center" data-label="عمليات">
           <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#actions<?= $r['id'] ?>">
             <i class="bi bi-gear-fill"></i>
           </button>
