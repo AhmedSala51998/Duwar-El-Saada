@@ -280,134 +280,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
     }
 
     /*******************/
-    /* ============================= */
-    /* 📱 تصميم ريسبونسف للشاشات المختلفة */
-    /* ============================= */
-
-    /* الشاشات الكبيرة (اللابتوب والديسكتوب) */
-    @media (min-width: 992px) {
-      .page-title {
-        font-size: 1.5rem;
-      }
-      .custom-table {
-        font-size: 0.9rem;
-      }
-      .d-flex.flex-wrap.justify-content-between {
-        flex-wrap: nowrap !important;
-      }
-    }
-
-    /* الشاشات المتوسطة (التابلت) */
-    @media (min-width: 768px) and (max-width: 991px) {
-      .page-title {
-        font-size: 1.3rem;
-        text-align: center;
-        width: 100%;
-      }
-      .d-flex.flex-wrap.align-items-center.gap-2 {
-        justify-content: center;
-      }
-      .form-control {
-        width: 100% !important;
-      }
-      .btn {
-        width: auto;
-        font-size: 0.9rem;
-      }
-      .table-responsive {
-        overflow-x: auto;
-      }
-      .custom-file-upload {
-        padding: 15px;
-      }
-      .custom-file-upload i {
-        font-size: 32px;
-      }
-    }
-
-    /* الشاشات الصغيرة (الموبايل) */
-    @media (max-width: 767px) {
-      .page-title {
-        font-size: 1.1rem;
-        text-align: center;
-        margin-bottom: 10px;
-      }
-
-      /* أزرار البحث والتصدير */
-      .d-flex.flex-wrap.align-items-center.gap-2 {
-        flex-direction: column;
-        align-items: stretch;
-      }
-
-      form.d-flex.align-items-center {
-        flex-direction: column;
-        width: 100%;
-      }
-
-      form.d-flex.align-items-center input,
-      form.d-flex.align-items-center button {
-        width: 100%;
-        margin-bottom: 5px;
-      }
-
-      .btn {
-        width: 100%;
-        font-size: 0.85rem;
-      }
-
-      .table-responsive {
-        border: none;
-        padding: 0;
-      }
-
-      .custom-table thead {
-        display: none;
-      }
-
-      .custom-table tbody tr {
-        display: block;
-        margin-bottom: 15px;
-        border: 1px solid #eee;
-        border-radius: 10px;
-        padding: 10px;
-        background: #fff;
-      }
-
-      .custom-table td {
-        display: flex;
-        justify-content: space-between;
-        padding: 8px 5px;
-        border: none;
-        font-size: 0.85rem;
-      }
-
-      .custom-table td::before {
-        content: attr(data-label);
-        font-weight: 600;
-        color: #555;
-      }
-
-      /* تحسين عرض مكون رفع الصور */
-      .custom-file-upload {
-        width: 100%;
-        height: auto;
-        padding: 15px;
-      }
-
-      .custom-file-upload img {
-        max-width: 100%;
-        height: auto;
-      }
-
-      .pagination {
-        flex-wrap: wrap;
-      }
-
-      .pagination .page-link {
-        font-size: 0.85rem;
-        padding: 6px 10px;
-      }
-    }
 
     /* 🌐 تحسين الجدول ليصبح ريسبونسف بشكل جذاب */
 
@@ -484,24 +356,27 @@ $current_page = basename($_SERVER['PHP_SELF']);
       }
 
       .responsive-table thead {
-        display: none; /* نخفي رؤوس الأعمدة */
+        display: none;
       }
 
       .responsive-table tr {
-        background: #f8f9fa;
+        background: #fff;
         margin-bottom: 1rem;
+        border: 1px solid #eee;
         border-radius: 0.75rem;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
         padding: 0.75rem 1rem;
       }
 
       .responsive-table td {
-        display: flex;
-        justify-content: space-between;
+        display: grid;
+        grid-template-columns: 40% 60%;
+        gap: 6px;
         text-align: left;
         padding: 6px 0;
         border: none;
         border-bottom: 1px dashed #ddd;
+        word-break: break-word; /* يمنع التداخل */
       }
 
       .responsive-table td:last-child {
@@ -511,17 +386,28 @@ $current_page = basename($_SERVER['PHP_SELF']);
       .responsive-table td::before {
         content: attr(data-label);
         font-weight: 600;
-        color: #666;
-        flex-basis: 40%;
+        color: #555;
         text-align: right;
-        padding-left: 10px;
+        padding-left: 5px;
       }
 
       .responsive-table td span,
       .responsive-table td div,
-      .responsive-table td small {
-        flex-basis: 55%;
+      .responsive-table td small,
+      .responsive-table td button {
         text-align: left;
+        white-space: normal;
+      }
+
+      /* علشان العمليات تبقى في سطر منفصل */
+      .responsive-table td[data-label="عمليات"] {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+
+      /* السعر الطويل ما يخترق الكارت */
+      .responsive-table td[data-label="السعر"] {
+        word-break: break-all;
       }
     }
 
