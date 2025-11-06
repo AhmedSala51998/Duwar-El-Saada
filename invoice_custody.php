@@ -12,6 +12,20 @@ if (!$custody) {
     require __DIR__.'/partials/footer.php'; 
     exit; 
 }
+function numberToArabicWords($number) {
+    $fmt = new NumberFormatter("ar", NumberFormatter::SPELLOUT);
+    $integerPart = floor($number);
+    $fractionPart = round(($number - $integerPart) * 100);
+
+    $words = $fmt->format($integerPart);
+
+    if ($fractionPart > 0) {
+        $fractionWords = $fmt->format($fractionPart);
+        return "$words ريال و$fractionWords هللة";
+    } else {
+        return "$words ريال";
+    }
+}
 ?>
 
 <style>
@@ -201,10 +215,27 @@ if (!$custody) {
   </table></div>
 
   <!-- الملخص -->
-  <div class="invoice-summary">
+  <!--<div class="invoice-summary">
     <div><strong>الإجمالي:</strong> <?= number_format($custody['main_amount'], 2) ?> ريال</div>
     <div><strong>تاريخ الإدخال:</strong> <?= esc($custody['created_at']) ?></div>
+  </div>-->
+  <div class="invoice-container" style="display: flex; justify-content: space-between; align-items: flex-start; gap: 30px; direction: rtl;">
+
+  <!-- ✅ العمود اليمين: المبلغ بالعربي -->
+  <div class="total-words" style="font-weight: bold; color: #444; font-size: 15px; text-align: right; margin-top: 20px;">
+    (<?= numberToArabicWords($custody['main_amount']) ?> فقط)
   </div>
+
+  <!-- ✅ العمود الشمال: التفاصيل -->
+  <div class="invoice-summary-wrapper" style="margin-top: 15px;">
+    <div class="invoice-summary" style="text-align: right;">
+      <div><strong>الإجمالي:</strong> <?= number_format($custody['main_amount'], 2) ?> ريال</div>
+      <div><strong>تاريخ الإدخال:</strong> <?= esc($custody['created_at']) ?></div>
+    </div>
+  </div>
+
+</div>
+
 </div>
 
 <script>

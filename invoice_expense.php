@@ -18,6 +18,21 @@ $vatRate = ($expense['has_vat'] == 1) ? 0.15 : 0.00;
 
 // صورة الفاتورة (إن وجدت)
 $invoiceImage = $expense['expense_file'] ?? null;
+
+function numberToArabicWords($number) {
+    $fmt = new NumberFormatter("ar", NumberFormatter::SPELLOUT);
+    $integerPart = floor($number);
+    $fractionPart = round(($number - $integerPart) * 100);
+
+    $words = $fmt->format($integerPart);
+
+    if ($fractionPart > 0) {
+        $fractionWords = $fmt->format($fractionPart);
+        return "$words ريال و$fractionWords هللة";
+    } else {
+        return "$words ريال";
+    }
+}
 ?>
 
 <style>
@@ -240,7 +255,7 @@ select#vatRate {
   </table></div>
 
   <!-- الملخص -->
-  <div class="invoice-summary">
+  <!--<div class="invoice-summary">
     <div>
       <strong>نسبة الضريبة:</strong>
       <select id="vatRate" data-expense-id="<?= $expenseId ?>">
@@ -253,7 +268,45 @@ select#vatRate {
     <div id="vatRow" <?= $vatRate == 0 ? 'style="display:none;"' : '' ?>><strong>الضريبة:</strong> <span id="vatValue"><?= number_format($expense['vat_value'],2) ?></span> ريال</div>
     <div id="grandRow" <?= $vatRate == 0 ? 'style="display:none;"' : '' ?>><strong>الإجمالي بعد الضريبة:</strong> <span id="grandTotal"><?= number_format($expense['total_amount'],2) ?></span> ريال</div>
   </div>
+</div>-->
+<div class="invoice-container" style="display: flex; justify-content: space-between; align-items: flex-start; gap: 30px; direction: rtl;">
+
+  <!-- ✅ العمود اليمين: المبلغ بالعربي -->
+  <div class="total-words" style="font-weight: bold; color: #444; font-size: 15px; text-align: right; margin-top: 35px;">
+    (<?= numberToArabicWords($expense['total_amount']) ?> فقط)
+  </div>
+
+  <!-- ✅ العمود الشمال: تفاصيل الفاتورة -->
+  <div class="invoice-summary-wrapper" style="margin-top: 25px;">
+    <div class="invoice-summary" style="text-align: right;">
+      <div>
+        <strong>نسبة الضريبة:</strong>
+        <select id="vatRate" data-expense-id="<?= $expenseId ?>">
+          <option value="0" <?= $vatRate == 0 ? 'selected' : '' ?>>0%</option>
+          <option value="0.15" <?= $vatRate == 0.15 ? 'selected' : '' ?>>15%</option>
+        </select>
+        <span id="vatRateText"><?= $vatRate == 0 ? '0%' : '15%' ?></span>
+      </div>
+
+      <div>
+        <strong>المجموع:</strong>
+        <span id="totalNoVat"><?= number_format($subtotal,2) ?></span> ريال
+      </div>
+
+      <div id="vatRow" <?= $vatRate == 0 ? 'style="display:none;"' : '' ?>>
+        <strong>الضريبة:</strong>
+        <span id="vatValue"><?= number_format($expense['vat_value'],2) ?></span> ريال
+      </div>
+
+      <div id="grandRow" <?= $vatRate == 0 ? 'style="display:none;"' : '' ?>>
+        <strong>الإجمالي بعد الضريبة:</strong>
+        <span id="grandTotal"><?= number_format($expense['total_amount'],2) ?></span> ريال
+      </div>
+    </div>
+  </div>
+
 </div>
+
 
 <script>
 function recalcTotals(saveToDB = false) {
