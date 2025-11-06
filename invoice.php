@@ -406,7 +406,6 @@ th, td {
       <span id="grandTotal"><?= number_format($grandTotal,2) ?></span> ريال
     </div>
   </div>
-
 </div>
 
 <script>
