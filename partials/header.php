@@ -420,7 +420,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
     .sidebar-link:hover,
     .sidebar-link.active {
       background-color: #ffe5cc;
-      color: #d35400;
+      color: #d35400 !important;
       text-decoration: none;
     }
 
