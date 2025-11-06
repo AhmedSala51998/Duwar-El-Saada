@@ -332,30 +332,30 @@ $rows = $stmt->fetchAll();
     <tbody>
       <?php foreach($rows as $r): ?>
       <tr class="text-center">
-        <td class="fw-bold text-muted"><?= $r['id'] ?></td>
-        <td><?= esc($r['invoice_serial'] ?? '-') ?></td>
-        <td><?= esc($r['name']) ?></td>
-        <td><?= esc($r['unit']) ?></td>
-        <td>
+        <td class="fw-bold text-muted" data-label="#"> <?= $r['id'] ?> </td>
+        <td data-label="رقم تسلسلي"> <?= esc($r['invoice_serial'] ?? '-') ?> </td>
+        <td data-label="البيان"> <?= esc($r['name']) ?> </td>
+        <td data-label="نوع الوحدة"> <?= esc($r['unit']) ?> </td>
+        <td data-label="الكمية">
           <span class="badge bg-light text-dark">
             <?= htmlspecialchars($r['total_packages']) ?>
             <?php if (!empty($r['package'])): ?> × <?= htmlspecialchars($r['package']) ?><?php endif; ?>
           </span>
         </td>
-        <td><?= number_format((float)$r['total_price'],7) ?></td>
-        <td>
+        <td data-label="السعر"> <?= number_format((float)$r['total_price'],7) ?> </td>
+        <td data-label="الكميات بالوحدة">
           <span class="badge bg-light text-dark"><?= htmlspecialchars($r['single_package']) ?></span>
         </td>
-        <td>
+        <td data-label="اجمالي الكميات">
           <span class="badge bg-light text-dark"><?= htmlspecialchars($r['quantity']) ?></span>
         </td>
-        <td><?= number_format((float)$r['price'],7) ?></td>
-        <td><?= esc($r['created_at']) ?></td>
-        <td><?= esc($r['payer_name']) ?></td>
-        <td><?= esc($r['payment_source'] ?? '-') ?></td>
+        <td data-label="السعر الافرادي"> <?= number_format((float)$r['price'],7) ?> </td>
+        <td data-label="التاريخ"> <?= esc($r['created_at']) ?> </td>
+        <td data-label="الدافع"> <?= esc($r['payer_name']) ?> </td>
+        <td data-label="مصدر الدفع"> <?= esc($r['payment_source'] ?? '-') ?> </td>
 
         <?php if(has_permission('purchases.processes')): ?>
-        <td class="text-center">
+        <td class="text-center" data-label="عمليات">
           <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#actions<?= $r['id'] ?>">
             <i class="bi bi-gear-fill"></i>
           </button>
