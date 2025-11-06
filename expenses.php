@@ -269,10 +269,10 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
         <td data-label="#" class="fw-bold text-muted"><?= $r['id'] ?></td>
         <td data-label="رقم تسلسلي"><?= esc($r['invoice_serial']) ?></td>
         <td data-label="المصروفات"><span class="badge bg-light text-dark px-3 py-2"><?= esc($r['main_expense']) ?></span></td>
-        <td data-label="نوع المصروف" class="text-truncate" style="max-width: 180px;" title="<?= esc($r['sub_expense']) ?>">
+        <td data-label="نوع المصروف" class="text-truncate" title="<?= esc($r['sub_expense']) ?>">
           <?= esc($r['sub_expense']) ?>
         </td>
-        <td data-label="بيان المصروف" class="text-truncate" style="max-width: 300px;" title="<?= esc($r['expense_desc']) ?>">
+        <td data-label="بيان المصروف" class="text-truncate" title="<?= esc($r['expense_desc']) ?>">
           <?= esc($r['expense_desc']) ?>
         </td>
         <td data-label="قيمة المصروف" class="text-success fw-semibold"><?= number_format((float)$r['expense_amount'], 2) ?></td>
