@@ -30,35 +30,25 @@ require_permission('permissions.view');?>
 $permissions = $pdo->query("SELECT * FROM permissions ORDER BY code ASC")->fetchAll();
 ?>
 
-<div class="d-flex flex-column flex-md-row justify-content-between align-items-center align-items-md-center text-center text-md-start gap-3 mb-3">
-
-  <!-- العنوان -->
-  <h3 class="page-title m-0 d-flex align-items-center gap-2 justify-content-center justify-content-md-start">
-    <span class="stat-icon d-flex justify-content-center align-items-center">
-      <i class="bi bi-lock"></i>
-    </span>
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h3 class="page-title">
+    <span class="stat-icon"><i class="bi bi-lock"></i></span>
     إدارة الصلاحيات
   </h3>
-
-  <!-- البحث + الأزرار -->
-  <div class="d-flex flex-column flex-sm-row flex-wrap justify-content-center justify-content-md-end align-items-center gap-2 w-100 w-md-auto">
+  <div class="d-flex gap-2">
     <input type="text" id="searchInput" class="form-control form-control-sm" placeholder="بحث عن صلاحية..." style="width: 220px;">
-    
     <?php if(has_permission('permissions.add')): ?>
     <button class="btn btn-orange" data-bs-toggle="modal" data-bs-target="#addPerm">
       <i class="bi bi-plus-lg"></i> إضافة صلاحية
     </button>
     <?php endif ?>
-
     <?php if(has_permission('permissions.add_group')): ?>
     <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#addPermGroup">
       <i class="bi bi-plus-square-dotted"></i> إضافة مجموعة صلاحيات
     </button>
     <?php endif ?>
   </div>
-
 </div>
-
 
 <div class="table-responsive shadow-sm rounded-3 border bg-white p-2">
   <table class="table custom-table table-hover align-middle mb-0 text-center">
