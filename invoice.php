@@ -295,8 +295,8 @@ th, td {
 
 
   <!-- جدول الأصناف -->
-  <!--<div class="table-responsive shadow-sm rounded-3 border bg-white p-2">-->
-  <table class="table-responsive" id="invoiceTable">
+  <div class="table-responsive">
+  <table id="invoiceTable">
     <thead>
       <tr>
         <th>البيان</th>
@@ -355,7 +355,7 @@ th, td {
       </tr>
       <?php endforeach; ?>
     </tbody>
-  </table><!--</div>-->
+  </table></div>
 
   <!-- الملخص -->
   <div class="invoice-summary">
