@@ -380,7 +380,9 @@ th, td {
     (<?= numberToArabicWords($grandTotal) ?>)
   </div>
 
-  <!-- ✅ العمود الشمال: تفاصيل الفاتورة -->
+<!-- الفاتورة -->
+<div class="invoice-summary-wrapper" style="margin-top: 25px;">
+
   <div class="invoice-summary" style="text-align: right;">
     <div>
       <strong>نسبة الضريبة:</strong>
@@ -391,21 +393,22 @@ th, td {
       <span id="vatRateText"><?= $vatRate == 0 ? '0%' : '15%' ?></span>
     </div>
 
-    <div>
-      <strong>المجموع:</strong>
-      <span id="totalNoVat"><?= number_format($subtotalAll,2) ?></span> ريال
-    </div>
-
-    <div id="vatRow" style="display: <?= $vatRate==0?'none':'block' ?>;">
-      <strong>الضريبة:</strong>
-      <span id="vatValue"><?= number_format($totalVat,2) ?></span> ريال
-    </div>
-
-    <div id="grandRow" style="display: <?= $vatRate==0?'none':'block' ?>;">
-      <strong>الإجمالي بعد الضريبة:</strong>
-      <span id="grandTotal"><?= number_format($grandTotal,2) ?></span> ريال
-    </div>
+    <div><strong>المجموع:</strong> <span id="totalNoVat"><?= number_format($subtotalAll,2) ?></span> ريال</div>
+    <div id="vatRow" style="display: <?= $vatRate==0?'none':'block' ?>;"><strong>الضريبة:</strong> <span id="vatValue"><?= number_format($totalVat,2) ?></span> ريال</div>
+    <div id="grandRow" style="display: <?= $vatRate==0?'none':'block' ?>;"><strong>الإجمالي بعد الضريبة:</strong> <span id="grandTotal"><?= number_format($grandTotal,2) ?></span> ريال</div>
   </div>
+
+  <!-- ✅ القراءة بالعربي تحت وبالمنتصف -->
+  <div class="total-words" style="
+      text-align: center;
+      margin-top: 25px;
+      font-weight: bold;
+      color: #444;
+      font-size: 15px;
+    ">
+    (<?= numberToArabicWords($grandTotal) ?>)
+  </div>
+
 </div>
 
 <script>
