@@ -265,8 +265,6 @@ th, td {
   /* تصحيح عرض الصفحة والجدول */
   html, body {
     width: 100% !important;
-    margin: 0;
-    padding: 0;
     overflow: visible !important;
   }
 
