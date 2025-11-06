@@ -68,6 +68,33 @@ require_permission('permissions.view');?>
             margin-inline-end: 6px;
         }
         }
+        /* ✅ توسيع مساحة العنوان في الديسكتوب فقط */
+@media (min-width: 992px) {
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  /* خليه ياخد عرض مريح */
+  .page-header .page-title {
+    flex: 1;
+    text-align: right;
+    padding-right: 1rem;
+  }
+
+  /* خلى البحث والأزرار ثابتين فى أقصى اليسار */
+  .page-header .actions {
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+
+  /* لو الأيقونة مضغوطة قوي */
+  .page-title .stat-icon {
+    margin-left: 0.5rem;
+  }
+}
+
 </style>
 <?php endif; ?>
 <?php
