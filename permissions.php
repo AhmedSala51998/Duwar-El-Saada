@@ -25,26 +25,6 @@ require_permission('permissions.view');?>
   });
 </script>
 <style>
-    .page-header .page-title {
-  font-size: 1.4rem;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.page-header .stat-icon {
-  background-color: #ff7b00;
-  color: white;
-  width: 34px;
-  height: 34px;
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
 /* ✅ تنسيق جميل للموبايل */
 @media (max-width: 768px) {
   .page-header {
