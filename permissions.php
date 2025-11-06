@@ -69,7 +69,6 @@ require_permission('permissions.view');?>
         }
         }
         /* ✅ توسيع مساحة العنوان في الديسكتوب فقط */
-@media (min-width: 992px) {
   /* نخلي صف الترويسة الرئيسي يستعمل المساحة كاملة */
   .page-header .d-flex.flex-md-row {
     align-items: center !important;
@@ -100,7 +99,6 @@ require_permission('permissions.view');?>
     padding: 0.3rem 0.6rem;
     border-radius: 50%;
   }
-}
 
 
 </style>
