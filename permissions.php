@@ -77,7 +77,7 @@ $permissions = $pdo->query("SELECT * FROM permissions ORDER BY code ASC")->fetch
 
     <!-- العنوان -->
     <h3 class="page-title m-0">
-      <span class="stat-icon"><i class="bi bi-lock"></i></span>
+      <span style="min-width: 180px; max-width: 350px !important;" class="stat-icon"><i class="bi bi-lock"></i></span>
       إدارة الصلاحيات
     </h3>
 
