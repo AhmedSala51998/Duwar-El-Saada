@@ -50,6 +50,20 @@ require_permission('permissions.view');?>
     min-width: 130px;
   }
 }
+@media (max-width: 767.98px) {
+  /* خلية العمليات */
+  td:last-child {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem; /* المسافة بين الأزرار */
+  }
+
+  /* الأزرار */
+  td:last-child .btn {
+    flex: 1 1 45%;
+    min-width: 100px;
+  }
+}
 </style>
 
 <?php endif; ?>
