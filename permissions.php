@@ -82,7 +82,7 @@ $permissions = $pdo->query("SELECT * FROM permissions ORDER BY code ASC")->fetch
 
     <!-- العنوان -->
     <div class="flex-grow-1">
-      <h3 class="page-title m-0 d-flex align-items-center gap-2">
+      <h3 class="page-title m-0 d-flex align-items-center gap-2" style="min-width: 180px; max-width: 300px !important;">
         <span class="stat-icon d-flex justify-content-center align-items-center">
           <i class="bi bi-lock"></i>
         </span>
