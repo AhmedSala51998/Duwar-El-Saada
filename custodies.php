@@ -249,15 +249,15 @@ $options = ['بسام','فيصل المطيري','مؤسسة','شركة'];
     العُهد
   </h3>
 
-  <div class="d-flex flex-wrap gap-2 justify-content-end align-items-center page-actions w-100 w-md-auto">
-    <form class="d-flex flex-wrap flex-md-nowrap gap-2 w-100 w-md-auto" method="get">
-      <select name="kw" class="form-select flex-fill">
+  <div class="d-flex flex-wrap gap-2 justify-content-end align-items-center page-actions">
+    <form class="d-flex gap-2 flex-md-nowrap w-auto w-sm-100" method="get">
+      <select name="kw" class="form-select">
         <option value="">بحث بالاسم</option>
         <?php foreach($options as $opt): ?>
           <option value="<?=esc($opt)?>" <?= $kw==$opt?'selected':'' ?>><?=esc($opt)?></option>
         <?php endforeach; ?>
       </select>
-      <button class="btn btn-outline-secondary flex-shrink-0">بحث</button>
+      <button class="btn btn-outline-secondary">بحث</button>
     </form>
 
     <?php if(has_permission('custodies.print_excel')): ?>
