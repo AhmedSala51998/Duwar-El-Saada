@@ -25,40 +25,29 @@ require_permission('permissions.view');?>
   });
 </script>
 <style>
-@media (max-width: 768px) {
-
-  /* غلاف الهيدر */
-  .page-header-wrap {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: stretch !important;
-    gap: .75rem !important;
+@media (max-width: 767.98px) {
+  .page-header .d-flex {
+    gap: 1rem !important;
   }
 
-  /* العنوان */
-  .page-header-wrap .page-title {
-    font-size: 1.1rem !important;
-    text-align: center !important;
-    margin-bottom: 0 !important;
+  .page-header .page-title {
+    text-align: center;
+    font-size: 1.1rem;
+    width: 100%;
   }
 
-  /* مجموعة البحث والأزرار */
-  .page-header-wrap .d-flex.gap-2 {
-    flex-wrap: wrap !important;
+  .page-header .actions {
     justify-content: center !important;
-    width: 100% !important;
-    gap: .5rem !important;
   }
 
-  /* مربع البحث */
-  .page-header-wrap #searchInput {
+  .page-header .actions input {
     width: 100% !important;
+    max-width: none !important;
   }
 
-  /* الأزرار */
-  .page-header-wrap .btn {
-    flex: 1 1 45% !important;
-    min-width: 140px !important;
+  .page-header .actions .btn {
+    flex: 1 1 48% !important;
+    min-width: 130px;
   }
 }
 </style>
@@ -69,23 +58,35 @@ require_permission('permissions.view');?>
 $permissions = $pdo->query("SELECT * FROM permissions ORDER BY code ASC")->fetchAll();
 ?>
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-  <h3 class="page-title">
-    <span class="stat-icon"><i class="bi bi-lock"></i></span>
-    إدارة الصلاحيات
-  </h3>
-  <div class="d-flex gap-2">
-    <input type="text" id="searchInput" class="form-control form-control-sm" placeholder="بحث عن صلاحية..." style="width: 220px;">
-    <?php if(has_permission('permissions.add')): ?>
-    <button class="btn btn-orange" data-bs-toggle="modal" data-bs-target="#addPerm">
-      <i class="bi bi-plus-lg"></i> إضافة صلاحية
-    </button>
-    <?php endif ?>
-    <?php if(has_permission('permissions.add_group')): ?>
-    <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#addPermGroup">
-      <i class="bi bi-plus-square-dotted"></i> إضافة مجموعة صلاحيات
-    </button>
-    <?php endif ?>
+<div class="page-header mb-3">
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+
+    <!-- العنوان -->
+    <h3 class="page-title m-0">
+      <span class="stat-icon"><i class="bi bi-lock"></i></span>
+      إدارة الصلاحيات
+    </h3>
+
+    <!-- البحث + الأزرار -->
+    <div class="actions d-flex flex-wrap justify-content-end gap-2 w-100 w-md-auto">
+
+      <input type="text" id="searchInput" class="form-control form-control-sm flex-grow-1"
+             placeholder="بحث عن صلاحية..." style="min-width: 180px; max-width: 220px;">
+
+      <?php if(has_permission('permissions.add')): ?>
+      <button class="btn btn-orange flex-grow-1 flex-md-grow-0" data-bs-toggle="modal" data-bs-target="#addPerm">
+        <i class="bi bi-plus-lg"></i> <span class="d-none d-sm-inline">إضافة صلاحية</span>
+      </button>
+      <?php endif ?>
+
+      <?php if(has_permission('permissions.add_group')): ?>
+      <button class="btn btn-outline-danger flex-grow-1 flex-md-grow-0" data-bs-toggle="modal" data-bs-target="#addPermGroup">
+        <i class="bi bi-plus-square-dotted"></i> <span class="d-none d-sm-inline">إضافة مجموعة صلاحيات</span>
+      </button>
+      <?php endif ?>
+
+    </div>
+
   </div>
 </div>
 
