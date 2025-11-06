@@ -332,32 +332,43 @@ $stocks = $pdo->query("
 </style>
 
 
-<div class="d-flex flex-wrap gap-2 justify-content-between align-items-center mb-3">
-  <h3 class="page-title">
-      <span class="stat-icon">
-        <i class="bi bi-gear"></i>
-      </span>
-      أوامر التشغيل 
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+  <h3 class="page-title mb-0">
+    <span class="stat-icon"><i class="bi bi-gear"></i></span>
+    أوامر التشغيل
   </h3>
-  <div class="d-flex gap-2">
-    <form class="d-flex gap-2" method="get">
-      <input class="form-control" name="kw" placeholder="بحث باسم المنتج" value="<?= esc($kw) ?>">
-      <button class="btn btn-outline-secondary">بحث</button>
+
+  <div class="d-flex flex-wrap gap-2 justify-content-end align-items-center w-auto w-md-auto">
+    <form class="d-flex flex-wrap flex-md-nowrap gap-2 w-100 w-md-auto" method="get">
+      <input class="form-control flex-fill" name="kw" placeholder="بحث باسم المنتج" value="<?= esc($kw) ?>">
+      <button class="btn btn-outline-secondary flex-shrink-0">بحث</button>
     </form>
+
     <?php if(has_permission('orders.print_excel')): ?>
-    <a class="btn btn-outline-dark" href="export_orders_excel.php?kw=<?= urlencode($kw) ?>"><i class="bi bi-file-earmark-spreadsheet"></i> Excel</a>
+      <a class="btn btn-outline-dark" href="export_orders_excel.php?kw=<?= urlencode($kw) ?>">
+        <i class="bi bi-file-earmark-spreadsheet"></i> 
+        <span class="d-none d-sm-inline">Excel</span>
+      </a>
     <?php endif ?>
+
     <?php if(has_permission('orders.print_pdf')): ?>
-    <a class="btn btn-outline-dark" href="export_orders_pdf.php?kw=<?= urlencode($kw) ?>"><i class="bi bi-filetype-pdf"></i> PDF</a>
+      <a class="btn btn-outline-dark" href="export_orders_pdf.php?kw=<?= urlencode($kw) ?>">
+        <i class="bi bi-filetype-pdf"></i> 
+        <span class="d-none d-sm-inline">PDF</span>
+      </a>
     <?php endif ?>
+
     <?php if(has_permission('orders.view_inventory')): ?>
-      <button class="btn btn-orange" data-bs-toggle="modal" data-bs-target="#stocksModal">
-        <i class="bi bi-box-seam"></i> المخزون
+      <button class="btn btn-orange">
+        <i class="bi bi-box-seam"></i> 
+        <span class="d-none d-sm-inline">المخزون</span>
       </button>
-      <?php endif ?>
-      <?php if(has_permission('orders.add')): ?>
+    <?php endif ?>
+
+    <?php if(has_permission('orders.add')): ?>
       <button class="btn btn-orange" data-bs-toggle="modal" data-bs-target="#addOrder">
-        <i class="bi bi-plus-lg"></i> إنشاء أمر
+        <i class="bi bi-plus-lg"></i> 
+        <span class="d-none d-sm-inline">إنشاء أمر</span>
       </button>
     <?php endif; ?>
   </div>
