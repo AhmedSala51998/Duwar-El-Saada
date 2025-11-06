@@ -262,15 +262,6 @@ select#vatRate {
 /* ============================= */
 /* 🖨️ تحسين المظهر عند الطباعة */
 /* ============================= */
-@media print {
-  body * { visibility: hidden; }
-  .print-area, .print-area * { visibility: visible; }
-  .print-area { position: absolute; left: 0; top: 0; width: 100%; }
-  select#vatRate, #invoiceDate { display: none !important; }
-  #vatRateText, #invoiceDateText { display: inline !important; }
-  .btn-orange { display: none; }
-  table, th, td { font-size: 10px; padding: 3px; }
-}
 
 </style>
 
