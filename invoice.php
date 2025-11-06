@@ -239,58 +239,10 @@ th, td {
     overflow: visible !important;
   }
 
-  table#invoiceTable {
-    width: 100% !important;
-    min-width: auto !important;
-    table-layout: auto;
-  }
-
 }
 
 /* ======== الطباعة فقط ======== */
 @media print {
-
-  /* إزالة أي تأثيرات لون أو ظل */
-
-  /* إلغاء أي highlight أو hover */
-  a, button, input, textarea, select {
-    color: #000 !important;
-    background: none !important;
-  }
-
-  a:hover, button:hover, tr:hover {
-    background: none !important;
-  }
-
-  /* تصحيح عرض الصفحة والجدول */
-  html, body {
-    width: 100% !important;
-    overflow: visible !important;
-  }
-
-  /* منطقة الطباعة */
-  .print-area {
-    width: 100%;
-    max-width: none !important;
-    padding: 0;
-  }
-
-  /* الجدول */
-  .table-responsive {
-    overflow: visible !important;
-    box-shadow: none !important;
-    border: none !important;
-  }
-
-  tr, td, th {
-    page-break-inside: avoid;
-  }
-  th, td { padding: 3px; }
-
-  /* إخفاء العناصر غير الضرورية */
-  .no-print, .btn, .navbar, .footer, .offcanvas {
-    display: none !important;
-  }
 
   /* طباعة بلون النصوص الأسود فقط */
   @page {
