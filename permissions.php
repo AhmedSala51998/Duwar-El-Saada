@@ -68,28 +68,6 @@ require_permission('permissions.view');?>
         margin-inline-end: 6px;
     }
     }
-    @media (min-width: 992px) {
-  .page-header .flex-grow-1 {
-    min-width: 300px;
-  }
-
-  .page-header .page-title {
-    white-space: nowrap;
-  }
-
-  .page-header .actions {
-    flex-shrink: 0;
-  }
-
-  .page-title .stat-icon {
-    background-color: #fff7f1;
-    padding: 0.35rem 0.55rem;
-    border-radius: 50%;
-    color: #ff7a00;
-    font-size: 1.1rem;
-  }
-}
-
 </style>
 <?php endif; ?>
 <?php
@@ -98,22 +76,17 @@ $permissions = $pdo->query("SELECT * FROM permissions ORDER BY code ASC")->fetch
 ?>
 
 <!-- ✅ ترويسة الصفحة -->
-<!-- ✅ ترويسة الصفحة -->
 <div class="page-header mb-3">
   <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
 
     <!-- العنوان -->
-    <div class="flex-grow-1">
-      <h3 class="page-title m-0 d-flex align-items-center gap-2">
-        <span class="stat-icon d-flex justify-content-center align-items-center">
-          <i class="bi bi-lock"></i>
-        </span>
-        <span class="page-title-text">إدارة الصلاحيات</span>
-      </h3>
-    </div>
+    <h3 class="page-title m-0" style="min-width: 180px; max-width: 220px !important;">
+      <span class="stat-icon"><i class="bi bi-lock"></i></span>
+      إدارة الصلاحيات
+    </h3>
 
     <!-- البحث + الأزرار -->
-    <div class="actions d-flex flex-wrap justify-content-end gap-2 w-100 w-md-auto align-items-center flex-shrink-0">
+    <div class="actions d-flex flex-wrap justify-content-end gap-2 w-100 w-md-auto">
 
       <input type="text" id="searchInput" class="form-control form-control-sm flex-grow-1"
              placeholder="بحث عن صلاحية..." style="min-width: 180px; max-width: 220px;">
