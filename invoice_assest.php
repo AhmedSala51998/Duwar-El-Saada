@@ -217,49 +217,6 @@ select#vatRate {
 }
 
 /* ======== عرض الموبايل فقط ======== */
-@media (max-width: 768px) {
-
-  /* نحط الجدول داخل scroll أفقي */
-  .print-area table {
-    min-width: 900px; /* حتى يقدر المستخدم يعمل scroll */
-  }
-
-  .table-responsive {
-    overflow-x: auto;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-    border: none !important;
-  }
-
-  /* تحسين تجربة السحب */
-  .table-responsive::-webkit-scrollbar {
-    height: 6px;
-  }
-
-  .table-responsive::-webkit-scrollbar-thumb {
-    background: #ccc;
-    border-radius: 4px;
-  }
-
-  /* تصغير الخطوط لتناسب الشاشة */
-  th, td {
-    font-size: 12px !important;
-    white-space: nowrap !important; /* يمنع خروج النص */
-  }
-
-  /* عناوين الجدول (th) بشكل أوضح */
-  th {
-    background-color: #f8f9fa !important;
-    color: #333;
-    font-weight: 600;
-  }
-
-  /* منع خروج الجدول خارج حدود الصفحة */
-  .print-area {
-    overflow-x: hidden;
-    padding: 10px;
-  }
-}
 
 
 </style>
