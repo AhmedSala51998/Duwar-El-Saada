@@ -251,11 +251,6 @@ th, td {
 @media print {
 
   /* إزالة أي تأثيرات لون أو ظل */
-  * {
-    background: transparent !important;
-    box-shadow: none !important;
-    text-shadow: none !important;
-  }
 
   /* إلغاء أي highlight أو hover */
   a, button, input, textarea, select {
