@@ -39,6 +39,21 @@ $vatRate = ($order['vat'] > 0) ? 0.15 : 0.00;
 
 // صورة الفاتورة العامة (إن وجدت)
 $invoiceImage = $order['invoice_image'] ?? null;
+
+function numberToArabicWords($number) {
+    $fmt = new NumberFormatter("ar", NumberFormatter::SPELLOUT);
+    $integerPart = floor($number);
+    $fractionPart = round(($number - $integerPart) * 100);
+
+    $words = $fmt->format($integerPart);
+
+    if ($fractionPart > 0) {
+        $fractionWords = $fmt->format($fractionPart);
+        return "$words ريال و$fractionWords هللة";
+    } else {
+        return "$words ريال";
+    }
+}
 ?>
 
 <style>
@@ -351,7 +366,14 @@ th, td {
         <td><?= esc($item['quantity']) ?></td>
         <td><?= number_format($item['unit_total'],3) ?> ريال</td>
         <td class="vat"><?= number_format($item['unit_vat'],5) ?> ريال</td>
-        <td class="total"><?= number_format($item['unit_all_total'],5) ?> ريال</td>
+        <!--<td class="total"><?= number_format($item['unit_all_total'],5) ?> ريال</td>-->
+        <td class="total">
+          <?= number_format($item['unit_all_total'],5) ?> ريال
+          <br>
+          <small class="text-muted">
+            (<?= numberToArabicWords($item['unit_all_total']) ?>)
+          </small>
+        </td>
       </tr>
       <?php endforeach; ?>
     </tbody>
