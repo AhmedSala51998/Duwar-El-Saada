@@ -300,8 +300,21 @@ th, td {
     margin: 10mm;
   }
 }
-
-
+@media print {
+  body * { visibility: hidden; }
+  .print-area, .print-area * { visibility: visible; }
+  .print-area { position: absolute; left: 0; top: 0; width: 100%; }
+  select#vatRate { display: none !important; }
+  #vatRateText { display: inline !important; }
+  #invoiceDate { display: none !important; }
+  #invoiceDateText { display: inline !important; }
+}
+@media print {
+  body { font-size: 10px; }
+  table { page-break-inside: auto; }
+  tr    { page-break-inside: avoid; page-break-after: auto; }
+  th, td { padding: 3px; }
+}
 </style>
 
 <div class="d-print-none mb-3">
