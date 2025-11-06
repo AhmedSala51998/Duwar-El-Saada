@@ -391,12 +391,12 @@ $stocks = $pdo->query("
     <tbody>
       <?php foreach($orders as $o): ?>
       <tr class="text-center">
-        <td class="fw-bold text-muted"><?= $o['id'] ?></td>
-        <td><?= esc($o['pname']) ?></td>
-        <td><?= $o['qty'] ?></td>
-        <td><?= esc($o['unit']) ?></td>
-        <td><?= esc($o['note']) ?></td>
-        <td><?= esc($o['created_at']) ?></td>
+        <td data-label="#" class="fw-bold text-muted"><?= $o['id'] ?></td>
+        <td data-label="المنتج"><?= esc($o['pname']) ?></td>
+        <td data-label="الكمية"><?= $o['qty'] ?></td>
+        <td data-label="الوحدة"><?= esc($o['unit']) ?></td>
+        <td data-label="ملاحظة"><?= esc($o['note']) ?></td>
+        <td data-label="التاريخ"><?= esc($o['created_at']) ?></td>
         <?php if(has_permission('orders.processes')): ?>
         <td class="text-center">
           <?php if(has_permission('orders.delete')): ?>

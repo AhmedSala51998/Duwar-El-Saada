@@ -271,27 +271,27 @@ $rows=$s->fetchAll();
     <tbody>
       <?php foreach($rows as $r): ?>
       <tr class="text-center">
-        <td class="fw-bold text-muted"><?= $r['id'] ?></td>
-        <td><?= esc($r['invoice_serial']) ?></td>
+        <td data-label="#" class="fw-bold text-muted"><?= $r['id'] ?></td>
+        <td data-label="رقم تسلسلي"><?= esc($r['invoice_serial']) ?></td>
         <!--<td>
           <?php if($r['image']): ?>
             <img src="uploads/<?= esc($r['image']) ?>" width="44" class="rounded">
           <?php endif; ?>
         </td>-->
-        <td><?= esc($r['name']) ?></td>
-        <td><?= esc($r['type']) ?></td>
-        <td><?= (int)$r['quantity'] ?></td>
-        <td><?= number_format((float)$r['price'],2) ?></td>
-        <td>
+        <td data-label="الاسم"><?= esc($r['name']) ?></td>
+        <td data-label="النوع"><?= esc($r['type']) ?></td>
+        <td data-label="العدد"><?= (int)$r['quantity'] ?></td>
+        <td data-label="السعر"><?= number_format((float)$r['price'],2) ?></td>
+        <td data-label="الضريبة">
           <?php if (!empty($r['has_vat']) && $r['has_vat'] == 1): ?>
             <span class="text-primary fw-semibold"><?= number_format((float)$r['vat_value'],2) ?></span>
           <?php else: ?>
             <span class="text-muted small">بدون</span>
           <?php endif; ?>
         </td>
-        <td class="fw-bold text-dark"><?= number_format((float)$r['total_amount'],2) ?></td>
-        <td><?= esc($r['payer_name'] ?? '-') ?></td>
-        <td><?= esc($r['payment_source'] ?? '-') ?></td>
+        <td data-label="الاجمالي بعد الضريبة" class="fw-bold text-dark"><?= number_format((float)$r['total_amount'],2) ?></td>
+        <td data-label="الدافع"><?= esc($r['payer_name'] ?? '-') ?></td>
+        <td data-label="مصدر الدفع"><?= esc($r['payment_source'] ?? '-') ?></td>
 
         <?php if(has_permission('assets.processes')): ?>
         <td class="text-center">

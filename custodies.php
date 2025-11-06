@@ -345,13 +345,13 @@ $total_balance = $total_in - $total_out;
         $last_balance = $current_balance;
     ?>
       <tr class="table-primary">
-        <td class="fw-bold text-muted"><?= $r['id'] ?></td>
-        <td><?= esc($r['person_name']) ?></td>
-        <td><?= number_format($in,2) ?></td>
-        <td><?= number_format($out,2) ?></td>
-        <td><?= number_format($current_balance,2) ?></td>
-        <td><?= esc($r['taken_at']) ?></td>
-        <td><?= esc($r['notes']) ?></td>
+        <td data-label="#" class="fw-bold text-muted"><?= $r['id'] ?></td>
+        <td data-label="البيان"><?= esc($r['person_name']) ?></td>
+        <td data-label="الوارد"><?= number_format($in,2) ?></td>
+        <td data-label="الصادر"><?= number_format($out,2) ?></td>
+        <td data-label="الرصيد"><?= number_format($current_balance,2) ?></td>
+        <td data-label="التاريخ"><?= esc($r['taken_at']) ?></td>
+        <td data-label="ملاحظات"><?= esc($r['notes']) ?></td>
         <?php if(has_permission('custodies.processes')): ?>
         <td class="text-center">
           <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#actions<?= $r['id'] ?>">
@@ -403,13 +403,13 @@ $total_balance = $total_in - $total_out;
         }
       ?>
       <tr>
-        <td></td>
-        <td><?= esc($r['person_name']) ?> -- <?= $type_ar ?></td>
-        <td></td>
-        <td><?= number_format($trans_amount,2) ?></td>
-        <td><?= number_format($current_balance,2) ?></td>
-        <td><?= esc($t['created_at']) ?></td>
-        <td><?= esc($t['notes'] ?? '') ?></td>
+        <td data-label="#"></td>
+        <td data-label="البيان"><?= esc($r['person_name']) ?> -- <?= $type_ar ?></td>
+        <td data-label="الوارد"></td>
+        <td data-label="الصادر"><?= number_format($trans_amount,2) ?></td>
+        <td data-label="الرصيد"><?= number_format($current_balance,2) ?></td>
+        <td data-label="التاريخ"><?= esc($t['created_at']) ?></td>
+        <td data-label="ملاحظات"><?= esc($t['notes'] ?? '') ?></td>
         <td><?= $type_ar ?></td>
         <?php if($can_edit): ?><td></td><?php endif; ?>
       </tr>
