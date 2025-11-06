@@ -287,6 +287,7 @@ th, td {
   tr, td, th {
     page-break-inside: avoid;
   }
+  th, td { padding: 3px; }
 
   /* إخفاء العناصر غير الضرورية */
   .no-print, .btn, .navbar, .footer, .offcanvas {
