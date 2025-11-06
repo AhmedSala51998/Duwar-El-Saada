@@ -233,6 +233,43 @@ select#vatRate {
 /* ============================= */
 /* 🖨️ تحسين المظهر عند الطباعة */
 /* ============================= */
+@media print {
+  /* ✅ ضمان ظهور الجدول بالكامل وعدم القص */
+  html, body {
+    width: 100%;
+    overflow: visible !important;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .print-area {
+    width: 100%;
+    max-width: none !important;
+    overflow: visible !important;
+    zoom: 0.85; /* تقلل الحجم شوية ليظهر الجدول كامل في عرض الصفحة */
+  }
+
+  table {
+    width: 100%;
+    min-width: auto !important;
+    table-layout: auto !important;
+    overflow: visible !important;
+  }
+
+  th, td {
+    white-space: nowrap; /* يمنع التكسير الغريب أثناء الطباعة */
+    word-wrap: normal;
+  }
+
+  /* ✅ السماح للجدول أن يمتد لعدة صفحات */
+  tr, td, th {
+    page-break-inside: avoid;
+  }
+
+  /* إخفاء أي تمرير أفقي أثناء الطباعة */
+  .print-area::-webkit-scrollbar {
+    display: none;
+  }
+}
 
 </style>
 
