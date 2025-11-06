@@ -116,6 +116,120 @@ if (!$custody) {
   }
 }
 
+/* ======== الطباعة فقط ======== */
+@media print {
+
+  /* إزالة أي تأثيرات لون أو ظل */
+  * {
+    background: transparent !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  /* إلغاء أي highlight أو hover */
+  a, button, input, textarea, select, th, td {
+    color: #000 !important;
+    background: none !important;
+  }
+
+  a:hover, button:hover, tr:hover {
+    background: none !important;
+  }
+
+  /* تصحيح عرض الصفحة والجدول */
+  html, body {
+    width: 100% !important;
+    margin: 0;
+    padding: 0;
+    overflow: visible !important;
+  }
+
+  /* منطقة الطباعة */
+  .print-area {
+    width: 100%;
+    max-width: none !important;
+    border: none !important;
+    padding: 0;
+  }
+
+  /* الجدول */
+  .table-responsive {
+    overflow: visible !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    table-layout: auto !important;
+  }
+
+  th, td {
+    border: 1px solid #000 !important;
+    white-space: normal !important;
+    padding: 6px 8px !important;
+  }
+
+  tr, td, th {
+    page-break-inside: avoid;
+  }
+
+  /* إخفاء العناصر غير الضرورية */
+  .no-print, .btn, .navbar, .footer, .offcanvas {
+    display: none !important;
+  }
+
+  /* طباعة بلون النصوص الأسود فقط */
+  @page {
+    size: A4 portrait; /* يمكن تغييرها إلى landscape */
+    margin: 10mm;
+  }
+}
+/* ======== عرض الموبايل فقط ======== */
+@media (max-width: 768px) {
+
+  /* نحط الجدول داخل scroll أفقي */
+  .print-area table {
+    min-width: 900px; /* حتى يقدر المستخدم يعمل scroll */
+  }
+
+  .table-responsive {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    border: none !important;
+  }
+
+  /* تحسين تجربة السحب */
+  .table-responsive::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  .table-responsive::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+  }
+
+  /* تصغير الخطوط لتناسب الشاشة */
+  th, td {
+    font-size: 12px !important;
+    white-space: nowrap !important; /* يمنع خروج النص */
+  }
+
+  /* عناوين الجدول (th) بشكل أوضح */
+  th {
+    background-color: #f8f9fa !important;
+    color: #333;
+    font-weight: 600;
+  }
+
+  /* منع خروج الجدول خارج حدود الصفحة */
+  .print-area {
+    overflow-x: hidden;
+    padding: 10px;
+  }
+}
 
 </style>
 
