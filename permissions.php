@@ -76,37 +76,33 @@ $permissions = $pdo->query("SELECT * FROM permissions ORDER BY code ASC")->fetch
 ?>
 
 <!-- ✅ ترويسة الصفحة -->
-<!-- ✅ ترويسة الصفحة -->
 <div class="page-header mb-3">
   <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
 
     <!-- العنوان -->
-    <div class="flex-grow-1">
-      <h3 class="page-title m-0 d-flex align-items-center gap-2">
-        <span class="stat-icon d-flex justify-content-center align-items-center">
-          <i class="bi bi-lock"></i>
-        </span>
-        <span class="page-title-text">إدارة الصلاحيات</span>
-      </h3>
-    </div>
+    <h3 class="page-title m-0">
+      <span class="stat-icon"><i class="bi bi-lock"></i></span>
+      إدارة الصلاحيات
+    </h3>
 
     <!-- البحث + الأزرار -->
-    <div class="actions d-flex flex-wrap justify-content-end align-items-center gap-2 flex-shrink-0"
-         style="max-width: 100%;">
-      <input type="text" id="searchInput" class="form-control form-control-sm"
-             placeholder="بحث عن صلاحية..." style="min-width: 200px; max-width: 240px;">
+    <div class="actions d-flex flex-wrap justify-content-end gap-2 w-100 w-md-auto">
+
+      <input type="text" id="searchInput" class="form-control form-control-sm flex-grow-1"
+             placeholder="بحث عن صلاحية..." style="min-width: 180px; max-width: 220px;">
 
       <?php if(has_permission('permissions.add')): ?>
-      <button class="btn btn-orange" data-bs-toggle="modal" data-bs-target="#addPerm">
+      <button class="btn btn-orange flex-grow-1 flex-md-grow-0" data-bs-toggle="modal" data-bs-target="#addPerm">
         <i class="bi bi-plus-lg"></i> <span class="d-none d-sm-inline">إضافة صلاحية</span>
       </button>
       <?php endif ?>
 
       <?php if(has_permission('permissions.add_group')): ?>
-      <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#addPermGroup">
+      <button class="btn btn-outline-danger flex-grow-1 flex-md-grow-0" data-bs-toggle="modal" data-bs-target="#addPermGroup">
         <i class="bi bi-plus-square-dotted"></i> <span class="d-none d-sm-inline">إضافة مجموعة صلاحيات</span>
       </button>
       <?php endif ?>
+
     </div>
 
   </div>
