@@ -410,7 +410,12 @@ $current_page = basename($_SERVER['PHP_SELF']);
         word-break: break-all;
       }
     }
-
+    .navbar .btn[data-bs-toggle="offcanvas"] {
+      order: 3; /* يخليه آخر عنصر في flex RTL */
+    }
+    .navbar .navbar-brand {
+      order: 1;
+    }
 
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
@@ -430,57 +435,51 @@ $current_page = basename($_SERVER['PHP_SELF']);
   </div>
 <div id="page-wrapper" style="opacity:0; transition:opacity .8s ease;">
 <nav class="navbar navbar-expand-lg sticky-top custom-navbar">
-  <div class="container-fluid">
+  <div class="container-fluid d-flex justify-content-between align-items-center">
 
-    <!-- زر القائمة للموبايل -->
-    <button class="btn d-md-none me-2 text-orange fs-3 border-0" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
-      <i class="bi bi-list"></i>
-    </button>
-
-    <!-- اللوجو -->
+    <!-- ✅ اللوجو على اليمين -->
     <a class="navbar-brand d-flex align-items-center gap-2 fw-bold text-orange" href="<?= BASE_URL ?>/home.php">
-      <img src="<?= BASE_URL ?>/assets/logo.png" width="65" height="65" alt="logo" class="rounded shadow-sm">
-      <span class="fs-5" style="font-family: 'Scheherazade New', serif; font-size: 1.4rem; font-weight: 700;">
+      <img src="<?= BASE_URL ?>/assets/logo.png" width="55" height="55" alt="logo" class="rounded shadow-sm">
+      <span class="fs-5" style="font-family: 'Scheherazade New', serif; font-weight: 700;">
         <?= esc(APP_NAME) ?>
       </span>
     </a>
 
-    <!-- زرار القائمة -->
-    <button class="navbar-toggler border-0" data-bs-toggle="collapse" data-bs-target="#nav">
-      <span class="navbar-toggler-icon"></span>
+    <!-- ✅ زر القائمة على الشمال (يظهر فقط في الموبايل) -->
+    <button class="btn d-md-none text-orange fs-3 border-0" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
+      <i class="bi bi-list"></i>
     </button>
 
-    <!-- عناصر النافبار -->
-    <div class="collapse navbar-collapse" id="nav">
-      <ul class="navbar-nav ms-auto align-items-lg-center gap-3">
+    <!-- ✅ العناصر الثابتة في اليمين الكبير -->
+    <ul class="navbar-nav ms-auto align-items-lg-center gap-3 d-none d-md-flex">
 
-        <!-- الدور -->
-        <li class="nav-item">
-          <span class="badge role-badge">
-            <i class="bi bi-person-badge me-1"></i> <?= esc(current_role()) ?>
-          </span>
-        </li>
+      <!-- الدور -->
+      <li class="nav-item">
+        <span class="badge role-badge">
+          <i class="bi bi-person-badge me-1"></i> <?= esc(current_role()) ?>
+        </span>
+      </li>
 
-        <!-- المستخدمون -->
-        <?php if(has_permission('users.view')): ?>
-        <li class="nav-item">
-          <a class="nav-link <?= $current_page=='users.php'?'active':'' ?>" href="<?= BASE_URL ?>/users.php">
-            <i class="bi bi-people me-1"></i> المستخدمون
-          </a>
-        </li>
-        <?php endif ?>
+      <!-- المستخدمون -->
+      <?php if(has_permission('users.view')): ?>
+      <li class="nav-item">
+        <a class="nav-link <?= $current_page=='users.php'?'active':'' ?>" href="<?= BASE_URL ?>/users.php">
+          <i class="bi bi-people me-1"></i> المستخدمون
+        </a>
+      </li>
+      <?php endif ?>
 
-        <!-- خروج -->
-        <li class="nav-item">
-          <a class="btn btn-logout" href="<?= BASE_URL ?>/logout.php">
-            <i class="bi bi-box-arrow-right me-1"></i> خروج
-          </a>
-        </li>
+      <!-- خروج -->
+      <li class="nav-item">
+        <a class="btn btn-logout" href="<?= BASE_URL ?>/logout.php">
+          <i class="bi bi-box-arrow-right me-1"></i> خروج
+        </a>
+      </li>
 
-      </ul>
-    </div>
+    </ul>
   </div>
-</nav></div>
+</nav>
+</div>
 
 <!-- القائمة الجانبية في الموبايل (Offcanvas) -->
 <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarMenu">
