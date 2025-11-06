@@ -213,20 +213,20 @@ $can_edit = in_array(current_role(), ['admin','manager']); ?>
     <tbody class="text-center">
       <?php foreach($rows as $r): ?>
       <tr>
-        <td class="fw-bold text-muted"><?= $r['id'] ?></td>
-        <td><?= esc($r['username']) ?></td>
+        <td data-label="#" class="fw-bold text-muted"><?= $r['id'] ?></td>
+        <td data-label="اسم المستخدم"><?= esc($r['username']) ?></td>
         <!--<td>
           <span class="badge bg-light text-dark border fw-semibold px-3 py-2">
             <i class="bi bi-person-badge me-1"></i> <?= esc($r['role_name'] ?? '-') ?>
           </span>
         </td>-->
-        <td>
+        <td data-label="الدور">
           <span class="role-badge position-relative d-inline-flex align-items-center px-3 py-2 fw-semibold">
             <span class="bullet"></span>
             <i class="bi bi-person-badge me-2"></i> <?= esc($r['role_name'] ?? '-') ?>
           </span>
         </td>
-        <td class="text-secondary small"><?= esc($r['created_at']) ?></td>
+        <td data-label="تاريخ الانشاء" class="text-secondary small"><?= esc($r['created_at']) ?></td>
         <?php if(has_permission('users.processes')): ?>
         <td class="text-center">
           <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#actionsUser<?= $r['id'] ?>">

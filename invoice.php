@@ -194,6 +194,183 @@ th, td {
 }
 
 
+.print-area {
+  max-width: 900px;
+  margin: auto;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  border: 1px solid #ccc;
+  padding: 20px;
+  border-radius: 8px;
+  background: #fff;
+  direction: rtl;
+  text-align: right;
+  overflow-x: auto; /* مهم للجداول على الموبايل */
+}
+
+/* الجدول الأساسي */
+.print-area table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+  min-width: 800px; /* يمنع تكدس الأعمدة في الموبايل */
+}
+
+.print-area table th,
+.print-area table td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: center;
+  font-size: 14px;
+  word-wrap: break-word;
+}
+
+.print-area table th {
+  background-color: #f8f9fa;
+  font-weight: bold;
+}
+
+/* الرأس */
+.invoice-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-direction: row-reverse;
+  flex-wrap: wrap; /* يجعل المحتوى ينزل تحت بعض في الموبايل */
+  gap: 15px;
+}
+
+.invoice-info {
+  flex: 1;
+  min-width: 250px;
+  text-align: right;
+  line-height: 1.8;
+}
+
+.invoice-image {
+  width: 150px;
+  height: auto;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-shadow: 0 0 6px rgba(0,0,0,0.1);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* الشعار والعنوان */
+.logo {
+  width: 120px;
+  height: auto;
+  margin-bottom: 10px;
+}
+
+.d-flex.flex-column.align-items-center.mb-3 h2 {
+  font-size: 1.6rem;
+}
+
+/* الملخص */
+.invoice-summary {
+  margin-top: 20px;
+  text-align: left;
+  line-height: 1.8;
+  font-size: 15px;
+}
+
+.invoice-summary div {
+  margin-bottom: 5px;
+}
+
+select#vatRate {
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+/* تحسين الأزرار */
+.btn-orange {
+  background-color: #ff7f50;
+  border: none;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 6px;
+  transition: background 0.3s;
+}
+
+.btn-orange:hover {
+  background-color: #ff6a33;
+}
+
+/* ============================= */
+/* 📱 تحسين العرض على الشاشات الصغيرة */
+/* ============================= */
+@media (max-width: 768px) {
+  .print-area {
+    padding: 12px;
+    border: none;
+  }
+
+  .invoice-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .invoice-info {
+    text-align: center;
+  }
+
+  .invoice-image {
+    width: 100%;
+    max-width: 250px;
+    margin: 10px auto;
+  }
+
+  table {
+    font-size: 12px;
+  }
+
+  .invoice-summary {
+    text-align: center;
+  }
+
+  .invoice-summary div {
+    font-size: 14px;
+  }
+
+  .d-print-none.mb-3 {
+    text-align: center;
+  }
+
+  .logo {
+    width: 100px;
+  }
+}
+
+/* ============================= */
+/* 🖨️ تحسين المظهر عند الطباعة */
+/* ============================= */
+@media print {
+  body * { visibility: hidden; }
+  .print-area, .print-area * { visibility: visible; }
+  .print-area { position: absolute; left: 0; top: 0; width: 100%; }
+  select#vatRate, #invoiceDate { display: none !important; }
+  #vatRateText, #invoiceDateText { display: inline !important; }
+  .btn-orange { display: none; }
+  table, th, td { font-size: 10px; padding: 3px; }
+}
+
+/* الصف المميز */
+.highlighted-row {
+  background-color: #fff3cd !important;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 0 10px rgba(255, 193, 7, 0.6);
+}
+
+.blinking {
+  transform: scale(1.03);
+  box-shadow: 0 0 15px rgba(255, 193, 7, 0.9);
+}
+
+
 </style>
 
 <div class="d-print-none mb-3">
