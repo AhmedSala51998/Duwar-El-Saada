@@ -410,12 +410,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
         word-break: break-all;
       }
     }
-    .navbar .btn[data-bs-toggle="offcanvas"] {
-      order: 3; /* يخليه آخر عنصر في flex RTL */
-    }
-    .navbar .navbar-brand {
-      order: 1;
-    }
 
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
