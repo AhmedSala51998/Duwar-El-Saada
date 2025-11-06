@@ -213,8 +213,32 @@ input[type="file"]{display:none}
   align-items: center;
   gap: 10px;
 }
+@media (max-width: 768px) {
 
+  /* إصلاح الأعمدة 4 و 5 في صفحة المصروفات */
+  .custom-table td:nth-child(4),
+  .custom-table th:nth-child(4),
+  .custom-table td:nth-child(5),
+  .custom-table th:nth-child(5) {
+    width: auto !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+    text-align: right !important;
+    direction: rtl !important;
+    display: block !important;
+  }
 
+  /* تحسين عرض النص داخل الكارت */
+  .responsive-table td {
+    text-align: right;
+    direction: rtl;
+  }
+
+  .responsive-table td::before {
+    text-align: left;
+    direction: rtl;
+  }
+}
 </style>
 
 <?php if(!empty($_SESSION['toast'])): $toast=$_SESSION['toast']; unset($_SESSION['toast']); ?>
