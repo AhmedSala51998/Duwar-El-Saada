@@ -248,7 +248,6 @@ th, td {
   .table-responsive {
     overflow: visible !important;
     box-shadow: none !important;
-    border: none !important;
   }
 
   /* طباعة بلون النصوص الأسود فقط */
