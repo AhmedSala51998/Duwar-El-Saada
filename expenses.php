@@ -223,14 +223,14 @@ input[type="file"]{display:none}
     width: auto !important;
     white-space: normal !important;
     word-break: break-word !important;
-    text-align: right !important;
+    text-align: left !important;
     direction: rtl !important;
     display: block !important;
   }
 
   /* تحسين عرض النص داخل الكارت */
   .responsive-table td {
-    text-align: right;
+    text-align: left;
     direction: rtl;
   }
 
