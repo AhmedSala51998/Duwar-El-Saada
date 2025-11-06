@@ -243,12 +243,8 @@ th, td {
     width: 100% !important;
     min-width: auto !important;
     table-layout: auto;
-    font-size: 13px;
   }
 
-  th, td {
-    white-space: normal !important;
-  }
 }
 
 /* ======== الطباعة فقط ======== */
@@ -262,7 +258,7 @@ th, td {
   }
 
   /* إلغاء أي highlight أو hover */
-  a, button, input, textarea, select, th, td {
+  a, button, input, textarea, select {
     color: #000 !important;
     background: none !important;
   }
