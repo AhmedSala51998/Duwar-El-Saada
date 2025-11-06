@@ -472,7 +472,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
     </a>
 
     <!-- ✅ زر القائمة على الشمال (يظهر فقط في الموبايل) -->
-    <button class="btn btn-orange d-md-none rounded-circle shadow position-fixed top-2 start-2 p-2 z-3"
+    <button class="btn btn-orange d-md-none rounded-circle shadow position-fixed top-2 end-2 p-2 z-3"
             style="width:45px; height:45px;"
             data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu" aria-label="القائمة">
       <i class="bi bi-list fs-4 text-white"></i>
