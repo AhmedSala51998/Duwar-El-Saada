@@ -118,10 +118,10 @@ $permissions = $pdo->query("SELECT * FROM permissions ORDER BY code ASC")->fetch
     <tbody>
       <?php foreach($permissions as $p): ?>
       <tr>
-        <td class="fw-bold text-muted"><?= $p['id'] ?></td>
-        <td><code class="text-orange"><?= esc($p['code']) ?></code></td>
-        <td><?= esc($p['label']) ?></td>
-        <td><?= esc($p['description'] ?? '-') ?></td>
+        <td data-label="#" class="fw-bold text-muted"><?= $p['id'] ?></td>
+        <td data-label="الكود"><code class="text-orange"><?= esc($p['code']) ?></code></td>
+        <td data-label="الاسم الظاهر"><?= esc($p['label']) ?></td>
+        <td data-label="الوصف"><?= esc($p['description'] ?? '-') ?></td>
         <?php if(has_permission('permissions.processes')): ?>
         <td>
           <?php if(has_permission('permissions.edit')): ?>

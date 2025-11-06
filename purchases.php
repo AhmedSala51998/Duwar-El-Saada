@@ -355,7 +355,7 @@ $rows = $stmt->fetchAll();
         <td data-label="مصدر الدفع"> <?= esc($r['payment_source'] ?? '-') ?> </td>
 
         <?php if(has_permission('purchases.processes')): ?>
-        <td class="text-center" data-label="عمليات">
+        <td class="text-center">
           <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#actions<?= $r['id'] ?>">
             <i class="bi bi-gear-fill"></i>
           </button>

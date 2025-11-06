@@ -111,11 +111,11 @@ document.addEventListener('DOMContentLoaded', function() {
         $count = $pdo->query("SELECT COUNT(*) FROM role_permissions WHERE role_id={$r['id']}")->fetchColumn();
       ?>
       <tr>
-        <td class="fw-bold text-muted"><?= $r['id'] ?></td>
-        <td><?= esc($r['name']) ?></td>
-        <td><?= esc($r['description'] ?? '-') ?></td>
-        <td><span class="badge bg-light text-dark"><?= $count ?></span></td>
-        <td class="text-secondary small"><?= esc($r['created_at']) ?></td>
+        <td data-label="#" class="fw-bold text-muted"><?= $r['id'] ?></td>
+        <td data-label="اسم الدور"><?= esc($r['name']) ?></td>
+        <td data-label="الوصف"><?= esc($r['description'] ?? '-') ?></td>
+        <td data-label="عدد الصلاحيات"><span class="badge bg-light text-dark"><?= $count ?></span></td>
+        <td data-label="تاريخ الانشاء" class="text-secondary small"><?= esc($r['created_at']) ?></td>
         <?php if(has_permission('roles.processes')): ?>
         <td>
             <?php if(has_permission('roles.view_row')): ?>
