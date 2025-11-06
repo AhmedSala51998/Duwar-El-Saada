@@ -70,30 +70,38 @@ require_permission('permissions.view');?>
         }
         /* ✅ توسيع مساحة العنوان في الديسكتوب فقط */
 @media (min-width: 992px) {
-  .page-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  /* نخلي صف الترويسة الرئيسي يستعمل المساحة كاملة */
+  .page-header .d-flex.flex-md-row {
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 100%;
   }
 
-  /* خليه ياخد عرض مريح */
+  /* نخلي العنوان ياخد راحته بالكامل */
   .page-header .page-title {
-    flex: 1;
+    flex: 1 1 auto;
     text-align: right;
+    white-space: nowrap;
     padding-right: 1rem;
   }
 
-  /* خلى البحث والأزرار ثابتين فى أقصى اليسار */
+  /* نخلي مجموعة الأزرار والبحث في الجهة اليسار */
   .page-header .actions {
-    flex-shrink: 0;
-    white-space: nowrap;
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
   }
 
-  /* لو الأيقونة مضغوطة قوي */
+  /* نحسن مظهر الأيقونة */
   .page-title .stat-icon {
     margin-left: 0.5rem;
+    background-color: #fff7f1;
+    padding: 0.3rem 0.6rem;
+    border-radius: 50%;
   }
 }
+
 
 </style>
 <?php endif; ?>
