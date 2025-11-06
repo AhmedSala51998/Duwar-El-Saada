@@ -129,26 +129,17 @@ if (!$custody) {
     width: 100% !important;
     min-width: auto !important;
     table-layout: auto;
-    font-size: 13px;
   }
 
-  th, td {
-    white-space: normal !important;
-  }
 }
 
 /* ======== الطباعة فقط ======== */
 @media print {
 
   /* إزالة أي تأثيرات لون أو ظل */
-  * {
-    background: transparent !important;
-    box-shadow: none !important;
-    text-shadow: none !important;
-  }
 
   /* إلغاء أي highlight أو hover */
-  a, button, input, textarea, select, th, td {
+  a, button, input, textarea, select {
     color: #000 !important;
     background: none !important;
   }
@@ -178,18 +169,6 @@ if (!$custody) {
     overflow: visible !important;
     box-shadow: none !important;
     border: none !important;
-  }
-
-  table {
-    width: 100% !important;
-    border-collapse: collapse !important;
-    table-layout: auto !important;
-  }
-
-  th, td {
-    border: 1px solid #000 !important;
-    white-space: normal !important;
-    padding: 6px 8px !important;
   }
 
   tr, td, th {
