@@ -231,6 +231,77 @@ th, td {
   }
 }
 
+/* ======== الطباعة فقط ======== */
+@media print {
+
+  /* إزالة أي تأثيرات لون أو ظل */
+  * {
+    background: transparent !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  /* إلغاء أي highlight أو hover */
+  a, button, input, textarea, select, th, td {
+    color: #000 !important;
+    background: none !important;
+  }
+
+  a:hover, button:hover, tr:hover {
+    background: none !important;
+  }
+
+  /* تصحيح عرض الصفحة والجدول */
+  html, body {
+    width: 100% !important;
+    margin: 0;
+    padding: 0;
+    overflow: visible !important;
+  }
+
+  /* منطقة الطباعة */
+  .print-area {
+    width: 100%;
+    max-width: none !important;
+    border: none !important;
+    padding: 0;
+  }
+
+  /* الجدول */
+  .table-responsive {
+    overflow: visible !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    table-layout: auto !important;
+  }
+
+  th, td {
+    border: 1px solid #000 !important;
+    white-space: normal !important;
+    padding: 6px 8px !important;
+  }
+
+  tr, td, th {
+    page-break-inside: avoid;
+  }
+
+  /* إخفاء العناصر غير الضرورية */
+  .no-print, .btn, .navbar, .footer, .offcanvas {
+    display: none !important;
+  }
+
+  /* طباعة بلون النصوص الأسود فقط */
+  @page {
+    size: A4 portrait; /* يمكن تغييرها إلى landscape */
+    margin: 10mm;
+  }
+}
+
 
 </style>
 
