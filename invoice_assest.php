@@ -211,7 +211,7 @@ select#vatRate {
   </div>
 
   <!-- جدول الأصل -->
-  <div class="table-responsive shadow-sm rounded-3 border bg-white p-2">
+  <div class="table-responsive">
   <table id="invoiceTable">
     <thead>
       <tr>
