@@ -410,6 +410,26 @@ $current_page = basename($_SERVER['PHP_SELF']);
         word-break: break-all;
       }
     }
+    @media (max-width: 768px) {
+      /* منع تطبيق قياسات الأعمدة في الوضع البلوكي */
+      .custom-table th,
+      .custom-table td {
+        width: auto !important;
+        white-space: normal !important;
+        text-align: start !important;
+      }
+
+      /* تعديل بسيط لمحاذاة البيانات */
+      .responsive-table td {
+        text-align: right; /* لأن اللغة عربية */
+        direction: rtl;
+      }
+
+      .responsive-table td::before {
+        text-align: left;
+        direction: rtl;
+      }
+    }
 
     .sidebar-link {
       color: #444;
