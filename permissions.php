@@ -49,6 +49,49 @@ require_permission('permissions.view');?>
   }
 }
 
+.page-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #2c3e50;
+}
+
+.page-title .stat-icon {
+  background-color: #fff3e6;
+  color: #ff7b00;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  font-size: 1.3rem;
+  box-shadow: 0 0 0 3px rgba(255,123,0,0.1);
+  transition: all 0.3s ease;
+}
+
+.page-title .stat-icon:hover {
+  background-color: #ff7b00;
+  color: #fff;
+}
+
+/* ✅ تحسين المظهر في الديسكتوب */
+@media (min-width: 768px) {
+  .page-title {
+    font-size: 1.8rem;
+  }
+  .page-title .stat-icon {
+    width: 46px;
+    height: 46px;
+    font-size: 1.4rem;
+  }
+}
+
+/* ✅ تحسين الموبايل */
+@media (max-width: 767px) {
+  .page-title {
+    justify-content: center;
+    text-align: center;
+  }
+}
+
+
 </style>
 <?php endif; ?>
 <?php
@@ -61,9 +104,11 @@ $permissions = $pdo->query("SELECT * FROM permissions ORDER BY code ASC")->fetch
   <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
 
     <!-- العنوان -->
-    <h3 class="page-title">
-      <span class="stat-icon"><i class="bi bi-lock"></i></span>
-      إدارة الصلاحيات
+    <h3 class="page-title m-0 d-flex align-items-center gap-2">
+    <span class="stat-icon d-flex justify-content-center align-items-center">
+        <i class="bi bi-lock"></i>
+    </span>
+    <span>إدارة الصلاحيات</span>
     </h3>
 
     <!-- البحث + الأزرار -->
