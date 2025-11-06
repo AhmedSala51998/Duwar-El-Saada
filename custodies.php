@@ -243,34 +243,46 @@ $transactions_stmt = $pdo->prepare("SELECT * FROM custody_transactions WHERE cus
 $options = ['بسام','فيصل المطيري','مؤسسة','شركة'];
 ?>
 
-<div class="d-flex flex-wrap gap-2 justify-content-between align-items-center mb-3">
-    <h3 class="page-title">
-      <span class="stat-icon">
-        <i class="bi bi-wallet2"></i>
-      </span>
-      العُهد
-    </h3>
-  <div class="d-flex gap-2">
-    <form class="d-flex gap-2" method="get">
-      <select name="kw" class="form-select">
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+  <h3 class="page-title mb-0">
+    <span class="stat-icon"><i class="bi bi-wallet2"></i></span>
+    العُهد
+  </h3>
+
+  <div class="d-flex flex-wrap gap-2 justify-content-end align-items-center page-actions w-100 w-md-auto">
+    <form class="d-flex flex-wrap flex-md-nowrap gap-2 w-100 w-md-auto" method="get">
+      <select name="kw" class="form-select flex-fill">
         <option value="">بحث بالاسم</option>
         <?php foreach($options as $opt): ?>
           <option value="<?=esc($opt)?>" <?= $kw==$opt?'selected':'' ?>><?=esc($opt)?></option>
         <?php endforeach; ?>
       </select>
-      <button class="btn btn-outline-secondary">بحث</button>
+      <button class="btn btn-outline-secondary flex-shrink-0">بحث</button>
     </form>
+
     <?php if(has_permission('custodies.print_excel')): ?>
-    <a class="btn btn-outline-dark" href="export_custodies_excel.php?kw=<?=urlencode($kw)?>"><i class="bi bi-file-earmark-spreadsheet"></i> Excel</a>
+      <a class="btn btn-outline-dark" href="export_custodies_excel.php?kw=<?=urlencode($kw)?>">
+        <i class="bi bi-file-earmark-spreadsheet"></i>
+        <span class="d-none d-sm-inline">Excel</span>
+      </a>
     <?php endif ?>
+
     <?php if(has_permission('custodies.print_pdf')): ?>
-    <a class="btn btn-outline-dark" href="export_custodies_pdf.php?kw=<?=urlencode($kw)?>"><i class="bi bi-filetype-pdf"></i> PDF</a>
+      <a class="btn btn-outline-dark" href="export_custodies_pdf.php?kw=<?=urlencode($kw)?>">
+        <i class="bi bi-filetype-pdf"></i>
+        <span class="d-none d-sm-inline">PDF</span>
+      </a>
     <?php endif ?>
+
     <?php if(has_permission('custodies.add')): ?>
-      <button class="btn btn-orange" data-bs-toggle="modal" data-bs-target="#add"><i class="bi bi-plus-lg"></i> إضافة</button>
+      <button class="btn btn-orange" data-bs-toggle="modal" data-bs-target="#add">
+        <i class="bi bi-plus-lg"></i>
+        <span class="d-none d-sm-inline">إضافة</span>
+      </button>
     <?php endif; ?>
   </div>
 </div>
+
 <?php 
 $last_balance = 0; // الرصيد السابق
 $total_in = 0; 
