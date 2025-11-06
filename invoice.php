@@ -294,18 +294,6 @@ th, td {
     border: none !important;
   }
 
-  table {
-    width: 100% !important;
-    border-collapse: collapse !important;
-    table-layout: auto !important;
-  }
-
-  th, td {
-    border: 1px solid #000 !important;
-    white-space: normal !important;
-    padding: 6px 8px !important;
-  }
-
   tr, td, th {
     page-break-inside: avoid;
   }
