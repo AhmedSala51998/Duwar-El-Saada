@@ -296,7 +296,7 @@ th, td {
 
   <!-- جدول الأصناف -->
   <!--<div class="table-responsive shadow-sm rounded-3 border bg-white p-2">-->
-  <table id="invoiceTable">
+  <table class="table-responsive" id="invoiceTable">
     <thead>
       <tr>
         <th>البيان</th>
