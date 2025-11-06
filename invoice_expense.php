@@ -113,20 +113,41 @@ select#vatRate {
 @media screen and (max-width: 768px) {
   .table-responsive {
     overflow-x: auto !important;
-    -webkit-overflow-scrolling: touch; /* تمرير سلس على الموبايل */
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch; /* تمرير سلس */
+    border: none !important;
   }
 
   table#invoiceTable {
-    min-width: 800px; /* يجعل الجدول أعرض من الشاشة لتفعيل الاسكرول */
-    font-size: 12px;
+    width: 100%;
+    min-width: 700px; /* علشان يقدر يعمل scroll لو ضاق العرض */
+    border-collapse: collapse;
+    font-size: 13px;
+    table-layout: auto !important; /* يخلي الأعمدة تتسع تلقائياً حسب النص */
   }
 
   table#invoiceTable th,
   table#invoiceTable td {
-    white-space: nowrap;
-    padding: 6px 3px;
+    white-space: normal !important; /* يسمح بتكسر السطر */
+    word-wrap: break-word !important; /* يمنع التداخل */
+    word-break: break-word !important;
+    text-align: center;
+    vertical-align: middle;
+    padding: 6px 4px;
+  }
+
+  table#invoiceTable th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+  }
+
+  /* تأكد إن الجدول ما يخرجش عن حدود الصفحة */
+  .print-area {
+    overflow-x: hidden;
+    padding: 10px;
   }
 }
+
 
 /* ======= عند الطباعة (اخفاء الاسكرول نهائيًا) ======= */
 @media print {
