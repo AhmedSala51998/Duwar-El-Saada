@@ -434,15 +434,13 @@ $current_page = basename($_SERVER['PHP_SELF']);
       background-color: #e76f00;
       color: #fff;
     }
-    .text-orange { color: #ff7b00 !important; }
-    .btn[data-bs-toggle="offcanvas"] {
-      transition: all 0.3s ease;
-      background-color: #fff;
-    }
-    .btn[data-bs-toggle="offcanvas"]:hover {
+    .btn-orange {
       background-color: #ff7b00;
-      color: #fff !important;
-      transform: scale(1.05);
+      transition: all 0.3s ease;
+    }
+    .btn-orange:hover {
+      background-color: #e46e00;
+      transform: scale(1.08);
     }
 
   </style>
@@ -474,9 +472,10 @@ $current_page = basename($_SERVER['PHP_SELF']);
     </a>
 
     <!-- ✅ زر القائمة على الشمال (يظهر فقط في الموبايل) -->
-    <button class="btn d-md-none border rounded-circle shadow-sm p-2 text-orange"
+    <button class="btn btn-orange d-md-none rounded-circle shadow position-fixed top-2 start-2 p-2 z-3"
+            style="width:45px; height:45px;"
             data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu" aria-label="القائمة">
-      <i class="bi bi-list fs-4"></i>
+      <i class="bi bi-list fs-4 text-white"></i>
     </button>
 
     <!-- ✅ العناصر الثابتة في اليمين الكبير -->
