@@ -194,40 +194,55 @@ th, td {
 }
 
 /* ===== شاشة الموبايل ===== */
-/* ======= فقط على الشاشات (وليس الطباعة) ======= */
-@media screen and (max-width: 768px) {
+@media (max-width: 768px) {
+  .print-area {
+    padding: 10px;
+    border: none;
+    border-radius: 0;
+    font-size: 14px;
+  }
+
+  .invoice-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .invoice-info {
+    width: 100%;
+    text-align: right;
+    margin-bottom: 10px;
+  }
+
+  .invoice-image {
+    width: 100%;
+    max-width: 200px;
+    margin-left: 0;
+    margin-bottom: 10px;
+  }
+
+  /* ===== إضافة تمرير أفقي للجدول ===== */
   .table-responsive {
-    overflow-x: auto !important;
-    -webkit-overflow-scrolling: touch; /* تمرير سلس على الموبايل */
+    overflow-x: auto;
   }
 
   table#invoiceTable {
-    min-width: 800px; /* يجعل الجدول أعرض من الشاشة لتفعيل الاسكرول */
     font-size: 12px;
+    min-width: 800px; /* إجبار الجدول على أن يكون أعرض من الشاشة على الموبايل */
   }
 
   table#invoiceTable th,
   table#invoiceTable td {
-    white-space: nowrap;
     padding: 6px 3px;
-  }
-}
-
-/* ======= عند الطباعة (اخفاء الاسكرول نهائيًا) ======= */
-@media print {
-  .table-responsive {
-    overflow: visible !important;
+    white-space: nowrap; /* منع تقسيم النصوص الطويلة داخل الخلية */
   }
 
-  table#invoiceTable {
-    width: 100% !important;
-    min-width: auto !important;
-    table-layout: auto;
+  .invoice-summary {
+    text-align: right;
     font-size: 13px;
   }
 
-  th, td {
-    white-space: normal !important;
+  .invoice-summary div {
+    margin-bottom: 6px;
   }
 }
 
@@ -299,50 +314,6 @@ th, td {
   @page {
     size: A4 portrait; /* يمكن تغييرها إلى landscape */
     margin: 10mm;
-  }
-}
-/* ======== عرض الموبايل فقط ======== */
-@media (max-width: 768px) {
-
-  /* نحط الجدول داخل scroll أفقي */
-  .print-area table {
-    min-width: 900px; /* حتى يقدر المستخدم يعمل scroll */
-  }
-
-  .table-responsive {
-    overflow-x: auto;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-    border: none !important;
-  }
-
-  /* تحسين تجربة السحب */
-  .table-responsive::-webkit-scrollbar {
-    height: 6px;
-  }
-
-  .table-responsive::-webkit-scrollbar-thumb {
-    background: #ccc;
-    border-radius: 4px;
-  }
-
-  /* تصغير الخطوط لتناسب الشاشة */
-  th, td {
-    font-size: 12px !important;
-    white-space: nowrap !important; /* يمنع خروج النص */
-  }
-
-  /* عناوين الجدول (th) بشكل أوضح */
-  th {
-    background-color: #f8f9fa !important;
-    color: #333;
-    font-weight: 600;
-  }
-
-  /* منع خروج الجدول خارج حدود الصفحة */
-  .print-area {
-    overflow-x: hidden;
-    padding: 10px;
   }
 }
 
