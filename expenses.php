@@ -224,19 +224,19 @@ input[type="file"]{display:none}
     white-space: normal !important;
     word-break: break-word !important;
     text-align: left !important;
-    direction: rtl !important;
+    direction: ltr !important;
     display: block !important;
   }
 
   /* تحسين عرض النص داخل الكارت */
   .responsive-table td {
     text-align: left;
-    direction: rtl;
+    direction: ltr;
   }
 
   .responsive-table td::before {
     text-align: left;
-    direction: rtl;
+    direction: ltr;
   }
 }
 </style>
