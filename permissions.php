@@ -61,7 +61,7 @@ $permissions = $pdo->query("SELECT * FROM permissions ORDER BY code ASC")->fetch
   <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
 
     <!-- العنوان -->
-    <h3 class="page-title m-0">
+    <h3 class="page-title">
       <span class="stat-icon"><i class="bi bi-lock"></i></span>
       إدارة الصلاحيات
     </h3>
