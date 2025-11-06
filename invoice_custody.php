@@ -79,7 +79,6 @@ if (!$custody) {
   margin-top: 5px;
 }
 
-/* ===== شاشة الموبايل ===== */
 @media (max-width: 768px) {
   .print-area {
     padding: 10px;
@@ -106,13 +105,20 @@ if (!$custody) {
     margin-bottom: 10px;
   }
 
+  /* ===== إضافة تمرير أفقي للجدول ===== */
+  .table-responsive {
+    overflow-x: auto;
+  }
+
   table#invoiceTable {
     font-size: 12px;
+    min-width: 800px; /* إجبار الجدول على أن يكون أعرض من الشاشة على الموبايل */
   }
 
   table#invoiceTable th,
   table#invoiceTable td {
     padding: 6px 3px;
+    white-space: nowrap; /* منع تقسيم النصوص الطويلة داخل الخلية */
   }
 
   .invoice-summary {
@@ -161,6 +167,7 @@ if (!$custody) {
   </div>
 
   <!-- جدول العهدة -->
+  <div class="table-responsive shadow-sm rounded-3 border bg-white p-2">
   <table>
     <thead>
       <tr>
@@ -176,7 +183,7 @@ if (!$custody) {
         <td><?= nl2br(esc($custody['notes'])) ?></td>
       </tr>
     </tbody>
-  </table>
+  </table></div>
 
   <!-- الملخص -->
   <div class="invoice-summary">

@@ -135,13 +135,20 @@ select#vatRate {
     margin-bottom: 10px;
   }
 
+  /* ===== إضافة تمرير أفقي للجدول ===== */
+  .table-responsive {
+    overflow-x: auto;
+  }
+
   table#invoiceTable {
     font-size: 12px;
+    min-width: 800px; /* إجبار الجدول على أن يكون أعرض من الشاشة على الموبايل */
   }
 
   table#invoiceTable th,
   table#invoiceTable td {
     padding: 6px 3px;
+    white-space: nowrap; /* منع تقسيم النصوص الطويلة داخل الخلية */
   }
 
   .invoice-summary {
@@ -188,6 +195,7 @@ select#vatRate {
   </div>
 
   <!-- جدول الأصل -->
+  <div class="table-responsive shadow-sm rounded-3 border bg-white p-2">
   <table id="invoiceTable">
     <thead>
       <tr>
@@ -224,7 +232,7 @@ select#vatRate {
         <td class="total"><?= number_format($total,7) ?> ريال</td>
       </tr>
     </tbody>
-  </table>
+  </table></div>
 
   <!-- الملخص -->
   <div class="invoice-summary">

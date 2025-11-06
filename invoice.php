@@ -220,13 +220,20 @@ th, td {
     margin-bottom: 10px;
   }
 
+  /* ===== إضافة تمرير أفقي للجدول ===== */
+  .table-responsive {
+    overflow-x: auto;
+  }
+
   table#invoiceTable {
     font-size: 12px;
+    min-width: 800px; /* إجبار الجدول على أن يكون أعرض من الشاشة على الموبايل */
   }
 
   table#invoiceTable th,
   table#invoiceTable td {
     padding: 6px 3px;
+    white-space: nowrap; /* منع تقسيم النصوص الطويلة داخل الخلية */
   }
 
   .invoice-summary {
@@ -238,7 +245,6 @@ th, td {
     margin-bottom: 6px;
   }
 }
-
 
 </style>
 
@@ -278,6 +284,7 @@ th, td {
 
 
   <!-- جدول الأصناف -->
+  <div class="table-responsive shadow-sm rounded-3 border bg-white p-2">
   <table id="invoiceTable">
     <thead>
       <tr>
@@ -337,7 +344,7 @@ th, td {
       </tr>
       <?php endforeach; ?>
     </tbody>
-  </table>
+  </table></div>
 
   <!-- الملخص -->
   <div class="invoice-summary">
