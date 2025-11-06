@@ -411,6 +411,30 @@ $current_page = basename($_SERVER['PHP_SELF']);
       }
     }
 
+    .sidebar-link {
+      color: #444;
+      padding: 8px 10px;
+      border-radius: 8px;
+      transition: 0.2s ease;
+    }
+    .sidebar-link:hover,
+    .sidebar-link.active {
+      background-color: #ffe5cc;
+      color: #d35400;
+      text-decoration: none;
+    }
+
+    .btn-logout {
+      background-color: #ff7b00;
+      color: #fff;
+      border-radius: 8px;
+      transition: 0.2s;
+    }
+    .btn-logout:hover {
+      background-color: #e76f00;
+      color: #fff;
+    }
+
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
 </head>
@@ -477,49 +501,99 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
 <!-- القائمة الجانبية في الموبايل (Offcanvas) -->
 <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarMenu">
-  <div class="offcanvas-header">
-    <h5 class="offcanvas-title">القائمة</h5>
+  <div class="offcanvas-header border-bottom">
+    <div class="d-flex align-items-center gap-2">
+      <img src="<?= BASE_URL ?>/assets/logo.png" width="40" height="40" alt="logo" class="rounded shadow-sm">
+      <h5 class="offcanvas-title fw-bold text-orange m-0"><?= esc(APP_NAME) ?></h5>
+    </div>
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
   </div>
+
   <div class="offcanvas-body">
-    <a class="sidebar-link d-block mb-2 <?= $current_page=='home.php'?'active':'' ?>" href="<?= BASE_URL ?>/home.php"><i class="bi bi-house"></i> الرئيسية</a>
+
+    <!-- ✅ روابط أساسية -->
+    <a class="sidebar-link d-block mb-2 <?= $current_page=='home.php'?'active':'' ?>" href="<?= BASE_URL ?>/home.php">
+      <i class="bi bi-house"></i> الرئيسية
+    </a>
+
     <?php if(has_permission('purchases.view')): ?>
-    <a class="sidebar-link d-block mb-2 <?= $current_page=='purchases.php'?'active':'' ?>" href="<?= BASE_URL ?>/purchases.php"><i class="bi bi-bag"></i> تهيئة المشتريات</a>
+    <a class="sidebar-link d-block mb-2 <?= $current_page=='purchases.php'?'active':'' ?>" href="<?= BASE_URL ?>/purchases.php">
+      <i class="bi bi-bag"></i> تهيئة المشتريات
+    </a>
     <?php endif ?>
+
     <?php if(has_permission('orders.view')): ?>
-    <a class="sidebar-link d-block mb-2 <?= $current_page=='orders.php'?'active':'' ?>" href="<?= BASE_URL ?>/orders.php"><i class="bi bi-gear"></i> أوامر التشغيل</a>
+    <a class="sidebar-link d-block mb-2 <?= $current_page=='orders.php'?'active':'' ?>" href="<?= BASE_URL ?>/orders.php">
+      <i class="bi bi-gear"></i> أوامر التشغيل
+    </a>
     <?php endif ?>
+
     <?php if(has_permission('custodies.view')): ?>
-    <a class="sidebar-link d-block <?= $current_page=='custodies.php'?'active':'' ?>" href="<?= BASE_URL ?>/custodies"><i class="bi bi-wallet2"></i> العهد</a>
+    <a class="sidebar-link d-block mb-2 <?= $current_page=='custodies.php'?'active':'' ?>" href="<?= BASE_URL ?>/custodies.php">
+      <i class="bi bi-wallet2"></i> العهد
+    </a>
     <?php endif ?>
+
     <?php if(has_permission('assets.view')): ?>
-    <a class="sidebar-link d-block mb-2 <?= $current_page=='assetes.php'?'active':'' ?>" href="<?= BASE_URL ?>/assetes.php"><i class="bi bi-building"></i> الأصول</a>
+    <a class="sidebar-link d-block mb-2 <?= $current_page=='assetes.php'?'active':'' ?>" href="<?= BASE_URL ?>/assetes.php">
+      <i class="bi bi-building"></i> الأصول
+    </a>
     <?php endif ?>
-    <!--<a class="sidebar-link d-block mb-2 <?= $current_page=='gov_fees.php'?'active':'' ?>" href="<?= BASE_URL ?>/gov_fees.php"><i class="bi bi-file-earmark-text"></i> الرسوم الحكومية</a>
-    <a class="sidebar-link d-block mb-2 <?= $current_page=='subscriptions.php'?'active':'' ?>" href="<?= BASE_URL ?>/subscriptions.php"><i class="bi bi-journal-bookmark"></i> الاشتراكات والخدمات</a>
-    <a class="sidebar-link d-block mb-2 <?= $current_page=='rentals.php'?'active':'' ?>" href="<?= BASE_URL ?>/rentals.php"><i class="bi bi-house-door"></i> الإيجارات</a>-->
+
     <?php if(has_permission('expenses.view')): ?>
-    <a class="sidebar-link d-block <?= $current_page=='expenses.php'?'active':'' ?>" href="<?= BASE_URL ?>/expenses.php"><i class="bi bi-cash-stack"></i> المصروفات</a>
+    <a class="sidebar-link d-block mb-2 <?= $current_page=='expenses.php'?'active':'' ?>" href="<?= BASE_URL ?>/expenses.php">
+      <i class="bi bi-cash-stack"></i> المصروفات
+    </a>
     <?php endif ?>
+
     <?php if(has_permission('reports.view')): ?>
-    <a class="sidebar-link d-block <?= $current_page=='reports.php'?'active':'' ?>" href="<?= BASE_URL ?>/reports.php"><i class="bi bi-graph-up"></i> التقارير</a>
+    <a class="sidebar-link d-block mb-2 <?= $current_page=='reports.php'?'active':'' ?>" href="<?= BASE_URL ?>/reports.php">
+      <i class="bi bi-graph-up"></i> التقارير
+    </a>
     <?php endif ?>
+
     <?php if(has_permission('settings.edit')): ?>
-    <hr class="my-2">
+    <hr class="my-3">
     <h6 class="text-muted small px-2">الإعدادات</h6>
+
     <?php if(has_permission('roles.view')): ?>
     <a class="sidebar-link d-block mb-2 <?= $current_page=='roles.php'?'active':'' ?>" href="<?= BASE_URL ?>/roles.php">
-        <i class="bi bi-shield-lock"></i> الأدوار
+      <i class="bi bi-shield-lock"></i> الأدوار
     </a>
     <?php endif ?>
+
     <?php if(has_permission('permissions.view')): ?>
     <a class="sidebar-link d-block mb-2 <?= $current_page=='permissions.php'?'active':'' ?>" href="<?= BASE_URL ?>/permissions.php">
-        <i class="bi bi-person-check"></i> الصلاحيات
+      <i class="bi bi-person-check"></i> الصلاحيات
     </a>
     <?php endif ?>
     <?php endif ?>
+
+    <!-- ✅ خط فاصل قبل المستخدم -->
+    <hr class="my-3">
+
+    <!-- ✅ معلومات المستخدم -->
+    <div class="px-2 mb-3">
+      <span class="badge bg-light text-dark w-100 d-flex align-items-center justify-content-center py-2">
+        <i class="bi bi-person-badge me-2 text-orange"></i>
+        <span><?= esc(current_role()) ?></span>
+      </span>
+    </div>
+
+    <?php if(has_permission('users.view')): ?>
+    <a class="sidebar-link d-block mb-2 <?= $current_page=='users.php'?'active':'' ?>" href="<?= BASE_URL ?>/users.php">
+      <i class="bi bi-people"></i> المستخدمون
+    </a>
+    <?php endif ?>
+
+    <!-- ✅ تسجيل الخروج -->
+    <a class="btn btn-logout w-100 mt-2 d-flex align-items-center justify-content-center gap-2" href="<?= BASE_URL ?>/logout.php">
+      <i class="bi bi-box-arrow-right"></i> خروج
+    </a>
+
   </div>
 </div>
+
 
 <div class="container-fluid">
   <div class="row">
