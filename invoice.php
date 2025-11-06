@@ -377,7 +377,7 @@ th, td {
 
   <!-- ✅ العمود اليمين: المبلغ بالعربي -->
   <div class="total-words" style="font-weight: bold; color: #444; font-size: 15px; text-align: right;margin-top:35px;">
-    (<?= numberToArabicWords($grandTotal) ?>)
+    (<?= numberToArabicWords($grandTotal) ?> فقط)
   </div>
 
 <!-- الفاتورة -->
