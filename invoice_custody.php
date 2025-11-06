@@ -167,7 +167,6 @@ if (!$custody) {
   </div>
 
   <!-- جدول العهدة -->
-  <div class="table-responsive shadow-sm rounded-3 border bg-white p-2">
   <table>
     <thead>
       <tr>
@@ -183,7 +182,7 @@ if (!$custody) {
         <td><?= nl2br(esc($custody['notes'])) ?></td>
       </tr>
     </tbody>
-  </table></div>
+  </table>
 
   <!-- الملخص -->
   <div class="invoice-summary">

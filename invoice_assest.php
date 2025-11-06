@@ -195,7 +195,6 @@ select#vatRate {
   </div>
 
   <!-- جدول الأصل -->
-  <div class="table-responsive shadow-sm rounded-3 border bg-white p-2">
   <table id="invoiceTable">
     <thead>
       <tr>
@@ -232,7 +231,7 @@ select#vatRate {
         <td class="total"><?= number_format($total,7) ?> ريال</td>
       </tr>
     </tbody>
-  </table></div>
+  </table>
 
   <!-- الملخص -->
   <div class="invoice-summary">
