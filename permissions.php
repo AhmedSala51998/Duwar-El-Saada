@@ -89,7 +89,7 @@ $permissions = $pdo->query("SELECT * FROM permissions ORDER BY code ASC")->fetch
     <div class="actions d-flex flex-wrap justify-content-end gap-2 w-100 w-md-auto">
 
       <input type="text" id="searchInput" class="form-control form-control-sm flex-grow-1"
-             placeholder="بحث عن صلاحية...">
+             placeholder="بحث عن صلاحية..." style="min-width: 180px; max-width: 220px;">
 
       <?php if(has_permission('permissions.add')): ?>
       <button class="btn btn-orange flex-grow-1 flex-md-grow-0" data-bs-toggle="modal" data-bs-target="#addPerm">
