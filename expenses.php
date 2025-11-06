@@ -215,7 +215,7 @@ input[type="file"]{display:none}
 }
 @media (max-width: 768px) {
 
-  /* إصلاح الأعمدة 4 و 5 في صفحة المصروفات */
+  /* الأعمدة 4 و5 في صفحة المصروفات */
   .custom-table td:nth-child(4),
   .custom-table th:nth-child(4),
   .custom-table td:nth-child(5),
@@ -224,19 +224,19 @@ input[type="file"]{display:none}
     white-space: normal !important;
     word-break: break-word !important;
     text-align: left !important;
-    direction: ltr !important;
+    direction: ltr !important; /* خلي الاتجاه شمالي فعلي */
     display: block !important;
   }
 
-  /* تحسين عرض النص داخل الكارت */
+  /* تحسين العرض داخل الكارت */
   .responsive-table td {
-    text-align: left;
-    direction: ltr;
+    text-align: left !important;
+    direction: ltr !important;
   }
 
   .responsive-table td::before {
-    text-align: left;
-    direction: ltr;
+    text-align: right !important;
+    direction: rtl !important; /* التسمية (label) تفضل يمين */
   }
 }
 </style>
