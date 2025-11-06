@@ -68,6 +68,28 @@ require_permission('permissions.view');?>
         margin-inline-end: 6px;
     }
     }
+    @media (min-width: 992px) {
+  .page-header .flex-grow-1 {
+    min-width: 300px;
+  }
+
+  .page-header .page-title {
+    white-space: nowrap;
+  }
+
+  .page-header .actions {
+    flex-shrink: 0;
+  }
+
+  .page-title .stat-icon {
+    background-color: #fff7f1;
+    padding: 0.35rem 0.55rem;
+    border-radius: 50%;
+    color: #ff7a00;
+    font-size: 1.1rem;
+  }
+}
+
 </style>
 <?php endif; ?>
 <?php
@@ -91,22 +113,23 @@ $permissions = $pdo->query("SELECT * FROM permissions ORDER BY code ASC")->fetch
     </div>
 
     <!-- البحث + الأزرار -->
-    <div class="actions d-flex flex-wrap justify-content-end align-items-center gap-2 flex-shrink-0"
-         style="max-width: 100%;">
-      <input type="text" id="searchInput" class="form-control form-control-sm"
-             placeholder="بحث عن صلاحية..." style="min-width: 200px; max-width: 220px;">
+    <div class="actions d-flex flex-wrap justify-content-end gap-2 w-100 w-md-auto align-items-center flex-shrink-0">
+
+      <input type="text" id="searchInput" class="form-control form-control-sm flex-grow-1"
+             placeholder="بحث عن صلاحية..." style="min-width: 180px; max-width: 220px;">
 
       <?php if(has_permission('permissions.add')): ?>
-      <button class="btn btn-orange" data-bs-toggle="modal" data-bs-target="#addPerm">
+      <button class="btn btn-orange flex-grow-1 flex-md-grow-0" data-bs-toggle="modal" data-bs-target="#addPerm">
         <i class="bi bi-plus-lg"></i> <span class="d-none d-sm-inline">إضافة صلاحية</span>
       </button>
       <?php endif ?>
 
       <?php if(has_permission('permissions.add_group')): ?>
-      <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#addPermGroup">
+      <button class="btn btn-outline-danger flex-grow-1 flex-md-grow-0" data-bs-toggle="modal" data-bs-target="#addPermGroup">
         <i class="bi bi-plus-square-dotted"></i> <span class="d-none d-sm-inline">إضافة مجموعة صلاحيات</span>
       </button>
       <?php endif ?>
+
     </div>
 
   </div>
