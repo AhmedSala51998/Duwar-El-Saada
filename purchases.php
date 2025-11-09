@@ -176,7 +176,36 @@
   text-align: center;
 }
 
+/* جعل الجدول داخل المودال ريسبونسف للموبايل */
+@media screen and (max-width: 768px) {
 
+  /* يحتوي الجدول داخل المودال على تمرير أفقي سلس */
+  #addM .modal-body {
+    padding: 10px;
+  }
+
+  #addM table {
+    min-width: 800px; /* يخلي الجدول أوسع من الشاشة لتفعيل الاسكرول */
+    font-size: 12px; /* تصغير النص شوية للموبايل */
+  }
+
+  #addM .table-responsive {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch; /* تمرير سلس على الموبايل */
+  }
+
+  #addM th, #addM td {
+    white-space: nowrap; /* يمنع النص من النزول لسطرين */
+    padding: 6px 8px;
+    vertical-align: middle;
+  }
+
+  /* تحسين شكل الأزرار */
+  #addM .btn {
+    font-size: 12px;
+    padding: 5px 10px;
+  }
+}
 </style>
 
 <?php require __DIR__.'/partials/header.php'; require_permission('purchases.view'); ?>
@@ -635,59 +664,59 @@ $rows = $stmt->fetchAll();
                 </select>
             </div>
           </div>
-
-          <table class="table table-bordered" id="itemsTable">
-            <thead>
-              <tr>
-                <th>البيان</th>
-                <th>نوع الوحدة</th>
-                <th>الوحدة \ العبوة</th>
-                <th>الكمية</th>
-                <th>السعر</th>
-                <th>الكمية بالوحدة</th>
-                <!--<th>اسم الدافع</th>
-                <th>مصدر الدفع</th>-->
-                <th>إزالة</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><input name="name[]" class="form-control" required></td>
-                <td>
-                  <select title="نوع الوحدة" name="unit[]" required class="form-select">
-                    <option>عدد</option>
-                    <option>كيلو</option>
-                    <option>لتر</option>
-                  </select>
-                </td>
-                <td><input name="package[]" class="form-control" required title="الوحدة"></td> <!-- حقل العبوة -->
-                <td><input type="number" step="0.001" min="0" name="quantity[]" class="form-control" required></td>
-                <td><input type="number" step="0.00000001" min="0" name="price[]" required class="form-control"></td>
-                <td><input type="number" step="0.001" min="0" name="single_package[]" required class="form-control"></td>
-                <!--<td>
-                  <select name="payer_name[]" class="form-select payer-select">
-                    <option hidden>اختر</option>
-                    <option>شركة</option>
-                    <option>مؤسسة</option>
-                    <option>فيصل المطيري</option>
-                    <option>بسام</option>
-                  </select>
-                </td>
-                <td>
-                  <select name="payment_source[]" class="form-select payment-source-select">
-                    <option hidden>اختر</option>
-                    <option>مالك</option>
-                    <option>كاش</option>
-                    <option>بنك</option>
-                  </select>
-                </td>-->
-                <td>
-                  <button type="button" class="btn btn-danger btn-sm remove-row">✖</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-
+          <div class="table-responsive">
+            <table class="table table-bordered" id="itemsTable">
+              <thead>
+                <tr>
+                  <th>البيان</th>
+                  <th>نوع الوحدة</th>
+                  <th>الوحدة \ العبوة</th>
+                  <th>الكمية</th>
+                  <th>السعر</th>
+                  <th>الكمية بالوحدة</th>
+                  <!--<th>اسم الدافع</th>
+                  <th>مصدر الدفع</th>-->
+                  <th>إزالة</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><input name="name[]" class="form-control" required></td>
+                  <td>
+                    <select title="نوع الوحدة" name="unit[]" required class="form-select">
+                      <option>عدد</option>
+                      <option>كيلو</option>
+                      <option>لتر</option>
+                    </select>
+                  </td>
+                  <td><input name="package[]" class="form-control" required title="الوحدة"></td> <!-- حقل العبوة -->
+                  <td><input type="number" step="0.001" min="0" name="quantity[]" class="form-control" required></td>
+                  <td><input type="number" step="0.00000001" min="0" name="price[]" required class="form-control"></td>
+                  <td><input type="number" step="0.001" min="0" name="single_package[]" required class="form-control"></td>
+                  <!--<td>
+                    <select name="payer_name[]" class="form-select payer-select">
+                      <option hidden>اختر</option>
+                      <option>شركة</option>
+                      <option>مؤسسة</option>
+                      <option>فيصل المطيري</option>
+                      <option>بسام</option>
+                    </select>
+                  </td>
+                  <td>
+                    <select name="payment_source[]" class="form-select payment-source-select">
+                      <option hidden>اختر</option>
+                      <option>مالك</option>
+                      <option>كاش</option>
+                      <option>بنك</option>
+                    </select>
+                  </td>-->
+                  <td>
+                    <button type="button" class="btn btn-danger btn-sm remove-row">✖</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
 
           <button type="button" id="addRow" class="btn btn-secondary">+ إضافة صف جديد</button>
 
