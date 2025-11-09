@@ -228,38 +228,11 @@ $can_edit = in_array(current_role(), ['admin','manager']); ?>
         </td>
         <td data-label="تاريخ الانشاء" class="text-secondary small"><?= esc($r['created_at']) ?></td>
         <?php if(has_permission('users.processes')): ?>
-        <td class="text-center">
-          <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#actionsUser<?= $r['id'] ?>">
-            <i class="bi bi-gear-fill"></i>
-          </button>
-
-          <div class="modal fade" id="actionsUser<?= $r['id'] ?>" tabindex="-1" aria-labelledby="actionsUserLabel<?= $r['id'] ?>" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-              <div class="modal-content border-0 shadow">
-                <div class="modal-header bg-light">
-                  <h5 class="modal-title" id="actionsUserLabel<?= $r['id'] ?>">
-                    <i class="bi bi-gear-fill me-1"></i> العمليات
-                  </h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="إغلاق"></button>
-                </div>
-                <div class="modal-body text-center">
-                  <?php if(has_permission('users.edit')): ?>
-                  <button class="btn btn-outline-warning w-100 mb-2" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#e<?= $r['id'] ?>">
-                    <i class="bi bi-pencil me-2"></i> تعديل
-                  </button>
-                  <?php endif; ?>
-                  <?php if(has_permission('users.delete')): ?>
-                  <?php if($r['id'] != $_SESSION['user_id']): ?>
-                  <button class="btn btn-outline-danger w-100" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#d<?= $r['id'] ?>">
-                    <i class="bi bi-trash me-2"></i> حذف
-                  </button>
-                  <?php endif; ?>
-                  <?php endif; ?>
-                </div>
-              </div>
-            </div>
-          </div>
-        </td>
+          <td class="text-center">
+            <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#actionsUser<?= $r['id'] ?>">
+              <i class="bi bi-gear-fill"></i>
+            </button>
+          </td>
         <?php endif; ?>
       </tr>
 
@@ -337,6 +310,35 @@ $can_edit = in_array(current_role(), ['admin','manager']); ?>
 <?php endforeach; ?>
   </tbody>
 </table>
+
+<?php foreach($rows as $r): ?>
+<div class="modal fade" id="actionsUser<?= $r['id'] ?>" tabindex="-1" aria-labelledby="actionsUserLabel<?= $r['id'] ?>" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow">
+      <div class="modal-header bg-light">
+        <h5 class="modal-title" id="actionsUserLabel<?= $r['id'] ?>">
+          <i class="bi bi-gear-fill me-1"></i> العمليات
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="إغلاق"></button>
+      </div>
+      <div class="modal-body text-center">
+        <?php if(has_permission('users.edit')): ?>
+        <button class="btn btn-outline-warning w-100 mb-2" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#e<?= $r['id'] ?>">
+          <i class="bi bi-pencil me-2"></i> تعديل
+        </button>
+        <?php endif; ?>
+
+        <?php if(has_permission('users.delete') && $r['id'] != $_SESSION['user_id']): ?>
+        <button class="btn btn-outline-danger w-100" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#d<?= $r['id'] ?>">
+          <i class="bi bi-trash me-2"></i> حذف
+        </button>
+        <?php endif; ?>
+      </div>
+    </div>
+  </div>
+</div>
+<?php endforeach; ?>
+
 
 <!-- مودال إضافة -->
 <div class="modal fade" id="add">
