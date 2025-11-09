@@ -464,7 +464,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
     }
 
     .logo-modern {
-      margin-right:60px;
+      margin-right:50px;
       height: 150px !important;          /* أكبر من الأول */
       width: auto;           /* يحافظ على التناسب */
       box-shadow: none !important;
