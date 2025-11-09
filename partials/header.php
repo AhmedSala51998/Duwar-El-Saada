@@ -469,7 +469,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
       box-shadow: none !important;
       transition: transform 0.3s ease, filter 0.3s ease;
       object-fit: contain;
-      transform: scale(3);   /* تكبير خفيف عند hover */
+      transform: scale(3.5);   /* تكبير خفيف عند hover */
     }
 
     @media screen and (max-width: 768px) {
