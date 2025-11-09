@@ -470,12 +470,10 @@ $current_page = basename($_SERVER['PHP_SELF']);
       box-shadow: none !important;
       transition: transform 0.3s ease, filter 0.3s ease;
       object-fit: contain;
+      transform: scale(2);   /* تكبير خفيف عند hover */
+      filter: brightness(1.3);
     }
 
-    .logo-modern:hover {
-      transform: scale(1.08);   /* تكبير خفيف عند hover */
-      filter: brightness(1.1);  /* يعطي لمعان بسيط */
-    }
     @media screen and (max-width: 768px) {
 
       /* يحتوي الجدول داخل المودال على تمرير أفقي سلس */
