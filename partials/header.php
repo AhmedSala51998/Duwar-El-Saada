@@ -613,9 +613,10 @@ $current_page = basename($_SERVER['PHP_SELF']);
     </div>-->
     <a href="<?= BASE_URL ?>/home.php" 
       class="navbar-brand d-flex align-items-center text-decoration-none">
-      <img src="<?= BASE_URL ?>/assets/logo_header2.png"  
+      <img src="<?= BASE_URL ?>/assets/logo_header2.png" 
+          width="140" height="140" 
           alt="logo" 
-          class="logo-modern">
+          class="rounded shadow-sm">
     </a>
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
   </div>
