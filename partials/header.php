@@ -471,7 +471,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
       transition: transform 0.3s ease, filter 0.3s ease;
       object-fit: contain;
       transform: scale(1.2);   /* تكبير خفيف عند hover */
-      filter: brightness(1.3);
     }
 
     @media screen and (max-width: 768px) {
