@@ -476,28 +476,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
       filter: brightness(1.1);  /* يعطي لمعان بسيط */
     }
 
-    /* يخلي النافبار ثابت تمامًا أعلى الصفحة */
-    .custom-navbar {
-      position: fixed !important;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 1030; /* أعلى من باقي العناصر */
-      transition: box-shadow 0.3s ease, background-color 0.3s ease;
-    }
-
-    /* إضافة ظل خفيف عند التمرير لتوضيح أنه ثابت */
-    body.scrolled .custom-navbar {
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-      background-color: #fff !important; /* ممكن تغيّرها حسب تصميمك */
-    }
-
-    /* عشان المحتوى ما يختبئش ورا النافبار */
-    body {
-      padding-top: 90px; /* حسب ارتفاع النافبار عندك */
-    }
-
-
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
 </head>
@@ -727,8 +705,3 @@ $current_page = basename($_SERVER['PHP_SELF']);
       }
     });
   </script>
-  <script>
-  window.addEventListener('scroll', function() {
-    document.body.classList.toggle('scrolled', window.scrollY > 10);
-  });
-</script>
