@@ -470,7 +470,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
       box-shadow: none !important;
       transition: transform 0.3s ease, filter 0.3s ease;
       object-fit: contain;
-      transform: scale(2);   /* تكبير خفيف عند hover */
+      transform: scale(1.4);   /* تكبير خفيف عند hover */
       filter: brightness(1.3);
     }
 
