@@ -463,17 +463,26 @@ $current_page = basename($_SERVER['PHP_SELF']);
       transform: scale(1.08);
     }
 
-    .logo-modern {
-      height: 140px;          /* أكبر من الأول */
-      width: auto;           /* يحافظ على التناسب */
-      box-shadow: none !important;
-      transition: transform 0.3s ease, filter 0.3s ease;
+    /* يخلي اللوجو فعلاً كبير وواضح */
+    .logo-large {
+      height: 120px;           /* كِبر فعلي */
+      width: auto;
       object-fit: contain;
+      margin-top: -25px;       /* يطلع جزء منه فوق الشريط */
+      margin-bottom: -25px;    /* وينزل جزء بسيط تحت */
+      transition: transform 0.3s ease, filter 0.3s ease;
+      box-shadow: none !important;
     }
 
-    .logo-modern:hover {
-      transform: scale(1.08);   /* تكبير خفيف عند hover */
-      filter: brightness(1.1);  /* يعطي لمعان بسيط */
+    /* تأثير بسيط عند المرور */
+    .logo-large:hover {
+      transform: scale(1.05);
+      filter: brightness(1.1);
+    }
+
+    /* علشان الشريط نفسه ما يتأثرش */
+    .navbar {
+      overflow: visible !important; /* يسمح للّوجو يخرج برا حدوده */
     }
 
   </style>
@@ -497,8 +506,9 @@ $current_page = basename($_SERVER['PHP_SELF']);
   <div class="container-fluid d-flex justify-content-between align-items-center">
 
     <!-- ✅ اللوجو على اليمين -->
-    <a class="navbar-brand d-flex align-items-center" href="<?= BASE_URL ?>/home.php" style="text-decoration:none;">
-      <img src="<?= BASE_URL ?>/assets/logo.png" alt="Logo" class="logo-modern">
+    <a class="navbar-brand d-flex align-items-center justify-content-center" 
+      href="<?= BASE_URL ?>/home.php" style="text-decoration:none;">
+      <img src="<?= BASE_URL ?>/assets/logo.png" alt="Logo" class="logo-large">
     </a>
 
     <!-- ✅ زر القائمة على الشمال (يظهر فقط في الموبايل) -->
