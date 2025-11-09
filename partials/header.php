@@ -562,7 +562,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
     <!-- ✅ اللوجو على اليمين -->
     <a class="navbar-brand d-flex align-items-center" href="<?= BASE_URL ?>/home.php" style="text-decoration:none;">
-      <img src="<?= BASE_URL ?>/assets/logo.png" alt="Logo" class="logo-modern">
+      <img src="<?= BASE_URL ?>/assets/logo_header.png" alt="Logo" class="logo-modern">
     </a>
 
     <!-- ✅ زر القائمة على الشمال (يظهر فقط في الموبايل) -->
@@ -607,8 +607,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
 <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarMenu">
   <div class="offcanvas-header border-bottom">
     <div class="d-flex align-items-center gap-2">
-      <img src="<?= BASE_URL ?>/assets/logo.png" width="40" height="40" alt="logo" class="rounded shadow-sm">
-      <h5 style="font-family: 'Scheherazade New', serif; font-weight: 700;" class="offcanvas-title fw-bold text-orange m-0"><?= esc(APP_NAME) ?></h5>
+      <img src="<?= BASE_URL ?>/assets/logo_header.png" width="40" height="40" alt="logo" class="rounded shadow-sm">
+      <!--<h5 style="font-family: 'Scheherazade New', serif; font-weight: 700;" class="offcanvas-title fw-bold text-orange m-0"><?= esc(APP_NAME) ?></h5>-->
     </div>
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
   </div>
