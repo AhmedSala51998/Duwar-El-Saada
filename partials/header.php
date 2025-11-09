@@ -476,6 +476,35 @@ $current_page = basename($_SERVER['PHP_SELF']);
       transform: scale(1.08);   /* تكبير خفيف عند hover */
       filter: brightness(1.1);  /* يعطي لمعان بسيط */
     }
+    @media screen and (max-width: 768px) {
+
+      /* يحتوي الجدول داخل المودال على تمرير أفقي سلس */
+      #addM .modal-body {
+        padding: 10px;
+      }
+
+      #addM table {
+        min-width: 800px; /* يخلي الجدول أوسع من الشاشة لتفعيل الاسكرول */
+        font-size: 12px; /* تصغير النص شوية للموبايل */
+      }
+
+      #addM .table-responsive {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch; /* تمرير سلس على الموبايل */
+      }
+
+      #addM th, #addM td {
+        white-space: nowrap; /* يمنع النص من النزول لسطرين */
+        padding: 6px 8px;
+        vertical-align: middle;
+      }
+
+      /* تحسين شكل الأزرار */
+      #addM .btn {
+        font-size: 12px;
+        padding: 5px 10px;
+      }
+    }
 
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
