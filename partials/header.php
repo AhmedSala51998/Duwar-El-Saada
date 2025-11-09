@@ -463,18 +463,35 @@ $current_page = basename($_SERVER['PHP_SELF']);
       transform: scale(1.08);
     }
 
-    .logo-modern {
-      height: 85px;          /* أكبر من الأول */
-      width: auto;           /* يحافظ على التناسب */
-      border-radius: 16px;   /* حواف ناعمة */
+    /* اللوجو يحتل ارتفاع النافبار بالكامل */
+    .logo-full {
+      height: 100%;           /* ياخد كامل ارتفاع الـ navbar */
+      max-height: 100px;      /* حد أقصى علشان ما يكبر زيادة */
+      width: auto;             /* يحافظ على النسبة */
+      object-fit: contain;     /* يحافظ على الجودة */
       box-shadow: none !important;
       transition: transform 0.3s ease, filter 0.3s ease;
-      object-fit: contain;
     }
 
-    .logo-modern:hover {
-      transform: scale(1.08);   /* تكبير خفيف عند hover */
-      filter: brightness(1.1);  /* يعطي لمعان بسيط */
+    /* عند تمرير الماوس */
+    .logo-full:hover {
+      transform: scale(1.05);
+      filter: brightness(1.1);
+    }
+
+    /* تحكم في ارتفاع الـ navbar نفسه */
+    .navbar {
+      min-height: 100px;       /* أكبر من الافتراضي */
+      padding: 10px 20px;      /* مساحة مريحة حول اللوجو */
+    }
+
+    @media (max-width: 768px) {
+      .navbar {
+        min-height: 80px;     /* أصغر للموبايل */
+      }
+      .logo-full {
+        max-height: 70px;
+      }
     }
 
   </style>
@@ -498,8 +515,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
   <div class="container-fluid d-flex justify-content-between align-items-center">
 
     <!-- ✅ اللوجو على اليمين -->
-    <a class="navbar-brand d-flex align-items-center" href="<?= BASE_URL ?>/home.php" style="text-decoration:none;">
-      <img src="<?= BASE_URL ?>/assets/logo.png" alt="Logo" class="logo-modern">
+    <a class="navbar-brand d-flex align-items-center justify-content-center w-100" href="<?= BASE_URL ?>/home.php" style="text-decoration:none;">
+      <img src="<?= BASE_URL ?>/assets/logo.png" alt="Logo" class="logo-full">
     </a>
 
     <!-- ✅ زر القائمة على الشمال (يظهر فقط في الموبايل) -->
