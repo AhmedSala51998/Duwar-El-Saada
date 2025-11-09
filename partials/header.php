@@ -563,7 +563,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
     <!-- ✅ اللوجو على اليمين -->
     <a class="navbar-brand d-flex align-items-center" href="<?= BASE_URL ?>/home.php" style="text-decoration:none;">
-      <img src="<?= BASE_URL ?>/assets/logo_header.png" alt="Logo" class="logo-modern">
+      <img src="<?= BASE_URL ?>/assets/logo_header2.png" alt="Logo" class="logo-modern">
     </a>
 
     <!-- ✅ زر القائمة على الشمال (يظهر فقط في الموبايل) -->
