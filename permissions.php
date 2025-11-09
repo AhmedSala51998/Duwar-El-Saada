@@ -64,45 +64,6 @@ require_permission('permissions.view');?>
     min-width: 100px;
   }
 }
-/* 📱 تحسين عرض جدول صلاحيات المجموعات في الموبايل */
-@media screen and (max-width: 768px) {
-  #addPermGroup .modal-dialog {
-    margin: 10px;
-  }
-
-  #addPermGroup .modal-body {
-    padding: 10px;
-  }
-
-  /* جعل الجدول قابل للتمرير */
-  #addPermGroup .table-responsive {
-    overflow-x: auto !important;
-    -webkit-overflow-scrolling: touch; /* تمرير سلس */
-  }
-
-  #addPermGroup table {
-    min-width: 700px; /* يجعل الجدول أعرض لتفعيل الاسكرول */
-    font-size: 12px; /* تصغير النص قليلاً للموبايل */
-  }
-
-  #addPermGroup th,
-  #addPermGroup td {
-    white-space: nowrap;
-    padding: 6px 8px;
-    vertical-align: middle;
-  }
-
-  #addPermGroup .btn {
-    font-size: 12px;
-    padding: 5px 10px;
-  }
-
-  /* تحسين المسافات حول زر إضافة صف */
-  #addPermGroup .text-end.mt-3 {
-    text-align: center !important;
-    margin-top: 15px !important;
-  }
-}
 </style>
 
 <?php endif; ?>
