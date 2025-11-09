@@ -463,6 +463,18 @@ $current_page = basename($_SERVER['PHP_SELF']);
       transform: scale(1.08);
     }
 
+    .logo-modern {
+      height: 65px;          /* أكبر قليلاً */
+      width: auto;           /* يحافظ على التناسب */
+      border-radius: 14px;   /* حواف ناعمة */
+      box-shadow: none !important;  /* بدون ظل */
+      transition: transform 0.3s ease;
+    }
+
+    .logo-modern:hover {
+      transform: scale(1.05);  /* تكبير خفيف عند المرور */
+    }
+
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
 </head>
@@ -484,11 +496,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
   <div class="container-fluid d-flex justify-content-between align-items-center">
 
     <!-- ✅ اللوجو على اليمين -->
-    <a class="navbar-brand d-flex align-items-center gap-2 fw-bold text-orange" href="<?= BASE_URL ?>/home.php">
-      <img src="<?= BASE_URL ?>/assets/logo.png" width="55" height="55" alt="logo" class="rounded shadow-sm">
-      <span class="fs-5" style="font-family: 'Scheherazade New', serif; font-weight: 700;">
-        <?= esc(APP_NAME) ?>
-      </span>
+    <a class="navbar-brand d-flex align-items-center" href="<?= BASE_URL ?>/home.php" style="text-decoration:none;">
+      <img src="<?= BASE_URL ?>/assets/logo.png" alt="Logo" class="logo-modern">
     </a>
 
     <!-- ✅ زر القائمة على الشمال (يظهر فقط في الموبايل) -->
