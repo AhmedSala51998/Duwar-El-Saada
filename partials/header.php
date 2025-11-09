@@ -463,17 +463,20 @@ $current_page = basename($_SERVER['PHP_SELF']);
       transform: scale(1.08);
     }
 
-    .logo-modern {
-      height: 140px;          /* أكبر من الأول */
-      width: auto;           /* يحافظ على التناسب */
-      box-shadow: none !important;
+    .logo-overflow {
+      height: 180px;            /* أكبر فعلاً من ارتفاع النافبار */
+      width: auto;
+      position: absolute;       /* يخليه يخرج برّا حدود النافبار */
+      top: 50%;                 /* يوسّطه عموديًا */
+      transform: translateY(-50%);
+      z-index: 10;
+      pointer-events: none;     /* ما يأثرش على الأزرار التانية */
       transition: transform 0.3s ease, filter 0.3s ease;
-      object-fit: contain;
     }
 
-    .logo-modern:hover {
-      transform: scale(1.08);   /* تكبير خفيف عند hover */
-      filter: brightness(1.1);  /* يعطي لمعان بسيط */
+    .logo-overflow:hover {
+      transform: translateY(-50%) scale(1.05);
+      filter: brightness(1.1);
     }
 
   </style>
@@ -497,8 +500,10 @@ $current_page = basename($_SERVER['PHP_SELF']);
   <div class="container-fluid d-flex justify-content-between align-items-center">
 
     <!-- ✅ اللوجو على اليمين -->
-    <a class="navbar-brand d-flex align-items-center" href="<?= BASE_URL ?>/home.php" style="text-decoration:none;">
-      <img src="<?= BASE_URL ?>/assets/logo.png" alt="Logo" class="logo-modern">
+    <a class="navbar-brand position-relative d-flex align-items-center" 
+      href="<?= BASE_URL ?>/home.php" 
+      style="text-decoration:none;">
+      <img src="<?= BASE_URL ?>/assets/logo.png" alt="Logo" class="logo-overflow">
     </a>
 
     <!-- ✅ زر القائمة على الشمال (يظهر فقط في الموبايل) -->
