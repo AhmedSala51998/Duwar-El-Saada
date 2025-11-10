@@ -610,7 +610,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
     <a href="<?= BASE_URL ?>/home.php" 
       class="navbar-brand d-flex align-items-center text-decoration-none">
       <img src="<?= BASE_URL ?>/assets/logo_header2.png" 
-          style="height: 32px; width: auto; transform: scale(1.5); margin-right: 0;"
+          style="height: 32px; width: auto; transform: scale(1.5); margin-right: 50px;"
           alt="logo" 
           class="rounded">
     </a>
