@@ -614,7 +614,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
     <a href="<?= BASE_URL ?>/home.php" 
       class="navbar-brand d-flex align-items-center text-decoration-none">
       <img src="<?= BASE_URL ?>/assets/logo_header2.png" 
-          style="transform: scale(0.95) !important;margin-right:0 !important"
+          style="transform: scale(0.85) !important;margin-right:0 !important"
           alt="logo" 
           class="rounded">
     </a>
