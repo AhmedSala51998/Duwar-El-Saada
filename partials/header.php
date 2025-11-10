@@ -472,8 +472,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
       transform: scale(3.4);
       transform-origin: right center;  /* يخليه يكبر باتجاه اليمين فقط */
       position: relative;
-      z-index: 1;
-      pointer-events: none;           /* يمنع تغطيته للزر اللي تحته */
+      z-index: 1;           /* يمنع تغطيته للزر اللي تحته */
     }
 
     @media screen and (max-width: 768px) {
