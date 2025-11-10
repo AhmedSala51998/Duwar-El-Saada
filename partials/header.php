@@ -606,11 +606,11 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
 <!-- القائمة الجانبية في الموبايل (Offcanvas) -->
 <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarMenu">
-  <div class="offcanvas-header border-bottom" style="padding: 6px 10px; height: 55px; min-height: unset;">
+  <div class="offcanvas-header border-bottom" style="padding: 6px 10px; height: 65px; min-height: unset;">
     <a href="<?= BASE_URL ?>/home.php" 
       class="navbar-brand d-flex align-items-center text-decoration-none">
       <img src="<?= BASE_URL ?>/assets/logo_header2.png" 
-          style="height: 32px; width: auto; transform: scale(0.82); margin-right: 0;"
+          style="height: 32px; width: auto; transform: scale(0.9); margin-right: 0;"
           alt="logo" 
           class="rounded">
     </a>
