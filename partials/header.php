@@ -464,13 +464,15 @@ $current_page = basename($_SERVER['PHP_SELF']);
     }
 
     .logo-modern {
-      margin-right:50px;
-      height: 55px !important;          /* أكبر من الأول */
-      width: auto;           /* يحافظ على التناسب */
+      margin-right: 50px;
+      height: 55px !important;     /* ارتفاع منطقي للرأس */
+      width: auto;
       box-shadow: none !important;
       transition: transform 0.3s ease, filter 0.3s ease;
       object-fit: contain;
-      transform: scale(3.4);   /* تكبير خفيف عند hover */
+      transform: scale(1);         /* بدون تضخيم مفرط */
+      z-index: 1;                  /* تمنع تغطية العناصر الأخرى */
+      position: relative;          /* ضروري لتفعيل z-index */
     }
 
     @media screen and (max-width: 768px) {
