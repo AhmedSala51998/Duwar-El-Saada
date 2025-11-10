@@ -606,19 +606,15 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
 <!-- القائمة الجانبية في الموبايل (Offcanvas) -->
 <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarMenu">
-  <div class="offcanvas-header border-bottom">
-    <!--<div class="d-flex align-items-center gap-2">
-      <img src="<?= BASE_URL ?>/assets/logo_header2.png" width="40" height="40" alt="logo" class="rounded shadow-sm">
-      <h5 style="font-family: 'Scheherazade New', serif; font-weight: 700;" class="offcanvas-title fw-bold text-orange m-0"><?= esc(APP_NAME) ?></h5>
-    </div>-->
+  <div class="offcanvas-header border-bottom" style="padding: 6px 10px; height: 55px; min-height: unset;">
     <a href="<?= BASE_URL ?>/home.php" 
       class="navbar-brand d-flex align-items-center text-decoration-none">
       <img src="<?= BASE_URL ?>/assets/logo_header2.png" 
-          style="transform: scale(0.82) !important;margin-right:0 !important"
+          style="height: 32px; width: auto; transform: scale(0.82); margin-right: 0;"
           alt="logo" 
           class="rounded">
     </a>
-    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" style="transform: scale(0.85);"></button>
   </div>
 
   <div class="offcanvas-body">
