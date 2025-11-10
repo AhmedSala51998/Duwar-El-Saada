@@ -471,7 +471,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
       transition: transform 0.3s ease, filter 0.3s ease;
       object-fit: contain;
       transform: scale(3.4);
-      transform-origin: right center;  /* يخليه يكبر باتجاه اليمين فقط */
+      transform-origin: right;  /* يخليه يكبر باتجاه اليمين فقط */
       position: relative;
       z-index: 1;
       pointer-events: none;           /* يمنع تغطيته للزر اللي تحته */
