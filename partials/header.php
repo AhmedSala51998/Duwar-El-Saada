@@ -582,6 +582,44 @@ $current_page = basename($_SERVER['PHP_SELF']);
         margin-top: 15px !important;
       }
     }
+    @media screen and (max-width: 768px) {
+      #addMultipleExpenses .modal-dialog {
+        margin: 10px;
+      }
+
+      #addMultipleExpenses .modal-body {
+        padding: 10px;
+      }
+
+      /* جعل الجدول قابل للتمرير */
+      #addMultipleExpenses .table-responsive {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch; /* تمرير سلس */
+      }
+
+      #addMultipleExpenses table {
+        min-width: 1000px; /* يجعل الجدول أعرض لتفعيل الاسكرول */
+        font-size: 12px; /* تصغير النص قليلاً للموبايل */
+      }
+
+      #addMultipleExpenses th,
+      #addMultipleExpenses td {
+        white-space: nowrap;
+        padding: 6px 8px;
+        vertical-align: middle;
+      }
+
+      #addMultipleExpenses .btn {
+        font-size: 12px;
+        padding: 5px 10px;
+      }
+
+      /* تحسين المسافات حول زر إضافة صف */
+      #addMultipleExpenses .text-end.mt-3 {
+        text-align: center !important;
+        margin-top: 15px !important;
+      }
+    }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
 </head>
