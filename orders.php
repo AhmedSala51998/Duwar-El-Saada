@@ -371,6 +371,14 @@ $stocks = $pdo->query("
         <span class="d-none d-sm-inline">إنشاء أمر</span>
       </button>
     <?php endif; ?>
+
+    <?php if(has_permission('orders.add_group')): ?>
+      <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#addMultipleOrders">
+        <i class="bi bi-layers"></i>
+        <span class="d-none d-sm-inline">إضافة متعددة</span>
+      </button>
+    <?php endif; ?>
+
   </div>
 </div>
 
@@ -546,6 +554,74 @@ $stocks = $pdo->query("
 </div></div></div>
 <?php endif; ?>
 
+<?php if(has_permission('orders.add_group')): ?>
+<div class="modal fade" id="addMultipleOrders">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <form method="post" action="orders_add_multiple">
+        <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
+
+        <div class="modal-header">
+          <h5 class="modal-title">إضافة أوامر تشغيل متعددة</h5>
+          <button class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+          <div class="table-responsive">
+            <table class="table table-bordered align-middle" id="ordersTable">
+              <thead class="table-light">
+                <tr>
+                  <th>المنتج</th>
+                  <th>الكمية</th>
+                  <th>الوحدة</th>
+                  <th>ملاحظة</th>
+                  <th width="60">إجراء</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <select name="orders[0][purchase_id]" class="form-select select2-product" required>
+                      <option value="">اختر المنتج</option>
+                      <?php foreach($items as $i): ?>
+                        <option value="<?= $i['id'] ?>">
+                          <?= esc($i['name']) ?> — متاح: <?= $i['quantity'].' '.$i['unit'] ?>
+                        </option>
+                      <?php endforeach; ?>
+                    </select>
+                  </td>
+                  <td><input type="number" step="0.001" name="orders[0][qty]" class="form-control" required></td>
+                  <td>
+                    <select name="orders[0][unit]" class="form-select">
+                      <option>عدد</option>
+                      <option>جرام</option>
+                      <option>كيلو</option>
+                      <option>لتر</option>
+                    </select>
+                  </td>
+                  <td><input type="text" name="orders[0][note]" class="form-control"></td>
+                  <td class="text-center">
+                    <button type="button" class="btn btn-danger btn-sm removeRow"><i class="bi bi-trash"></i></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <button type="button" class="btn btn-outline-primary mt-2" id="addRow">
+            <i class="bi bi-plus-circle"></i> إضافة صف جديد
+          </button>
+        </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-orange">تنفيذ جميع الأوامر</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<?php endif; ?>
+
 <?php require __DIR__.'/partials/footer.php'; ?>
 <!-- jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -580,6 +656,46 @@ document.addEventListener("DOMContentLoaded", function () {
       const text = tr.cells[0]?.innerText.toLowerCase() || "";
       tr.style.display = text.includes(filter) ? "" : "none";
     });
+  });
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  let index = 1;
+
+  // ✅ إضافة صف جديد
+  document.getElementById("addRow").addEventListener("click", function () {
+    const tbody = document.querySelector("#ordersTable tbody");
+    const newRow = tbody.rows[0].cloneNode(true);
+
+    // تحديث أسماء الحقول بالـ index الجديد
+    newRow.querySelectorAll("select, input").forEach(el => {
+      el.name = el.name.replace(/\[\d+\]/, `[${index}]`);
+      el.value = "";
+    });
+
+    tbody.appendChild(newRow);
+    index++;
+
+    // تفعيل select2 في الصف الجديد
+    $(newRow).find(".select2-product").select2({
+      width: '100%',
+      dropdownParent: $('#addMultipleOrders')
+    });
+  });
+
+  // ✅ حذف صف
+  document.addEventListener("click", function (e) {
+    if (e.target.closest(".removeRow")) {
+      const rows = document.querySelectorAll("#ordersTable tbody tr");
+      if (rows.length > 1) e.target.closest("tr").remove();
+    }
+  });
+
+  // ✅ تفعيل select2 أول مرة
+  $('.select2-product').select2({
+    width: '100%',
+    dropdownParent: $('#addMultipleOrders')
   });
 });
 </script>
