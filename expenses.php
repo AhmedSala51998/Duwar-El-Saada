@@ -989,7 +989,7 @@ deleteModal.addEventListener('show.bs.modal', function (event) {
 
 </script>
 <script>
-  const expenseTypes = {
+  const expenseTypes_multiple = {
   "ايجارات": ["أخرى"],
   "حكومية": ["إقامات ونقل كفالة","تأمينات","أخرى"],
   "مرافق وخدمات": ["كهرباء","مياه","غاز","هاتف وانترنت","أخرى"],
@@ -1034,7 +1034,7 @@ document.getElementById('multipleExpensesTable').addEventListener('change', func
   if(e.target.classList.contains('main-expense-select')){
     const wrapper = e.target.closest('td').nextElementSibling.querySelector('.sub-expense-wrapper');
     const hidden = e.target.closest('td').nextElementSibling.querySelector('.hidden-sub-expense');
-    const opts = expenseTypes[e.target.value] || [];
+    const opts = expenseTypes_multiple[e.target.value] || [];
     wrapper.innerHTML = "";
     if(opts.length>0){
       const sel = document.createElement('select');
