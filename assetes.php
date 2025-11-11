@@ -288,23 +288,27 @@ $rows=$s->fetchAll();
       </button>
     <?php endif; ?>
 
-    <!-- زر إضافة أصول متعددة (جروب) -->
+    <!-- زر إضافة أصول متعددة -->
     <?php if(has_permission('assets.add_group')): ?>
       <button class="btn btn-warning d-flex align-items-center text-dark" data-bs-toggle="modal" data-bs-target="#addAsset" style="height:40px;">
-        <i class="bi bi-layers me-1"></i> إضافة مجموعة من الأصول
+        <i class="bi bi-layers me-1"></i> إضافة مجموعة
       </button>
     <?php endif; ?>
 
-    <!-- زر استيراد من Excel -->
+    <!-- استيراد من Excel -->
     <?php if(has_permission('assets.addAssetExcel')): ?>
       <button class="btn btn-outline-primary d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#importAssetsExcel" style="height:40px;">
         <i class="bi bi-cloud-arrow-up me-1"></i> استيراد Excel
       </button>
     <?php endif; ?>
-
+    <?php if(has_permission('assets.downloadExcelAssets')): ?>
+      <!-- 🔹 زر تحميل نموذج الأصول -->
+      <a href="uploads/sample_assets.xlsx" class="btn btn-outline-info d-flex align-items-center" style="height:40px;">
+        <i class="bi bi-download me-1"></i> تحميل نموذج Excel
+      </a>
+    <?php endif; ?> 
   </div>
 </div>
-
 
 <div class="table-responsive shadow-sm rounded-3 border bg-white p-2">
   <table class="table table-hover align-middle mb-0 custom-table">

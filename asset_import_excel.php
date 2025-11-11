@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
         unset($rows[0]);
 
         // الأعمدة المطلوبة
-        $required = ['name','type','quantity','price','has_vat'];
+        $required = ['invoice_serial','invoice_date','name','type','quantity','price','has_vat'];
         foreach($required as $col){
             if(!in_array($col,$header)){
                 $_SESSION['toast'] = ['type'=>'danger','msg'=>"❌ الملف لا يحتوي على العمود: $col"];
