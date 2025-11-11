@@ -571,7 +571,7 @@ $stocks = $pdo->query("
             <table class="table table-bordered align-middle" id="ordersTable">
               <thead class="table-light">
                 <tr>
-                  <th>المنتج</th>
+                  <th style="width:350px !important">المنتج</th>
                   <th>الكمية</th>
                   <th>الوحدة</th>
                   <th>ملاحظة</th>
@@ -580,7 +580,7 @@ $stocks = $pdo->query("
               </thead>
               <tbody>
                 <tr>
-                  <td>
+                  <td style="width:350px !important">
                     <select name="orders[0][purchase_id]" class="form-select select2-product" required>
                       <option value="">اختر المنتج</option>
                       <?php foreach($items as $i): ?>
