@@ -264,9 +264,7 @@ $rows=$s->fetchAll();
     <!-- مربع البحث -->
     <form class="d-flex align-items-center gap-2 mb-0" method="get" style="height:40px;">
       <input class="form-control" name="kw" placeholder="بحث بالاسم" value="<?= esc($kw) ?>" style="height:40px; min-width:200px;">
-      <button class="btn btn-outline-secondary" style="height:40px;">
-        <i class="bi bi-search"></i> بحث
-      </button>
+      <button class="btn btn-outline-secondary" style="height:40px;">بحث</button>
     </form>
 
     <!-- تصدير Excel -->
@@ -298,7 +296,7 @@ $rows=$s->fetchAll();
     <?php endif; ?>
 
     <!-- زر استيراد من Excel -->
-    <?php if(has_permission('assets.addExcel')): ?>
+    <?php if(has_permission('assets.addAssetExcel')): ?>
       <button class="btn btn-outline-primary d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#importAssetsExcel" style="height:40px;">
         <i class="bi bi-cloud-arrow-up me-1"></i> استيراد Excel
       </button>
