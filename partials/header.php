@@ -544,6 +544,44 @@ $current_page = basename($_SERVER['PHP_SELF']);
         margin-top: 15px !important;
       }
     }
+    @media screen and (max-width: 768px) {
+      #addAsset .modal-dialog {
+        margin: 10px;
+      }
+
+      #addAsset .modal-body {
+        padding: 10px;
+      }
+
+      /* جعل الجدول قابل للتمرير */
+      #addAsset .table-responsive {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch; /* تمرير سلس */
+      }
+
+      #addAsset table {
+        min-width: 700px; /* يجعل الجدول أعرض لتفعيل الاسكرول */
+        font-size: 12px; /* تصغير النص قليلاً للموبايل */
+      }
+
+      #addAsset th,
+      #addAsset td {
+        white-space: nowrap;
+        padding: 6px 8px;
+        vertical-align: middle;
+      }
+
+      #addAsset .btn {
+        font-size: 12px;
+        padding: 5px 10px;
+      }
+
+      /* تحسين المسافات حول زر إضافة صف */
+      #addAsset .text-end.mt-3 {
+        text-align: center !important;
+        margin-top: 15px !important;
+      }
+    }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
 </head>
