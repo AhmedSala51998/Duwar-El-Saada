@@ -560,7 +560,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
       }
 
       #addAsset table {
-        min-width: 700px; /* يجعل الجدول أعرض لتفعيل الاسكرول */
+        min-width: 900px; /* يجعل الجدول أعرض لتفعيل الاسكرول */
         font-size: 12px; /* تصغير النص قليلاً للموبايل */
       }
 
