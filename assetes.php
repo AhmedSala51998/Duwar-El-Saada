@@ -638,16 +638,6 @@ $rows=$s->fetchAll();
 
         <div class="modal-body">
 
-          <div class="mb-3">
-            <label>رقم الفاتورة</label>
-            <input type="number" name="invoice_serial" class="form-control" placeholder="رقم الفاتورة" required>
-          </div>
-
-          <div class="mb-3">
-            <label>تاريخ الفاتورة</label>
-            <input type="date" name="invoice_date" class="form-control" required>
-          </div>
-
           <div class="row">
             <div class="col-md-6 mb-3">
               <label>اسم الدافع</label>
@@ -675,6 +665,8 @@ $rows=$s->fetchAll();
             <table class="table table-bordered" id="assetsTable">
               <thead>
                 <tr>
+                  <th>رقم الفاتورة</th>
+                  <th>تاريخ الفاتورة</th>
                   <th>اسم الأصل</th>
                   <th>النوع</th>
                   <th>الكمية</th>
@@ -686,6 +678,8 @@ $rows=$s->fetchAll();
               </thead>
               <tbody>
                 <tr>
+                  <td><input type="number" name="invoice_serial[]" class="form-control" required></td>
+                  <td><input type="date" name="invoice_date[]" class="form-control" required></td>
                   <td><input name="name[]" class="form-control" required></td>
                   <td><input name="type[]" class="form-control" required></td>
                   <td><input type="number" step="0.001" name="quantity[]" class="form-control" required></td>
@@ -743,7 +737,7 @@ $rows=$s->fetchAll();
         </div>
 
         <div class="modal-body">
-          <div class="mb-3">
+          <!--<div class="mb-3">
             <label>رقم الفاتورة</label>
             <input type="number" name="invoice_serial" class="form-control" required>
           </div>
@@ -751,7 +745,7 @@ $rows=$s->fetchAll();
           <div class="mb-3">
             <label>تاريخ الفاتورة</label>
             <input type="date" name="invoice_date" class="form-control" required>
-          </div>
+          </div>-->
 
           <div class="row">
             <div class="col-md-6 mb-3">
@@ -789,6 +783,8 @@ $rows=$s->fetchAll();
           <div class="alert alert-info">
             📘 يجب أن يحتوي ملف Excel على الأعمدة التالية:
             <ul class="mb-0">
+              <li><b>invoice_serial</b> : رقم الفاتورة</li>
+              <li><b>invoice_date</b> : تاريخ الفاتورة</li>
               <li><b>name</b> : اسم الأصل</li>
               <li><b>type</b> : نوع الأصل</li>
               <li><b>quantity</b> : الكمية</li>

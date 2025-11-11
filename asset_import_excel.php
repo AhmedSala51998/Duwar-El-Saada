@@ -16,8 +16,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
     require_once __DIR__ . '/libs/SimpleXLSX.php';
     $filePath = $_FILES['excel_file']['tmp_name'];
 
-    $bill_number     = trim($_POST['invoice_serial'] ?? '');
-    $invoice_date    = trim($_POST['invoice_date'] ?? date('Y-m-d'));
+    //$bill_number     = trim($_POST['invoice_serial'] ?? '');
+    //$invoice_date    = trim($_POST['invoice_date'] ?? date('Y-m-d'));
     $payer_name      = trim($_POST['payer_name'] ?? '');
     $payment_source  = trim($_POST['payment_source'] ?? 'كاش');
 
@@ -69,6 +69,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
                 $name = trim($data['name']);
                 if (!$name) continue;
 
+                $bill_number     = trim($data['invoice_serial'] ?? '');
+                $invoice_date    = trim($data['invoice_date'] ?? date('Y-m-d'));
                 $type = trim($data['type']);
                 $quantity = (float)($data['quantity'] ?? 0);
                 $price = (float)($data['price'] ?? 0);

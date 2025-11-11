@@ -242,6 +242,19 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
     <?php if(has_permission('expenses.add')): ?>
       <button class="btn btn-orange" data-bs-toggle="modal" data-bs-target="#addExpense"><i class="bi bi-plus-lg"></i> إضافة</button>
     <?php endif; ?>
+    <!-- زر إضافة مصروفات متعددة -->
+    <?php if(has_permission('expenses.add_group')): ?>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addMultipleExpenses">
+            <i class="bi bi-list-check"></i> إضافة متعددة
+        </button>
+    <?php endif; ?>
+
+    <!-- زر استيراد من Excel -->
+    <?php if(has_permission('expenses.addExpenseExcel')): ?>
+        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#importExpensesModal">
+            <i class="bi bi-file-earmark-excel"></i> استيراد Excel
+        </button>
+    <?php endif; ?>
   </div>
 </div>
 
@@ -581,6 +594,166 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 </div>
 <?php endif; ?>
 
+<?php if(has_permission('expenses.add_group')): ?>
+<div class="modal fade" id="addMultipleExpenses">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <form method="post" action="expenses_add_multiple" enctype="multipart/form-data">
+        <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
+        <div class="modal-header">
+          <h5 class="modal-title">إضافة مصروفات متعددة</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label>اسم الدافع</label>
+              <select name="payer_name" class="form-select payer-select" data-target="payment_source_add">
+                <option hidden>اختر</option>
+                <option>شركة</option>
+                <option>مؤسسة</option>
+                <option>فيصل المطيري</option>
+                <option>بسام</option>
+              </select>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label>مصدر الدفع</label>
+              <select name="payment_source" id="payment_source_add" class="form-select">
+                <option hidden>اختر</option>
+                <option>مالك</option>
+                <option>كاش</option>
+                <option>بنك</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+          <table class="table table-bordered" id="multipleExpensesTable">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>رقم الفاتورة</th>
+                <th>تاريخ الفاتورة</th>
+                <th>المصروف الرئيسي</th>
+                <th>نوع المصروف</th>
+                <th>بيان المصروف</th>
+                <th>قيمة المصروف</th>
+                <th>الضريبة</th>
+                <th>حذف</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="row-index">1</td>
+                <td><input type="number" name="invoice_serial[]" class="form-control" required></td>
+                <td><input type="date" name="invoice_date[]" class="form-control" required></td>
+                <td>
+                  <select name="main_expense[]" class="form-select main-expense-select" required>
+                    <option value="">اختر</option>
+                    <option value="ايجارات">ايجارات</option>
+                    <option value="حكومية">حكومية</option>
+                    <option value="مرافق وخدمات">مرافق وخدمات</option>
+                    <option value="رواتب">رواتب</option>
+                    <option value="سكن">سكن</option>
+                    <option value="مصروفات تشغيلية">مصروفات تشغيلية</option>
+                    <option value="مصروفات تأسيس">مصروفات تأسيس</option>
+                    <option value="مصروفات متنوعة">مصروفات متنوعة</option>
+                  </select>
+                </td>
+                <td>
+                  <div class="sub-expense-wrapper"></div>
+                  <input type="hidden" name="sub_expense[]" class="hidden-sub-expense">
+                </td>
+                <td><input type="text" name="expense_desc[]" class="form-control"></td>
+                <td><input type="number" step="0.01" min="0" name="expense_amount[]" class="form-control expense-amount"></td>
+                <td>
+                  <select name="has_vat[]" class="form-select has-vat">
+                    <option value="0">لا</option>
+                    <option value="1">نعم</option>
+                  </select>
+                </td>
+                <td><button type="button" class="btn btn-danger btn-sm remove-row">حذف</button></td>
+              </tr>
+            </tbody>
+          </table>
+          </div>
+          <button type="button" class="btn btn-outline-primary" id="addRowBtn">إضافة صف جديد</button>
+
+          <hr>
+
+          <div class="mt-4">
+            <label>صورة الفاتورة</label>
+            <label class="custom-file-upload w-100">
+              <i class="bi bi-receipt"></i>
+              <span id="file-text-expense-main"></span>
+              <input type="file" name="invoice_image" accept="image/*"
+                     onchange="previewFile(this,'file-text-expense-main','preview-expense-main')">
+              <img id="preview-expense-main" style="display:none; max-width:150px; margin-top:10px"/>
+            </label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-orange">حفظ</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<?php endif; ?>
+
+<?php if(has_permission('expenses.addExpenseExcel')): ?>
+<div class="modal fade" id="importExpensesModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="post" action="expenses_import" enctype="multipart/form-data">
+        <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
+        <div class="modal-header">
+          <h5 class="modal-title">استيراد مصروفات من Excel</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <!-- حقول الدافع ومصدر الدفع خارج اختيار الملف -->
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label>الدافع</label>
+              <select name="payer_name" class="form-select payer-select" data-target="payment_source_add" required>
+                <option value="">اختر الدافع</option>
+                <option value="شركة">شركة</option>
+                <option value="مؤسسة">مؤسسة</option>
+                <option value="فيصل المطيري">فيصل المطيري</option>
+                <option value="بسام">بسام</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label>مصدر الدفع</label>
+              <select name="payment_source" id="payment_source_add" class="form-select" required>
+                <option value="">اختر مصدر الدفع</option>
+                <option value="مالك">مالك</option>
+                <option value="بنك">بنك</option>
+                <option value="كاش">كاش</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- اختيار ملف Excel -->
+          <div class="mb-3">
+            <label>اختر ملف Excel (.xlsx أو .csv)</label>
+            <input type="file" name="excel_file" accept=".xlsx,.csv" class="form-control" required>
+            <small class="text-muted">
+              يجب أن يحتوي الملف على الأعمدة: invoice_serial, invoice_date, main_expense, sub_expense, expense_desc, expense_amount, has_vat
+            </small>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-orange">استيراد</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<?php endif; ?>
+
 <script>
 const expenseTypes = {
   "ايجارات": ["أخرى"],
@@ -814,4 +987,78 @@ deleteModal.addEventListener('show.bs.modal', function (event) {
   modalIdInput.value = id
 })
 
+</script>
+<script>
+  const expenseTypes = {
+  "ايجارات": ["أخرى"],
+  "حكومية": ["إقامات ونقل كفالة","تأمينات","أخرى"],
+  "مرافق وخدمات": ["كهرباء","مياه","غاز","هاتف وانترنت","أخرى"],
+  "رواتب": ["رواتب موظفين","أخرى"],
+  "سكن": ["سكن وإعاشة","كهرباء","مياه","أخرى"],
+  "مصروفات متنوعة": ["أخرى"],
+  "مصروفات تشغيلية": ["أخرى"],
+  "مصروفات تأسيس": ["أخرى"]
+};
+
+// إضافة صف جديد
+document.getElementById('addRowBtn').addEventListener('click', function(){
+  const table = document.getElementById('multipleExpensesTable').querySelector('tbody');
+  const newRow = table.rows[0].cloneNode(true);
+  // إعادة تهيئة القيم
+  newRow.querySelectorAll('input, select').forEach(el=>{
+    el.value = '';
+    if(el.type==='file') el.value = null;
+  });
+  table.appendChild(newRow);
+  updateRowIndices();
+});
+
+// حذف صف
+document.getElementById('multipleExpensesTable').addEventListener('click', function(e){
+  if(e.target.classList.contains('remove-row')){
+    const tr = e.target.closest('tr');
+    tr.remove();
+    updateRowIndices();
+  }
+});
+
+// تحديث أرقام الصفوف
+function updateRowIndices(){
+  document.querySelectorAll('#multipleExpensesTable tbody tr').forEach((tr,i)=>{
+    tr.querySelector('.row-index').textContent = i+1;
+  });
+}
+
+// ربط dynamic sub_expense
+document.getElementById('multipleExpensesTable').addEventListener('change', function(e){
+  if(e.target.classList.contains('main-expense-select')){
+    const wrapper = e.target.closest('td').nextElementSibling.querySelector('.sub-expense-wrapper');
+    const hidden = e.target.closest('td').nextElementSibling.querySelector('.hidden-sub-expense');
+    const opts = expenseTypes[e.target.value] || [];
+    wrapper.innerHTML = "";
+    if(opts.length>0){
+      const sel = document.createElement('select');
+      sel.className = 'form-select';
+      sel.innerHTML = `<option value="">اختر</option>`+opts.map(v=>`<option value="${v}">${v}</option>`).join('');
+      wrapper.appendChild(sel);
+      hidden.value='';
+      sel.addEventListener('change', function(){
+        if(this.value==='أخرى'){
+          const input = document.createElement('input');
+          input.type='text';
+          input.className='form-control';
+          wrapper.innerHTML='';
+          wrapper.appendChild(input);
+          input.addEventListener('input', ()=>hidden.value = input.value);
+        } else hidden.value = this.value;
+      });
+    } else {
+      const input = document.createElement('input');
+      input.type='text';
+      input.className='form-control';
+      wrapper.appendChild(input);
+      input.addEventListener('input', ()=>hidden.value = input.value);
+    }
+  }
+});
 </script>

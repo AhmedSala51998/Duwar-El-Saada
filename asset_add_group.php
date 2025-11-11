@@ -9,8 +9,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
         exit;
     }
 
-    $invoice_serial = trim($_POST['invoice_serial'] ?? '');
-    $invoice_date   = trim($_POST['invoice_date'] ?? date('Y-m-d'));
+    //$invoice_serial = trim($_POST['invoice_serial'] ?? '');
+    //$invoice_date   = trim($_POST['invoice_date'] ?? date('Y-m-d'));
     $payer_name     = trim($_POST['payer_name'] ?? '');
     $payment_source = trim($_POST['payment_source'] ?? 'كاش');
 
@@ -56,6 +56,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
             $name = trim($name);
             if ($name === '') continue;
 
+            $invoice_serial = trim($_POST['invoice_serial'][$i] ?? '');
+            $invoice_date   = trim($_POST['invoice_date'][$i] ?? date('Y-m-d'));
             $type = trim($_POST['type'][$i] ?? '');
             $quantity = (float)($_POST['quantity'][$i] ?? 0);
             $price = (float)($_POST['price'][$i] ?? 0);
