@@ -221,7 +221,7 @@ $rows=$s->fetchAll();
   </div>
 </div>-->
 
-<div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-3">
+<!--<div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-3">
   <h3 class="page-title">
   <span class="stat-icon">
     <i class="bi bi-building"></i>
@@ -249,7 +249,64 @@ $rows=$s->fetchAll();
       </button>
     <?php endif; ?>
   </div>
+</div>-->
+
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-3">
+  <h3 class="page-title mb-0">
+    <span class="stat-icon">
+      <i class="bi bi-building"></i>
+    </span>
+    الأصول
+  </h3>
+
+  <div class="d-flex flex-wrap align-items-center gap-2">
+
+    <!-- مربع البحث -->
+    <form class="d-flex align-items-center gap-2 mb-0" method="get" style="height:40px;">
+      <input class="form-control" name="kw" placeholder="بحث بالاسم" value="<?= esc($kw) ?>" style="height:40px; min-width:200px;">
+      <button class="btn btn-outline-secondary" style="height:40px;">
+        <i class="bi bi-search"></i> بحث
+      </button>
+    </form>
+
+    <!-- تصدير Excel -->
+    <?php if(has_permission('assets.print_excel')): ?>
+      <a class="btn btn-outline-success d-flex align-items-center" href="export_assets_excel.php?kw=<?= urlencode($kw) ?>" style="height:40px;">
+        <i class="bi bi-file-earmark-excel me-1"></i> Excel
+      </a>
+    <?php endif; ?>
+
+    <!-- تصدير PDF -->
+    <?php if(has_permission('assets.print_pdf')): ?>
+      <a class="btn btn-outline-danger d-flex align-items-center" href="export_assets_pdf.php?kw=<?= urlencode($kw) ?>" style="height:40px;">
+        <i class="bi bi-filetype-pdf me-1"></i> PDF
+      </a>
+    <?php endif; ?>
+
+    <!-- زر إضافة أصل فردي -->
+    <?php if(has_permission('assets.add')): ?>
+      <button class="btn btn-orange d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#add" style="height:40px;">
+        <i class="bi bi-plus-circle me-1"></i> إضافة
+      </button>
+    <?php endif; ?>
+
+    <!-- زر إضافة أصول متعددة (جروب) -->
+    <?php if(has_permission('assets.add_group')): ?>
+      <button class="btn btn-warning d-flex align-items-center text-dark" data-bs-toggle="modal" data-bs-target="#addAsset" style="height:40px;">
+        <i class="bi bi-layers me-1"></i> إضافة مجموعة من الأصول
+      </button>
+    <?php endif; ?>
+
+    <!-- زر استيراد من Excel -->
+    <?php if(has_permission('assets.addExcel')): ?>
+      <button class="btn btn-outline-primary d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#importAssetsExcel" style="height:40px;">
+        <i class="bi bi-cloud-arrow-up me-1"></i> استيراد Excel
+      </button>
+    <?php endif; ?>
+
+  </div>
 </div>
+
 
 <div class="table-responsive shadow-sm rounded-3 border bg-white p-2">
   <table class="table table-hover align-middle mb-0 custom-table">
@@ -568,6 +625,201 @@ $rows=$s->fetchAll();
 </div>
 <?php endif; ?>
 
+<?php if(has_permission('assets.add_group')): ?>
+<!-- Modal إضافة أصول يدوياً -->
+<div class="modal fade" id="addAsset">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <form method="post" action="asset_add_group" enctype="multipart/form-data">
+        <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
+
+        <div class="modal-header">
+          <h5 class="modal-title">إضافة أصول متعددة</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+
+          <div class="mb-3">
+            <label>رقم الفاتورة</label>
+            <input type="number" name="invoice_serial" class="form-control" placeholder="رقم الفاتورة" required>
+          </div>
+
+          <div class="mb-3">
+            <label>تاريخ الفاتورة</label>
+            <input type="date" name="invoice_date" class="form-control" required>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label>اسم الدافع</label>
+              <select name="payer_name" class="form-select payer-select">
+                <option hidden>اختر</option>
+                <option>شركة</option>
+                <option>مؤسسة</option>
+                <option>فيصل المطيري</option>
+                <option>بسام</option>
+              </select>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label>مصدر الدفع</label>
+              <select name="payment_source" class="form-select payment-source-select">
+                <option hidden>اختر</option>
+                <option>مالك</option>
+                <option>كاش</option>
+                <option>بنك</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-bordered" id="assetsTable">
+              <thead>
+                <tr>
+                  <th>اسم الأصل</th>
+                  <th>النوع</th>
+                  <th>الكمية</th>
+                  <th>السعر</th>
+                  <th>ضريبة (15%)</th>
+                  <th>إجمالي بعد الضريبة</th>
+                  <th>إزالة</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><input name="name[]" class="form-control" required></td>
+                  <td><input name="type[]" class="form-control" required></td>
+                  <td><input type="number" step="0.001" name="quantity[]" class="form-control" required></td>
+                  <td><input type="number" step="0.01" name="price[]" class="form-control" required></td>
+                  <td>
+                    <select name="has_vat[]" class="form-select">
+                      <option value="0">بدون</option>
+                      <option value="1">مع الضريبة</option>
+                    </select>
+                  </td>
+                  <td><input type="text" name="total_amount[]" class="form-control" readonly></td>
+                  <td><button type="button" class="btn btn-danger btn-sm remove-row">✖</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <button type="button" id="addAssetRow" class="btn btn-secondary">+ إضافة صف</button>
+
+          <hr>
+
+          <div class="mt-4">
+            <label>صورة الفاتورة</label>
+            <label class="custom-file-upload w-100">
+              <i class="bi bi-receipt"></i>
+              <span id="file-text-asset-main"></span>
+              <input type="file" name="invoice_image" accept="image/*"
+                     onchange="previewFile(this,'file-text-asset-main','preview-asset-main')">
+              <img id="preview-asset-main" style="display:none; max-width:150px; margin-top:10px"/>
+            </label>
+          </div>
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="submit" name="save" class="btn btn-orange">حفظ</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<?php endif; ?>
+
+<?php if(has_permission('assets.addAssetExcel')): ?>
+<!-- Modal استيراد أصول من Excel -->
+<div class="modal fade" id="importAssetsExcel">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <form method="post" action="asset_import_excel" enctype="multipart/form-data">
+        <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
+
+        <div class="modal-header">
+          <h5 class="modal-title"><i class="bi bi-file-earmark-spreadsheet"></i> استيراد أصول من ملف Excel</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+          <div class="mb-3">
+            <label>رقم الفاتورة</label>
+            <input type="number" name="invoice_serial" class="form-control" required>
+          </div>
+
+          <div class="mb-3">
+            <label>تاريخ الفاتورة</label>
+            <input type="date" name="invoice_date" class="form-control" required>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label>اسم الدافع</label>
+              <select name="payer_name" class="form-select payer-select">
+                <option hidden>اختر</option>
+                <option>شركة</option>
+                <option>مؤسسة</option>
+                <option>فيصل المطيري</option>
+                <option>بسام</option>
+              </select>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label>مصدر الدفع</label>
+              <select name="payment_source" class="form-select payment-source-select">
+                <option hidden>اختر</option>
+                <option>مالك</option>
+                <option>كاش</option>
+                <option>بنك</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label>ملف Excel</label>
+            <label class="custom-file-upload w-100">
+              <i class="bi bi-cloud-arrow-up"></i>
+              <span id="file-text-asset-excel">اختر ملف Excel</span>
+              <input type="file" name="excel_file" accept=".xlsx,.xls" required
+                     onchange="document.getElementById('file-text-asset-excel').textContent=this.files[0].name">
+            </label>
+          </div>
+
+          <div class="alert alert-info">
+            📘 يجب أن يحتوي ملف Excel على الأعمدة التالية:
+            <ul class="mb-0">
+              <li><b>name</b> : اسم الأصل</li>
+              <li><b>type</b> : نوع الأصل</li>
+              <li><b>quantity</b> : الكمية</li>
+              <li><b>price</b> : السعر</li>
+              <li><b>has_vat</b> : 1 = مع الضريبة / 0 = بدون</li>
+            </ul>
+          </div>
+
+          <div class="mt-4">
+            <label>صورة الفاتورة (اختياري)</label>
+            <label class="custom-file-upload w-100">
+              <i class="bi bi-receipt"></i>
+              <span id="file-text-asset-img"></span>
+              <input type="file" name="invoice_image" accept="image/*"
+                     onchange="previewFile(this,'file-text-asset-img','preview-asset-img')">
+              <img id="preview-asset-img" style="display:none; max-width:150px; margin-top:10px"/>
+            </label>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="submit" name="save" class="btn btn-orange">استيراد</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<?php endif; ?>
+
 <?php require __DIR__.'/partials/footer.php'; ?>
 
 <script>
@@ -669,5 +921,55 @@ function updateAssetVat(id){
   vatSection.style.display = hasVat ? 'block' : 'none';
   totalField.value = hasVat ? (totalPrice + totalPrice * vatPercent / 100).toFixed(2) : totalPrice.toFixed(2);
 }
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+
+  // زر إضافة صف جديد
+  document.getElementById("addAssetRow").addEventListener("click", function() {
+    const tableBody = document.querySelector("#assetsTable tbody");
+    const firstRow = tableBody.querySelector("tr");
+    const newRow = firstRow.cloneNode(true);
+
+    // مسح القيم القديمة
+    newRow.querySelectorAll("input").forEach(input => {
+      input.value = "";
+    });
+
+    // إعادة تهيئة الأحداث للحساب والحذف
+    tableBody.appendChild(newRow);
+    attachEvents(newRow);
+  });
+
+  // تفعيل الحساب والحذف في الصف الأول
+  document.querySelectorAll("#assetsTable tbody tr").forEach(attachEvents);
+
+  // وظيفة لإضافة الأحداث
+  function attachEvents(row) {
+    const quantity = row.querySelector("input[name='quantity[]']");
+    const price = row.querySelector("input[name='price[]']");
+    const vat = row.querySelector("select[name='has_vat[]']");
+    const total = row.querySelector("input[name='total_amount[]']");
+    const removeBtn = row.querySelector(".remove-row");
+
+    function calculate() {
+      const q = parseFloat(quantity.value) || 0;
+      const p = parseFloat(price.value) || 0;
+      const hasVat = vat.value === "1";
+      let result = q * p;
+      if (hasVat) result *= 1.15; // ضريبة 15%
+      total.value = result.toFixed(2);
+    }
+
+    [quantity, price, vat].forEach(el => el.addEventListener("input", calculate));
+
+    removeBtn.addEventListener("click", function() {
+      const rows = document.querySelectorAll("#assetsTable tbody tr");
+      if (rows.length > 1) row.remove();
+    });
+  }
+
+});
 </script>
 
