@@ -738,11 +738,16 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 
           <!-- اختيار ملف Excel -->
           <div class="mb-3">
-            <label>اختر ملف Excel (.xlsx أو .csv)</label>
-            <input type="file" name="excel_file" accept=".xlsx,.csv" class="form-control" required>
-            <small class="text-muted">
+            <label>ملف Excel</label>
+            <label class="custom-file-upload w-100">
+              <i class="bi bi-cloud-arrow-up"></i>
+              <span id="file-text-expense-excel">اختر ملف Excel</span>
+              <input type="file" name="excel_file" accept=".xlsx,.xls" required
+                     onchange="document.getElementById('file-text-expense-excel').textContent=this.files[0].name">
+              <small class="text-muted">
               يجب أن يحتوي الملف على الأعمدة: invoice_serial, invoice_date, main_expense, sub_expense, expense_desc, expense_amount, has_vat
             </small>
+            </label>
           </div>
         </div>
         <div class="modal-footer">
