@@ -288,7 +288,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
     <?php endif; ?>
     <?php if(has_permission('expenses.downloadExcelExpenses')): ?>
       <!-- 🔹 زر تحميل نموذج المصروفات -->
-      <a href="uploads/sample_expenses.xlsx" class="btn btn-outline-info d-flex align-items-center">
+      <a href="uploads/sample_expenses.xlsx" download class="btn btn-outline-info d-flex align-items-center">
         <i class="bi bi-download me-1"></i> تحميل نموذج Excel
       </a>
     <?php endif; ?>

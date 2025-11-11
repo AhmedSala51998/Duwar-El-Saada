@@ -303,7 +303,7 @@ $rows=$s->fetchAll();
     <?php endif; ?>
     <?php if(has_permission('assets.downloadExcelAssets')): ?>
       <!-- 🔹 زر تحميل نموذج الأصول -->
-      <a href="uploads/sample_assets.xlsx" class="btn btn-outline-info d-flex align-items-center" style="height:40px;">
+      <a href="uploads/sample_assets.xlsx" download class="btn btn-outline-info d-flex align-items-center" style="height:40px;">
         <i class="bi bi-download me-1"></i> تحميل نموذج Excel
       </a>
     <?php endif; ?> 
