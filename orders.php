@@ -679,13 +679,17 @@ document.addEventListener("DOMContentLoaded", function () {
     selectProduct.value = "";
 
     // إعادة تسمية باقي الحقول
-    newRow.querySelector("input[name^='orders']").forEach(el => {
+    // إعادة تسمية باقي الحقول
+    newRow.querySelectorAll("input[name^='orders']").forEach(el => {
       if(el.type === "number") el.name = `orders[${index}][qty]`;
       else el.name = `orders[${index}][note]`;
       el.value = "";
     });
 
-    newRow.querySelector("select[name^='orders'][name!='purchase_id']").name = `orders[${index}][unit]`;
+    newRow.querySelectorAll("select[name^='orders']:not([name$='purchase_id'])").forEach(el => {
+      el.name = `orders[${index}][unit]`;
+    });
+
 
     tbody.appendChild(newRow);
     index++;
