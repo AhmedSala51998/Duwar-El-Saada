@@ -213,6 +213,34 @@ input[type="file"]{display:none}
   align-items: center;
   gap: 10px;
 }
+
+@media screen and (max-width: 768px) {
+  .expenses-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+
+  .expenses-header .header-actions {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+
+  .expenses-header .search-form {
+    flex-direction: column;
+  }
+
+  .expenses-header .search-form input,
+  .expenses-header .search-form button {
+    width: 100%;
+  }
+
+  .expenses-header button {
+    width: 100%;
+  }
+}
+
 </style>
 
 <?php if(!empty($_SESSION['toast'])): $toast=$_SESSION['toast']; unset($_SESSION['toast']); ?>
@@ -227,36 +255,40 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 </script>
 <?php endif; ?>
 
-<div class="d-flex flex-wrap gap-2 justify-content-between align-items-center mb-3">
-    <h3 class="page-title">
-      <span class="stat-icon">
-        <i class="bi bi-cash-stack"></i>
-      </span>
-      المصروفات
-    </h3>
-  <div class="d-flex gap-2">
-    <form class="d-flex gap-2" method="get">
+<div class="d-flex flex-wrap gap-2 justify-content-between align-items-center mb-3 expenses-header">
+  <h3 class="page-title">
+    <span class="stat-icon">
+      <i class="bi bi-cash-stack"></i>
+    </span>
+    المصروفات
+  </h3>
+
+  <div class="d-flex gap-2 flex-wrap header-actions">
+    <form class="d-flex gap-2 search-form" method="get">
       <input class="form-control" name="kw" placeholder="بحث بالمصروفات" value="<?= esc($kw) ?>">
       <button class="btn btn-outline-secondary">بحث</button>
     </form>
+
     <?php if(has_permission('expenses.add')): ?>
-      <button class="btn btn-orange" data-bs-toggle="modal" data-bs-target="#addExpense"><i class="bi bi-plus-lg"></i> إضافة</button>
-    <?php endif; ?>
-    <!-- زر إضافة مصروفات متعددة -->
-    <?php if(has_permission('expenses.add_group')): ?>
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addMultipleExpenses">
-            <i class="bi bi-list-check"></i> إضافة متعددة
-        </button>
+      <button class="btn btn-orange" data-bs-toggle="modal" data-bs-target="#addExpense">
+        <i class="bi bi-plus-lg"></i> إضافة
+      </button>
     <?php endif; ?>
 
-    <!-- زر استيراد من Excel -->
+    <?php if(has_permission('expenses.add_group')): ?>
+      <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addMultipleExpenses">
+        <i class="bi bi-list-check"></i> إضافة متعددة
+      </button>
+    <?php endif; ?>
+
     <?php if(has_permission('expenses.addExpenseExcel')): ?>
-        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#importExpensesModal">
-            <i class="bi bi-file-earmark-excel"></i> استيراد Excel
-        </button>
+      <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#importExpensesModal">
+        <i class="bi bi-file-earmark-excel"></i> استيراد Excel
+      </button>
     <?php endif; ?>
   </div>
 </div>
+
 
 <div class="table-responsive shadow-sm rounded-3 border bg-white p-2">
   <table class="table table-hover align-middle mb-0 custom-table">

@@ -560,7 +560,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
       }
 
       #addAsset table {
-        min-width: 900px; /* يجعل الجدول أعرض لتفعيل الاسكرول */
+        min-width: 950px; /* يجعل الجدول أعرض لتفعيل الاسكرول */
         font-size: 12px; /* تصغير النص قليلاً للموبايل */
       }
 
@@ -598,7 +598,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
       }
 
       #addMultipleExpenses table {
-        min-width: 1000px; /* يجعل الجدول أعرض لتفعيل الاسكرول */
+        min-width: 1100px; /* يجعل الجدول أعرض لتفعيل الاسكرول */
         font-size: 12px; /* تصغير النص قليلاً للموبايل */
       }
 
