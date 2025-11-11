@@ -608,7 +608,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
           <div class="row">
             <div class="col-md-6 mb-3">
               <label>اسم الدافع</label>
-              <select name="payer_name" class="form-select payer-select" data-target="payment_source_add">
+              <select name="payer_name" class="form-select payer-select" data-target="payment_source_add1">
                 <option hidden>اختر</option>
                 <option>شركة</option>
                 <option>مؤسسة</option>
@@ -619,7 +619,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 
             <div class="col-md-6 mb-3">
               <label>مصدر الدفع</label>
-              <select name="payment_source" id="payment_source_add" class="form-select">
+              <select name="payment_source" id="payment_source_add1" class="form-select">
                 <option hidden>اختر</option>
                 <option>مالك</option>
                 <option>كاش</option>
@@ -717,7 +717,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
           <div class="row mb-3">
             <div class="col-md-6">
               <label>الدافع</label>
-              <select name="payer_name" class="form-select payer-select" data-target="payment_source_add" required>
+              <select name="payer_name" class="form-select payer-select" data-target="payment_source_add2" required>
                 <option value="">اختر الدافع</option>
                 <option value="شركة">شركة</option>
                 <option value="مؤسسة">مؤسسة</option>
@@ -727,7 +727,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
             </div>
             <div class="col-md-6">
               <label>مصدر الدفع</label>
-              <select name="payment_source" id="payment_source_add" class="form-select" required>
+              <select name="payment_source" id="payment_source_add2" class="form-select" required>
                 <option value="">اختر مصدر الدفع</option>
                 <option value="مالك">مالك</option>
                 <option value="بنك">بنك</option>
