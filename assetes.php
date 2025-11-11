@@ -270,7 +270,7 @@ $rows=$s->fetchAll();
     <!-- تصدير Excel -->
     <?php if(has_permission('assets.print_excel')): ?>
       <a class="btn btn-outline-success d-flex align-items-center" href="export_assets_excel.php?kw=<?= urlencode($kw) ?>" style="height:40px;">
-        <i class="bi bi-file-earmark-excel me-1"></i> Excel
+        <i class="bi bi-file-earmark-spreadsheet me-1"></i> Excel
       </a>
     <?php endif; ?>
 
