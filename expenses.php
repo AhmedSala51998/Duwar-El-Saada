@@ -630,52 +630,54 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 
           <div class="table-responsive">
           <table class="table table-bordered" id="multipleExpensesTable">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>رقم الفاتورة</th>
-                <th>تاريخ الفاتورة</th>
-                <th>المصروف الرئيسي</th>
-                <th>نوع المصروف</th>
-                <th>بيان المصروف</th>
-                <th>قيمة المصروف</th>
-                <th>الضريبة</th>
-                <th>حذف</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="row-index">1</td>
-                <td><input type="number" name="invoice_serial[]" class="form-control" required></td>
-                <td><input type="date" name="invoice_date[]" class="form-control" required></td>
-                <td>
-                  <select name="main_expense[]" class="form-select main-expense-select" required>
-                    <option value="">اختر</option>
-                    <option value="ايجارات">ايجارات</option>
-                    <option value="حكومية">حكومية</option>
-                    <option value="مرافق وخدمات">مرافق وخدمات</option>
-                    <option value="رواتب">رواتب</option>
-                    <option value="سكن">سكن</option>
-                    <option value="مصروفات تشغيلية">مصروفات تشغيلية</option>
-                    <option value="مصروفات تأسيس">مصروفات تأسيس</option>
-                    <option value="مصروفات متنوعة">مصروفات متنوعة</option>
-                  </select>
-                </td>
-                <td>
-                  <div class="sub-expense-wrapper"></div>
-                  <input type="hidden" name="sub_expense[]" class="hidden-sub-expense">
-                </td>
-                <td><input type="text" name="expense_desc[]" class="form-control"></td>
-                <td><input type="number" step="0.01" min="0" name="expense_amount[]" class="form-control expense-amount"></td>
-                <td>
-                  <select name="has_vat[]" class="form-select has-vat">
-                    <option value="0">لا</option>
-                    <option value="1">نعم</option>
-                  </select>
-                </td>
-                <td><button type="button" class="btn btn-danger btn-sm remove-row">حذف</button></td>
-              </tr>
-            </tbody>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>رقم الفاتورة</th>
+              <th>تاريخ الفاتورة</th>
+              <th>المصروف الرئيسي</th>
+              <th>نوع المصروف</th>
+              <th>بيان المصروف</th>
+              <th>قيمة المصروف</th>
+              <th>الضريبة</th>
+              <th>الإجمالي بعد الضريبة</th>
+              <th>حذف</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="row-index">1</td>
+              <td><input type="number" name="invoice_serial[]" class="form-control" required></td>
+              <td><input type="date" name="invoice_date[]" class="form-control" required></td>
+              <td>
+                <select name="main_expense[]" class="form-select main-expense-select" required>
+                  <option value="">اختر</option>
+                  <option value="ايجارات">ايجارات</option>
+                  <option value="حكومية">حكومية</option>
+                  <option value="مرافق وخدمات">مرافق وخدمات</option>
+                  <option value="رواتب">رواتب</option>
+                  <option value="سكن">سكن</option>
+                  <option value="مصروفات تشغيلية">مصروفات تشغيلية</option>
+                  <option value="مصروفات تأسيس">مصروفات تأسيس</option>
+                  <option value="مصروفات متنوعة">مصروفات متنوعة</option>
+                </select>
+              </td>
+              <td>
+                <div class="sub-expense-wrapper"></div>
+                <input type="hidden" name="sub_expense[]" class="hidden-sub-expense">
+              </td>
+              <td><input type="text" name="expense_desc[]" class="form-control"></td>
+              <td><input type="number" step="0.01" min="0" name="expense_amount[]" class="form-control expense-amount"></td>
+              <td>
+                <select name="has_vat[]" class="form-select has-vat">
+                  <option value="0">لا</option>
+                  <option value="1">نعم</option>
+                </select>
+              </td>
+              <td><input type="text" name="total_after_vat[]" class="form-control total-after-vat" readonly></td>
+              <td><button type="button" class="btn btn-danger btn-sm remove-row">حذف</button></td>
+            </tr>
+          </tbody>
           </table>
           </div>
           <button type="button" class="btn btn-outline-primary" id="addRowBtn">إضافة صف جديد</button>
@@ -1064,6 +1066,34 @@ document.getElementById('multipleExpensesTable').addEventListener('change', func
       wrapper.appendChild(input);
       input.addEventListener('input', ()=>hidden.value = input.value);
     }
+  }
+});
+
+// دالة لحساب الإجمالي بعد الضريبة
+function calculateTotal(row) {
+  const amountInput = row.querySelector('.expense-amount');
+  const vatSelect = row.querySelector('.has-vat');
+  const totalField = row.querySelector('.total-after-vat');
+
+  const amount = parseFloat(amountInput.value) || 0;
+  const hasVat = vatSelect.value === '1';
+
+  const total = hasVat ? amount * 1.15 : amount;
+  totalField.value = total.toFixed(2);
+}
+
+// ربط الأحداث عند الكتابة أو تغيير القيمة
+document.getElementById('multipleExpensesTable').addEventListener('input', function(e){
+  if (e.target.classList.contains('expense-amount')) {
+    const row = e.target.closest('tr');
+    calculateTotal(row);
+  }
+});
+
+document.getElementById('multipleExpensesTable').addEventListener('change', function(e){
+  if (e.target.classList.contains('has-vat')) {
+    const row = e.target.closest('tr');
+    calculateTotal(row);
   }
 });
 </script>
