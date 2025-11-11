@@ -663,28 +663,41 @@ document.addEventListener("DOMContentLoaded", function () {
 document.addEventListener("DOMContentLoaded", function () {
   let index = 1;
 
-  // ✅ إضافة صف جديد
-  document.getElementById("addRow").addEventListener("click", function () {
-    const tbody = document.querySelector("#ordersTable tbody");
-    const newRow = tbody.rows[0].cloneNode(true);
+  const tbody = document.querySelector("#ordersTable tbody");
+  const templateRow = tbody.rows[0].cloneNode(true); // نسخة الصف الأساسي
 
-    // تحديث أسماء الحقول بالـ index الجديد
-    newRow.querySelectorAll("select, input").forEach(el => {
-      el.name = el.name.replace(/\[\d+\]/, `[${index}]`);
+  // حفظ HTML للـ options من الـ select الأصلي
+  const productOptions = templateRow.querySelector(".select2-product").innerHTML;
+
+  document.getElementById("addRow").addEventListener("click", function () {
+    const newRow = templateRow.cloneNode(true);
+
+    // إعادة توليد options للمنتج
+    const selectProduct = newRow.querySelector(".select2-product");
+    selectProduct.innerHTML = productOptions;
+    selectProduct.name = `orders[${index}][purchase_id]`;
+    selectProduct.value = "";
+
+    // إعادة تسمية باقي الحقول
+    newRow.querySelector("input[name^='orders']").forEach(el => {
+      if(el.type === "number") el.name = `orders[${index}][qty]`;
+      else el.name = `orders[${index}][note]`;
       el.value = "";
     });
+
+    newRow.querySelector("select[name^='orders'][name!='purchase_id']").name = `orders[${index}][unit]`;
 
     tbody.appendChild(newRow);
     index++;
 
-    // تفعيل select2 في الصف الجديد
-    $(newRow).find(".select2-product").select2({
+    // تفعيل select2 للصف الجديد
+    $(selectProduct).select2({
       width: '100%',
       dropdownParent: $('#addMultipleOrders')
     });
   });
 
-  // ✅ حذف صف
+  // حذف صف
   document.addEventListener("click", function (e) {
     if (e.target.closest(".removeRow")) {
       const rows = document.querySelectorAll("#ordersTable tbody tr");
@@ -692,7 +705,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // ✅ تفعيل select2 أول مرة
+  // تفعيل select2 للصف الأول
   $('.select2-product').select2({
     width: '100%',
     dropdownParent: $('#addMultipleOrders')
