@@ -30,7 +30,7 @@ require_permission('roles.view'); ?>
 //$roles = $pdo->query("SELECT * FROM roles ORDER BY id DESC")->fetchAll();
 
 // إعداد عدد النتائج في كل صفحة
-$limit = 20; // عدد الأدوار في الصفحة الواحدة
+$limit = 10; // عدد الأدوار في الصفحة الواحدة
 $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int) $_GET['page'] : 1;
 $kw = $_GET['kw'] ?? '';
 
