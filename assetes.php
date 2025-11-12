@@ -513,13 +513,15 @@ $rows=$s->fetchAll();
 </div>
 <?php if ($total_pages > 1): ?>
 <nav aria-label="صفحات النتائج" class="mt-3">
-  <ul class="pagination justify-content-center flex-wrap">
+  <ul class="pagination justify-content-center flex-wrap overflow-auto" style="gap:4px;">
+    <!-- أول صفحة -->
     <li class="page-item <?= $page == 1 ? 'disabled' : '' ?>">
-      <a class="page-link" href="?kw=<?= urlencode($kw) ?>&page=1">الأول</a>
+      <a class="page-link px-2 py-1" href="?kw=<?= urlencode($kw) ?>&page=1">الأول</a>
     </li>
 
+    <!-- السابق -->
     <li class="page-item <?= $page <= 1 ? 'disabled' : '' ?>">
-      <a class="page-link" href="?kw=<?= urlencode($kw) ?>&page=<?= $page - 1 ?>">السابق</a>
+      <a class="page-link px-2 py-1" href="?kw=<?= urlencode($kw) ?>&page=<?= $page - 1 ?>">السابق</a>
     </li>
 
     <?php
@@ -528,30 +530,33 @@ $rows=$s->fetchAll();
     $end = min($page + 2, $total_pages);
 
     if($start > 1){
-        echo '<li class="page-item disabled"><span class="page-link">…</span></li>';
+        echo '<li class="page-item disabled"><span class="page-link px-2 py-1">…</span></li>';
     }
 
     for($i = $start; $i <= $end; $i++): ?>
       <li class="page-item <?= $page == $i ? 'active' : '' ?>">
-        <a class="page-link" href="?kw=<?= urlencode($kw) ?>&page=<?= $i ?>"><?= $i ?></a>
+        <a class="page-link px-2 py-1" href="?kw=<?= urlencode($kw) ?>&page=<?= $i ?>"><?= $i ?></a>
       </li>
     <?php endfor;
 
     if($end < $total_pages){
-        echo '<li class="page-item disabled"><span class="page-link">…</span></li>';
+        echo '<li class="page-item disabled"><span class="page-link px-2 py-1">…</span></li>';
     }
     ?>
 
+    <!-- التالي -->
     <li class="page-item <?= $page >= $total_pages ? 'disabled' : '' ?>">
-      <a class="page-link" href="?kw=<?= urlencode($kw) ?>&page=<?= $page + 1 ?>">التالي</a>
+      <a class="page-link px-2 py-1" href="?kw=<?= urlencode($kw) ?>&page=<?= $page + 1 ?>">التالي</a>
     </li>
 
+    <!-- آخر صفحة -->
     <li class="page-item <?= $page == $total_pages ? 'disabled' : '' ?>">
-      <a class="page-link" href="?kw=<?= urlencode($kw) ?>&page=<?= $total_pages ?>">الأخير</a>
+      <a class="page-link px-2 py-1" href="?kw=<?= urlencode($kw) ?>&page=<?= $total_pages ?>">الأخير</a>
     </li>
   </ul>
 </nav>
 <?php endif; ?>
+
 
 
 <?php if(has_permission('assets.add')): ?>
