@@ -62,34 +62,20 @@ foreach ($permissions as $p) {
   user-select: none;
 }
 
-.permissions-box .row > div {
-  display: flex;
-  align-items: center;
-}
 
 .permissions-box label {
-  display: block;
-  white-space: normal;        /* يسمح بتقسيم السطر */
-  word-wrap: break-word;      /* يكسر الكلمات الطويلة */
-  overflow-wrap: break-word;  /* تأكيد على الكسر */
-  line-height: 1.4;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
+  white-space: nowrap; /* يمنع النزول لسطر جديد */
 }
 
-.permissions-box .form-check-input {
-  margin-left: 4px;
-  margin-right: 6px;
+.permissions-box .col-6 {
+  padding-right: 8px;
+  padding-left: 8px;
 }
 
-.permissions-box .col-6, 
-.permissions-box .col-md-4, 
-.permissions-box .col-lg-3 {
-  padding-right: 6px;
-  padding-left: 6px;
-}
-
-.permissions-box .border {
-  border-color: #ddd !important;
+.permissions-box input[type="checkbox"] {
+  transform: scale(1.1);
+  accent-color: #ff8800; /* نفس اللون البرتقالي */
 }
 </style>
 <script>
@@ -481,10 +467,11 @@ document.addEventListener('DOMContentLoaded', function() {
                             <strong class="text-primary d-block mb-1"><?= esc($groupName) ?></strong>
                             <div class="row g-2">
                               <?php foreach ($perms as $p): ?>
-                                <div class="col-6 col-md-4 col-lg-3">
-                                  <label class="form-check-label small">
+                                <div class="col-6"> <!-- عمودين فقط -->
+                                  <label class="form-check-label d-flex align-items-center gap-1" style="white-space: nowrap;">
                                     <input type="checkbox" class="form-check-input me-1"
-                                      name="roles[0][permissions][]" value="<?= $p['id'] ?>"> <?= esc($p['label']) ?>
+                                      name="roles[0][permissions][]" value="<?= $p['id'] ?>">
+                                    <span><?= esc($p['label']) ?></span>
                                   </label>
                                 </div>
                               <?php endforeach; ?>
