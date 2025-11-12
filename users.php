@@ -252,35 +252,42 @@ $stmt->execute(["%$kw%"]);
 $rows = $stmt->fetchAll();
 
 ?>
-<div class="d-flex justify-content-between align-items-center mb-3">
-  <h3 class="page-title">
-  <span class="stat-icon">
-    <i class="bi bi-people"></i>
-  </span>
-   المستخدمون
- </h3>
+<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+  <div class="d-flex align-items-center gap-2 flex-wrap">
+    <h3 class="page-title mb-0">
+      <span class="stat-icon">
+        <i class="bi bi-people"></i>
+      </span>
+      المستخدمون
+    </h3>
+
+    <!-- 🔍 مربع البحث -->
+    <form method="get" class="d-flex align-items-center gap-2">
+      <div class="input-group" style="max-width: 250px;">
+        <span class="input-group-text bg-white border-orange text-orange">
+          <i class="bi bi-search"></i>
+        </span>
+        <input type="text" name="kw" class="form-control border-orange" placeholder="بحث عن مستخدم..."
+               value="<?= esc($kw) ?>">
+      </div>
+      <button type="submit" class="btn btn-orange">
+        <i class="bi bi-search"></i>
+      </button>
+      <?php if($kw !== ''): ?>
+        <a href="users.php" class="btn btn-outline-secondary">
+          <i class="bi bi-x-lg"></i>
+        </a>
+      <?php endif; ?>
+    </form>
+  </div>
+
+  <!-- زر إضافة مستخدم -->
   <?php if(has_permission('users.add')): ?>
-  <button class="btn btn-orange" data-bs-toggle="modal" data-bs-target="#add"><i class="bi bi-plus-lg"></i> مستخدم</button>
+    <button class="btn btn-orange" data-bs-toggle="modal" data-bs-target="#add">
+      <i class="bi bi-plus-lg"></i> مستخدم
+    </button>
   <?php endif ?>
 </div>
-
-<form method="get" class="d-flex align-items-center gap-2 mb-3 flex-wrap">
-  <div class="input-group" style="max-width: 300px;">
-    <span class="input-group-text bg-white border-orange text-orange">
-      <i class="bi bi-search"></i>
-    </span>
-    <input type="text" name="kw" class="form-control border-orange" placeholder="بحث عن مستخدم..."
-           value="<?= esc($kw) ?>">
-  </div>
-  <button type="submit" class="btn btn-orange">
-    <i class="bi bi-search"></i> بحث
-  </button>
-  <?php if($kw !== ''): ?>
-    <a href="users.php" class="btn btn-outline-secondary">
-      <i class="bi bi-x-lg"></i> مسح البحث
-    </a>
-  <?php endif; ?>
-</form>
 
 <div class="table-responsive shadow-sm rounded-3 border bg-white p-2">
   <table class="table table-hover align-middle mb-0 custom-table">
