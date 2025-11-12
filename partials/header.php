@@ -712,7 +712,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
       }
 
       #addMultipleRoles table {
-        min-width: 2200px; /* يجعل الجدول أعرض لتفعيل الاسكرول */
+        min-width: 1100px; /* يجعل الجدول أعرض لتفعيل الاسكرول */
         font-size: 12px; /* تصغير النص قليلاً للموبايل */
       }
 
