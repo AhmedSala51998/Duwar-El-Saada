@@ -90,6 +90,9 @@ require_permission('permissions.view');?>
   border-color: #ccc !important;
   background-color: #f8f9fa !important;
 }
+.pagination .page-link {
+    background-image: none !important;
+}
 </style>
 
 <?php endif; ?>
