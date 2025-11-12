@@ -195,18 +195,24 @@ document.addEventListener('DOMContentLoaded', function() {
         <td data-label="عدد الصلاحيات"><span class="badge bg-light text-dark"><?= $count ?></span></td>
         <td data-label="تاريخ الانشاء" class="text-secondary small"><?= esc($r['created_at']) ?></td>
         <?php if(has_permission('roles.processes')): ?>
-        <td>
+        <td style="display: flex; flex-wrap: wrap; gap: 4px; justify-content: center;">
             <?php if(has_permission('roles.view_row')): ?>
             <button class="btn btn-sm btn-info view_roles" data-bs-toggle="modal" data-bs-target="#viewPerms<?= $r['id'] ?>">
                 <i style="color:#FFF" class="bi bi-eye"></i>
             </button>
             <?php endif ?>
-          <?php if(has_permission('roles.edit')): ?>
-          <button class="btn btn-sm btn-outline-warning edit_roles" data-bs-toggle="modal" data-bs-target="#edit<?= $r['id'] ?>"><i class="bi bi-pencil"></i></button>
-          <?php endif ?>
-          <?php if(has_permission('roles.delete')): ?>
-          <button class="btn btn-sm btn-outline-danger delete_roles" data-bs-toggle="modal" data-bs-target="#delete<?= $r['id'] ?>"><i class="bi bi-trash"></i></button>
-          <?php endif ?>
+            
+            <?php if(has_permission('roles.edit')): ?>
+            <button class="btn btn-sm btn-outline-warning edit_roles" data-bs-toggle="modal" data-bs-target="#edit<?= $r['id'] ?>">
+                <i class="bi bi-pencil"></i>
+            </button>
+            <?php endif ?>
+            
+            <?php if(has_permission('roles.delete')): ?>
+            <button class="btn btn-sm btn-outline-danger delete_roles" data-bs-toggle="modal" data-bs-target="#delete<?= $r['id'] ?>">
+                <i class="bi bi-trash"></i>
+            </button>
+            <?php endif ?>
         </td>
         <?php endif ?>
       </tr>
