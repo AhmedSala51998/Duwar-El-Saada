@@ -84,19 +84,36 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-  <h3 class="page-title">
-    <span class="stat-icon"><i class="bi bi-shield-lock"></i></span>
-    الأدوار والصلاحيات
-  </h3>
-  <?php if(has_permission('roles.add')): ?>
-  <button class="btn btn-orange" data-bs-toggle="modal" data-bs-target="#addRole"><i class="bi bi-plus-lg"></i> إضافة دور</button>
-  <?php endif ?>
-  <?php if(has_permission('roles.add_group')): ?>
-    <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addMultipleRoles">
-      <i class="bi bi-plus-circle-dotted"></i> إضافة متعددة
-    </button>
-  <?php endif; ?>
+<div class="page-header mb-3">
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+
+    <!-- العنوان -->
+    <h3 class="page-title m-0 gap-2 w-100">
+      <span class="stat-icon"><i class="bi bi-shield-lock"></i></span>
+      الأدوار والصلاحيات
+    </h3>
+
+    <!-- البحث + الأزرار -->
+    <div class="actions d-flex flex-wrap justify-content-end gap-2 w-100 w-md-auto">
+
+      <input type="text" id="searchInput" class="form-control form-control-sm flex-grow-1"
+             placeholder="بحث عن دور..." style="min-width: 180px; max-width: 220px;">
+
+      <?php if(has_permission('roles.add')): ?>
+      <button class="btn btn-orange flex-grow-1 flex-md-grow-0" data-bs-toggle="modal" data-bs-target="#addRole">
+        <i class="bi bi-plus-lg"></i> <span class="d-none d-sm-inline">إضافة دور</span>
+      </button>
+      <?php endif ?>
+
+      <?php if(has_permission('roles.add_group')): ?>
+      <button class="btn btn-outline-danger flex-grow-1 flex-md-grow-0" data-bs-toggle="modal" data-bs-target="#addMultipleRoles">
+        <i class="bi bi-plus-circle-dotted"></i> <span class="d-none d-sm-inline">إضافة متعددة</span>
+      </button>
+      <?php endif ?>
+
+    </div>
+
+  </div>
 </div>
 
 <div class="table-responsive shadow-sm rounded-3 border bg-white p-2">
@@ -509,5 +526,19 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 </script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const searchInput = document.getElementById("searchInput");
+  const tableRows = document.querySelectorAll("tbody tr");
 
+  searchInput.addEventListener("keyup", function() {
+    const term = this.value.toLowerCase().trim();
+
+    tableRows.forEach(row => {
+      const text = row.textContent.toLowerCase();
+      row.style.display = text.includes(term) ? "" : "none";
+    });
+  });
+});
+</script>
 <?php require __DIR__.'/partials/footer.php'; ?>
