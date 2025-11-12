@@ -793,10 +793,10 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
             <label>صورة الفاتورة</label>
             <label class="custom-file-upload w-100">
               <i class="bi bi-receipt"></i>
-              <span id="file-text-expense-main"></span>
+              <span id="file-text-expense-main1"></span>
               <input type="file" name="invoice_image" accept="image/*"
-                     onchange="previewFile(this,'file-text-expense-main','preview-expense-main')">
-              <img id="preview-expense-main" style="display:none; max-width:150px; margin-top:10px"/>
+                     onchange="previewFile(this,'file-text-expense-main1','preview-expense-main1')">
+              <img id="preview-expense-main1" style="display:none; max-width:150px; margin-top:10px"/>
             </label>
           </div>
         </div>
