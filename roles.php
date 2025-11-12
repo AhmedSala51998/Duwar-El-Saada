@@ -61,6 +61,36 @@ foreach ($permissions as $p) {
   cursor: pointer;
   user-select: none;
 }
+
+.permissions-box .row > div {
+  display: flex;
+  align-items: center;
+}
+
+.permissions-box label {
+  display: block;
+  white-space: normal;        /* يسمح بتقسيم السطر */
+  word-wrap: break-word;      /* يكسر الكلمات الطويلة */
+  overflow-wrap: break-word;  /* تأكيد على الكسر */
+  line-height: 1.4;
+  font-size: 0.85rem;
+}
+
+.permissions-box .form-check-input {
+  margin-left: 4px;
+  margin-right: 6px;
+}
+
+.permissions-box .col-6, 
+.permissions-box .col-md-4, 
+.permissions-box .col-lg-3 {
+  padding-right: 6px;
+  padding-left: 6px;
+}
+
+.permissions-box .border {
+  border-color: #ddd !important;
+}
 </style>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
