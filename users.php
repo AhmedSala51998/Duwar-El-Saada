@@ -9,6 +9,7 @@
 <script>
 document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById("liveToast");if(el){new bootstrap.Toast(el,{delay:2500}).show();}});
 </script>
+<?php endif; ?>
 <style>
 .custom-table {
   border-collapse: separate;
@@ -202,7 +203,6 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
     border-color: #ccc;
 }
 </style>
-<?php endif; ?>
 <?php 
 /*$rows = $pdo->query("
   SELECT users.*, roles.name AS role_name 
@@ -361,8 +361,7 @@ $rows = $stmt->fetchAll();
 
 <?php endforeach; ?>
   </tbody>
-</table>
-
+</table></div>
 
 <?php if ($total_pages > 1): ?>
 <nav aria-label="صفحات المستخدمين" class="mt-3">
