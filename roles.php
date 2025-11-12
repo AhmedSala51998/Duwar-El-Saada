@@ -77,6 +77,12 @@ foreach ($permissions as $p) {
   transform: scale(1.1);
   accent-color: #ff8800; /* نفس اللون البرتقالي */
 }
+.view_roles{
+  margin-left:3px !important
+}
+.edit_roles{
+  margin-left:3px !important
+}
 }
 </style>
 <script>
@@ -191,15 +197,15 @@ document.addEventListener('DOMContentLoaded', function() {
         <?php if(has_permission('roles.processes')): ?>
         <td>
             <?php if(has_permission('roles.view_row')): ?>
-            <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#viewPerms<?= $r['id'] ?>">
+            <button class="btn btn-sm btn-info view_roles" data-bs-toggle="modal" data-bs-target="#viewPerms<?= $r['id'] ?>">
                 <i style="color:#FFF" class="bi bi-eye"></i>
             </button>
             <?php endif ?>
           <?php if(has_permission('roles.edit')): ?>
-          <button class="btn btn-sm btn-outline-warning" data-bs-toggle="modal" data-bs-target="#edit<?= $r['id'] ?>"><i class="bi bi-pencil"></i></button>
+          <button class="btn btn-sm btn-outline-warning edit_roles" data-bs-toggle="modal" data-bs-target="#edit<?= $r['id'] ?>"><i class="bi bi-pencil"></i></button>
           <?php endif ?>
           <?php if(has_permission('roles.delete')): ?>
-          <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete<?= $r['id'] ?>"><i class="bi bi-trash"></i></button>
+          <button class="btn btn-sm btn-outline-danger delete_roles" data-bs-toggle="modal" data-bs-target="#delete<?= $r['id'] ?>"><i class="bi bi-trash"></i></button>
           <?php endif ?>
         </td>
         <?php endif ?>
