@@ -92,6 +92,11 @@ document.addEventListener('DOMContentLoaded', function() {
   <?php if(has_permission('roles.add')): ?>
   <button class="btn btn-orange" data-bs-toggle="modal" data-bs-target="#addRole"><i class="bi bi-plus-lg"></i> إضافة دور</button>
   <?php endif ?>
+  <?php if(has_permission('roles.add_group')): ?>
+    <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addMultipleRoles">
+      <i class="bi bi-plus-circle-dotted"></i> إضافة متعددة
+    </button>
+  <?php endif; ?>
 </div>
 
 <div class="table-responsive shadow-sm rounded-3 border bg-white p-2">
@@ -367,6 +372,63 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
   </div>
 </div>
+
+<?php if(has_permission('roles.add_group')): ?>
+<div class="modal fade" id="addMultipleRoles">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <form method="post" action="roles_add_multiple" enctype="multipart/form-data">
+        <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
+
+        <div class="modal-header bg-light">
+          <h5 class="modal-title"><i class="bi bi-plus-square-dotted me-1"></i> إضافة أدوار متعددة</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+          <div class="table-responsive">
+            <table class="table table-bordered align-middle text-center" id="rolesTable">
+              <thead class="table-light">
+                <tr>
+                  <th>اسم الدور</th>
+                  <th>الوصف</th>
+                  <th>الصلاحيات</th>
+                  <th width="60">إجراء</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><input type="text" name="roles[0][name]" class="form-control" required></td>
+                  <td><input type="text" name="roles[0][description]" class="form-control"></td>
+                  <td>
+                    <select class="form-select select2-permissions" name="roles[0][permissions][]" multiple="multiple" required>
+                      <?php foreach($permissions as $p): ?>
+                        <option value="<?= $p['id'] ?>"><?= esc($p['label']) ?></option>
+                      <?php endforeach; ?>
+                    </select>
+                  </td>
+                  <td>
+                    <button type="button" class="btn btn-danger btn-sm removeRow"><i class="bi bi-trash"></i></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <button type="button" class="btn btn-outline-primary mt-2" id="addRoleRow">
+            <i class="bi bi-plus-circle"></i> إضافة صف جديد
+          </button>
+        </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-orange">حفظ جميع الأدوار</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<?php endif; ?>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   // عند الضغط على زر "تحديد الكل"
@@ -383,6 +445,55 @@ document.addEventListener('DOMContentLoaded', function() {
       const target = document.getElementById(this.dataset.target);
       target.querySelectorAll('input[type="checkbox"]').forEach(chk => chk.checked = false);
     });
+  });
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  let index = 1;
+  const tbody = document.querySelector("#rolesTable tbody");
+  const templateRow = tbody.rows[0].cloneNode(true);
+  const permOptions = templateRow.querySelector(".select2-permissions").innerHTML;
+
+  // زر إضافة صف جديد
+  document.getElementById("addRoleRow").addEventListener("click", function () {
+    const newRow = templateRow.cloneNode(true);
+
+    // إعادة تسمية الحقول
+    newRow.querySelectorAll("input, select").forEach(el => {
+      if (el.name.includes("[name]"))
+        el.name = `roles[${index}][name]`;
+      else if (el.name.includes("[description]"))
+        el.name = `roles[${index}][description]`;
+      else if (el.name.includes("[permissions]"))
+        el.name = `roles[${index}][permissions][]`;
+      el.value = "";
+    });
+
+    // تهيئة select2 للصلاحيات
+    const selectPerm = newRow.querySelector(".select2-permissions");
+    selectPerm.innerHTML = permOptions;
+    $(selectPerm).select2({
+      width: '100%',
+      dropdownParent: $('#addMultipleRoles')
+    });
+
+    tbody.appendChild(newRow);
+    index++;
+  });
+
+  // حذف صف
+  document.addEventListener("click", function (e) {
+    if (e.target.closest(".removeRow")) {
+      const rows = document.querySelectorAll("#rolesTable tbody tr");
+      if (rows.length > 1) e.target.closest("tr").remove();
+    }
+  });
+
+  // تفعيل select2 للصف الأول
+  $('.select2-permissions').select2({
+    width: '100%',
+    dropdownParent: $('#addMultipleRoles')
   });
 });
 </script>
