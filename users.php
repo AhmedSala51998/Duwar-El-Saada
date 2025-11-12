@@ -178,15 +178,67 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
   animation: pulse 1.5s infinite;
 }
 
+/* Pagination Styling */
+.pagination .page-link {
+    color: #ff6a00;
+    border-color: #ff6a00;
+    transition: all 0.2s ease-in-out;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #ff6a00;
+    border-color: #ff6a00;
+    color: #fff;
+}
+
+.pagination .page-link:hover {
+    background-color: #ff6a00;
+    color: #fff;
+    border-color: #ff6a00;
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #aaa;
+    border-color: #ccc;
+}
 </style>
 <?php endif; ?>
-<?php $rows = $pdo->query("
+<?php 
+/*$rows = $pdo->query("
   SELECT users.*, roles.name AS role_name 
   FROM users 
   LEFT JOIN roles ON users.role_id = roles.id 
   ORDER BY users.id DESC
-")->fetchAll();
-$can_edit = in_array(current_role(), ['admin','manager']); ?>
+")->fetchAll();*/
+//$can_edit = in_array(current_role(), ['admin','manager']);
+
+$kw = trim($_GET['kw'] ?? '');
+$page = max(1, intval($_GET['page'] ?? 1));
+$per_page = 10; // عدد المستخدمين في كل صفحة
+$offset = ($page - 1) * $per_page;
+
+// إجمالي عدد الصفوف
+$count_sql = "SELECT COUNT(*) 
+              FROM users 
+              LEFT JOIN roles ON users.role_id = roles.id 
+              WHERE users.username LIKE ?";
+$count_stmt = $pdo->prepare($count_sql);
+$count_stmt->execute(["%$kw%"]);
+$total_rows = $count_stmt->fetchColumn();
+$total_pages = ceil($total_rows / $per_page);
+
+// جلب البيانات مع التصفية والصفحات
+$sql = "SELECT users.*, roles.name AS role_name 
+        FROM users 
+        LEFT JOIN roles ON users.role_id = roles.id 
+        WHERE users.username LIKE ?
+        ORDER BY users.id DESC 
+        LIMIT $per_page OFFSET $offset";
+$stmt = $pdo->prepare($sql);
+$stmt->execute(["%$kw%"]);
+$rows = $stmt->fetchAll();
+
+?>
 <div class="d-flex justify-content-between align-items-center mb-3">
   <h3 class="page-title">
   <span class="stat-icon">
@@ -310,6 +362,48 @@ $can_edit = in_array(current_role(), ['admin','manager']); ?>
 <?php endforeach; ?>
   </tbody>
 </table>
+
+
+<?php if ($total_pages > 1): ?>
+<nav aria-label="صفحات المستخدمين" class="mt-3">
+  <ul class="pagination justify-content-center flex-wrap">
+    <li class="page-item <?= $page == 1 ? 'disabled' : '' ?>">
+      <a class="page-link" href="?kw=<?= urlencode($kw) ?>&page=1">الأول</a>
+    </li>
+
+    <li class="page-item <?= $page <= 1 ? 'disabled' : '' ?>">
+      <a class="page-link" href="?kw=<?= urlencode($kw) ?>&page=<?= $page - 1 ?>">السابق</a>
+    </li>
+
+    <?php
+    $max_links = 5;
+    $start = max($page - 2, 1);
+    $end = min($page + 2, $total_pages);
+
+    if ($start > 1)
+      echo '<li class="page-item disabled"><span class="page-link">…</span></li>';
+
+    for ($i = $start; $i <= $end; $i++): ?>
+      <li class="page-item <?= $page == $i ? 'active' : '' ?>">
+        <a class="page-link" href="?kw=<?= urlencode($kw) ?>&page=<?= $i ?>"><?= $i ?></a>
+      </li>
+    <?php endfor;
+
+    if ($end < $total_pages)
+      echo '<li class="page-item disabled"><span class="page-link">…</span></li>';
+    ?>
+
+    <li class="page-item <?= $page >= $total_pages ? 'disabled' : '' ?>">
+      <a class="page-link" href="?kw=<?= urlencode($kw) ?>&page=<?= $page + 1 ?>">التالي</a>
+    </li>
+
+    <li class="page-item <?= $page == $total_pages ? 'disabled' : '' ?>">
+      <a class="page-link" href="?kw=<?= urlencode($kw) ?>&page=<?= $total_pages ?>">الأخير</a>
+    </li>
+  </ul>
+</nav>
+<?php endif; ?>
+
 
 <?php foreach($rows as $r): ?>
 <div class="modal fade" id="actionsUser<?= $r['id'] ?>" tabindex="-1" aria-labelledby="actionsUserLabel<?= $r['id'] ?>" aria-hidden="true">

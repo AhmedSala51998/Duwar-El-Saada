@@ -25,7 +25,7 @@
 <?php endif; ?>
 <?php
 $items = $pdo->query("SELECT * FROM purchases ORDER BY name")->fetchAll();
-$kw = trim($_GET['kw'] ?? '');
+/*$kw = trim($_GET['kw'] ?? '');
 $q = "SELECT o.*, p.name pname, p.unit punit 
       FROM orders o 
       JOIN purchases p ON p.id=o.purchase_id 
@@ -38,7 +38,46 @@ if($kw!==''){
 $q.=" ORDER BY o.id DESC";
 $s=$pdo->prepare($q); 
 $s->execute($params);
-$orders=$s->fetchAll();
+$orders=$s->fetchAll();*/
+
+$kw = trim($_GET['kw'] ?? '');
+$page = max(1, intval($_GET['page'] ?? 1));
+$per_page = 10; // عدد السجلات في الصفحة
+$offset = ($page - 1) * $per_page;
+
+$count_query = "
+    SELECT COUNT(*) 
+    FROM orders o 
+    JOIN purchases p ON p.id = o.purchase_id 
+    WHERE 1
+";
+$params = [];
+
+if ($kw !== '') {
+    $count_query .= " AND p.name LIKE ?";
+    $params[] = "%$kw%";
+}
+
+$count_stmt = $pdo->prepare($count_query);
+$count_stmt->execute($params);
+$total_rows = $count_stmt->fetchColumn();
+$total_pages = ceil($total_rows / $per_page);
+
+$q = "
+    SELECT o.*, p.name pname, p.unit punit 
+    FROM orders o 
+    JOIN purchases p ON p.id = o.purchase_id 
+    WHERE 1
+";
+if ($kw !== '') {
+    $q .= " AND p.name LIKE ?";
+}
+$q .= " ORDER BY o.id DESC LIMIT $per_page OFFSET $offset";
+
+$stmt = $pdo->prepare($q);
+$stmt->execute($params);
+$orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 //$can_edit = in_array(current_role(), ['admin','manager']);
 
 /*$stocks = $pdo->query("
@@ -329,6 +368,31 @@ $stocks = $pdo->query("
   gap: 10px;
 }
 
+
+/* Pagination Styling */
+.pagination .page-link {
+    color: #ff6a00;
+    border-color: #ff6a00;
+    transition: all 0.2s ease-in-out;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #ff6a00;
+    border-color: #ff6a00;
+    color: #fff;
+}
+
+.pagination .page-link:hover {
+    background-color: #ff6a00;
+    color: #fff;
+    border-color: #ff6a00;
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #aaa;
+    border-color: #ccc;
+}
+
 </style>
 
 
@@ -442,6 +506,43 @@ $stocks = $pdo->query("
   </tbody>
 </table>
 </div>
+
+<?php if ($total_pages > 1): ?>
+<nav aria-label="صفحات النتائج" class="mt-3">
+  <ul class="pagination justify-content-center flex-wrap">
+    <li class="page-item <?= $page == 1 ? 'disabled' : '' ?>">
+      <a class="page-link" href="?kw=<?= urlencode($kw) ?>&page=1">الأول</a>
+    </li>
+
+    <li class="page-item <?= $page <= 1 ? 'disabled' : '' ?>">
+      <a class="page-link" href="?kw=<?= urlencode($kw) ?>&page=<?= $page - 1 ?>">السابق</a>
+    </li>
+
+    <?php
+      $max_links = 5;
+      $start = max($page - 2, 1);
+      $end = min($page + 2, $total_pages);
+      if ($start > 1) echo '<li class="page-item disabled"><span class="page-link">…</span></li>';
+      for ($i = $start; $i <= $end; $i++):
+    ?>
+      <li class="page-item <?= $page == $i ? 'active' : '' ?>">
+        <a class="page-link" href="?kw=<?= urlencode($kw) ?>&page=<?= $i ?>"><?= $i ?></a>
+      </li>
+    <?php endfor;
+      if ($end < $total_pages) echo '<li class="page-item disabled"><span class="page-link">…</span></li>';
+    ?>
+
+    <li class="page-item <?= $page >= $total_pages ? 'disabled' : '' ?>">
+      <a class="page-link" href="?kw=<?= urlencode($kw) ?>&page=<?= $page + 1 ?>">التالي</a>
+    </li>
+
+    <li class="page-item <?= $page == $total_pages ? 'disabled' : '' ?>">
+      <a class="page-link" href="?kw=<?= urlencode($kw) ?>&page=<?= $total_pages ?>">الأخير</a>
+    </li>
+  </ul>
+</nav>
+<?php endif; ?>
+
 
 <!-- ✅ Modal عرض المخزون -->
 <div class="modal fade" id="stocksModal" tabindex="-1">
