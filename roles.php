@@ -425,9 +425,9 @@ document.addEventListener('DOMContentLoaded', function() {
             <table class="table table-bordered align-middle text-center" id="rolesTable">
               <thead class="table-light">
                 <tr>
-                  <th style="width:25%">اسم الدور</th>
-                  <th style="width:25%">الوصف</th>
-                  <th style="width:45%">الصلاحيات</th>
+                  <th style="width:20%">اسم الدور</th>
+                  <th style="width:20%">الوصف</th>
+                  <th style="width:55%">الصلاحيات</th>
                   <th style="width:5%">إجراء</th>
                 </tr>
               </thead>
