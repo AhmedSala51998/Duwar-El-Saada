@@ -457,7 +457,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     <input type="text" name="roles[0][description]" class="form-control" placeholder="مثال: لديه كل الصلاحيات">
                   </td>
                   <td class="text-start">
-                    <div class="permissions-box" style="max-height:400px; overflow-y:auto;">
+                    <div class="d-flex justify-content-between mb-2">
+                      <button type="button" class="btn btn-sm btn-success select-all">اختيار الكل</button>
+                      <button type="button" class="btn btn-sm btn-secondary deselect-all">مسح الكل</button>
+                    </div>
+
+                    <div class="permissions-box border rounded p-2" style="max-height:400px; overflow-y:auto; font-size:13px;">
                       <?php 
                         $groups = [];
                         foreach ($permissions as $perm) {
@@ -468,7 +473,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             <strong class="text-primary d-block mb-1"><?= esc($groupName) ?></strong>
                             <div class="row g-2">
                               <?php foreach ($perms as $p): ?>
-                                <div class="col-6"> <!-- عمودين فقط -->
+                                <div class="col-6"> <!-- عمودين -->
                                   <label class="form-check-label d-flex align-items-center gap-1" style="white-space: nowrap;">
                                     <input type="checkbox" class="form-check-input me-1"
                                       name="roles[0][permissions][]" value="<?= $p['id'] ?>">
@@ -495,7 +500,6 @@ document.addEventListener('DOMContentLoaded', function() {
             <i class="bi bi-plus-circle"></i> إضافة صف جديد
           </button>
         </div>
-
 
         <div class="modal-footer">
           <button type="submit" class="btn btn-orange">حفظ جميع الأدوار</button>
@@ -604,5 +608,24 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
 </script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  // اختيار أو إلغاء الكل داخل كل صف
+  document.querySelectorAll('#rolesTable').forEach(table => {
+    table.addEventListener('click', function(e) {
+      const btn = e.target.closest('.select-all, .deselect-all');
+      if (!btn) return;
 
+      const permissionsBox = btn.closest('td').querySelector('.permissions-box');
+      if (!permissionsBox) return;
+
+      const checkboxes = permissionsBox.querySelectorAll('input[type="checkbox"]');
+      checkboxes.forEach(chk => chk.checked = btn.classList.contains('select-all'));
+    });
+  });
+
+  // تأكد من اختيار صلاحية واحدة على الأقل لكل صف قبل الإرسال
+
+});
+</script>
 <?php require __DIR__.'/partials/footer.php'; ?>
