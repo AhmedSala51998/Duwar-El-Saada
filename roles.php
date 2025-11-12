@@ -64,7 +64,7 @@ foreach ($permissions as $p) {
 
 @media screen and (min-width: 768px) {
 .permissions-box label {
-  font-size: 0.9rem;
+  font-size: 0.78rem;
   white-space: nowrap; /* يمنع النزول لسطر جديد */
 }
 
@@ -76,9 +76,6 @@ foreach ($permissions as $p) {
 .permissions-box input[type="checkbox"] {
   transform: scale(1.1);
   accent-color: #ff8800; /* نفس اللون البرتقالي */
-}
-#addMultipleRoles table {
-  font-size: 12px; /* تصغير النص قليلاً للموبايل */
 }
 }
 </style>
