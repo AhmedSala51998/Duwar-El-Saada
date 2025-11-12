@@ -584,4 +584,25 @@ document.addEventListener("DOMContentLoaded", function() {
   });
 });
 </script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const form = document.querySelector('#addMultipleRoles form');
+  if (!form) return;
+
+  form.addEventListener('submit', function (e) {
+    // التأكد من أن على الأقل صلاحية واحدة محددة في كل صف
+    const rows = form.querySelectorAll('#rolesTable tbody tr');
+    for (const row of rows) {
+      const checked = row.querySelectorAll('input[type="checkbox"]:checked');
+      if (checked.length === 0) {
+        e.preventDefault();
+        alert('يجب اختيار صلاحية واحدة على الأقل لكل دور قبل الحفظ.');
+        row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+    }
+  });
+});
+</script>
+
 <?php require __DIR__.'/partials/footer.php'; ?>
