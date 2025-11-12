@@ -24,6 +24,9 @@ require_permission('permissions.view');?>
     }
   });
 </script>
+
+<?php endif; ?>
+
 <style>
 @media (max-width: 767.98px) {
   .page-header .d-flex {
@@ -66,38 +69,29 @@ require_permission('permissions.view');?>
 }
 
 /* Pagination Styling */
-.pagination .page-link,
-.pagination .page-item .page-link {
-  color: #ff6a00 !important;
-  border: 1px solid #ff6a00 !important;
-  background-color: #fff !important;
-  background-image: none !important;
-  box-shadow: none !important;
-  transition: all 0.2s ease-in-out !important;
+.pagination .page-link {
+    color: #ff6a00;
+    border-color: #ff6a00;
+    transition: all 0.2s ease-in-out;
 }
 
-.pagination .page-item.active .page-link,
-.pagination .active > .page-link {
-  background-color: #ff6a00 !important;
-  border-color: #ff6a00 !important;
-  color: #fff !important;
+.pagination .page-item.active .page-link {
+    background-color: #ff6a00;
+    border-color: #ff6a00;
+    color: #fff;
 }
 
-.pagination .page-link:hover,
-.pagination .page-item:hover .page-link {
-  background-color: #ff6a00 !important;
-  color: #fff !important;
-  border-color: #ff6a00 !important;
+.pagination .page-link:hover {
+    background-color: #ff6a00;
+    color: #fff;
+    border-color: #ff6a00;
 }
 
 .pagination .page-item.disabled .page-link {
-  color: #aaa !important;
-  border-color: #ccc !important;
-  background-color: #f8f9fa !important;
+    color: #aaa;
+    border-color: #ccc;
 }
 </style>
-
-<?php endif; ?>
 <?php
 // جلب الصلاحيات
 //$permissions = $pdo->query("SELECT * FROM permissions ORDER BY code ASC")->fetchAll();
