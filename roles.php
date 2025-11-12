@@ -76,7 +76,12 @@ foreach ($permissions as $p) {
 .permissions-box input[type="checkbox"] {
   transform: scale(1.1);
   accent-color: #ff8800; /* نفس اللون البرتقالي */
-}}
+}
+#addMultipleRoles table {
+  min-width: 1100px; /* يجعل الجدول أعرض لتفعيل الاسكرول */
+  font-size: 15px; /* تصغير النص قليلاً للموبايل */
+}
+}
 </style>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
