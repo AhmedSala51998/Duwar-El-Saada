@@ -390,16 +390,16 @@ document.addEventListener('DOMContentLoaded', function() {
             <table class="table table-bordered align-middle text-center" id="rolesTable">
               <thead class="table-light">
                 <tr>
-                  <th>اسم الدور</th>
-                  <th>الوصف</th>
+                  <th style="width:200px">اسم الدور</th>
+                  <th style="width:200px">الوصف</th>
                   <th>الصلاحيات</th>
                   <th width="60">إجراء</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td><input type="text" name="roles[0][name]" class="form-control" required></td>
-                  <td><input type="text" name="roles[0][description]" class="form-control"></td>
+                  <td style="width:200px"><input type="text" name="roles[0][name]" class="form-control" required></td>
+                  <td style="width:200px"><input type="text" name="roles[0][description]" class="form-control"></td>
                   <td class="text-start">
                     <div class="permissions-box">
                       <?php 
@@ -477,29 +477,23 @@ document.addEventListener("DOMContentLoaded", function () {
   let index = 1;
   const tbody = document.querySelector("#rolesTable tbody");
   const templateRow = tbody.rows[0].cloneNode(true);
-  const permOptions = templateRow.querySelector(".select2-permissions").innerHTML;
 
-  // زر إضافة صف جديد
   document.getElementById("addRoleRow").addEventListener("click", function () {
     const newRow = templateRow.cloneNode(true);
 
-    // إعادة تسمية الحقول
-    newRow.querySelectorAll("input, select").forEach(el => {
+    // تحديث أسماء الحقول
+    newRow.querySelectorAll("input, textarea").forEach(el => {
       if (el.name.includes("[name]"))
         el.name = `roles[${index}][name]`;
       else if (el.name.includes("[description]"))
         el.name = `roles[${index}][description]`;
       else if (el.name.includes("[permissions]"))
         el.name = `roles[${index}][permissions][]`;
-      el.value = "";
-    });
 
-    // تهيئة select2 للصلاحيات
-    const selectPerm = newRow.querySelector(".select2-permissions");
-    selectPerm.innerHTML = permOptions;
-    $(selectPerm).select2({
-      width: '100%',
-      dropdownParent: $('#addMultipleRoles')
+      if (el.type === "text" || el.tagName === "TEXTAREA")
+        el.value = "";
+      else if (el.type === "checkbox")
+        el.checked = false;
     });
 
     tbody.appendChild(newRow);
@@ -512,12 +506,6 @@ document.addEventListener("DOMContentLoaded", function () {
       const rows = document.querySelectorAll("#rolesTable tbody tr");
       if (rows.length > 1) e.target.closest("tr").remove();
     }
-  });
-
-  // تفعيل select2 للصف الأول
-  $('.select2-permissions').select2({
-    width: '100%',
-    dropdownParent: $('#addMultipleRoles')
   });
 });
 </script>
