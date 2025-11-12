@@ -118,7 +118,22 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 </script>
-
+<div id="toast" style="
+  visibility: hidden;
+  min-width: 250px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 5px;
+  padding: 16px;
+  position: fixed;
+  z-index: 9999;
+  left: 50%;
+  top: 20px;
+  transform: translateX(-50%);
+  font-size: 16px;
+">
+</div>
 <div class="page-header mb-3">
   <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
 
@@ -593,14 +608,27 @@ document.addEventListener('DOMContentLoaded', function () {
   const form = document.querySelector('#addMultipleRoles form');
   if (!form) return;
 
+  const toast = document.getElementById('toast');
+
+  function showToast(message, duration = 3000) {
+    toast.textContent = message;
+    toast.style.visibility = 'visible';
+    toast.style.opacity = '1';
+    toast.style.transition = 'opacity 0.5s';
+
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      setTimeout(() => toast.style.visibility = 'hidden', 500);
+    }, duration);
+  }
+
   form.addEventListener('submit', function (e) {
-    // التأكد من أن على الأقل صلاحية واحدة محددة في كل صف
     const rows = form.querySelectorAll('#rolesTable tbody tr');
     for (const row of rows) {
       const checked = row.querySelectorAll('input[type="checkbox"]:checked');
       if (checked.length === 0) {
         e.preventDefault();
-        alert('يجب اختيار صلاحية واحدة على الأقل لكل دور قبل الحفظ.');
+        showToast('يجب اختيار صلاحية واحدة على الأقل لكل دور قبل الحفظ.');
         row.scrollIntoView({ behavior: 'smooth', block: 'center' });
         return;
       }
