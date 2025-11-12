@@ -43,6 +43,24 @@ foreach ($permissions as $p) {
     background-color: #ff8800;
     border-color: #ff8800;
   }
+.permissions-box {
+  background: #fdfdfd;
+  border-radius: 10px;
+  padding: 8px;
+}
+
+.permissions-box .border {
+  border-color: #e0e0e0 !important;
+}
+
+.permissions-box strong {
+  font-size: 0.9rem;
+}
+
+.permissions-box label {
+  cursor: pointer;
+  user-select: none;
+}
 </style>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -407,18 +425,22 @@ document.addEventListener('DOMContentLoaded', function() {
             <table class="table table-bordered align-middle text-center" id="rolesTable">
               <thead class="table-light">
                 <tr>
-                  <th style="width:200px">اسم الدور</th>
-                  <th style="width:200px">الوصف</th>
-                  <th style="width:1200px">الصلاحيات</th>
-                  <th width="60">إجراء</th>
+                  <th style="width:25%">اسم الدور</th>
+                  <th style="width:25%">الوصف</th>
+                  <th style="width:45%">الصلاحيات</th>
+                  <th style="width:5%">إجراء</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td style="width:200px"><input type="text" name="roles[0][name]" class="form-control" required></td>
-                  <td style="width:200px"><input type="text" name="roles[0][description]" class="form-control"></td>
-                  <td style="width:1200px" class="text-start">
-                    <div class="permissions-box">
+                  <td>
+                    <input type="text" name="roles[0][name]" class="form-control" required placeholder="مثال: مدير النظام">
+                  </td>
+                  <td>
+                    <input type="text" name="roles[0][description]" class="form-control" placeholder="مثال: لديه كل الصلاحيات">
+                  </td>
+                  <td class="text-start">
+                    <div class="permissions-box" style="max-height:400px; overflow-y:auto;">
                       <?php 
                         $groups = [];
                         foreach ($permissions as $perm) {
@@ -426,12 +448,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                         foreach ($groups as $groupName => $perms): ?>
                           <div class="mb-2 border rounded p-2 bg-light">
-                            <strong class="text-primary"><?= esc($groupName) ?></strong>
-                            <div class="row mt-1">
+                            <strong class="text-primary d-block mb-1"><?= esc($groupName) ?></strong>
+                            <div class="row g-2">
                               <?php foreach ($perms as $p): ?>
-                                <div class="col-6 col-md-4">
-                                  <label class="form-check-label">
-                                    <input type="checkbox" class="form-check-input" 
+                                <div class="col-6 col-md-4 col-lg-3">
+                                  <label class="form-check-label small">
+                                    <input type="checkbox" class="form-check-input me-1"
                                       name="roles[0][permissions][]" value="<?= $p['id'] ?>"> <?= esc($p['label']) ?>
                                   </label>
                                 </div>
@@ -442,7 +464,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                   </td>
                   <td>
-                    <button type="button" class="btn btn-danger btn-sm removeRow"><i class="bi bi-trash"></i></button>
+                    <button type="button" class="btn btn-danger btn-sm removeRow">
+                      <i class="bi bi-trash"></i>
+                    </button>
                   </td>
                 </tr>
               </tbody>
@@ -453,6 +477,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <i class="bi bi-plus-circle"></i> إضافة صف جديد
           </button>
         </div>
+
 
         <div class="modal-footer">
           <button type="submit" class="btn btn-orange">حفظ جميع الأدوار</button>
