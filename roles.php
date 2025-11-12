@@ -78,7 +78,7 @@ foreach ($permissions as $p) {
   accent-color: #ff8800; /* نفس اللون البرتقالي */
 }
 #addMultipleRoles table {
-  font-size: 15px; /* تصغير النص قليلاً للموبايل */
+  font-size: 13px; /* تصغير النص قليلاً للموبايل */
 }
 }
 </style>
