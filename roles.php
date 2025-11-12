@@ -195,7 +195,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <td data-label="عدد الصلاحيات"><span class="badge bg-light text-dark"><?= $count ?></span></td>
         <td data-label="تاريخ الانشاء" class="text-secondary small"><?= esc($r['created_at']) ?></td>
         <?php if(has_permission('roles.processes')): ?>
-        <td style="display: flex; flex-wrap: wrap; gap: 4px; justify-content: center;">
+        <td style="display: flex; gap: 6px; justify-content: center; flex-wrap: nowrap;">
             <?php if(has_permission('roles.view_row')): ?>
             <button class="btn btn-sm btn-info view_roles" data-bs-toggle="modal" data-bs-target="#viewPerms<?= $r['id'] ?>">
                 <i style="color:#FFF" class="bi bi-eye"></i>
