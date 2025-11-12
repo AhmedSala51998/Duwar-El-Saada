@@ -78,7 +78,6 @@ foreach ($permissions as $p) {
   accent-color: #ff8800; /* نفس اللون البرتقالي */
 }
 #addMultipleRoles table {
-  min-width: 1100px; /* يجعل الجدول أعرض لتفعيل الاسكرول */
   font-size: 15px; /* تصغير النص قليلاً للموبايل */
 }
 }
