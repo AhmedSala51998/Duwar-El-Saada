@@ -77,12 +77,6 @@ foreach ($permissions as $p) {
   transform: scale(1.1);
   accent-color: #ff8800; /* نفس اللون البرتقالي */
 }
-.view_roles{
-  margin-left:3px !important
-}
-.edit_roles{
-  margin-left:3px !important
-}
 }
 </style>
 <script>
