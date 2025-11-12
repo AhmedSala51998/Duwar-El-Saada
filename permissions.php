@@ -67,26 +67,26 @@ require_permission('permissions.view');?>
 
 /* Pagination Styling */
 .pagination .page-link {
-    color: #ff6a00;
-    border-color: #ff6a00;
-    transition: all 0.2s ease-in-out;
+    color: #ff6a00 !important;
+    border-color: #ff6a00 !important;
+    transition: all 0.2s ease-in-out !important;
 }
 
 .pagination .page-item.active .page-link {
-    background-color: #ff6a00;
-    border-color: #ff6a00;
-    color: #fff;
+    background-color: #ff6a00 !important;
+    border-color: #ff6a00 !important;
+    color: #fff !important;
 }
 
 .pagination .page-link:hover {
-    background-color: #ff6a00;
-    color: #fff;
-    border-color: #ff6a00;
+    background-color: #ff6a00 !important;
+    color: #fff !important;
+    border-color: #ff6a00 !important;
 }
 
 .pagination .page-item.disabled .page-link {
-    color: #aaa;
-    border-color: #ccc;
+    color: #aaa !important;
+    border-color: #ccc !important;
 }
 </style>
 
