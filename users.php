@@ -202,6 +202,19 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
     color: #aaa;
     border-color: #ccc;
 }
+
+  .border-orange { border-color: #ff6a00 !important; }
+  .text-orange { color: #ff6a00 !important; }
+  .btn-orange {
+    background-color: #ff6a00;
+    color: #fff;
+    border: none;
+    transition: all 0.3s ease;
+  }
+  .btn-orange:hover {
+    background-color: #e85d00;
+    color: #fff;
+  }
 </style>
 <?php 
 /*$rows = $pdo->query("
@@ -250,6 +263,24 @@ $rows = $stmt->fetchAll();
   <button class="btn btn-orange" data-bs-toggle="modal" data-bs-target="#add"><i class="bi bi-plus-lg"></i> مستخدم</button>
   <?php endif ?>
 </div>
+
+<form method="get" class="d-flex align-items-center gap-2 mb-3 flex-wrap">
+  <div class="input-group" style="max-width: 300px;">
+    <span class="input-group-text bg-white border-orange text-orange">
+      <i class="bi bi-search"></i>
+    </span>
+    <input type="text" name="kw" class="form-control border-orange" placeholder="بحث عن مستخدم..."
+           value="<?= esc($kw) ?>">
+  </div>
+  <button type="submit" class="btn btn-orange">
+    <i class="bi bi-search"></i> بحث
+  </button>
+  <?php if($kw !== ''): ?>
+    <a href="users.php" class="btn btn-outline-secondary">
+      <i class="bi bi-x-lg"></i> مسح البحث
+    </a>
+  <?php endif; ?>
+</form>
 
 <div class="table-responsive shadow-sm rounded-3 border bg-white p-2">
   <table class="table table-hover align-middle mb-0 custom-table">
