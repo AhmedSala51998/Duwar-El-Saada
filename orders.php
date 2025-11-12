@@ -76,7 +76,7 @@ $q .= " ORDER BY o.id DESC LIMIT $per_page OFFSET $offset";
 
 $stmt = $pdo->prepare($q);
 $stmt->execute($params);
-$order = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 //$can_edit = in_array(current_role(), ['admin','manager']);
 

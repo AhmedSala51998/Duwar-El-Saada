@@ -214,7 +214,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 
 $kw = trim($_GET['kw'] ?? '');
 $page = max(1, intval($_GET['page'] ?? 1));
-$per_page = 10; // عدد المستخدمين في كل صفحة
+$per_page = 2; // عدد المستخدمين في كل صفحة
 $offset = ($page - 1) * $per_page;
 
 // إجمالي عدد الصفوف
