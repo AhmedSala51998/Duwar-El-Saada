@@ -62,7 +62,7 @@ foreach ($permissions as $p) {
   user-select: none;
 }
 
-
+@media screen and (min-width: 768px) {
 .permissions-box label {
   font-size: 0.9rem;
   white-space: nowrap; /* يمنع النزول لسطر جديد */
@@ -76,7 +76,7 @@ foreach ($permissions as $p) {
 .permissions-box input[type="checkbox"] {
   transform: scale(1.1);
   accent-color: #ff8800; /* نفس اللون البرتقالي */
-}
+}}
 </style>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
