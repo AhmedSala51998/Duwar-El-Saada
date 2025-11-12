@@ -53,12 +53,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
             }
 
             $stmt = $pdo->prepare("
-                INSERT INTO expenses(invoice_serial, invoice_date, main_expense, sub_expense, expense_desc, expense_amount, vat_value, total_amount, has_vat, expense_file, payer_name, payment_source)
-                VALUES(?,?,?,?,?,?,?,?,?,?,?,?)
+                INSERT INTO expenses(invoice_serial, bill_number, main_expense, sub_expense, expense_desc, expense_amount, vat_value, total_amount, has_vat, expense_file, payer_name, payment_source, created_at)
+                VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)
             ");
             $stmt->execute([
+                $serial_invoice,
                 $invoice_serial,
-                $invoice_date,
                 $main_expense,
                 $sub_expense,
                 $expense_desc,
@@ -68,7 +68,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
                 $has_vat,
                 $file_name,
                 $payer_name,
-                $payment_source
+                $payment_source,
+                $invoice_date
             ]);
 
             $expense_id = $pdo->lastInsertId();
