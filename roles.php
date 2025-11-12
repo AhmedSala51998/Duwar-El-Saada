@@ -409,7 +409,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <tr>
                   <th style="width:200px">اسم الدور</th>
                   <th style="width:200px">الوصف</th>
-                  <th style="width:1000px">الصلاحيات</th>
+                  <th style="width:1200px">الصلاحيات</th>
                   <th width="60">إجراء</th>
                 </tr>
               </thead>
@@ -417,7 +417,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <tr>
                   <td style="width:200px"><input type="text" name="roles[0][name]" class="form-control" required></td>
                   <td style="width:200px"><input type="text" name="roles[0][description]" class="form-control"></td>
-                  <td style="width:1000px" class="text-start">
+                  <td style="width:1200px" class="text-start">
                     <div class="permissions-box">
                       <?php 
                         $groups = [];
