@@ -253,14 +253,14 @@ $rows = $stmt->fetchAll();
 
 ?>
 <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-  <div class="d-flex align-items-center gap-2 flex-wrap">
-    <h3 class="page-title mb-0">
-      <span class="stat-icon">
-        <i class="bi bi-people"></i>
-      </span>
-      المستخدمون
-    </h3>
+  <h3 class="page-title mb-0 d-flex align-items-center gap-2">
+    <span class="stat-icon">
+      <i class="bi bi-people"></i>
+    </span>
+    المستخدمون
+  </h3>
 
+  <div class="d-flex align-items-center gap-2 flex-wrap">
     <!-- 🔍 مربع البحث -->
     <form method="get" class="d-flex align-items-center gap-2">
       <div class="input-group" style="max-width: 250px;">
@@ -279,14 +279,14 @@ $rows = $stmt->fetchAll();
         </a>
       <?php endif; ?>
     </form>
-  </div>
 
-  <!-- زر إضافة مستخدم -->
-  <?php if(has_permission('users.add')): ?>
-    <button class="btn btn-orange" data-bs-toggle="modal" data-bs-target="#add">
-      <i class="bi bi-plus-lg"></i> مستخدم
-    </button>
-  <?php endif ?>
+    <!-- زر إضافة مستخدم -->
+    <?php if(has_permission('users.add')): ?>
+      <button class="btn btn-orange" data-bs-toggle="modal" data-bs-target="#add">
+        <i class="bi bi-plus-lg"></i> مستخدم
+      </button>
+    <?php endif ?>
+  </div>
 </div>
 
 <div class="table-responsive shadow-sm rounded-3 border bg-white p-2">
