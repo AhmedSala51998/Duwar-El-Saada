@@ -60,6 +60,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
                 $expense_amount = (float)($data['expense_amount'] ?? 0);
                 $has_vat        = (int)($data['has_vat'] ?? 0);
                 $invoice_serial = trim($data['invoice_serial'] ?? '');
+                if ($invoice_serial !== '') {
+                    // فحص التكرار
+                    $check = $pdo->prepare("SELECT id FROM expenses WHERE bill_number = ?");
+                    $check->execute([$invoice_serial]);
+                    if ($check->fetch()) {
+                        $pdo->rollBack();
+                        $_SESSION['toast'] = ['type' => 'danger', 'msg' => 'رقم فاتورة المورد مكرر بالفعل'];
+                        header('Location: ' . BASE_URL . '/expenses.php');
+                        exit;
+                    }
+                }
                 $invoice_date   = trim($data['invoice_date'] ?? date('Y-m-d'));
 
                 if (!$main_expense || $expense_amount <= 0) continue;

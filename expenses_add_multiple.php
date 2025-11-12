@@ -27,6 +27,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
 
         foreach ($invoice_serials as $i => $serial) {
             $invoice_serial = trim($serial);
+            if ($invoice_serial !== '') {
+                // فحص التكرار
+                $check = $pdo->prepare("SELECT id FROM expenses WHERE bill_number = ?");
+                $check->execute([$invoice_serial]);
+                if ($check->fetch()) {
+                    $pdo->rollBack();
+                    $_SESSION['toast'] = ['type' => 'danger', 'msg' => 'رقم فاتورة المورد مكرر بالفعل'];
+                    header('Location: ' . BASE_URL . '/expenses.php');
+                    exit;
+                }
+            }
             $invoice_date   = trim($invoice_dates[$i] ?? '');
             $main_expense   = trim($main_expenses[$i] ?? '');
             $sub_expense    = trim($sub_expenses[$i] ?? '');

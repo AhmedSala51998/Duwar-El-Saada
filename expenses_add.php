@@ -20,7 +20,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
             $check = $pdo->prepare("SELECT id FROM expenses WHERE bill_number = ?");
             $check->execute([$bill_number]);
             if ($check->fetch()) {
-                throw new Exception('رقم فاتورة المورد مكرر بالفعل');
+                $pdo->rollBack();
+                $_SESSION['toast'] = ['type' => 'danger', 'msg' => 'رقم فاتورة المورد مكرر بالفعل'];
+                header('Location: ' . BASE_URL . '/expenses.php');
+                exit;
             }
         }
 
