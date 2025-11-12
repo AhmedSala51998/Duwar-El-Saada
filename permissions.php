@@ -123,13 +123,18 @@ $permissions = $pdo->query("SELECT * FROM permissions ORDER BY code ASC")->fetch
         <td data-label="الاسم الظاهر"><?= esc($p['label']) ?></td>
         <td data-label="الوصف"><?= esc($p['description'] ?? '-') ?></td>
         <?php if(has_permission('permissions.processes')): ?>
-        <td>
-          <?php if(has_permission('permissions.edit')): ?>
-          <button class="btn btn-sm btn-outline-warning" data-bs-toggle="modal" data-bs-target="#edit<?= $p['id'] ?>"><i class="bi bi-pencil"></i></button>
-          <?php endif ?>
-          <?php if(has_permission('permissions.delete')): ?>
-          <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete<?= $p['id'] ?>"><i class="bi bi-trash"></i></button>
-          <?php endif ?>
+        <td style="display: flex; gap: 6px; justify-content: center; flex-wrap: nowrap;">
+            <?php if(has_permission('permissions.edit')): ?>
+            <button class="btn btn-sm btn-outline-warning" data-bs-toggle="modal" data-bs-target="#edit<?= $p['id'] ?>">
+                <i class="bi bi-pencil"></i>
+            </button>
+            <?php endif ?>
+            
+            <?php if(has_permission('permissions.delete')): ?>
+            <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete<?= $p['id'] ?>">
+                <i class="bi bi-trash"></i>
+            </button>
+            <?php endif ?>
         </td>
         <?php endif ?>
       </tr>
