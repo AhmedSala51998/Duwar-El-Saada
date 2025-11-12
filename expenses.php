@@ -1071,9 +1071,14 @@ document.getElementById('addRowBtn').addEventListener('click', function(){
 // حذف صف
 document.getElementById('multipleExpensesTable').addEventListener('click', function(e){
   if(e.target.classList.contains('remove-row')){
+    const tableBody = this.querySelector('tbody');
     const tr = e.target.closest('tr');
-    tr.remove();
-    updateRowIndices();
+
+    // تحقق من عدد الصفوف قبل الحذف
+    if(tableBody.rows.length > 1){
+      tr.remove();
+      updateRowIndices();
+    }
   }
 });
 
