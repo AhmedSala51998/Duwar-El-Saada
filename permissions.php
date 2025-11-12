@@ -66,20 +66,25 @@ require_permission('permissions.view');?>
 }
 
 /* Pagination Styling */
-.pagination .page-link {
+.pagination .page-link,
+.pagination .page-item .page-link {
   color: #ff6a00 !important;
   border: 1px solid #ff6a00 !important;
   background-color: #fff !important;
+  background-image: none !important;
+  box-shadow: none !important;
   transition: all 0.2s ease-in-out !important;
 }
 
-.pagination .page-item.active .page-link {
+.pagination .page-item.active .page-link,
+.pagination .active > .page-link {
   background-color: #ff6a00 !important;
   border-color: #ff6a00 !important;
   color: #fff !important;
 }
 
-.pagination .page-link:hover {
+.pagination .page-link:hover,
+.pagination .page-item:hover .page-link {
   background-color: #ff6a00 !important;
   color: #fff !important;
   border-color: #ff6a00 !important;
@@ -89,9 +94,6 @@ require_permission('permissions.view');?>
   color: #aaa !important;
   border-color: #ccc !important;
   background-color: #f8f9fa !important;
-}
-.pagination .page-link {
-    background-image: none !important;
 }
 </style>
 
