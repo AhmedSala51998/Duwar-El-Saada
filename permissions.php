@@ -69,7 +69,39 @@ require_permission('permissions.view');?>
 <?php endif; ?>
 <?php
 // جلب الصلاحيات
-$permissions = $pdo->query("SELECT * FROM permissions ORDER BY code ASC")->fetchAll();
+//$permissions = $pdo->query("SELECT * FROM permissions ORDER BY code ASC")->fetchAll();
+// إعداد عدد النتائج في كل صفحة
+$limit = 10; // عدد العناصر في الصفحة الواحدة
+$page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int) $_GET['page'] : 1;
+$kw = $_GET['kw'] ?? '';
+
+// حساب إجمالي النتائج
+$sqlCount = "SELECT COUNT(*) FROM permissions WHERE code LIKE :kw OR label LIKE :kw OR description LIKE :kw";
+$stmtCount = $pdo->prepare($sqlCount);
+$stmtCount->execute(['kw' => "%$kw%"]);
+$total_rows = $stmtCount->fetchColumn();
+
+// حساب إجمالي الصفحات
+$total_pages = ceil($total_rows / $limit);
+
+// التأكد أن الصفحة ضمن النطاق
+if ($page < 1) $page = 1;
+if ($page > $total_pages && $total_pages > 0) $page = $total_pages;
+
+// حساب بداية البيانات
+$offset = ($page - 1) * $limit;
+
+// جلب البيانات الفعلية للصفحة الحالية
+$sql = "SELECT * FROM permissions 
+        WHERE code LIKE :kw OR label LIKE :kw OR description LIKE :kw
+        ORDER BY id DESC 
+        LIMIT :limit OFFSET :offset";
+$stmt = $pdo->prepare($sql);
+$stmt->bindValue(':kw', "%$kw%", PDO::PARAM_STR);
+$stmt->bindValue(':limit', (int) $limit, PDO::PARAM_INT);
+$stmt->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
+$stmt->execute();
+$permissions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <div class="page-header mb-3">
@@ -198,6 +230,53 @@ $permissions = $pdo->query("SELECT * FROM permissions ORDER BY code ASC")->fetch
     </tbody>
   </table>
 </div>
+
+<?php if ($total_pages > 1): ?>
+<nav aria-label="صفحات النتائج" class="mt-3">
+  <ul class="pagination justify-content-center flex-wrap overflow-auto" style="gap:4px;">
+    <!-- أول صفحة -->
+    <li class="page-item <?= $page == 1 ? 'disabled' : '' ?>">
+      <a class="page-link px-2 py-1" href="?kw=<?= urlencode($kw ?? '') ?>&page=1">الأول</a>
+    </li>
+
+    <!-- السابق -->
+    <li class="page-item <?= $page <= 1 ? 'disabled' : '' ?>">
+      <a class="page-link px-2 py-1" href="?kw=<?= urlencode($kw ?? '') ?>&page=<?= $page - 1 ?>">السابق</a>
+    </li>
+
+    <?php
+    $max_links = 5;
+    $start = max($page - 2, 1);
+    $end = min($page + 2, $total_pages);
+
+    if ($start > 1) {
+      echo '<li class="page-item disabled"><span class="page-link px-2 py-1">…</span></li>';
+    }
+
+    for ($i = $start; $i <= $end; $i++): ?>
+      <li class="page-item <?= $page == $i ? 'active' : '' ?>">
+        <a class="page-link px-2 py-1" href="?kw=<?= urlencode($kw ?? '') ?>&page=<?= $i ?>"><?= $i ?></a>
+      </li>
+    <?php endfor;
+
+    if ($end < $total_pages) {
+      echo '<li class="page-item disabled"><span class="page-link px-2 py-1">…</span></li>';
+    }
+    ?>
+
+    <!-- التالي -->
+    <li class="page-item <?= $page >= $total_pages ? 'disabled' : '' ?>">
+      <a class="page-link px-2 py-1" href="?kw=<?= urlencode($kw ?? '') ?>&page=<?= $page + 1 ?>">التالي</a>
+    </li>
+
+    <!-- آخر صفحة -->
+    <li class="page-item <?= $page == $total_pages ? 'disabled' : '' ?>">
+      <a class="page-link px-2 py-1" href="?kw=<?= urlencode($kw ?? '') ?>&page=<?= $total_pages ?>">الأخير</a>
+    </li>
+  </ul>
+</nav>
+<?php endif; ?>
+
 
 <!-- مودال إضافة -->
 <div class="modal fade" id="addPerm">
