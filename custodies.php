@@ -280,6 +280,12 @@ $options = ['بسام','فيصل المطيري','مؤسسة','شركة'];
         <span class="d-none d-sm-inline">إضافة</span>
       </button>
     <?php endif; ?>
+    <?php if(has_permission('custodies.add_group')): ?>
+      <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addMultipleCustodies">
+        <i class="bi bi-plus-circle-dotted"></i>
+        <span class="d-none d-sm-inline">إضافة متعددة</span>
+      </button>
+    <?php endif; ?>
   </div>
 </div>
 
@@ -530,4 +536,120 @@ $total_balance = $total_in - $total_out;
 </div>
 <?php endif; ?>
 
+<?php if(has_permission('custodies.add_group')): ?>
+<div class="modal fade" id="addMultipleCustodies">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <form method="post" action="custodies_add_multiple" enctype="multipart/form-data">
+        <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
+
+        <div class="modal-header bg-light">
+          <h5 class="modal-title"><i class="bi bi-plus-square-dotted me-1"></i> إضافة عُهد متعددة</h5>
+          <button class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+          <div class="table-responsive">
+            <table class="table table-bordered align-middle" id="custodiesTable">
+              <thead class="table-light">
+                <tr>
+                  <th>اسم الشخص</th>
+                  <th>المبلغ</th>
+                  <th>التاريخ</th>
+                  <th>ملاحظات</th>
+                  <th width="60">إجراء</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <select name="custodies[0][person_name]" class="form-select select2-person" required>
+                      <option value="">اختر الشخص</option>
+                      <?php foreach($options as $opt): ?>
+                        <option value="<?= esc($opt) ?>"><?= esc($opt) ?></option>
+                      <?php endforeach; ?>
+                    </select>
+                  </td>
+                  <td><input type="number" step="0.01" name="custodies[0][amount]" class="form-control" required></td>
+                  <td><input type="date" name="custodies[0][taken_at]" class="form-control" required></td>
+                  <td><input type="text" name="custodies[0][notes]" class="form-control"></td>
+                  <td class="text-center">
+                    <button type="button" class="btn btn-danger btn-sm removeRow"><i class="bi bi-trash"></i></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <button type="button" class="btn btn-outline-primary mt-2" id="addCustodyRow">
+            <i class="bi bi-plus-circle"></i> إضافة صف جديد
+          </button>
+        </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-orange">حفظ جميع العهد</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<?php endif; ?>
+
 <?php require __DIR__.'/partials/footer.php'; ?>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  let index = 1;
+
+  const tbody = document.querySelector("#custodiesTable tbody");
+  const templateRow = tbody.rows[0].cloneNode(true); // نسخة الصف الأول
+
+  const personOptions = templateRow.querySelector(".select2-person").innerHTML;
+
+  document.getElementById("addCustodyRow").addEventListener("click", function () {
+    const newRow = templateRow.cloneNode(true);
+
+    // إعادة تهيئة select
+    const selectPerson = newRow.querySelector(".select2-person");
+    selectPerson.innerHTML = personOptions;
+    selectPerson.name = `custodies[${index}][person_name]`;
+    selectPerson.value = "";
+
+    // إعادة تسمية باقي الحقول
+    const amountInput = newRow.querySelector("input[name^='custodies'][type='number']");
+    const dateInput = newRow.querySelector("input[name^='custodies'][type='date']");
+    const noteInput = newRow.querySelector("input[name^='custodies'][type='text']");
+
+    amountInput.name = `custodies[${index}][amount]`;
+    dateInput.name = `custodies[${index}][taken_at]`;
+    noteInput.name = `custodies[${index}][notes]`;
+
+    // تنظيف القيم
+    amountInput.value = "";
+    dateInput.value = "";
+    noteInput.value = "";
+
+    tbody.appendChild(newRow);
+    index++;
+
+    // تفعيل select2 للصف الجديد
+    $(selectPerson).select2({
+      width: '100%',
+      dropdownParent: $('#addMultipleCustodies')
+    });
+  });
+
+  // حذف صف
+  document.addEventListener("click", function (e) {
+    if (e.target.closest(".removeRow")) {
+      const rows = document.querySelectorAll("#custodiesTable tbody tr");
+      if (rows.length > 1) e.target.closest("tr").remove();
+    }
+  });
+
+  // تفعيل select2 للصف الأول
+  $('.select2-person').select2({
+    width: '100%',
+    dropdownParent: $('#addMultipleCustodies')
+  });
+});
+</script>
