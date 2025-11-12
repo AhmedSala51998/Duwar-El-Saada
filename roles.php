@@ -64,7 +64,7 @@ foreach ($permissions as $p) {
 
 @media screen and (min-width: 768px) {
 .permissions-box label {
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   white-space: nowrap; /* يمنع النزول لسطر جديد */
 }
 
