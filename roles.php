@@ -400,12 +400,29 @@ document.addEventListener('DOMContentLoaded', function() {
                 <tr>
                   <td><input type="text" name="roles[0][name]" class="form-control" required></td>
                   <td><input type="text" name="roles[0][description]" class="form-control"></td>
-                  <td>
-                    <select class="form-select select2-permissions" name="roles[0][permissions][]" multiple="multiple" required>
-                      <?php foreach($permissions as $p): ?>
-                        <option value="<?= $p['id'] ?>"><?= esc($p['label']) ?></option>
+                  <td class="text-start">
+                    <div class="permissions-box">
+                      <?php 
+                        $groups = [];
+                        foreach ($permissions as $perm) {
+                          $groups[$perm['category']][] = $perm;
+                        }
+                        foreach ($groups as $groupName => $perms): ?>
+                          <div class="mb-2 border rounded p-2 bg-light">
+                            <strong class="text-primary"><?= esc($groupName) ?></strong>
+                            <div class="row mt-1">
+                              <?php foreach ($perms as $p): ?>
+                                <div class="col-6 col-md-4">
+                                  <label class="form-check-label">
+                                    <input type="checkbox" class="form-check-input" 
+                                      name="roles[0][permissions][]" value="<?= $p['id'] ?>"> <?= esc($p['label']) ?>
+                                  </label>
+                                </div>
+                              <?php endforeach; ?>
+                            </div>
+                          </div>
                       <?php endforeach; ?>
-                    </select>
+                    </div>
                   </td>
                   <td>
                     <button type="button" class="btn btn-danger btn-sm removeRow"><i class="bi bi-trash"></i></button>
@@ -448,6 +465,13 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 </script>
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Select2 -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 <script>
 document.addEventListener("DOMContentLoaded", function () {
   let index = 1;
