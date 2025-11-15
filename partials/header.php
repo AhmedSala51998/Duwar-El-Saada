@@ -1066,6 +1066,49 @@ $current_page = basename($_SERVER['PHP_SELF']);
 [data-theme="dark"] .btn-outline-warning:hover {
   background: rgba(255,255,255,0.1) !important;
 }
+/* --- الجدول بالكامل في الدارك مود --- */
+[data-theme="dark"] .custom-table,
+[data-theme="dark"] .table {
+    background-color: #1e1e1e !important;   /* رمادي غامق خفيف */
+    color: #ffffff !important;              /* نص أبيض */
+}
+
+/* خلفية الـ tbody */
+[data-theme="dark"] .custom-table tbody tr {
+    background-color: #1e1e1e !important;
+    border-color: #2a2a2a !important;
+}
+
+/* خلفية الهدر */
+[data-theme="dark"] .custom-table thead th {
+    background-color: #2a2a2a !important;   /* أغمق شويه */
+    color: #ffffff !important;              
+    border-bottom: 1px solid #3a3a3a !important;
+}
+
+/* نص الجدول */
+[data-theme="dark"] .custom-table td,
+[data-theme="dark"] .custom-table th {
+    color: #ffffff !important;
+    opacity: 1 !important;  /* يمنع البهتان */
+}
+
+/* Hover */
+[data-theme="dark"] .custom-table tbody tr:hover {
+    background-color: #333333 !important;
+}
+
+/* الحدود */
+[data-theme="dark"] .custom-table td,
+[data-theme="dark"] .custom-table th {
+    border-color: #3a3a3a !important;
+}
+
+/* شغل داخل table-responsive */
+[data-theme="dark"] .table-responsive {
+    background-color: #1e1e1e !important;
+    border: 1px solid #2a2a2a !important;
+}
 
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
