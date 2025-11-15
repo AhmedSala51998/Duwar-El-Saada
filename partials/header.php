@@ -957,6 +957,115 @@ $current_page = basename($_SERVER['PHP_SELF']);
   background: rgba(255,255,255,0.07) !important;
   color: #fff !important;
 }
+/* ============================================================
+   🔥 DARK MODE FULL FIX — Readable Tables, Cards, Charts, Modal
+   ============================================================ */
+
+/* ========== Global text ========== */
+[data-theme="dark"] body,
+[data-theme="dark"] .text,
+[data-theme="dark"] .card,
+[data-theme="dark"] .modal-content {
+  color: #f1f5f9 !important; /* نص واضح */
+}
+
+/* ========== Cards ========== */
+[data-theme="dark"] .card {
+  background: #111827 !important; 
+  border-color: rgba(255,255,255,0.08) !important;
+}
+
+[data-theme="dark"] .card-header {
+  background: #1f2937 !important;
+  color: #f8fafc !important;
+  border-bottom-color: rgba(255,255,255,0.08) !important;
+}
+
+/* ========== Charts containers ========== */
+[data-theme="dark"] .chart-container,
+[data-theme="dark"] canvas {
+  background: #111827 !important;
+  color: #f1f5f9 !important;
+}
+
+/* ========== Tables ========== */
+
+/* table header */
+[data-theme="dark"] table thead th {
+  background: #1e293b !important;
+  color: #e2e8f0 !important;
+  border-color: rgba(255,255,255,0.08) !important;
+}
+
+/* table body */
+[data-theme="dark"] table tbody tr {
+  background: #0f172a !important;
+}
+
+[data-theme="dark"] table tbody tr:hover {
+  background: #1e293b !important;
+}
+
+/* table cells */
+[data-theme="dark"] table tbody td {
+  color: #f1f5f9 !important;
+  border-color: rgba(255,255,255,0.05) !important;
+}
+
+/* muted text */
+[data-theme="dark"] .text-muted {
+  color: #94a3b8 !important;
+}
+
+/* ========== Pagination ========== */
+[data-theme="dark"] .pagination .page-link {
+  background: transparent !important;
+  color: #ff8c3b !important;
+}
+
+[data-theme="dark"] .pagination .page-item.active .page-link {
+  background: #ff8c3b !important;
+  color: #111 !important;
+}
+
+/* ========== Modal Close Button (X) ========== */
+[data-theme="dark"] .btn-close {
+  filter: invert(1) brightness(200%) !important; /* يخلي الـ X بيضاء وواضحة */
+  opacity: 1 !important;
+}
+
+/* ========== Forms input text ========== */
+[data-theme="dark"] input,
+[data-theme="dark"] select,
+[data-theme="dark"] textarea {
+  background: #0f172a !important;
+  color: #f1f5f9 !important;
+  border-color: rgba(255,255,255,0.1) !important;
+}
+
+[data-theme="dark"] input::placeholder,
+[data-theme="dark"] textarea::placeholder {
+  color: #64748b !important;
+}
+
+/* ========== Buttons ========== */
+[data-theme="dark"] .btn,
+[data-theme="dark"] button {
+  color: #f1f5f9 !important;
+}
+
+[data-theme="dark"] .btn-outline-secondary,
+[data-theme="dark"] .btn-outline-danger,
+[data-theme="dark"] .btn-outline-warning {
+  border-color: rgba(255,255,255,0.15) !important;
+  color: #e2e8f0 !important;
+}
+
+[data-theme="dark"] .btn-outline-secondary:hover,
+[data-theme="dark"] .btn-outline-danger:hover,
+[data-theme="dark"] .btn-outline-warning:hover {
+  background: rgba(255,255,255,0.1) !important;
+}
 
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
