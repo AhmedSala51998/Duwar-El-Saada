@@ -1109,6 +1109,44 @@ $current_page = basename($_SERVER['PHP_SELF']);
     background-color: #1e1e1e !important;
     border: 1px solid #2a2a2a !important;
 }
+/* --- Dark Mode: Fix Table Full Styling --- */
+[data-theme="dark"] table,
+[data-theme="dark"] .table {
+    background-color: #1c1c1c !important; /* خلفية الجدول */
+    color: #fff !important;
+}
+
+/* جسم الجدول */
+[data-theme="dark"] .table tbody tr {
+    background-color: #1c1c1c !important;
+    color: #fff !important;
+}
+
+/* خلايا الجدول */
+[data-theme="dark"] .table td,
+[data-theme="dark"] .table th {
+    color: #ffffff !important;
+    opacity: 1 !important;        /* يمنع البهتان */
+    background-color: inherit !important;
+    border-color: #333 !important;
+}
+
+/* الهيدر */
+[data-theme="dark"] .table thead th {
+    background-color: #262626 !important;
+    color: #fff !important;
+    border-color: #444 !important;
+}
+
+/* Hover */
+[data-theme="dark"] .table tbody tr:hover {
+    background-color: #333333 !important;
+}
+
+/* لو الجدول جوه table-responsive */
+[data-theme="dark"] .table-responsive {
+    background-color: #1c1c1c !important;
+}
 
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
