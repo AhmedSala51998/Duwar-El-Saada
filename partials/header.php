@@ -1147,6 +1147,114 @@ $current_page = basename($_SERVER['PHP_SELF']);
 [data-theme="dark"] .table-responsive {
     background-color: #1c1c1c !important;
 }
+/* ---------------------------
+       Dropdown / Offcanvas Header
+----------------------------*/
+.dark-mode .dropdown-menu,
+.dark-mode .popover,
+.dark-mode .offcanvas,
+.dark-mode .dropdown-item,
+.dark-mode .modal-content {
+    background-color: #0f1621 !important; /* داكن نفس باقي النظام */
+    color: #fff !important;
+}
+
+/* هيدر الـ dropdown أو offcanvas */
+.dark-mode .dropdown-header,
+.dark-mode .offcanvas-header,
+.dark-mode .modal-header {
+    background-color: #0f1621 !important;
+    color: #fff !important;
+    border-bottom: 1px solid #222 !important;
+}
+
+/* زر الإغلاق داخل الهيدر */
+.dark-mode .btn-close {
+    filter: invert(1); /* يخلي الأيقونة بيضاء */
+}
+
+
+/* ---------------------------
+         FILTER CARD
+----------------------------*/
+.dark-mode .filter-card,
+.dark-mode .card,
+.dark-mode .report-container {
+    background-color: #0f1621 !important;
+    color: white !important;
+    border: 1px solid #1f2630 !important;
+}
+
+/* مدخلات التاريخ */
+.dark-mode input[type="date"],
+.dark-mode .form-control {
+    background-color: #0b1120 !important;
+    color: white !important;
+    border: 1px solid #222 !important;
+}
+
+/* placeholder يكون ظاهر */
+.dark-mode input::placeholder {
+    color: #e2e2e2 !important;
+    opacity: 0.7;
+}
+/* -----------------------------------
+      FILE INPUT (اختيار ملف)
+----------------------------------- */
+.dark-mode input[type="file"] {
+    background-color: #0b1120 !important;
+    color: #fff !important;
+    border: 1px solid #222 !important;
+}
+
+/* النص داخل زر اختيار الملف */
+.dark-mode input[type="file"]::file-selector-button {
+    background-color: #162030 !important;
+    color: #fff !important;
+    border: 1px solid #2a3240 !important;
+    padding: 6px 12px;
+    border-radius: 6px;
+}
+
+/* عند المرور بالماوس */
+.dark-mode input[type="file"]::file-selector-button:hover {
+    background-color: #1d2738 !important;
+    border-color: #3b4556 !important;
+}
+
+
+/* -----------------------------------
+      SEARCH ICON (أيقونة البحث)
+----------------------------------- */
+
+/* أي input داخل search bar */
+.dark-mode .search-box input,
+.dark-mode .search-input,
+.dark-mode input[type="search"] {
+    background-color: #0b1120 !important;
+    color: #fff !important;
+    border: 1px solid #222 !important;
+}
+
+/* أي أيقونة بحث داخل input */
+.dark-mode .search-box i,
+.dark-mode .search-icon,
+.dark-mode .bi-search,
+.dark-mode button.search-btn i {
+    color: #fff !important;
+    opacity: 0.9;
+}
+
+/* زر البحث */
+.dark-mode .search-btn {
+    background-color: #162030 !important;
+    border: 1px solid #222 !important;
+    color: #fff !important;
+}
+
+.dark-mode .search-btn:hover {
+    background-color: #1d2738 !important;
+}
 
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
