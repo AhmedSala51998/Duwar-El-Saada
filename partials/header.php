@@ -734,6 +734,164 @@ $current_page = basename($_SERVER['PHP_SELF']);
         margin-top: 15px !important;
       }
     }
+
+
+
+
+      /* Theme variables (light default) */
+  :root {
+    --bg: #f6f7fb;
+    --surface: #ffffff;
+    --muted: #6c757d;
+    --text: #2c3e50;
+    --accent: #ff6a00;        /* اللون البرتقالي الأساسي */
+    --accent-600: #e85d00;
+    --card-shadow: 0 6px 18px rgba(44,62,80,0.06);
+    --border: rgba(0,0,0,0.06);
+    --glass: rgba(255,255,255,0.6);
+    --inverse-text: #ffffff;
+    --toast-bg: #fff8f0;
+    --loader-bg: #fff;
+  }
+
+  /* Dark theme overrides */
+  [data-theme="dark"] {
+    --bg: #0f1720;
+    --surface: #0b1220;
+    --muted: #9aa6b2;
+    --text: #e6eef6;
+    --accent: #ff8f3b;
+    --accent-600: #ff7a00;
+    --card-shadow: 0 8px 24px rgba(0,0,0,0.6);
+    --border: rgba(255,255,255,0.06);
+    --glass: rgba(10,14,20,0.5);
+    --inverse-text: #0b1220;
+    --toast-bg: #1a2a37;
+    --loader-bg: #071018;
+  }
+
+  /* apply */
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    transition: background-color .25s ease, color .25s ease;
+  }
+
+  .container-fluid, .page-wrapper, main {
+    background: transparent;
+  }
+
+  .table-responsive, .custom-table, .table {
+    background: transparent;
+  }
+
+  .card, .table-responsive, .modal-content {
+    background: var(--surface) !important;
+    box-shadow: var(--card-shadow) !important;
+    border: 1px solid var(--border) !important;
+    transition: background .25s ease, box-shadow .25s ease, border-color .25s ease;
+  }
+
+  /* Navbar */
+  .custom-navbar {
+    background: linear-gradient(to right, rgba(255,255,255,0.6), rgba(255,255,255,0.35));
+    backdrop-filter: blur(6px);
+  }
+  [data-theme="dark"] .custom-navbar {
+    background: linear-gradient(180deg, rgba(11,18,32,0.6), rgba(11,18,32,0.45));
+  }
+
+  .navbar .nav-link, .sidebar-link {
+    color: var(--text) !important;
+  }
+  [data-theme="dark"] .navbar .nav-link, [data-theme="dark"] .sidebar-link {
+    color: var(--muted) !important;
+  }
+
+  /* Buttons */
+  .btn-orange {
+    background: linear-gradient(135deg, var(--accent), var(--accent-600));
+    color: var(--inverse-text);
+    border: none;
+    box-shadow: 0 6px 16px rgba(255,106,0,0.14);
+  }
+  .btn-orange:hover { transform: translateY(-2px); }
+
+  /* Role badge */
+  .role-badge {
+    background: linear-gradient(90deg, rgba(255,240,230,0.9), rgba(255,244,236,0.85));
+    color: var(--accent);
+    border: 1px solid rgba(255,106,0,0.12);
+  }
+  [data-theme="dark"] .role-badge {
+    background: rgba(255,108,40,0.08);
+    color: var(--accent);
+    border: 1px solid rgba(255,106,0,0.15);
+  }
+
+  /* Table text and muted */
+  .custom-table thead th {
+    background: transparent;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+  }
+  .custom-table td {
+    color: var(--text);
+  }
+  [data-theme="dark"] .custom-table td { color: var(--text); }
+
+  /* Loader */
+  .loader { background: var(--loader-bg); }
+  .loader-text { color: var(--accent); text-shadow: none; }
+
+  /* Toast */
+  .toast.align-items-center.text-bg-warning {
+    background: var(--toast-bg);
+    color: var(--text);
+    border: 1px solid rgba(255,106,0,0.06);
+  }
+  [data-theme="dark"] .toast.align-items-center.text-bg-warning {
+    background: rgba(255,120,60,0.08);
+    color: var(--text);
+    border: 1px solid rgba(255,120,60,0.12);
+  }
+
+  /* Pagination */
+  .pagination .page-link {
+    color: var(--accent) !important;
+    border-color: transparent !important;
+    background: transparent !important;
+    padding: .35rem .6rem;
+    border-radius: .5rem;
+  }
+  .pagination .page-item.active .page-link {
+    background: var(--accent) !important;
+    color: var(--inverse-text) !important;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+  }
+
+  /* Make sure modals and offcanvas match */
+  .offcanvas, .modal-content { background: var(--surface) !important; color: var(--text) !important; }
+
+  /* small helpers */
+  .theme-toggle-btn {
+    border-radius: 10px;
+    padding: .45rem .6rem;
+    min-width: 44px;
+    display:inline-flex;
+    justify-content:center;
+    align-items:center;
+    background: transparent;
+    border: 1px solid rgba(0,0,0,0.04);
+  }
+  [data-theme="dark"] .theme-toggle-btn { border-color: rgba(255,255,255,0.06); }
+
+  /* ensure links visible on dark */
+  a { color: var(--accent); }
+  [data-theme="dark"] a { color: var(--accent); }
+
+  /* transitions */
+  * { transition: background-color .18s ease, color .18s ease, border-color .18s ease; }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
 </head>
@@ -784,6 +942,13 @@ $current_page = basename($_SERVER['PHP_SELF']);
         </a>
       </li>
       <?php endif ?>
+
+      <!-- Theme toggle -->
+      <li class="nav-item d-flex align-items-center">
+        <button id="themeToggle" class="btn theme-toggle-btn ms-2" aria-label="Toggle theme" title="تبديل بين الوضع الفاتح والداكن">
+          <i id="themeIcon" class="bi bi-moon-fill"></i>
+        </button>
+      </li>
 
       <!-- خروج -->
       <li class="nav-item">
@@ -966,3 +1131,59 @@ $current_page = basename($_SERVER['PHP_SELF']);
       }
     });
   </script>
+  <script>
+(function(){
+  const root = document.documentElement;
+  const toggle = document.getElementById('themeToggle');
+  const icon = document.getElementById('themeIcon');
+
+  // قراءة التفضيل: localStorage -> prefers-color-scheme
+  function getPreferredTheme(){
+    const saved = localStorage.getItem('theme');
+    if(saved === 'dark' || saved === 'light') return saved;
+    // fallback to system
+    const sys = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    return sys;
+  }
+
+  // تطبيق الثيم
+  function applyTheme(theme){
+    if(theme === 'dark'){
+      root.setAttribute('data-theme','dark');
+      icon.className = 'bi bi-sun-fill'; // show sun to indicate can switch to light
+      icon.setAttribute('title','الوضع الفاتح');
+    } else {
+      root.removeAttribute('data-theme');
+      icon.className = 'bi bi-moon-fill';
+      icon.setAttribute('title','الوضع الداكن');
+    }
+  }
+
+  // شغّل حسب المحفوظ أو التفضيل
+  const initial = getPreferredTheme();
+  applyTheme(initial);
+
+  // الاستماع لتغيّر إعداد النظام (لو المستخدم غير تفضيله)
+  if(window.matchMedia) {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+      const saved = localStorage.getItem('theme');
+      if(!saved) applyTheme(e.matches ? 'dark' : 'light');
+    });
+  }
+
+  // زر التبديل
+  toggle?.addEventListener('click', () => {
+    const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+    const next = current === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('theme', next);
+    applyTheme(next);
+  });
+
+  // إمكانية مسح الاختيار للمستخدم (optional) عبر الضغط مع Ctrl+Click
+  toggle?.addEventListener('dblclick', (e) => {
+    // ضع الاختيار على automatic (يتبع النظام)
+    localStorage.removeItem('theme');
+    applyTheme(getPreferredTheme());
+  });
+})();
+</script>
