@@ -1385,6 +1385,60 @@ body.dark-mode .modal-content code {
 body.dark-mode .modal-content .btn-close {
   filter: invert(1); /* يخلي زر الإغلاق أبيض */
 }
+/* ======= Dark Mode للفاتورة ======= */
+body.dark-mode .print-area {
+    background-color: #1e1e1e !important;
+    color: #fff !important;
+    border-color: #333 !important;
+}
+
+body.dark-mode .print-area table th {
+    background-color: #2c2c2c !important;
+    color: #fff !important;
+    border-color: #444 !important;
+}
+
+body.dark-mode .print-area table td {
+    background-color: #1e1e1e !important;
+    color: #fff !important;
+    border-color: #444 !important;
+}
+
+body.dark-mode .print-area .highlighted-row {
+    background-color: #444d1e !important;
+    box-shadow: 0 0 10px rgba(255, 193, 7, 0.6);
+}
+
+body.dark-mode .print-area .blinking {
+    transform: scale(1.03);
+    box-shadow: 0 0 15px rgba(255, 193, 7, 0.9);
+}
+
+body.dark-mode .invoice-summary, 
+body.dark-mode .invoice-info, 
+body.dark-mode .total-words {
+    color: #fff !important;
+}
+
+body.dark-mode .invoice-image {
+    border-color: #555 !important;
+    box-shadow: 1px 1px 5px rgba(0,0,0,0.5);
+}
+
+/* select و span الضريبة */
+body.dark-mode select#vatRate,
+body.dark-mode #vatRateText {
+    background-color: #2c2c2c !important;
+    color: #fff !important;
+    border-color: #555 !important;
+}
+
+/* inputs التاريخ */
+body.dark-mode #invoiceDate {
+    background-color: #2c2c2c !important;
+    color: #fff !important;
+    border-color: #555 !important;
+}
 
 
   </style>
