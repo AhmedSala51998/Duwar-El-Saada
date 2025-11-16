@@ -1353,6 +1353,90 @@ $current_page = basename($_SERVER['PHP_SELF']);
 .dark-mode hr {
     border-color: #1f2937 !important;
 }
+/* ==========================================
+   🌙 DARK MODE GLOBAL RESET
+========================================== */
+
+body.dark-mode {
+    background: #0b1220 !important;
+    color: #fff !important;
+}
+
+/* ==========================================
+   🟥 جعل كل الكروت داكنة مهما كان نوعها
+========================================== */
+
+body.dark-mode .card,
+body.dark-mode .dashboard-card,
+body.dark-mode .stat-card,
+body.dark-mode .chart-card,
+body.dark-mode .shadow,
+body.dark-mode .card-body,
+body.dark-mode .card-header,
+body.dark-mode .card-footer {
+    background: #131a2a !important;
+    color: #fff !important;
+    border-color: #1f273b !important;
+    box-shadow: none !important;
+}
+
+/* العناوين داخل أي كارت */
+body.dark-mode .card h1,
+body.dark-mode .card h2,
+body.dark-mode .card h3,
+body.dark-mode .card h4,
+body.dark-mode .card h5,
+body.dark-mode .card p,
+body.dark-mode .card span {
+    color: #fff !important;
+}
+
+/* ==========================================
+   🟦 الشـــارت (Canvas)
+========================================== */
+
+body.dark-mode canvas {
+    background: #0e1625 !important;
+    border-radius: 10px !important;
+    border: 1px solid #1f273b !important;
+}
+
+/* إطار الشارت نفسه */
+body.dark-mode .chartjs-size-monitor,
+body.dark-mode .chart-container {
+    background: #131a2a !important;
+    border: 1px solid #1f273b !important;
+}
+
+/* الكتابة داخل الشارت */
+body.dark-mode .chartjs-render-monitor {
+    color: #fff !important;
+}
+
+/* ==========================================
+   🟧 إخفاء أي Border أبيض بالقوة
+========================================== */
+
+body.dark-mode * {
+    border-color: #1f273b !important;
+}
+
+/* ==========================================
+   🟩 الستايل الخاص بالكروت الصغيرة (stat cards)
+========================================== */
+
+body.dark-mode .stat-icon {
+    background: rgba(255, 106, 0, 0.12) !important;
+    color: #ff6a00 !important;
+}
+
+body.dark-mode .stat-title {
+    color: #e5e5e5 !important;
+}
+
+body.dark-mode .stat-value {
+    color: #ffffff !important;
+}
 
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
