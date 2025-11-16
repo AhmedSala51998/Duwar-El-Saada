@@ -1642,6 +1642,36 @@ $current_page = basename($_SERVER['PHP_SELF']);
     body.dark-mode .accordion-button::after {
         filter: invert(1);      /* يجعل السهم أبيض */
     }
+    /* ======= اجبار الفاتورة على شكل Light Mode عند الطباعة ======= */
+    @media print {
+        body.dark-mode * {
+            background: #fff !important;  /* خلفية فاتحة */
+            color: #000 !important;       /* النص أسود */
+            -webkit-print-color-adjust: exact; /* لتأكيد طباعة الألوان */
+        }
+
+        .print-area {
+            background: #fff !important;
+            color: #000 !important;
+        }
+
+        .print-area table th,
+        .print-area table td {
+            border-color: #000 !important;
+            color: #000 !important;
+        }
+
+        .invoice-header,
+        .invoice-summary,
+        .invoice-info,
+        .total-words {
+            color: #000 !important;
+        }
+
+        .invoice-image {
+            border: 1px solid #000 !important;
+        }
+    }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
 </head>
