@@ -862,6 +862,42 @@ body.dark-mode .form-control:focus {
   border-color: #ff944d !important;
   color: #fff !important;
 }
+/* ============================ */
+/*       DARK MODE TABLE        */
+/* ============================ */
+
+[data-theme="dark"] table {
+    background-color: #1a1a1a !important;
+    border-color: #444 !important;
+}
+
+[data-theme="dark"] table thead th {
+    background-color: #222 !important;
+    color: #ffffff !important;
+    border-color: #444 !important;
+}
+
+[data-theme="dark"] table tbody tr td {
+    background-color: #1e1e1e !important;
+    color: #ffffff !important;
+    border-color: #444 !important;
+}
+
+/* صفوف متبادلة */
+[data-theme="dark"] table tbody tr:nth-child(even) td {
+    background-color: #242424 !important;
+}
+
+/* عند مرور الماوس */
+[data-theme="dark"] table tbody tr:hover td {
+    background-color: #2b2b2b !important;
+}
+
+/* أي أيقونات داخل الجدول */
+[data-theme="dark"] table i,
+[data-theme="dark"] table svg {
+    color: #ffa64d !important;
+}
 
 
   </style>

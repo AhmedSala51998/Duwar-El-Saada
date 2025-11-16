@@ -246,54 +246,6 @@
   color: #6f42c1 !important;
 }
 
-
-
-
-
-
-
-
-
-
-
-/* ======================= */
-/*     DARK MODE FIXES     */
-/* ======================= */
-
-[data-theme="dark"] .stat-card,
-html.dark .stat-card {
-    background: #1e1e1e !important;
-    box-shadow: 0 0 10px rgba(0,0,0,0.4) !important;
-}
-
-[data-theme="dark"] .stat-title,
-html.dark .stat-title {
-    color: #bbb !important;
-}
-
-[data-theme="dark"] .stat-value,
-html.dark .stat-value {
-    color: #fff !important;
-}
-
-[data-theme="dark"] .chart-card,
-html.dark .chart-card {
-    background: #1e1e1e !important;
-    box-shadow: 0 0 15px rgba(0,0,0,0.5) !important;
-}
-
-[data-theme="dark"] h5,
-html.dark h5 {
-    color: #fff !important;
-}
-
-/* أي div داخل chart-js */
-[data-theme="dark"] .chart-card canvas,
-html.dark .chart-card canvas {
-    background-color: #1e1e1e !important;
-}
-
-
 </style>
 
 <?php
@@ -417,13 +369,7 @@ $assetsByPayer = $pdo->query("SELECT payer_name, COUNT(*) c FROM assets GROUP BY
     </div>
   </div>
 </div>
-<script>
-if (document.documentElement.getAttribute("data-theme") === "dark" || document.documentElement.classList.contains("dark")) {
 
-    Chart.defaults.color = "#fff";            // لون الكلام داخل الشارت
-    Chart.defaults.borderColor = "rgba(255,255,255,0.2)"; // لون المحاور Gridlines
-}
-</script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 new Chart(document.getElementById('purchasesChart'), {
