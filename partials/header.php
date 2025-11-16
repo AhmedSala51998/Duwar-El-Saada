@@ -1554,7 +1554,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
     }
 
     /* hover effect */
-    #toggleDark:hover, #logoutBtn:hover {
+    #toggleDark:hover {
       transform: scale(1.1);
       box-shadow: 0 6px 20px rgba(255,106,0,0.6);
     }
