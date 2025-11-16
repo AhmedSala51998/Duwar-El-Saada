@@ -1645,7 +1645,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
     /* ======= اجبار الفاتورة على شكل Light Mode عند الطباعة ======= */
     @media print {
         body.dark-mode * {
-            background: #fff !important;  /* خلفية فاتحة */
             color: #000 !important;       /* النص أسود */
             -webkit-print-color-adjust: exact; /* لتأكيد طباعة الألوان */
         }
