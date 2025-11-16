@@ -1714,7 +1714,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
         </a>
       </li>
       <?php endif ?>
-
+      <?php if(has_permission('settings.light_and_dark_mode')): ?>
       <li>
         <button id="toggleDark" class="btn btn-orange position-relative overflow-hidden" style="width:50px; height:50px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.2rem;">
           <i class="bi bi-moon" id="toggleIcon"></i>
@@ -1724,7 +1724,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
           <span class="bubble bubble3"></span>
         </button>
       </li>
-
+      <?php endif ?>
       <!--<li>
         <a href="logout.php" class="btn btn-orange" id="logoutBtn" style="width:50px; height:50px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.2rem;">
           <i class="bi bi-box-arrow-right"></i>
@@ -1832,6 +1832,18 @@ $current_page = basename($_SERVER['PHP_SELF']);
       <i class="bi bi-people"></i> المستخدمون
     </a>
     <?php endif ?>
+
+      <?php if(has_permission('settings.light_and_dark_mode')): ?>
+      <li>
+        <button id="toggleDark" class="btn btn-orange position-relative overflow-hidden" style="width:50px; height:50px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.2rem;">
+          <i class="bi bi-moon" id="toggleIcon"></i>
+          <!-- فقاعات -->
+          <span class="bubble bubble1"></span>
+          <span class="bubble bubble2"></span>
+          <span class="bubble bubble3"></span>
+        </button>
+      </li>
+      <?php endif ?>
 
     <!-- ✅ تسجيل الخروج -->
     <a class="btn btn-logout w-100 mt-2 d-flex align-items-center justify-content-center gap-2" href="<?= BASE_URL ?>/logout.php">
