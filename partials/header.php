@@ -1479,6 +1479,35 @@ body.dark-mode .filter-form button.btn-warning {
     border-color: #ccc !important;
   }
 }
+/* ===== Dark Mode للفلاتر فقط ===== */
+body.dark-mode .filter-form {
+    background-color: #1e1e1e; /* خلفية عامة للفورم */
+    padding: 15px;
+    border-radius: 8px;
+}
+
+body.dark-mode .filter-form .form-control {
+    background-color: #2c2c2c !important; /* Inputs */
+    color: #fff !important;
+    border: 1px solid #555 !important;
+}
+
+body.dark-mode .filter-form .form-label {
+    color: #fff !important; /* Labels */
+}
+
+body.dark-mode .filter-form button.btn-warning {
+    background-color: #ff6a00 !important; /* يظل برتقالي */
+    color: #fff !important;
+    border: none !important;
+}
+
+/* لو في hover أو focus على الـ inputs */
+body.dark-mode .filter-form .form-control:focus {
+    background-color: #3a3a3a !important;
+    color: #fff !important;
+    border-color: #ff6a00 !important; /* إشارة تمييز */
+}
 
 
   </style>
