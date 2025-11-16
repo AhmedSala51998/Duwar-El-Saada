@@ -1255,6 +1255,104 @@ $current_page = basename($_SERVER['PHP_SELF']);
 .dark-mode .search-btn:hover {
     background-color: #1d2738 !important;
 }
+/* ===============================
+   🌙 DARK MODE — Dashboard
+   ضيف كلاس .dark-mode على <body>
+=============================== */
+
+.dark-mode {
+    background-color: #0a0f1c !important;
+    color: #fff !important;
+}
+
+/* -----------------------------
+   الهيدر العلوي في الداشبورد
+------------------------------ */
+.dark-mode .dashboard-header {
+    background: #141b2d !important;
+    color: #fff !important;
+    box-shadow: 0 0 0 transparent !important;
+    border: 1px solid #1e2639 !important;
+}
+
+/* -----------------------------
+   الكارت الأساسي الكبير
+------------------------------ */
+.dark-mode .dashboard-card {
+    background: #141b2d !important;
+    border: 1px solid #1f273b !important;
+    color: #fff !important;
+}
+
+.dark-mode .dashboard-card p,
+.dark-mode .dashboard-card h3 {
+    color: #fff !important;
+}
+
+/* -----------------------------
+   أيقونة اللوجو الكبيرة
+------------------------------ */
+.dark-mode .chef-icon {
+    background: #0a0f1c !important;
+    border-color: #ff6a00 !important;
+}
+
+/* -----------------------------
+   كروت الإحصائيات
+------------------------------ */
+.dark-mode .stat-card {
+    background: #111827 !important;
+    border: 1px solid #1f2937 !important;
+    box-shadow: none !important;
+}
+
+.dark-mode .stat-title {
+    color: #d0d0d0 !important;
+}
+
+.dark-mode .stat-value {
+    color: #fff !important;
+}
+
+.dark-mode .stat-icon {
+    background: rgba(255,106,0,0.15) !important;
+    color: #ff6a00 !important;
+}
+
+/* -----------------------------
+   الشارت كارد
+------------------------------ */
+.dark-mode .chart-card {
+    background: #111827 !important;
+    border: 1px solid #1f2937 !important;
+    color: #fff !important;
+    box-shadow: none !important;
+}
+
+.dark-mode .chart-card h5 {
+    color: #fff !important;
+}
+
+/* -----------------------------
+   مخططات Chart.js
+------------------------------ */
+.dark-mode canvas {
+    background-color: #0e1625 !important;
+    border-radius: 12px;
+    padding: 10px;
+}
+
+/* تصغير ألوان الليجند */
+.dark-mode .chartjs-render-monitor {
+    color: #fff !important;
+}
+
+/* -----------------------------
+   فواصل (HR)
+------------------------------ */
+.dark-mode hr {
+    border-color: #1f2937 !important;
+}
 
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
