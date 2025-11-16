@@ -1157,6 +1157,80 @@ body.dark-mode .alert ul li {
 body.dark-mode hr {
     border-color: #333;
 }
+/* Dark Mode Modals */
+body.dark-mode .modal-content {
+    background-color: #1e1e1e !important; /* خلفية المودال داكنة */
+    color: #ffffff !important; /* نص أبيض */
+}
+
+body.dark-mode .modal-header,
+body.dark-mode .modal-footer {
+    background-color: #2a2a2a !important; /* رأس وتذييل المودال */
+    color: #ffffff !important;
+}
+
+body.dark-mode .form-control,
+body.dark-mode .form-control:focus,
+body.dark-mode textarea {
+    background-color: #2a2a2a !important;
+    color: #ffffff !important;
+    border: 1px solid #444 !important;
+}
+
+body.dark-mode .accordion-button {
+    background-color: #2a2a2a !important;
+    color: #ffffff !important;
+}
+
+body.dark-mode .accordion-button:not(.collapsed) {
+    background-color: #3a3a3a !important;
+    color: #ffffff !important;
+}
+
+body.dark-mode .accordion-body {
+    background-color: #2a2a2a !important;
+    color: #ffffff !important;
+}
+
+body.dark-mode .form-check-label {
+    color: #ffffff !important;
+}
+
+body.dark-mode .btn-close {
+    filter: invert(1); /* لجعل زر الإغلاق مرئي */
+}
+
+/* Badges داخل المودال */
+body.dark-mode .badge {
+    background-color: #333 !important;
+    color: #fff !important;
+}
+
+/* أي Table داخل المودال */
+body.dark-mode .table {
+    color: #ffffff;
+}
+
+body.dark-mode .table th,
+body.dark-mode .table td {
+    border-color: #444 !important;
+}
+
+/* تنسيق أزرار المودال */
+body.dark-mode .btn-outline-warning {
+    color: #ff8800 !important;
+    border-color: #ff8800 !important;
+}
+
+body.dark-mode .btn-outline-danger {
+    color: #ff5555 !important;
+    border-color: #ff5555 !important;
+}
+
+body.dark-mode .btn-outline-success {
+    color: #00cc66 !important;
+    border-color: #00cc66 !important;
+}
 
 
   </style>
