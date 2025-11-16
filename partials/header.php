@@ -890,6 +890,110 @@ body.dark-mode .custom-table thead th {
 body.dark-mode .custom-table tbody tr:nth-child(even) td {
     background-color: #262626 !important;
 }
+/* ============================
+   1) Pagination
+============================ */
+body.dark-mode .pagination .page-link {
+    background-color: #1e1e1e !important;
+    border-color: #333 !important;
+    color: #fff !important;
+}
+
+body.dark-mode .pagination .page-item.active .page-link {
+    background-color: #ff6a00 !important;
+    border-color: #ff6a00 !important;
+    color: #fff !important;
+}
+
+body.dark-mode .pagination .page-item.disabled .page-link {
+    background-color: #2a2a2a !important;
+    color: #777 !important;
+    border-color: #333 !important;
+}
+
+/* ============================
+   2) Placeholder في الدارك مود
+============================ */
+body.dark-mode input::placeholder,
+body.dark-mode textarea::placeholder,
+body.dark-mode select::placeholder {
+    color: #ccc !important;
+    opacity: 1;
+}
+
+/* ============================
+   3) Dropdown (قوائم Bootstrap)
+============================ */
+body.dark-mode .dropdown-menu {
+    background-color: #1e1e1e !important;
+    border-color: #333 !important;
+    color: #fff !important;
+}
+
+body.dark-mode .dropdown-item {
+    color: #fff !important;
+}
+
+body.dark-mode .dropdown-item:hover,
+body.dark-mode .dropdown-item:focus {
+    background-color: #333 !important;
+    color: #fff !important;
+}
+
+/* ============================
+   4) Select2
+============================ */
+body.dark-mode .select2-container--default .select2-selection--single {
+    background-color: #1e1e1e !important;
+    border-color: #333 !important;
+    color: #fff !important;
+}
+
+body.dark-mode .select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #fff !important;
+}
+
+body.dark-mode .select2-container--default .select2-selection--single .select2-selection__placeholder {
+    color: #ccc !important;
+}
+
+body.dark-mode .select2-dropdown {
+    background-color: #1e1e1e !important;
+    border-color: #333 !important;
+}
+
+body.dark-mode .select2-results__option {
+    color: #fff !important;
+}
+
+body.dark-mode .select2-results__option--highlighted {
+    background-color: #333 !important;
+    color: #fff !important;
+}
+
+/* ============================
+   5) Inputs + file input
+============================ */
+body.dark-mode input,
+body.dark-mode textarea,
+body.dark-mode select {
+    background-color: #1e1e1e !important;
+    color: #fff !important;
+    border-color: #333 !important;
+}
+
+body.dark-mode input[type="file"] {
+    background-color: #1e1e1e !important;
+    color: #fff !important;
+}
+
+/* نص اسم الملف المختار */
+body.dark-mode .form-control-file,
+body.dark-mode .custom-file-label {
+    background-color: #1e1e1e !important;
+    color: #fff !important;
+    border-color: #333 !important;
+}
 
 
   </style>
