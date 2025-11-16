@@ -1631,6 +1631,17 @@ $current_page = basename($_SERVER['PHP_SELF']);
     .dark-mode #logoutBtn i {
       color: #fff !important;
     }
+    /* Dark Mode للـ Accordion */
+    body.dark-mode .accordion-button {
+        background-color: #333; /* خلفية داكنة */
+        color: #fff;            /* النص أبيض */
+        border-color: #444;     /* حدود داكنة */
+    }
+
+    /* السهم */
+    body.dark-mode .accordion-button::after {
+        filter: invert(1);      /* يجعل السهم أبيض */
+    }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
 </head>
