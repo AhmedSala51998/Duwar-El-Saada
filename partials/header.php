@@ -1551,7 +1551,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
       color: #fff !important; /* أيقونات الأزرار أبيض */
     }
     /* الزر */
-    #toggleDark {
+    #toggleDarkMobile,#toggleDarkDesktop {
       background: #ff6a00;
       color: #fff;
       border: none;
@@ -1563,13 +1563,21 @@ $current_page = basename($_SERVER['PHP_SELF']);
     }
 
     /* hover effect */
-    #toggleDark:hover {
+    #toggleDarkMobile:hover, #toggleDarkDesktop:hover{
       transform: scale(1.1);
       box-shadow: 0 6px 20px rgba(255,106,0,0.6);
     }
 
     /* فقاعات */
-    #toggleDark .bubble {
+    #toggleDarkMobile .bubble {
+      position: absolute;
+      border-radius: 50%;
+      background-color: rgba(255,255,255,0.5);
+      pointer-events: none;
+      animation: rise 2s infinite;
+      opacity: 0;
+    }
+    #toggleDarkDesktop .bubble {
       position: absolute;
       border-radius: 50%;
       background-color: rgba(255,255,255,0.5);
