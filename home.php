@@ -369,7 +369,13 @@ $assetsByPayer = $pdo->query("SELECT payer_name, COUNT(*) c FROM assets GROUP BY
     </div>
   </div>
 </div>
+<script>
+if (document.documentElement.getAttribute("data-theme") === "dark" || document.documentElement.classList.contains("dark")) {
 
+    Chart.defaults.color = "#fff";            // لون الكلام داخل الشارت
+    Chart.defaults.borderColor = "rgba(255,255,255,0.2)"; // لون المحاور Gridlines
+}
+</script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 new Chart(document.getElementById('purchasesChart'), {
