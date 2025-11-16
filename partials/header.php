@@ -1503,6 +1503,32 @@ $current_page = basename($_SERVER['PHP_SELF']);
         color: #fff !important;
         border-color: #ff6a00 !important; /* إشارة تمييز */
     }
+    /* ====== Dark Mode فقط ====== */
+    body.dark-mode .search-form .input-group {
+      max-width: 250px;
+    }
+
+    body.dark-mode .search-form .input-group-text {
+      background-color: #333; /* خلفية داكنة */
+      color: #fff;            /* أيقون أبيض */
+      border-color: #555;     /* حدود داكنة */
+    }
+
+    body.dark-mode .search-form .form-control {
+      background-color: #222; /* خلفية الداكنة */
+      color: #fff;            /* نص أبيض */
+      border-color: #555;
+    }
+
+    body.dark-mode .search-form button.btn-orange i,
+    body.dark-mode .search-form a.btn-outline-secondary i {
+      color: #fff; /* أيقونات الأزرار أبيض */
+    }
+
+    /* placeholder */
+    body.dark-mode .search-form .form-control::placeholder {
+      color: #bbb;
+    }
     /* الزر */
     #toggleDark {
       background: #ff6a00;
