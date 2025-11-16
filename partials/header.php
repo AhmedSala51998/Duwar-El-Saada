@@ -1111,6 +1111,52 @@ body.dark-mode .modal-content input::placeholder,
 body.dark-mode .modal-content textarea::placeholder {
     color: #bbb !important;
 }
+/* الوضع الداكن للملفات والمودالز */
+body.dark-mode {
+    background-color: #121212; /* خلفية عامة داكنة */
+    color: #ffffff; /* نص أبيض */
+}
+
+/* الدايركت على الملفات */
+body.dark-mode .custom-file-upload {
+    background-color: #1e1e1e;
+    color: #ffffff;
+    border: 1px solid #333;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+}
+
+/* أي نصوص داخل الملفات */
+body.dark-mode .custom-file-upload span,
+body.dark-mode .custom-file-upload i {
+    color: #ffffff;
+}
+
+/* حالة hover للملفات */
+body.dark-mode .custom-file-upload:hover {
+    background-color: #2a2a2a;
+}
+
+/* preview الصور */
+body.dark-mode #preview-inv-main {
+    border: 1px solid #444;
+}
+
+/* الـ alerts */
+body.dark-mode .alert {
+    background-color: #1e1e1e;
+    color: #ffffff;
+    border: 1px solid #333;
+}
+
+/* القوائم داخل الـ alerts */
+body.dark-mode .alert ul li {
+    color: #ffffff;
+}
+
+/* الخطوط والفواصل */
+body.dark-mode hr {
+    border-color: #333;
+}
 
 
   </style>
