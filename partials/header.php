@@ -1648,7 +1648,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
         .print-area, 
         .print-area * {
             color: #000 !important;  /* النص أسود */
-            -webkit-print-color-adjust: exact; /* لتأكيد الطباعة الصحيحة للألوان */
         }
 
         .print-area table th,
