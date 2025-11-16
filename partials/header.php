@@ -1702,11 +1702,9 @@ $current_page = basename($_SERVER['PHP_SELF']);
     <!-- مجموعة أزرار الموبايل (القائمة + الداكن) -->
     <div class="mobile-buttons d-md-none position-fixed top-2 d-flex gap-2" style="left:10px; z-index:1050;">
       <?php if(has_permission('settings.light_and_dark_mode')): ?>
-      <!-- زر الداكن -->
       <button id="toggleDarkMobile" class="btn btn-orange position-relative overflow-hidden rounded-circle shadow p-2"
               style="width:45px; height:45px; display:flex; align-items:center; justify-content:center; font-size:1.2rem;">
-        <i class="bi bi-moon" id="toggleIcon"></i>
-        <!-- فقاعات -->
+        <i class="bi bi-moon" id="toggleIconMobile"></i>
         <span class="bubble bubble1"></span>
         <span class="bubble bubble2"></span>
         <span class="bubble bubble3"></span>
@@ -1742,8 +1740,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
       <?php if(has_permission('settings.light_and_dark_mode')): ?>
       <li>
         <button id="toggleDarkDesktop" class="btn btn-orange position-relative overflow-hidden" style="width:50px; height:50px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.2rem;">
-          <i class="bi bi-moon" id="toggleIcon"></i>
-          <!-- فقاعات -->
+          <i class="bi bi-moon" id="toggleIconDesktop"></i>
           <span class="bubble bubble1"></span>
           <span class="bubble bubble2"></span>
           <span class="bubble bubble3"></span>
