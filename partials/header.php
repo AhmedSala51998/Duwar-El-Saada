@@ -994,6 +994,123 @@ body.dark-mode .custom-file-label {
     color: #fff !important;
     border-color: #333 !important;
 }
+/* ======================================
+   1) مودال بالكامل في الدارك مود
+====================================== */
+body.dark-mode .modal-content {
+    background-color: #1f1f1f !important;
+    color: #fff !important;
+    border-color: #333 !important;
+}
+
+body.dark-mode .modal-header,
+body.dark-mode .modal-footer {
+    background-color: #1c1c1c !important;
+    border-color: #333 !important;
+}
+
+body.dark-mode .modal-title {
+    color: #fff !important;
+}
+
+body.dark-mode .btn-close {
+    filter: invert(1) brightness(200%);
+}
+
+/* ======================================
+   2) الجداول داخل المودال
+====================================== */
+body.dark-mode .modal-content table,
+body.dark-mode .modal-content .table {
+    background-color: #1b1b1b !important;
+    color: #fff !important;
+}
+
+body.dark-mode .modal-content table td,
+body.dark-mode .modal-content table th {
+    background-color: #222 !important;
+    color: #fff !important;
+    border-color: #444 !important;
+}
+
+/* الصفوف بالتبادل */
+body.dark-mode .modal-content table tbody tr:nth-child(even) td {
+    background-color: #262626 !important;
+}
+
+/* ======================================
+   3) زر X أو أي زر أحمر أو رمادي داخل المودال
+====================================== */
+body.dark-mode .btn-danger,
+body.dark-mode .btn-outline-danger {
+    background-color: #a00000 !important;
+    border-color: #cc0000 !important;
+    color: #fff !important;
+}
+
+body.dark-mode .btn-outline-secondary,
+body.dark-mode .btn-secondary {
+    background-color: #2d2d2d !important;
+    color: #fff !important;
+    border-color: #555 !important;
+}
+
+/* ======================================
+   4) INPUT FILE داخل المودال وخارجها
+====================================== */
+body.dark-mode input[type="file"],
+body.dark-mode .custom-file-label,
+body.dark-mode .form-control-file {
+    background-color: #1e1e1e !important;
+    color: #fff !important;
+    border-color: #333 !important;
+}
+
+body.dark-mode input[type="file"]::-webkit-file-upload-button {
+    background-color: #333 !important;
+    color: #fff !important;
+    border-color: #555 !important;
+}
+
+/* ======================================
+   5) BADGE bg-light تتحول دارك مود
+====================================== */
+body.dark-mode .badge.bg-light,
+body.dark-mode .badge.bg-light.text-dark {
+    background-color: #333 !important;
+    color: #fff !important;
+    border-color: #444 !important;
+}
+
+/* ======================================
+   6) SELECT + DROPDOWN داخل المودال
+====================================== */
+body.dark-mode .modal-content select,
+body.dark-mode .modal-content .form-select {
+    background-color: #1e1e1e !important;
+    color: #fff !important;
+    border-color: #444 !important;
+}
+
+body.dark-mode .modal-content option {
+    background-color: #1e1e1e !important;
+    color: #fff !important;
+}
+
+/* ======================================
+   7) أي INPUT أو TEXTAREA داخل المودال
+====================================== */
+body.dark-mode .modal-content input,
+body.dark-mode .modal-content textarea {
+    background-color: #1e1e1e !important;
+    color: #fff !important;
+    border-color: #444 !important;
+}
+
+body.dark-mode .modal-content input::placeholder,
+body.dark-mode .modal-content textarea::placeholder {
+    color: #bbb !important;
+}
 
 
   </style>
