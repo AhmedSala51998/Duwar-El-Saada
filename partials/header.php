@@ -1673,6 +1673,31 @@ $current_page = basename($_SERVER['PHP_SELF']);
     body.dark-mode .btn[data-bs-toggle="offcanvas"] i {
         color: #fff !important; /* اجبار اللون الأبيض في الداكن */
     }
+    .btn-orange.position-relative {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      padding: 0 !important; /* لا تضيف padding غير ضروري */
+      font-size: 1.2rem;
+    }
+
+    .btn-orange.position-relative i {
+      position: relative; /* نضمن بقاء الأيقونة في المنتصف */
+      top: 0;
+      left: 0;
+    }
+
+    .bubble {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.7);
+    }
+
+    .bubble1 { top: 5px; left: 5px; }
+    .bubble2 { bottom: 5px; right: 5px; }
+    .bubble3 { top: 5px; right: 5px; }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
 </head>
@@ -1702,9 +1727,9 @@ $current_page = basename($_SERVER['PHP_SELF']);
     <!-- مجموعة أزرار الموبايل (القائمة + الداكن) -->
     <div class="mobile-buttons d-md-none position-fixed top-2 d-flex gap-2" style="left:10px; z-index:1050;">
       <?php if(has_permission('settings.light_and_dark_mode')): ?>
-      <button id="toggleDarkMobile" class="btn btn-orange position-relative overflow-hidden rounded-circle shadow p-2"
-              style="width:45px; height:45px; display:flex; align-items:center; justify-content:center; font-size:1.2rem;">
-        <i class="bi bi-moon" id="toggleIconMobile"></i>
+      <button id="toggleDarkMobile" class="btn btn-orange position-relative rounded-circle shadow"
+              style="width:50px; height:50px;">
+        <i class="bi bi-moon" id="toggleIconDesktop"></i>
         <span class="bubble bubble1"></span>
         <span class="bubble bubble2"></span>
         <span class="bubble bubble3"></span>
@@ -1739,7 +1764,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
       <?php endif ?>
       <?php if(has_permission('settings.light_and_dark_mode')): ?>
       <li>
-        <button id="toggleDarkDesktop" class="btn btn-orange position-relative overflow-hidden" style="width:50px; height:50px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.2rem;">
+        <button id="toggleDarkDesktop" class="btn btn-orange position-relative rounded-circle shadow"
+                style="width:50px; height:50px;">
           <i class="bi bi-moon" id="toggleIconDesktop"></i>
           <span class="bubble bubble1"></span>
           <span class="bubble bubble2"></span>
