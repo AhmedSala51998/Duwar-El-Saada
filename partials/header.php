@@ -1703,14 +1703,13 @@ $current_page = basename($_SERVER['PHP_SELF']);
     <div class="mobile-buttons d-md-none position-fixed top-2 d-flex gap-2" style="left:10px; z-index:1050;">
       <?php if(has_permission('settings.light_and_dark_mode')): ?>
       <!-- زر الداكن -->
-      <button id="toggleDark" class="btn btn-orange position-relative overflow-hidden rounded-circle shadow p-2"
-              style="width:45px; height:45px; display:flex; align-items:center; justify-content:center; font-size:1.2rem;">
-        <i class="bi bi-moon" id="toggleIcon"></i>
-        <!-- فقاعات -->
-        <span class="bubble bubble1"></span>
-        <span class="bubble bubble2"></span>
-        <span class="bubble bubble3"></span>
-      </button>
+        <button id="toggleDarkMobile" class="btn btn-orange position-relative overflow-hidden rounded-circle shadow p-2"
+                style="width:45px; height:45px; display:flex; align-items:center; justify-content:center; font-size:1.2rem;">
+          <i class="bi bi-moon" id="toggleIconMobile"></i>
+          <span class="bubble bubble1"></span>
+          <span class="bubble bubble2"></span>
+          <span class="bubble bubble3"></span>
+        </button>
       <?php endif ?>
       <!-- زر القائمة -->
       <button class="btn btn-orange rounded-circle shadow p-2"
@@ -1741,9 +1740,9 @@ $current_page = basename($_SERVER['PHP_SELF']);
       <?php endif ?>
       <?php if(has_permission('settings.light_and_dark_mode')): ?>
       <li>
-        <button id="toggleDark" class="btn btn-orange position-relative overflow-hidden" style="width:50px; height:50px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.2rem;">
-          <i class="bi bi-moon" id="toggleIcon"></i>
-          <!-- فقاعات -->
+        <button id="toggleDarkDesktop" class="btn btn-orange position-relative overflow-hidden" 
+                style="width:50px; height:50px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.2rem;">
+          <i class="bi bi-moon" id="toggleIconDesktop"></i>
           <span class="bubble bubble1"></span>
           <span class="bubble bubble2"></span>
           <span class="bubble bubble3"></span>
@@ -1938,32 +1937,40 @@ $current_page = basename($_SERVER['PHP_SELF']);
     });
   </script>
   <script>
-  const toggleBtn = document.getElementById('toggleDark');
-  const toggleIcon = document.getElementById('toggleIcon');
-  const logoutIcon = document.querySelector('#logoutBtn i');
+    // الموبايل
+    const toggleBtnMobile = document.getElementById('toggleDarkMobile');
+    const toggleIconMobile = document.getElementById('toggleIconMobile');
 
-  function updateDarkModeIcon() {
-    if(document.body.classList.contains('dark-mode')){
-      toggleIcon.className = 'bi bi-sun'; // أيقون الشمس لللايت مود
-      toggleIcon.style.color = '#fff';
-      logoutIcon.style.color = '#fff';
-    } else {
-      toggleIcon.className = 'bi bi-moon'; // أيقون القمر للدارك مود
-      toggleIcon.style.color = '';
-      logoutIcon.style.color = '';
+    // الديسكتوب
+    const toggleBtnDesktop = document.getElementById('toggleDarkDesktop');
+    const toggleIconDesktop = document.getElementById('toggleIconDesktop');
+
+    const logoutIcon = document.querySelector('#logoutBtn i');
+
+    function updateDarkModeIcons() {
+      const dark = document.body.classList.contains('dark-mode');
+      // أيقونات الداكن
+      toggleIconMobile.className = dark ? 'bi bi-sun' : 'bi bi-moon';
+      toggleIconDesktop.className = dark ? 'bi bi-sun' : 'bi bi-moon';
+
+      // ألوان الأيقونات
+      toggleIconMobile.style.color = dark ? '#fff' : '';
+      toggleIconDesktop.style.color = dark ? '#fff' : '';
+      logoutIcon.style.color = dark ? '#fff' : '';
     }
-  }
 
-  // عند الضغط
-  toggleBtn.onclick = function() {
-    document.body.classList.toggle("dark-mode");
-    localStorage.setItem("dark-mode", document.body.classList.contains("dark-mode") ? "on" : "off");
-    updateDarkModeIcon();
-  }
+    // عند الضغط على أي زر
+    [toggleBtnMobile, toggleBtnDesktop].forEach(btn => {
+      btn.onclick = function() {
+        document.body.classList.toggle("dark-mode");
+        localStorage.setItem("dark-mode", document.body.classList.contains("dark-mode") ? "on" : "off");
+        updateDarkModeIcons();
+      }
+    });
 
-  // عند تحميل الصفحة
-  if (localStorage.getItem("dark-mode") === "on") {
-    document.body.classList.add("dark-mode");
-  }
-  updateDarkModeIcon();
+    // عند تحميل الصفحة
+    if (localStorage.getItem("dark-mode") === "on") {
+      document.body.classList.add("dark-mode");
+    }
+    updateDarkModeIcons();
   </script>
