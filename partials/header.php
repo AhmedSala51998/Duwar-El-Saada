@@ -1503,88 +1503,87 @@ $current_page = basename($_SERVER['PHP_SELF']);
         color: #fff !important;
         border-color: #ff6a00 !important; /* إشارة تمييز */
     }
-
     /* الزر */
-#toggleDark {
-  background: #ff6a00;
-  color: #fff;
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(255,106,0,0.4);
-  position: relative;
-  overflow: hidden;
-}
+    #toggleDark {
+      background: #ff6a00;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(255,106,0,0.4);
+      position: relative;
+      overflow: hidden;
+    }
 
-/* hover effect */
-#toggleDark:hover {
-  transform: scale(1.1);
-  box-shadow: 0 6px 20px rgba(255,106,0,0.6);
-}
+    /* hover effect */
+    #toggleDark:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 20px rgba(255,106,0,0.6);
+    }
 
-/* فقاعات */
-#toggleDark .bubble {
-  position: absolute;
-  border-radius: 50%;
-  background-color: rgba(255,255,255,0.5);
-  pointer-events: none;
-  animation: rise 2s infinite;
-  opacity: 0;
-}
+    /* فقاعات */
+    #toggleDark .bubble {
+      position: absolute;
+      border-radius: 50%;
+      background-color: rgba(255,255,255,0.5);
+      pointer-events: none;
+      animation: rise 2s infinite;
+      opacity: 0;
+    }
 
-.bubble1 { width: 6px; height: 6px; bottom: 5px; left: 20%; animation-delay: 0s; }
-.bubble2 { width: 8px; height: 8px; bottom: 5px; left: 50%; animation-delay: 0.5s; }
-.bubble3 { width: 4px; height: 4px; bottom: 5px; left: 80%; animation-delay: 1s; }
+    .bubble1 { width: 6px; height: 6px; bottom: 5px; left: 20%; animation-delay: 0s; }
+    .bubble2 { width: 8px; height: 8px; bottom: 5px; left: 50%; animation-delay: 0.5s; }
+    .bubble3 { width: 4px; height: 4px; bottom: 5px; left: 80%; animation-delay: 1s; }
 
-@keyframes rise {
-  0% { transform: translateY(0) scale(0.5); opacity: 1; }
-  80% { opacity: 0.5; }
-  100% { transform: translateY(-50px) scale(1); opacity: 0; }
-}
+    @keyframes rise {
+      0% { transform: translateY(0) scale(0.5); opacity: 1; }
+      80% { opacity: 0.5; }
+      100% { transform: translateY(-50px) scale(1); opacity: 0; }
+    }
 
-/* الزر العام */
-#toggleDark, #logoutBtn {
-  background: #ff6a00;
-  color: #fff;
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(255,106,0,0.4);
-  position: relative;
-  overflow: hidden;
-}
+    /* الزر العام */
+    #toggleDark, #logoutBtn {
+      background: #ff6a00;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(255,106,0,0.4);
+      position: relative;
+      overflow: hidden;
+    }
 
-/* hover effect */
-#toggleDark:hover, #logoutBtn:hover {
-  transform: scale(1.1);
-  box-shadow: 0 6px 20px rgba(255,106,0,0.6);
-}
+    /* hover effect */
+    #toggleDark:hover, #logoutBtn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 20px rgba(255,106,0,0.6);
+    }
 
-/* فقاعات */
-#toggleDark .bubble {
-  position: absolute;
-  border-radius: 50%;
-  background-color: rgba(255,255,255,0.5);
-  pointer-events: none;
-  animation: rise 2s infinite;
-  opacity: 0;
-}
+    /* فقاعات */
+    #toggleDark .bubble {
+      position: absolute;
+      border-radius: 50%;
+      background-color: rgba(255,255,255,0.5);
+      pointer-events: none;
+      animation: rise 2s infinite;
+      opacity: 0;
+    }
 
-.bubble1 { width: 6px; height: 6px; bottom: 5px; left: 20%; animation-delay: 0s; }
-.bubble2 { width: 8px; height: 8px; bottom: 5px; left: 50%; animation-delay: 0.5s; }
-.bubble3 { width: 4px; height: 4px; bottom: 5px; left: 80%; animation-delay: 1s; }
+    .bubble1 { width: 6px; height: 6px; bottom: 5px; left: 20%; animation-delay: 0s; }
+    .bubble2 { width: 8px; height: 8px; bottom: 5px; left: 50%; animation-delay: 0.5s; }
+    .bubble3 { width: 4px; height: 4px; bottom: 5px; left: 80%; animation-delay: 1s; }
 
-@keyframes rise {
-  0% { transform: translateY(0) scale(0.5); opacity: 1; }
-  80% { opacity: 0.5; }
-  100% { transform: translateY(-50px) scale(1); opacity: 0; }
-}
+    @keyframes rise {
+      0% { transform: translateY(0) scale(0.5); opacity: 1; }
+      80% { opacity: 0.5; }
+      100% { transform: translateY(-50px) scale(1); opacity: 0; }
+    }
 
-/* أيقونات في الدارك مود */
-.dark-mode #toggleIcon,
-.dark-mode #logoutBtn i {
-  color: #fff !important;
-}
+    /* أيقونات في الدارك مود */
+    .dark-mode #toggleIcon,
+    .dark-mode #logoutBtn i {
+      color: #fff !important;
+    }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
 </head>
@@ -1646,11 +1645,11 @@ $current_page = basename($_SERVER['PHP_SELF']);
         </button>
       </li>
 
-      <li>
+      <!--<li>
         <a href="logout.php" class="btn btn-orange" id="logoutBtn" style="width:50px; height:50px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.2rem;">
           <i class="bi bi-box-arrow-right"></i>
         </a>
-      </li>
+      </li>-->
 
       <!-- خروج -->
       <li class="nav-item">
