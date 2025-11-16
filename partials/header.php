@@ -1320,6 +1320,22 @@ body.dark-mode #viewPerms<?= $r['id'] ?> .list-group-item {
 body.dark-mode #viewPerms<?= $r['id'] ?> .text-orange {
     color: #ff8800 !important; /* يحافظ على اللون البرتقالي للكود */
 }
+/* فقط في الدارك مود */
+body.dark-mode .dark-perms {
+  background-color: #1e1e1e; /* خلفية داكنة */
+  color: #ffffff;            /* نص أبيض */
+  border-radius: 5px;
+  padding: 10px;
+}
+
+body.dark-mode .dark-perms .list-group-item {
+  background-color: #2a2a2a; /* خلفية عناصر الليست */
+  color: #ffffff;             /* نص أبيض */
+}
+
+body.dark-mode .dark-perms code {
+  color: #ffa500; /* لون الكود لو حابب تظل برتقالي */
+}
 
 
   </style>
