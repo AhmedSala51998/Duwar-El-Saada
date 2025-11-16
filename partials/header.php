@@ -1231,6 +1231,95 @@ body.dark-mode .btn-outline-success {
     color: #00cc66 !important;
     border-color: #00cc66 !important;
 }
+/* Dark Mode for Add Multiple Roles & View Permissions Modals */
+body.dark-mode #addMultipleRoles .modal-content,
+body.dark-mode #viewPerms<?= $r['id'] ?> .modal-content {
+    background-color: #1e1e1e !important;
+    color: #ffffff !important;
+}
+
+/* Header & Footer */
+body.dark-mode #addMultipleRoles .modal-header,
+body.dark-mode #viewPerms<?= $r['id'] ?> .modal-header,
+body.dark-mode #addMultipleRoles .modal-footer,
+body.dark-mode #viewPerms<?= $r['id'] ?> .modal-footer {
+    background-color: #2a2a2a !important;
+    color: #ffffff !important;
+}
+
+/* Inputs, textarea, selects */
+body.dark-mode #addMultipleRoles .form-control,
+body.dark-mode #addMultipleRoles textarea,
+body.dark-mode #viewPerms<?= $r['id'] ?> .form-control,
+body.dark-mode #viewPerms<?= $r['id'] ?> textarea {
+    background-color: #2a2a2a !important;
+    color: #ffffff !important;
+    border: 1px solid #444 !important;
+}
+
+/* Table & checkboxes */
+body.dark-mode #addMultipleRoles .table,
+body.dark-mode #addMultipleRoles .table th,
+body.dark-mode #addMultipleRoles .table td {
+    border-color: #444 !important;
+    color: #ffffff !important;
+}
+
+body.dark-mode #addMultipleRoles .permissions-box,
+body.dark-mode #addMultipleRoles .permissions-box .border,
+body.dark-mode #addMultipleRoles .permissions-box strong,
+body.dark-mode #addMultipleRoles .permissions-box label {
+    background-color: #2a2a2a !important;
+    color: #ffffff !important;
+    border-color: #444 !important;
+}
+
+/* Accordion */
+body.dark-mode #addMultipleRoles .accordion-button,
+body.dark-mode #viewPerms<?= $r['id'] ?> .accordion-button {
+    background-color: #2a2a2a !important;
+    color: #ffffff !important;
+}
+body.dark-mode #addMultipleRoles .accordion-button:not(.collapsed),
+body.dark-mode #viewPerms<?= $r['id'] ?> .accordion-button:not(.collapsed) {
+    background-color: #3a3a3a !important;
+    color: #ffffff !important;
+}
+body.dark-mode #addMultipleRoles .accordion-body,
+body.dark-mode #viewPerms<?= $r['id'] ?> .accordion-body {
+    background-color: #2a2a2a !important;
+    color: #ffffff !important;
+}
+
+/* زراغلاق المودال */
+body.dark-mode #addMultipleRoles .btn-close,
+body.dark-mode #viewPerms<?= $r['id'] ?> .btn-close {
+    filter: invert(1); /* يظهر باللون الأبيض */
+}
+
+/* Badges */
+body.dark-mode #addMultipleRoles .badge,
+body.dark-mode #viewPerms<?= $r['id'] ?> .badge {
+    background-color: #333 !important;
+    color: #fff !important;
+}
+
+/* أيقونات السهم والأيقونات داخل المودال */
+body.dark-mode #addMultipleRoles i,
+body.dark-mode #viewPerms<?= $r['id'] ?> i {
+    color: #ffffff !important;
+}
+
+/* قائمة الصلاحيات في viewPerms */
+body.dark-mode #viewPerms<?= $r['id'] ?> .list-group-item {
+    background-color: #2a2a2a !important;
+    color: #ffffff !important;
+    border-color: #444 !important;
+}
+
+body.dark-mode #viewPerms<?= $r['id'] ?> .text-orange {
+    color: #ff8800 !important; /* يحافظ على اللون البرتقالي للكود */
+}
 
 
   </style>
