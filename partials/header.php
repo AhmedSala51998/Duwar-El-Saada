@@ -1643,21 +1643,18 @@ $current_page = basename($_SERVER['PHP_SELF']);
         filter: invert(1);      /* يجعل السهم أبيض */
     }
     /* ======= اجبار الفاتورة على شكل Light Mode عند الطباعة ======= */
+    /* ======= الطباعة: النصوص سوداء فقط ======= */
     @media print {
-        body.dark-mode * {
-            color: #000 !important;       /* النص أسود */
-            -webkit-print-color-adjust: exact; /* لتأكيد طباعة الألوان */
-        }
-
-        .print-area {
-            background: #fff !important;
-            color: #000 !important;
+        .print-area, 
+        .print-area * {
+            color: #000 !important;  /* النص أسود */
+            -webkit-print-color-adjust: exact; /* لتأكيد الطباعة الصحيحة للألوان */
         }
 
         .print-area table th,
         .print-area table td {
-            border-color: #000 !important;
             color: #000 !important;
+            border-color: #000 !important; /* نحافظ على لون الحدود الحالي */
         }
 
         .invoice-header,
@@ -1665,10 +1662,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
         .invoice-info,
         .total-words {
             color: #000 !important;
-        }
-
-        .invoice-image {
-            border: 1px solid #000 !important;
         }
     }
   </style>
