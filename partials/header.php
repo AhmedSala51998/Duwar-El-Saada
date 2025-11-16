@@ -1664,6 +1664,15 @@ $current_page = basename($_SERVER['PHP_SELF']);
             color: #000 !important;
         }
     }
+    /* أيقونة القائمة في الموبايل */
+    .btn[data-bs-toggle="offcanvas"] i {
+        color: #fff; /* افتراضي أبيض عند الداكن */
+    }
+
+    /* لو تستخدم dark-mode body */
+    body.dark-mode .btn[data-bs-toggle="offcanvas"] i {
+        color: #fff !important; /* اجبار اللون الأبيض في الداكن */
+    }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
 </head>
@@ -1833,17 +1842,19 @@ $current_page = basename($_SERVER['PHP_SELF']);
     </a>
     <?php endif ?>
 
-      <?php if(has_permission('settings.light_and_dark_mode')): ?>
-      <li>
-        <button id="toggleDark" class="btn btn-orange position-relative overflow-hidden" style="width:50px; height:50px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.2rem;">
-          <i class="bi bi-moon" id="toggleIcon"></i>
-          <!-- فقاعات -->
-          <span class="bubble bubble1"></span>
-          <span class="bubble bubble2"></span>
-          <span class="bubble bubble3"></span>
-        </button>
-      </li>
-      <?php endif ?>
+    <!-- زر الداكن / الفاتح في الـ Offcanvas -->
+    <?php if(has_permission('settings.light_and_dark_mode')): ?>
+    <div class="px-2 mt-3 d-flex justify-content-center">
+      <button id="toggleDark" class="btn btn-orange position-relative overflow-hidden"
+              style="width:50px; height:50px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.2rem;">
+        <i class="bi bi-moon" id="toggleIcon"></i>
+        <!-- فقاعات -->
+        <span class="bubble bubble1"></span>
+        <span class="bubble bubble2"></span>
+        <span class="bubble bubble3"></span>
+      </button>
+    </div>
+    <?php endif ?>
 
     <!-- ✅ تسجيل الخروج -->
     <a class="btn btn-logout w-100 mt-2 d-flex align-items-center justify-content-center gap-2" href="<?= BASE_URL ?>/logout.php">
