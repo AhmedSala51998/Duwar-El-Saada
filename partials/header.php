@@ -1703,7 +1703,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
     <div class="mobile-buttons d-md-none position-fixed top-2 d-flex gap-2" style="left:10px; z-index:1050;">
       <?php if(has_permission('settings.light_and_dark_mode')): ?>
       <!-- زر الداكن -->
-      <button id="toggleDark" class="btn btn-orange position-relative overflow-hidden rounded-circle shadow p-2"
+      <button id="toggleDarkMobile" class="btn btn-orange position-relative overflow-hidden rounded-circle shadow p-2"
               style="width:45px; height:45px; display:flex; align-items:center; justify-content:center; font-size:1.2rem;">
         <i class="bi bi-moon" id="toggleIcon"></i>
         <!-- فقاعات -->
@@ -1741,7 +1741,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
       <?php endif ?>
       <?php if(has_permission('settings.light_and_dark_mode')): ?>
       <li>
-        <button id="toggleDark" class="btn btn-orange position-relative overflow-hidden" style="width:50px; height:50px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.2rem;">
+        <button id="toggleDarkDesktop" class="btn btn-orange position-relative overflow-hidden" style="width:50px; height:50px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.2rem;">
           <i class="bi bi-moon" id="toggleIcon"></i>
           <!-- فقاعات -->
           <span class="bubble bubble1"></span>
@@ -1938,32 +1938,35 @@ $current_page = basename($_SERVER['PHP_SELF']);
     });
   </script>
   <script>
-  const toggleBtn = document.getElementById('toggleDark');
-  const toggleIcon = document.getElementById('toggleIcon');
+  const toggleBtns = [
+    {btn: document.getElementById('toggleDarkDesktop'), icon: document.getElementById('toggleIconDesktop')},
+    {btn: document.getElementById('toggleDarkMobile'), icon: document.getElementById('toggleIconMobile')}
+  ];
   const logoutIcon = document.querySelector('#logoutBtn i');
 
-  function updateDarkModeIcon() {
-    if(document.body.classList.contains('dark-mode')){
-      toggleIcon.className = 'bi bi-sun'; // أيقون الشمس لللايت مود
-      toggleIcon.style.color = '#fff';
-      logoutIcon.style.color = '#fff';
-    } else {
-      toggleIcon.className = 'bi bi-moon'; // أيقون القمر للدارك مود
-      toggleIcon.style.color = '';
-      logoutIcon.style.color = '';
-    }
+  function updateDarkModeIcons() {
+    const isDark = document.body.classList.contains('dark-mode');
+    toggleBtns.forEach(t => {
+      if(!t.btn) return;
+      t.icon.className = isDark ? 'bi bi-sun' : 'bi bi-moon';
+      t.icon.style.color = isDark ? '#fff' : '';
+    });
+    logoutIcon.style.color = isDark ? '#fff' : '';
   }
 
-  // عند الضغط
-  toggleBtn.onclick = function() {
-    document.body.classList.toggle("dark-mode");
-    localStorage.setItem("dark-mode", document.body.classList.contains("dark-mode") ? "on" : "off");
-    updateDarkModeIcon();
-  }
+  // عند الضغط على أي زر
+  toggleBtns.forEach(t => {
+    if(!t.btn) return;
+    t.btn.onclick = function() {
+      document.body.classList.toggle('dark-mode');
+      localStorage.setItem('dark-mode', document.body.classList.contains('dark-mode') ? 'on' : 'off');
+      updateDarkModeIcons();
+    }
+  });
 
   // عند تحميل الصفحة
-  if (localStorage.getItem("dark-mode") === "on") {
-    document.body.classList.add("dark-mode");
+  if(localStorage.getItem('dark-mode') === 'on') {
+    document.body.classList.add('dark-mode');
   }
-  updateDarkModeIcon();
+  updateDarkModeIcons();
   </script>
