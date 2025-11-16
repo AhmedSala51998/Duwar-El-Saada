@@ -1336,6 +1336,55 @@ body.dark-mode .dark-perms .list-group-item {
 body.dark-mode .dark-perms code {
   color: #ffa500; /* لون الكود لو حابب تظل برتقالي */
 }
+/* الدارك مود */
+body.dark-mode {
+  background-color: #121212;
+  color: #fff;
+}
+
+/* الكروت الإحصائية */
+body.dark-mode .stat-card,
+body.dark-mode .chart-card,
+body.dark-mode .dashboard-card {
+  background-color: #1e1e1e !important;
+  color: #fff !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* النصوص داخل الكروت */
+body.dark-mode .stat-title,
+body.dark-mode .stat-value,
+body.dark-mode h5 {
+  color: #fff !important;
+}
+
+/* شارتس */
+body.dark-mode canvas {
+  background-color: #1e1e1e !important;
+}
+
+/* مودال عرض الصلاحيات */
+body.dark-mode .modal-content {
+  background-color: #1e1e1e !important;
+  color: #fff !important;
+}
+
+/* الليست داخل المودال */
+body.dark-mode .modal-content .list-group-item {
+  background-color: #2a2a2a !important;
+  color: #fff !important;
+  border: 1px solid #333;
+}
+
+/* الكود برتقالي يبقى واضح */
+body.dark-mode .modal-content code {
+  color: #ffa500 !important;
+}
+
+/* زر الإغلاق */
+body.dark-mode .modal-content .btn-close {
+  filter: invert(1); /* يخلي زر الإغلاق أبيض */
+}
 
 
   </style>
