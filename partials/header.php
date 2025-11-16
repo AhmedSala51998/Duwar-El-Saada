@@ -735,6 +735,135 @@ $current_page = basename($_SERVER['PHP_SELF']);
       }
     }
 
+
+
+
+
+    /* ============================
+    🌙 DARK MODE GLOBAL THEME
+============================ */
+body.dark-mode {
+  background-color: #121212 !important;
+  color: #ffffff !important;
+}
+
+/* النص */
+body.dark-mode * {
+  color: #eaeaea !important;
+}
+
+/* الروابط */
+body.dark-mode a {
+  color: #ff944d !important;
+}
+
+/* النافبار */
+body.dark-mode .custom-navbar {
+  background: rgba(18,18,18,0.9) !important;
+  border-bottom: 1px solid #333 !important;
+}
+
+/* الأيقونات */
+body.dark-mode i {
+  color: #ff944d !important;
+}
+
+/* الخلفيات العامة */
+body.dark-mode .card,
+body.dark-mode .table,
+body.dark-mode .modal-content,
+body.dark-mode .offcanvas,
+body.dark-mode .dropdown-menu,
+body.dark-mode .form-control,
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode textarea {
+  background-color: #1e1e1e !important;
+  color: #fff !important;
+  border-color: #333 !important;
+}
+
+/* الكروت */
+body.dark-mode .card {
+  box-shadow: 0 0 10px rgba(0,0,0,0.5) !important;
+}
+
+/* الجداول */
+body.dark-mode table {
+  color: #fff !important;
+}
+body.dark-mode table tr {
+  background: #1b1b1b !important;
+}
+body.dark-mode table td,
+body.dark-mode table th {
+  border-color: #333 !important;
+}
+
+/* المودال */
+body.dark-mode .modal-header,
+body.dark-mode .modal-footer {
+  border-color: #333 !important;
+}
+
+/* dropdown */
+body.dark-mode .dropdown-menu {
+  background-color: #1f1f1f !important;
+  border-color: #333 !important;
+}
+body.dark-mode .dropdown-item:hover {
+  background-color: #333 !important;
+}
+
+/* البادجات */
+body.dark-mode .role-badge {
+  background: #2c2c2c !important;
+  color: #ff944d !important;
+  border-color: #ff944d !important;
+}
+
+/* السايدبار */
+body.dark-mode .sidebar-link {
+  color: #ddd !important;
+}
+body.dark-mode .sidebar-link:hover,
+body.dark-mode .sidebar-link.active {
+  background: #333 !important;
+  color: #ff944d !important;
+}
+
+/* loader */
+body.dark-mode .loader {
+  background: #121212 !important;
+}
+body.dark-mode .loader-text {
+  color: #ff944d !important;
+}
+
+/* buttons */
+body.dark-mode .btn-logout,
+body.dark-mode .btn-orange {
+  background: #ff6a00 !important;
+  color: white !important;
+}
+body.dark-mode .btn-orange:hover {
+  background: #e65c00 !important;
+}
+
+/* حقول الإدخال */
+body.dark-mode .form-control {
+  background: #1f1f1f !important;
+  color: white !important;
+  border-color: #444 !important;
+}
+
+body.dark-mode .form-control:focus {
+  background: #222 !important;
+  border-color: #ff944d !important;
+  color: #fff !important;
+}
+
+
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
 </head>
@@ -785,6 +914,12 @@ $current_page = basename($_SERVER['PHP_SELF']);
         </a>
       </li>
       <?php endif ?>
+
+      <li>
+        <button id="toggleDark" class="btn btn-orange ms-2">
+          <i class="bi bi-moon"></i>
+        </button>
+      </li>
 
       <!-- خروج -->
       <li class="nav-item">
@@ -967,3 +1102,15 @@ $current_page = basename($_SERVER['PHP_SELF']);
       }
     });
   </script>
+<script>
+document.getElementById('toggleDark').onclick = function() {
+  document.body.classList.toggle("dark-mode");
+  localStorage.setItem("dark-mode", 
+      document.body.classList.contains("dark-mode") ? "on" : "off");
+};
+
+// عند فتح الموقع
+if (localStorage.getItem("dark-mode") === "on") {
+  document.body.classList.add("dark-mode");
+}
+</script>
