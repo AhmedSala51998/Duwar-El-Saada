@@ -1542,7 +1542,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
     }
 
     /* الزر العام */
-    #toggleDark, #logoutBtn {
+    #toggleDark {
       background: #ff6a00;
       color: #fff;
       border: none;
