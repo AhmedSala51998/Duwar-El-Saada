@@ -1644,23 +1644,27 @@ $current_page = basename($_SERVER['PHP_SELF']);
     }
     /* ======= اجبار الفاتورة على شكل Light Mode عند الطباعة ======= */
     /* ======= الطباعة: النصوص سوداء فقط ======= */
+    /* ======= الطباعة: النصوص سوداء فقط ======= */
     @media print {
         .print-area, 
         .print-area * {
-            color: #000 !important;  /* النص أسود */
+            color: #000000 !important;  /* أسود صافي */
+            background: #fff !important; /* الخلفية تبقى بيضاء */
+            -webkit-print-color-adjust: exact; /* تأكيد طباعة اللون الحقيقي */
+            print-color-adjust: exact;
         }
 
         .print-area table th,
         .print-area table td {
-            color: #000 !important;
-            border-color: #000 !important; /* نحافظ على لون الحدود الحالي */
+            color: #000000 !important;
+            border-color: #ccc !important; /* نحافظ على الحدود الحالية */
         }
 
         .invoice-header,
         .invoice-summary,
         .invoice-info,
         .total-words {
-            color: #000 !important;
+            color: #000000 !important;
         }
     }
   </style>
