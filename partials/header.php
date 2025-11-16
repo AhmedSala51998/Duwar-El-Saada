@@ -1686,18 +1686,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
       top: 0;
       left: 0;
     }
-
-    .bubble {
-      position: absolute;
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.7);
-    }
-
-    .bubble1 { top: 5px; left: 5px; }
-    .bubble2 { bottom: 5px; right: 5px; }
-    .bubble3 { top: 5px; right: 5px; }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
 </head>
