@@ -734,782 +734,813 @@ $current_page = basename($_SERVER['PHP_SELF']);
         margin-top: 15px !important;
       }
     }
+    /* ============================
+        🌙 DARK MODE GLOBAL THEME
+    ============================ */
+    body.dark-mode {
+      background-color: #121212 !important;
+      color: #ffffff !important;
+    }
 
+    /* النص */
+    body.dark-mode * {
+      color: #eaeaea !important;
+    }
 
+    /* الروابط */
+    body.dark-mode a {
+      color: #ff944d !important;
+    }
 
+    /* النافبار */
+    body.dark-mode .custom-navbar {
+      background: rgba(18,18,18,0.9) !important;
+      border-bottom: 1px solid #333 !important;
+    }
 
+    /* الأيقونات */
+    body.dark-mode i {
+      color: #ff944d !important;
+    }
+
+    /* الخلفيات العامة */
+    body.dark-mode .card,
+    body.dark-mode .table,
+    body.dark-mode .modal-content,
+    body.dark-mode .offcanvas,
+    body.dark-mode .dropdown-menu,
+    body.dark-mode .form-control,
+    body.dark-mode input,
+    body.dark-mode select,
+    body.dark-mode textarea {
+      background-color: #1e1e1e !important;
+      color: #fff !important;
+      border-color: #333 !important;
+    }
+
+    /* الكروت */
+    body.dark-mode .card {
+      box-shadow: 0 0 10px rgba(0,0,0,0.5) !important;
+    }
+
+    /* الجداول */
+    body.dark-mode table {
+      color: #fff !important;
+    }
+    body.dark-mode table tr {
+      background: #1b1b1b !important;
+    }
+    body.dark-mode table td,
+    body.dark-mode table th {
+      border-color: #333 !important;
+    }
+
+    /* المودال */
+    body.dark-mode .modal-header,
+    body.dark-mode .modal-footer {
+      border-color: #333 !important;
+    }
+
+    /* dropdown */
+    body.dark-mode .dropdown-menu {
+      background-color: #1f1f1f !important;
+      border-color: #333 !important;
+    }
+    body.dark-mode .dropdown-item:hover {
+      background-color: #333 !important;
+    }
+
+    /* البادجات */
+    body.dark-mode .role-badge {
+      background: #2c2c2c !important;
+      color: #ff944d !important;
+      border-color: #ff944d !important;
+    }
+
+    /* السايدبار */
+    body.dark-mode .sidebar-link {
+      color: #ddd !important;
+    }
+    body.dark-mode .sidebar-link:hover,
+    body.dark-mode .sidebar-link.active {
+      background: #333 !important;
+      color: #ff944d !important;
+    }
+
+    /* loader */
+    body.dark-mode .loader {
+      background: #121212 !important;
+    }
+    body.dark-mode .loader-text {
+      color: #ff944d !important;
+    }
+
+    /* buttons */
+    body.dark-mode .btn-logout,
+    body.dark-mode .btn-orange {
+      background: #ff6a00 !important;
+      color: white !important;
+    }
+    body.dark-mode .btn-orange:hover {
+      background: #e65c00 !important;
+    }
+
+    /* حقول الإدخال */
+    body.dark-mode .form-control {
+      background: #1f1f1f !important;
+      color: white !important;
+      border-color: #444 !important;
+    }
+
+    body.dark-mode .form-control:focus {
+      background: #222 !important;
+      border-color: #ff944d !important;
+      color: #fff !important;
+    }
+    /* خلفية الكونتينر */
+    body.dark-mode .table-responsive {
+        background-color: #1a1a1a !important;
+        border-color: #333 !important;
+    }
+
+    /* خلفية الجدول */
+    body.dark-mode .custom-table {
+        background-color: #1a1a1a !important;
+    }
+
+    /* خلايا الجدول */
+    body.dark-mode .custom-table td,
+    body.dark-mode .custom-table th {
+        background-color: #1e1e1e !important;
+        color: #fff !important;
+    }
+
+    /* رأس الجدول */
+    body.dark-mode .custom-table thead th {
+        background-color: #222 !important;
+        color: #fff !important;
+    }
+
+    /* الصفوف */
+    body.dark-mode .custom-table tbody tr:nth-child(even) td {
+        background-color: #262626 !important;
+    }
+    /* ============================
+      1) Pagination
+    ============================ */
+    body.dark-mode .pagination .page-link {
+        background-color: #1e1e1e !important;
+        border-color: #333 !important;
+        color: #fff !important;
+    }
+
+    body.dark-mode .pagination .page-item.active .page-link {
+        background-color: #ff6a00 !important;
+        border-color: #ff6a00 !important;
+        color: #fff !important;
+    }
+
+    body.dark-mode .pagination .page-item.disabled .page-link {
+        background-color: #2a2a2a !important;
+        color: #777 !important;
+        border-color: #333 !important;
+    }
 
     /* ============================
-    🌙 DARK MODE GLOBAL THEME
-============================ */
-body.dark-mode {
-  background-color: #121212 !important;
-  color: #ffffff !important;
-}
-
-/* النص */
-body.dark-mode * {
-  color: #eaeaea !important;
-}
-
-/* الروابط */
-body.dark-mode a {
-  color: #ff944d !important;
-}
-
-/* النافبار */
-body.dark-mode .custom-navbar {
-  background: rgba(18,18,18,0.9) !important;
-  border-bottom: 1px solid #333 !important;
-}
-
-/* الأيقونات */
-body.dark-mode i {
-  color: #ff944d !important;
-}
-
-/* الخلفيات العامة */
-body.dark-mode .card,
-body.dark-mode .table,
-body.dark-mode .modal-content,
-body.dark-mode .offcanvas,
-body.dark-mode .dropdown-menu,
-body.dark-mode .form-control,
-body.dark-mode input,
-body.dark-mode select,
-body.dark-mode textarea {
-  background-color: #1e1e1e !important;
-  color: #fff !important;
-  border-color: #333 !important;
-}
-
-/* الكروت */
-body.dark-mode .card {
-  box-shadow: 0 0 10px rgba(0,0,0,0.5) !important;
-}
-
-/* الجداول */
-body.dark-mode table {
-  color: #fff !important;
-}
-body.dark-mode table tr {
-  background: #1b1b1b !important;
-}
-body.dark-mode table td,
-body.dark-mode table th {
-  border-color: #333 !important;
-}
-
-/* المودال */
-body.dark-mode .modal-header,
-body.dark-mode .modal-footer {
-  border-color: #333 !important;
-}
-
-/* dropdown */
-body.dark-mode .dropdown-menu {
-  background-color: #1f1f1f !important;
-  border-color: #333 !important;
-}
-body.dark-mode .dropdown-item:hover {
-  background-color: #333 !important;
-}
-
-/* البادجات */
-body.dark-mode .role-badge {
-  background: #2c2c2c !important;
-  color: #ff944d !important;
-  border-color: #ff944d !important;
-}
-
-/* السايدبار */
-body.dark-mode .sidebar-link {
-  color: #ddd !important;
-}
-body.dark-mode .sidebar-link:hover,
-body.dark-mode .sidebar-link.active {
-  background: #333 !important;
-  color: #ff944d !important;
-}
-
-/* loader */
-body.dark-mode .loader {
-  background: #121212 !important;
-}
-body.dark-mode .loader-text {
-  color: #ff944d !important;
-}
-
-/* buttons */
-body.dark-mode .btn-logout,
-body.dark-mode .btn-orange {
-  background: #ff6a00 !important;
-  color: white !important;
-}
-body.dark-mode .btn-orange:hover {
-  background: #e65c00 !important;
-}
-
-/* حقول الإدخال */
-body.dark-mode .form-control {
-  background: #1f1f1f !important;
-  color: white !important;
-  border-color: #444 !important;
-}
-
-body.dark-mode .form-control:focus {
-  background: #222 !important;
-  border-color: #ff944d !important;
-  color: #fff !important;
-}
-/* خلفية الكونتينر */
-body.dark-mode .table-responsive {
-    background-color: #1a1a1a !important;
-    border-color: #333 !important;
-}
-
-/* خلفية الجدول */
-body.dark-mode .custom-table {
-    background-color: #1a1a1a !important;
-}
-
-/* خلايا الجدول */
-body.dark-mode .custom-table td,
-body.dark-mode .custom-table th {
-    background-color: #1e1e1e !important;
-    color: #fff !important;
-}
-
-/* رأس الجدول */
-body.dark-mode .custom-table thead th {
-    background-color: #222 !important;
-    color: #fff !important;
-}
-
-/* الصفوف */
-body.dark-mode .custom-table tbody tr:nth-child(even) td {
-    background-color: #262626 !important;
-}
-/* ============================
-   1) Pagination
-============================ */
-body.dark-mode .pagination .page-link {
-    background-color: #1e1e1e !important;
-    border-color: #333 !important;
-    color: #fff !important;
-}
-
-body.dark-mode .pagination .page-item.active .page-link {
-    background-color: #ff6a00 !important;
-    border-color: #ff6a00 !important;
-    color: #fff !important;
-}
-
-body.dark-mode .pagination .page-item.disabled .page-link {
-    background-color: #2a2a2a !important;
-    color: #777 !important;
-    border-color: #333 !important;
-}
-
-/* ============================
-   2) Placeholder في الدارك مود
-============================ */
-body.dark-mode input::placeholder,
-body.dark-mode textarea::placeholder,
-body.dark-mode select::placeholder {
-    color: #ccc !important;
-    opacity: 1;
-}
-
-/* ============================
-   3) Dropdown (قوائم Bootstrap)
-============================ */
-body.dark-mode .dropdown-menu {
-    background-color: #1e1e1e !important;
-    border-color: #333 !important;
-    color: #fff !important;
-}
-
-body.dark-mode .dropdown-item {
-    color: #fff !important;
-}
-
-body.dark-mode .dropdown-item:hover,
-body.dark-mode .dropdown-item:focus {
-    background-color: #333 !important;
-    color: #fff !important;
-}
-
-/* ============================
-   4) Select2
-============================ */
-body.dark-mode .select2-container--default .select2-selection--single {
-    background-color: #1e1e1e !important;
-    border-color: #333 !important;
-    color: #fff !important;
-}
-
-body.dark-mode .select2-container--default .select2-selection--single .select2-selection__rendered {
-    color: #fff !important;
-}
-
-body.dark-mode .select2-container--default .select2-selection--single .select2-selection__placeholder {
-    color: #ccc !important;
-}
-
-body.dark-mode .select2-dropdown {
-    background-color: #1e1e1e !important;
-    border-color: #333 !important;
-}
-
-body.dark-mode .select2-results__option {
-    color: #fff !important;
-}
-
-body.dark-mode .select2-results__option--highlighted {
-    background-color: #333 !important;
-    color: #fff !important;
-}
-
-/* ============================
-   5) Inputs + file input
-============================ */
-body.dark-mode input,
-body.dark-mode textarea,
-body.dark-mode select {
-    background-color: #1e1e1e !important;
-    color: #fff !important;
-    border-color: #333 !important;
-}
-
-body.dark-mode input[type="file"] {
-    background-color: #1e1e1e !important;
-    color: #fff !important;
-}
-
-/* نص اسم الملف المختار */
-body.dark-mode .form-control-file,
-body.dark-mode .custom-file-label {
-    background-color: #1e1e1e !important;
-    color: #fff !important;
-    border-color: #333 !important;
-}
-/* ======================================
-   1) مودال بالكامل في الدارك مود
-====================================== */
-body.dark-mode .modal-content {
-    background-color: #1f1f1f !important;
-    color: #fff !important;
-    border-color: #333 !important;
-}
-
-body.dark-mode .modal-header,
-body.dark-mode .modal-footer {
-    background-color: #1c1c1c !important;
-    border-color: #333 !important;
-}
-
-body.dark-mode .modal-title {
-    color: #fff !important;
-}
-
-body.dark-mode .btn-close {
-    filter: invert(1) brightness(200%);
-}
-
-/* ======================================
-   2) الجداول داخل المودال
-====================================== */
-body.dark-mode .modal-content table,
-body.dark-mode .modal-content .table {
-    background-color: #1b1b1b !important;
-    color: #fff !important;
-}
-
-body.dark-mode .modal-content table td,
-body.dark-mode .modal-content table th {
-    background-color: #222 !important;
-    color: #fff !important;
-    border-color: #444 !important;
-}
-
-/* الصفوف بالتبادل */
-body.dark-mode .modal-content table tbody tr:nth-child(even) td {
-    background-color: #262626 !important;
-}
-
-/* ======================================
-   3) زر X أو أي زر أحمر أو رمادي داخل المودال
-====================================== */
-body.dark-mode .btn-danger,
-body.dark-mode .btn-outline-danger {
-    background-color: #a00000 !important;
-    border-color: #cc0000 !important;
-    color: #fff !important;
-}
-
-body.dark-mode .btn-outline-secondary,
-body.dark-mode .btn-secondary {
-    background-color: #2d2d2d !important;
-    color: #fff !important;
-    border-color: #555 !important;
-}
-
-/* ======================================
-   4) INPUT FILE داخل المودال وخارجها
-====================================== */
-body.dark-mode input[type="file"],
-body.dark-mode .custom-file-label,
-body.dark-mode .form-control-file {
-    background-color: #1e1e1e !important;
-    color: #fff !important;
-    border-color: #333 !important;
-}
-
-body.dark-mode input[type="file"]::-webkit-file-upload-button {
-    background-color: #333 !important;
-    color: #fff !important;
-    border-color: #555 !important;
-}
-
-/* ======================================
-   5) BADGE bg-light تتحول دارك مود
-====================================== */
-body.dark-mode .badge.bg-light,
-body.dark-mode .badge.bg-light.text-dark {
-    background-color: #333 !important;
-    color: #fff !important;
-    border-color: #444 !important;
-}
-
-/* ======================================
-   6) SELECT + DROPDOWN داخل المودال
-====================================== */
-body.dark-mode .modal-content select,
-body.dark-mode .modal-content .form-select {
-    background-color: #1e1e1e !important;
-    color: #fff !important;
-    border-color: #444 !important;
-}
-
-body.dark-mode .modal-content option {
-    background-color: #1e1e1e !important;
-    color: #fff !important;
-}
-
-/* ======================================
-   7) أي INPUT أو TEXTAREA داخل المودال
-====================================== */
-body.dark-mode .modal-content input,
-body.dark-mode .modal-content textarea {
-    background-color: #1e1e1e !important;
-    color: #fff !important;
-    border-color: #444 !important;
-}
-
-body.dark-mode .modal-content input::placeholder,
-body.dark-mode .modal-content textarea::placeholder {
-    color: #bbb !important;
-}
-/* الوضع الداكن للملفات والمودالز */
-body.dark-mode {
-    background-color: #121212; /* خلفية عامة داكنة */
-    color: #ffffff; /* نص أبيض */
-}
-
-/* الدايركت على الملفات */
-body.dark-mode .custom-file-upload {
-    background-color: #1e1e1e;
-    color: #ffffff;
-    border: 1px solid #333;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.5);
-}
-
-/* أي نصوص داخل الملفات */
-body.dark-mode .custom-file-upload span,
-body.dark-mode .custom-file-upload i {
-    color: #ffffff;
-}
-
-/* حالة hover للملفات */
-body.dark-mode .custom-file-upload:hover {
-    background-color: #2a2a2a;
-}
-
-/* preview الصور */
-body.dark-mode #preview-inv-main {
-    border: 1px solid #444;
-}
-
-/* الـ alerts */
-body.dark-mode .alert {
-    background-color: #1e1e1e;
-    color: #ffffff;
-    border: 1px solid #333;
-}
-
-/* القوائم داخل الـ alerts */
-body.dark-mode .alert ul li {
-    color: #ffffff;
-}
-
-/* الخطوط والفواصل */
-body.dark-mode hr {
-    border-color: #333;
-}
-/* Dark Mode Modals */
-body.dark-mode .modal-content {
-    background-color: #1e1e1e !important; /* خلفية المودال داكنة */
-    color: #ffffff !important; /* نص أبيض */
-}
-
-body.dark-mode .modal-header,
-body.dark-mode .modal-footer {
-    background-color: #2a2a2a !important; /* رأس وتذييل المودال */
-    color: #ffffff !important;
-}
-
-body.dark-mode .form-control,
-body.dark-mode .form-control:focus,
-body.dark-mode textarea {
-    background-color: #2a2a2a !important;
-    color: #ffffff !important;
-    border: 1px solid #444 !important;
-}
-
-body.dark-mode .accordion-button {
-    background-color: #2a2a2a !important;
-    color: #ffffff !important;
-}
-
-body.dark-mode .accordion-button:not(.collapsed) {
-    background-color: #3a3a3a !important;
-    color: #ffffff !important;
-}
-
-body.dark-mode .accordion-body {
-    background-color: #2a2a2a !important;
-    color: #ffffff !important;
-}
-
-body.dark-mode .form-check-label {
-    color: #ffffff !important;
-}
-
-body.dark-mode .btn-close {
-    filter: invert(1); /* لجعل زر الإغلاق مرئي */
-}
-
-/* Badges داخل المودال */
-body.dark-mode .badge {
-    background-color: #333 !important;
-    color: #fff !important;
-}
-
-/* أي Table داخل المودال */
-body.dark-mode .table {
-    color: #ffffff;
-}
-
-body.dark-mode .table th,
-body.dark-mode .table td {
-    border-color: #444 !important;
-}
-
-/* تنسيق أزرار المودال */
-body.dark-mode .btn-outline-warning {
-    color: #ff8800 !important;
-    border-color: #ff8800 !important;
-}
-
-body.dark-mode .btn-outline-danger {
-    color: #ff5555 !important;
-    border-color: #ff5555 !important;
-}
-
-body.dark-mode .btn-outline-success {
-    color: #00cc66 !important;
-    border-color: #00cc66 !important;
-}
-/* Dark Mode for Add Multiple Roles & View Permissions Modals */
-body.dark-mode #addMultipleRoles .modal-content,
-body.dark-mode #viewPerms<?= $r['id'] ?> .modal-content {
-    background-color: #1e1e1e !important;
-    color: #ffffff !important;
-}
-
-/* Header & Footer */
-body.dark-mode #addMultipleRoles .modal-header,
-body.dark-mode #viewPerms<?= $r['id'] ?> .modal-header,
-body.dark-mode #addMultipleRoles .modal-footer,
-body.dark-mode #viewPerms<?= $r['id'] ?> .modal-footer {
-    background-color: #2a2a2a !important;
-    color: #ffffff !important;
-}
-
-/* Inputs, textarea, selects */
-body.dark-mode #addMultipleRoles .form-control,
-body.dark-mode #addMultipleRoles textarea,
-body.dark-mode #viewPerms<?= $r['id'] ?> .form-control,
-body.dark-mode #viewPerms<?= $r['id'] ?> textarea {
-    background-color: #2a2a2a !important;
-    color: #ffffff !important;
-    border: 1px solid #444 !important;
-}
-
-/* Table & checkboxes */
-body.dark-mode #addMultipleRoles .table,
-body.dark-mode #addMultipleRoles .table th,
-body.dark-mode #addMultipleRoles .table td {
-    border-color: #444 !important;
-    color: #ffffff !important;
-}
-
-body.dark-mode #addMultipleRoles .permissions-box,
-body.dark-mode #addMultipleRoles .permissions-box .border,
-body.dark-mode #addMultipleRoles .permissions-box strong,
-body.dark-mode #addMultipleRoles .permissions-box label {
-    background-color: #2a2a2a !important;
-    color: #ffffff !important;
-    border-color: #444 !important;
-}
-
-/* Accordion */
-body.dark-mode #addMultipleRoles .accordion-button,
-body.dark-mode #viewPerms<?= $r['id'] ?> .accordion-button {
-    background-color: #2a2a2a !important;
-    color: #ffffff !important;
-}
-body.dark-mode #addMultipleRoles .accordion-button:not(.collapsed),
-body.dark-mode #viewPerms<?= $r['id'] ?> .accordion-button:not(.collapsed) {
-    background-color: #3a3a3a !important;
-    color: #ffffff !important;
-}
-body.dark-mode #addMultipleRoles .accordion-body,
-body.dark-mode #viewPerms<?= $r['id'] ?> .accordion-body {
-    background-color: #2a2a2a !important;
-    color: #ffffff !important;
-}
-
-/* زراغلاق المودال */
-body.dark-mode #addMultipleRoles .btn-close,
-body.dark-mode #viewPerms<?= $r['id'] ?> .btn-close {
-    filter: invert(1); /* يظهر باللون الأبيض */
-}
-
-/* Badges */
-body.dark-mode #addMultipleRoles .badge,
-body.dark-mode #viewPerms<?= $r['id'] ?> .badge {
-    background-color: #333 !important;
-    color: #fff !important;
-}
-
-/* أيقونات السهم والأيقونات داخل المودال */
-body.dark-mode #addMultipleRoles i,
-body.dark-mode #viewPerms<?= $r['id'] ?> i {
-    color: #ffffff !important;
-}
-
-/* قائمة الصلاحيات في viewPerms */
-body.dark-mode #viewPerms<?= $r['id'] ?> .list-group-item {
-    background-color: #2a2a2a !important;
-    color: #ffffff !important;
-    border-color: #444 !important;
-}
-
-body.dark-mode #viewPerms<?= $r['id'] ?> .text-orange {
-    color: #ff8800 !important; /* يحافظ على اللون البرتقالي للكود */
-}
-/* فقط في الدارك مود */
-body.dark-mode .dark-perms {
-  background-color: #1e1e1e; /* خلفية داكنة */
-  color: #ffffff;            /* نص أبيض */
-  border-radius: 5px;
-  padding: 10px;
-}
-
-body.dark-mode .dark-perms .list-group-item {
-  background-color: #2a2a2a; /* خلفية عناصر الليست */
-  color: #ffffff;             /* نص أبيض */
-}
-
-body.dark-mode .dark-perms code {
-  color: #ffa500; /* لون الكود لو حابب تظل برتقالي */
-}
-/* الدارك مود */
-body.dark-mode {
-  background-color: #121212;
+      2) Placeholder في الدارك مود
+    ============================ */
+    body.dark-mode input::placeholder,
+    body.dark-mode textarea::placeholder,
+    body.dark-mode select::placeholder {
+        color: #ccc !important;
+        opacity: 1;
+    }
+
+    /* ============================
+      3) Dropdown (قوائم Bootstrap)
+    ============================ */
+    body.dark-mode .dropdown-menu {
+        background-color: #1e1e1e !important;
+        border-color: #333 !important;
+        color: #fff !important;
+    }
+
+    body.dark-mode .dropdown-item {
+        color: #fff !important;
+    }
+
+    body.dark-mode .dropdown-item:hover,
+    body.dark-mode .dropdown-item:focus {
+        background-color: #333 !important;
+        color: #fff !important;
+    }
+
+    /* ============================
+      4) Select2
+    ============================ */
+    body.dark-mode .select2-container--default .select2-selection--single {
+        background-color: #1e1e1e !important;
+        border-color: #333 !important;
+        color: #fff !important;
+    }
+
+    body.dark-mode .select2-container--default .select2-selection--single .select2-selection__rendered {
+        color: #fff !important;
+    }
+
+    body.dark-mode .select2-container--default .select2-selection--single .select2-selection__placeholder {
+        color: #ccc !important;
+    }
+
+    body.dark-mode .select2-dropdown {
+        background-color: #1e1e1e !important;
+        border-color: #333 !important;
+    }
+
+    body.dark-mode .select2-results__option {
+        color: #fff !important;
+    }
+
+    body.dark-mode .select2-results__option--highlighted {
+        background-color: #333 !important;
+        color: #fff !important;
+    }
+
+    /* ============================
+      5) Inputs + file input
+    ============================ */
+    body.dark-mode input,
+    body.dark-mode textarea,
+    body.dark-mode select {
+        background-color: #1e1e1e !important;
+        color: #fff !important;
+        border-color: #333 !important;
+    }
+
+    body.dark-mode input[type="file"] {
+        background-color: #1e1e1e !important;
+        color: #fff !important;
+    }
+
+    /* نص اسم الملف المختار */
+    body.dark-mode .form-control-file,
+    body.dark-mode .custom-file-label {
+        background-color: #1e1e1e !important;
+        color: #fff !important;
+        border-color: #333 !important;
+    }
+    /* ======================================
+      1) مودال بالكامل في الدارك مود
+    ====================================== */
+    body.dark-mode .modal-content {
+        background-color: #1f1f1f !important;
+        color: #fff !important;
+        border-color: #333 !important;
+    }
+
+    body.dark-mode .modal-header,
+    body.dark-mode .modal-footer {
+        background-color: #1c1c1c !important;
+        border-color: #333 !important;
+    }
+
+    body.dark-mode .modal-title {
+        color: #fff !important;
+    }
+
+    body.dark-mode .btn-close {
+        filter: invert(1) brightness(200%);
+    }
+
+    /* ======================================
+      2) الجداول داخل المودال
+    ====================================== */
+    body.dark-mode .modal-content table,
+    body.dark-mode .modal-content .table {
+        background-color: #1b1b1b !important;
+        color: #fff !important;
+    }
+
+    body.dark-mode .modal-content table td,
+    body.dark-mode .modal-content table th {
+        background-color: #222 !important;
+        color: #fff !important;
+        border-color: #444 !important;
+    }
+
+    /* الصفوف بالتبادل */
+    body.dark-mode .modal-content table tbody tr:nth-child(even) td {
+        background-color: #262626 !important;
+    }
+
+    /* ======================================
+      3) زر X أو أي زر أحمر أو رمادي داخل المودال
+    ====================================== */
+    body.dark-mode .btn-danger,
+    body.dark-mode .btn-outline-danger {
+        background-color: #a00000 !important;
+        border-color: #cc0000 !important;
+        color: #fff !important;
+    }
+
+    body.dark-mode .btn-outline-secondary,
+    body.dark-mode .btn-secondary {
+        background-color: #2d2d2d !important;
+        color: #fff !important;
+        border-color: #555 !important;
+    }
+
+    /* ======================================
+      4) INPUT FILE داخل المودال وخارجها
+    ====================================== */
+    body.dark-mode input[type="file"],
+    body.dark-mode .custom-file-label,
+    body.dark-mode .form-control-file {
+        background-color: #1e1e1e !important;
+        color: #fff !important;
+        border-color: #333 !important;
+    }
+
+    body.dark-mode input[type="file"]::-webkit-file-upload-button {
+        background-color: #333 !important;
+        color: #fff !important;
+        border-color: #555 !important;
+    }
+
+    /* ======================================
+      5) BADGE bg-light تتحول دارك مود
+    ====================================== */
+    body.dark-mode .badge.bg-light,
+    body.dark-mode .badge.bg-light.text-dark {
+        background-color: #333 !important;
+        color: #fff !important;
+        border-color: #444 !important;
+    }
+
+    /* ======================================
+      6) SELECT + DROPDOWN داخل المودال
+    ====================================== */
+    body.dark-mode .modal-content select,
+    body.dark-mode .modal-content .form-select {
+        background-color: #1e1e1e !important;
+        color: #fff !important;
+        border-color: #444 !important;
+    }
+
+    body.dark-mode .modal-content option {
+        background-color: #1e1e1e !important;
+        color: #fff !important;
+    }
+
+    /* ======================================
+      7) أي INPUT أو TEXTAREA داخل المودال
+    ====================================== */
+    body.dark-mode .modal-content input,
+    body.dark-mode .modal-content textarea {
+        background-color: #1e1e1e !important;
+        color: #fff !important;
+        border-color: #444 !important;
+    }
+
+    body.dark-mode .modal-content input::placeholder,
+    body.dark-mode .modal-content textarea::placeholder {
+        color: #bbb !important;
+    }
+    /* الوضع الداكن للملفات والمودالز */
+    body.dark-mode {
+        background-color: #121212; /* خلفية عامة داكنة */
+        color: #ffffff; /* نص أبيض */
+    }
+
+    /* الدايركت على الملفات */
+    body.dark-mode .custom-file-upload {
+        background-color: #1e1e1e;
+        color: #ffffff;
+        border: 1px solid #333;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+    }
+
+    /* أي نصوص داخل الملفات */
+    body.dark-mode .custom-file-upload span,
+    body.dark-mode .custom-file-upload i {
+        color: #ffffff;
+    }
+
+    /* حالة hover للملفات */
+    body.dark-mode .custom-file-upload:hover {
+        background-color: #2a2a2a;
+    }
+
+    /* preview الصور */
+    body.dark-mode #preview-inv-main {
+        border: 1px solid #444;
+    }
+
+    /* الـ alerts */
+    body.dark-mode .alert {
+        background-color: #1e1e1e;
+        color: #ffffff;
+        border: 1px solid #333;
+    }
+
+    /* القوائم داخل الـ alerts */
+    body.dark-mode .alert ul li {
+        color: #ffffff;
+    }
+
+    /* الخطوط والفواصل */
+    body.dark-mode hr {
+        border-color: #333;
+    }
+    /* Dark Mode Modals */
+    body.dark-mode .modal-content {
+        background-color: #1e1e1e !important; /* خلفية المودال داكنة */
+        color: #ffffff !important; /* نص أبيض */
+    }
+
+    body.dark-mode .modal-header,
+    body.dark-mode .modal-footer {
+        background-color: #2a2a2a !important; /* رأس وتذييل المودال */
+        color: #ffffff !important;
+    }
+
+    body.dark-mode .form-control,
+    body.dark-mode .form-control:focus,
+    body.dark-mode textarea {
+        background-color: #2a2a2a !important;
+        color: #ffffff !important;
+        border: 1px solid #444 !important;
+    }
+
+    body.dark-mode .accordion-button {
+        background-color: #2a2a2a !important;
+        color: #ffffff !important;
+    }
+
+    body.dark-mode .accordion-button:not(.collapsed) {
+        background-color: #3a3a3a !important;
+        color: #ffffff !important;
+    }
+
+    body.dark-mode .accordion-body {
+        background-color: #2a2a2a !important;
+        color: #ffffff !important;
+    }
+
+    body.dark-mode .form-check-label {
+        color: #ffffff !important;
+    }
+
+    body.dark-mode .btn-close {
+        filter: invert(1); /* لجعل زر الإغلاق مرئي */
+    }
+
+    /* Badges داخل المودال */
+    body.dark-mode .badge {
+        background-color: #333 !important;
+        color: #fff !important;
+    }
+
+    /* أي Table داخل المودال */
+    body.dark-mode .table {
+        color: #ffffff;
+    }
+
+    body.dark-mode .table th,
+    body.dark-mode .table td {
+        border-color: #444 !important;
+    }
+
+    /* تنسيق أزرار المودال */
+    body.dark-mode .btn-outline-warning {
+        color: #ff8800 !important;
+        border-color: #ff8800 !important;
+    }
+
+    body.dark-mode .btn-outline-danger {
+        color: #ff5555 !important;
+        border-color: #ff5555 !important;
+    }
+
+    body.dark-mode .btn-outline-success {
+        color: #00cc66 !important;
+        border-color: #00cc66 !important;
+    }
+    /* Dark Mode for Add Multiple Roles & View Permissions Modals */
+    body.dark-mode #addMultipleRoles .modal-content,
+    body.dark-mode #viewPerms<?= $r['id'] ?> .modal-content {
+        background-color: #1e1e1e !important;
+        color: #ffffff !important;
+    }
+
+    /* Header & Footer */
+    body.dark-mode #addMultipleRoles .modal-header,
+    body.dark-mode #viewPerms<?= $r['id'] ?> .modal-header,
+    body.dark-mode #addMultipleRoles .modal-footer,
+    body.dark-mode #viewPerms<?= $r['id'] ?> .modal-footer {
+        background-color: #2a2a2a !important;
+        color: #ffffff !important;
+    }
+
+    /* Inputs, textarea, selects */
+    body.dark-mode #addMultipleRoles .form-control,
+    body.dark-mode #addMultipleRoles textarea,
+    body.dark-mode #viewPerms<?= $r['id'] ?> .form-control,
+    body.dark-mode #viewPerms<?= $r['id'] ?> textarea {
+        background-color: #2a2a2a !important;
+        color: #ffffff !important;
+        border: 1px solid #444 !important;
+    }
+
+    /* Table & checkboxes */
+    body.dark-mode #addMultipleRoles .table,
+    body.dark-mode #addMultipleRoles .table th,
+    body.dark-mode #addMultipleRoles .table td {
+        border-color: #444 !important;
+        color: #ffffff !important;
+    }
+
+    body.dark-mode #addMultipleRoles .permissions-box,
+    body.dark-mode #addMultipleRoles .permissions-box .border,
+    body.dark-mode #addMultipleRoles .permissions-box strong,
+    body.dark-mode #addMultipleRoles .permissions-box label {
+        background-color: #2a2a2a !important;
+        color: #ffffff !important;
+        border-color: #444 !important;
+    }
+
+    /* Accordion */
+    body.dark-mode #addMultipleRoles .accordion-button,
+    body.dark-mode #viewPerms<?= $r['id'] ?> .accordion-button {
+        background-color: #2a2a2a !important;
+        color: #ffffff !important;
+    }
+    body.dark-mode #addMultipleRoles .accordion-button:not(.collapsed),
+    body.dark-mode #viewPerms<?= $r['id'] ?> .accordion-button:not(.collapsed) {
+        background-color: #3a3a3a !important;
+        color: #ffffff !important;
+    }
+    body.dark-mode #addMultipleRoles .accordion-body,
+    body.dark-mode #viewPerms<?= $r['id'] ?> .accordion-body {
+        background-color: #2a2a2a !important;
+        color: #ffffff !important;
+    }
+
+    /* زراغلاق المودال */
+    body.dark-mode #addMultipleRoles .btn-close,
+    body.dark-mode #viewPerms<?= $r['id'] ?> .btn-close {
+        filter: invert(1); /* يظهر باللون الأبيض */
+    }
+
+    /* Badges */
+    body.dark-mode #addMultipleRoles .badge,
+    body.dark-mode #viewPerms<?= $r['id'] ?> .badge {
+        background-color: #333 !important;
+        color: #fff !important;
+    }
+
+    /* أيقونات السهم والأيقونات داخل المودال */
+    body.dark-mode #addMultipleRoles i,
+    body.dark-mode #viewPerms<?= $r['id'] ?> i {
+        color: #ffffff !important;
+    }
+
+    /* قائمة الصلاحيات في viewPerms */
+    body.dark-mode #viewPerms<?= $r['id'] ?> .list-group-item {
+        background-color: #2a2a2a !important;
+        color: #ffffff !important;
+        border-color: #444 !important;
+    }
+
+    body.dark-mode #viewPerms<?= $r['id'] ?> .text-orange {
+        color: #ff8800 !important; /* يحافظ على اللون البرتقالي للكود */
+    }
+    /* فقط في الدارك مود */
+    body.dark-mode .dark-perms {
+      background-color: #1e1e1e; /* خلفية داكنة */
+      color: #ffffff;            /* نص أبيض */
+      border-radius: 5px;
+      padding: 10px;
+    }
+
+    body.dark-mode .dark-perms .list-group-item {
+      background-color: #2a2a2a; /* خلفية عناصر الليست */
+      color: #ffffff;             /* نص أبيض */
+    }
+
+    body.dark-mode .dark-perms code {
+      color: #ffa500; /* لون الكود لو حابب تظل برتقالي */
+    }
+    /* الدارك مود */
+    body.dark-mode {
+      background-color: #121212;
+      color: #fff;
+    }
+
+    /* الكروت الإحصائية */
+    body.dark-mode .stat-card,
+    body.dark-mode .chart-card,
+    body.dark-mode .dashboard-card {
+      background-color: #1e1e1e !important;
+      color: #fff !important;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    /* النصوص داخل الكروت */
+    body.dark-mode .stat-title,
+    body.dark-mode .stat-value,
+    body.dark-mode h5 {
+      color: #fff !important;
+    }
+
+    /* شارتس */
+    body.dark-mode canvas {
+      background-color: #1e1e1e !important;
+    }
+
+    /* مودال عرض الصلاحيات */
+    body.dark-mode .modal-content {
+      background-color: #1e1e1e !important;
+      color: #fff !important;
+    }
+
+    /* الليست داخل المودال */
+    body.dark-mode .modal-content .list-group-item {
+      background-color: #2a2a2a !important;
+      color: #fff !important;
+      border: 1px solid #333;
+    }
+
+    /* الكود برتقالي يبقى واضح */
+    body.dark-mode .modal-content code {
+      color: #ffa500 !important;
+    }
+
+    /* زر الإغلاق */
+    body.dark-mode .modal-content .btn-close {
+      filter: invert(1); /* يخلي زر الإغلاق أبيض */
+    }
+    /* ======= Dark Mode للفاتورة ======= */
+    body.dark-mode .print-area {
+        background-color: #1e1e1e !important;
+        color: #fff !important;
+        border-color: #333 !important;
+    }
+
+    body.dark-mode .print-area table th {
+        background-color: #2c2c2c !important;
+        color: #fff !important;
+        border-color: #444 !important;
+    }
+
+    body.dark-mode .print-area table td {
+        background-color: #1e1e1e !important;
+        color: #fff !important;
+        border-color: #444 !important;
+    }
+
+    body.dark-mode .print-area .highlighted-row {
+        background-color: #444d1e !important;
+        box-shadow: 0 0 10px rgba(255, 193, 7, 0.6);
+    }
+
+    body.dark-mode .print-area .blinking {
+        transform: scale(1.03);
+        box-shadow: 0 0 15px rgba(255, 193, 7, 0.9);
+    }
+
+    body.dark-mode .invoice-summary, 
+    body.dark-mode .invoice-info, 
+    body.dark-mode .total-words {
+        color: #fff !important;
+    }
+
+    body.dark-mode .invoice-image {
+        border-color: #555 !important;
+        box-shadow: 1px 1px 5px rgba(0,0,0,0.5);
+    }
+
+    /* select و span الضريبة */
+    body.dark-mode select#vatRate,
+    body.dark-mode #vatRateText {
+        background-color: #2c2c2c !important;
+        color: #fff !important;
+        border-color: #555 !important;
+    }
+
+    /* inputs التاريخ */
+    body.dark-mode #invoiceDate {
+        background-color: #2c2c2c !important;
+        color: #fff !important;
+        border-color: #555 !important;
+    }
+    /* ===== Dark Mode للفلاتر فقط ===== */
+    body.dark-mode .filter-form .form-control {
+        background-color: #2c2c2c !important;
+        color: #fff !important;
+        border: 1px solid #555 !important;
+    }
+
+    body.dark-mode .filter-form .form-label {
+        color: #fff !important;
+    }
+
+    body.dark-mode .filter-form button.btn-warning {
+        background-color: #ff6a00 !important; /* يظل برتقالي */
+        color: #fff !important;
+        border: none !important;
+    }
+    @media print {
+      body * { visibility: hidden; }
+      .print-area, .print-area * { visibility: visible; }
+      .print-area { position: absolute; left: 0; top: 0; width: 100%; }
+
+      /* Force Light Mode styles */
+      .print-area {
+        background-color: #fff !important;
+        color: #000 !important;
+        border-color: #ccc !important;
+      }
+
+      .print-area table th {
+        background-color: #f2f2f2 !important;
+        color: #000 !important;
+        border-color: #ccc !important;
+      }
+
+      .print-area table td {
+        background-color: #fff !important;
+        color: #000 !important;
+        border-color: #ccc !important;
+      }
+    }
+    /* ===== Dark Mode للفلاتر فقط ===== */
+    body.dark-mode .filter-form {
+        background-color: #1e1e1e; /* خلفية عامة للفورم */
+        padding: 15px;
+        border-radius: 8px;
+    }
+
+    body.dark-mode .filter-form .form-control {
+        background-color: #2c2c2c !important; /* Inputs */
+        color: #fff !important;
+        border: 1px solid #555 !important;
+    }
+
+    body.dark-mode .filter-form .form-label {
+        color: #fff !important; /* Labels */
+    }
+
+    body.dark-mode .filter-form button.btn-warning {
+        background-color: #ff6a00 !important; /* يظل برتقالي */
+        color: #fff !important;
+        border: none !important;
+    }
+
+    /* لو في hover أو focus على الـ inputs */
+    body.dark-mode .filter-form .form-control:focus {
+        background-color: #3a3a3a !important;
+        color: #fff !important;
+        border-color: #ff6a00 !important; /* إشارة تمييز */
+    }
+
+    /* الزر */
+#toggleDark {
+  background: #ff6a00;
   color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(255,106,0,0.4);
+  position: relative;
+  overflow: hidden;
 }
 
-/* الكروت الإحصائية */
-body.dark-mode .stat-card,
-body.dark-mode .chart-card,
-body.dark-mode .dashboard-card {
-  background-color: #1e1e1e !important;
-  color: #fff !important;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+/* hover effect */
+#toggleDark:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(255,106,0,0.6);
 }
 
-/* النصوص داخل الكروت */
-body.dark-mode .stat-title,
-body.dark-mode .stat-value,
-body.dark-mode h5 {
-  color: #fff !important;
+/* فقاعات */
+#toggleDark .bubble {
+  position: absolute;
+  border-radius: 50%;
+  background-color: rgba(255,255,255,0.5);
+  pointer-events: none;
+  animation: rise 2s infinite;
+  opacity: 0;
 }
 
-/* شارتس */
-body.dark-mode canvas {
-  background-color: #1e1e1e !important;
-}
+.bubble1 { width: 6px; height: 6px; bottom: 5px; left: 20%; animation-delay: 0s; }
+.bubble2 { width: 8px; height: 8px; bottom: 5px; left: 50%; animation-delay: 0.5s; }
+.bubble3 { width: 4px; height: 4px; bottom: 5px; left: 80%; animation-delay: 1s; }
 
-/* مودال عرض الصلاحيات */
-body.dark-mode .modal-content {
-  background-color: #1e1e1e !important;
-  color: #fff !important;
+@keyframes rise {
+  0% { transform: translateY(0) scale(0.5); opacity: 1; }
+  80% { opacity: 0.5; }
+  100% { transform: translateY(-50px) scale(1); opacity: 0; }
 }
-
-/* الليست داخل المودال */
-body.dark-mode .modal-content .list-group-item {
-  background-color: #2a2a2a !important;
-  color: #fff !important;
-  border: 1px solid #333;
-}
-
-/* الكود برتقالي يبقى واضح */
-body.dark-mode .modal-content code {
-  color: #ffa500 !important;
-}
-
-/* زر الإغلاق */
-body.dark-mode .modal-content .btn-close {
-  filter: invert(1); /* يخلي زر الإغلاق أبيض */
-}
-/* ======= Dark Mode للفاتورة ======= */
-body.dark-mode .print-area {
-    background-color: #1e1e1e !important;
-    color: #fff !important;
-    border-color: #333 !important;
-}
-
-body.dark-mode .print-area table th {
-    background-color: #2c2c2c !important;
-    color: #fff !important;
-    border-color: #444 !important;
-}
-
-body.dark-mode .print-area table td {
-    background-color: #1e1e1e !important;
-    color: #fff !important;
-    border-color: #444 !important;
-}
-
-body.dark-mode .print-area .highlighted-row {
-    background-color: #444d1e !important;
-    box-shadow: 0 0 10px rgba(255, 193, 7, 0.6);
-}
-
-body.dark-mode .print-area .blinking {
-    transform: scale(1.03);
-    box-shadow: 0 0 15px rgba(255, 193, 7, 0.9);
-}
-
-body.dark-mode .invoice-summary, 
-body.dark-mode .invoice-info, 
-body.dark-mode .total-words {
-    color: #fff !important;
-}
-
-body.dark-mode .invoice-image {
-    border-color: #555 !important;
-    box-shadow: 1px 1px 5px rgba(0,0,0,0.5);
-}
-
-/* select و span الضريبة */
-body.dark-mode select#vatRate,
-body.dark-mode #vatRateText {
-    background-color: #2c2c2c !important;
-    color: #fff !important;
-    border-color: #555 !important;
-}
-
-/* inputs التاريخ */
-body.dark-mode #invoiceDate {
-    background-color: #2c2c2c !important;
-    color: #fff !important;
-    border-color: #555 !important;
-}
-/* ===== Dark Mode للفلاتر فقط ===== */
-body.dark-mode .filter-form .form-control {
-    background-color: #2c2c2c !important;
-    color: #fff !important;
-    border: 1px solid #555 !important;
-}
-
-body.dark-mode .filter-form .form-label {
-    color: #fff !important;
-}
-
-body.dark-mode .filter-form button.btn-warning {
-    background-color: #ff6a00 !important; /* يظل برتقالي */
-    color: #fff !important;
-    border: none !important;
-}
-@media print {
-  body * { visibility: hidden; }
-  .print-area, .print-area * { visibility: visible; }
-  .print-area { position: absolute; left: 0; top: 0; width: 100%; }
-
-  /* Force Light Mode styles */
-  .print-area {
-    background-color: #fff !important;
-    color: #000 !important;
-    border-color: #ccc !important;
-  }
-
-  .print-area table th {
-    background-color: #f2f2f2 !important;
-    color: #000 !important;
-    border-color: #ccc !important;
-  }
-
-  .print-area table td {
-    background-color: #fff !important;
-    color: #000 !important;
-    border-color: #ccc !important;
-  }
-}
-/* ===== Dark Mode للفلاتر فقط ===== */
-body.dark-mode .filter-form {
-    background-color: #1e1e1e; /* خلفية عامة للفورم */
-    padding: 15px;
-    border-radius: 8px;
-}
-
-body.dark-mode .filter-form .form-control {
-    background-color: #2c2c2c !important; /* Inputs */
-    color: #fff !important;
-    border: 1px solid #555 !important;
-}
-
-body.dark-mode .filter-form .form-label {
-    color: #fff !important; /* Labels */
-}
-
-body.dark-mode .filter-form button.btn-warning {
-    background-color: #ff6a00 !important; /* يظل برتقالي */
-    color: #fff !important;
-    border: none !important;
-}
-
-/* لو في hover أو focus على الـ inputs */
-body.dark-mode .filter-form .form-control:focus {
-    background-color: #3a3a3a !important;
-    color: #fff !important;
-    border-color: #ff6a00 !important; /* إشارة تمييز */
-}
-
-
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
 </head>
@@ -1562,8 +1593,12 @@ body.dark-mode .filter-form .form-control:focus {
       <?php endif ?>
 
       <li>
-        <button id="toggleDark" class="btn btn-orange ms-2">
-          <i class="bi bi-moon"></i>
+        <button id="toggleDark" class="btn btn-orange position-relative overflow-hidden" style="width:50px; height:50px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.2rem;">
+          <i class="bi bi-moon" id="toggleIcon"></i>
+          <!-- فقاعات -->
+          <span class="bubble bubble1"></span>
+          <span class="bubble bubble2"></span>
+          <span class="bubble bubble3"></span>
         </button>
       </li>
 
@@ -1748,15 +1783,28 @@ body.dark-mode .filter-form .form-control:focus {
       }
     });
   </script>
-<script>
-document.getElementById('toggleDark').onclick = function() {
-  document.body.classList.toggle("dark-mode");
-  localStorage.setItem("dark-mode", 
-      document.body.classList.contains("dark-mode") ? "on" : "off");
-};
+  <script>
+  const toggleBtn = document.getElementById('toggleDark');
+  const toggleIcon = document.getElementById('toggleIcon');
 
-// عند فتح الموقع
-if (localStorage.getItem("dark-mode") === "on") {
-  document.body.classList.add("dark-mode");
-}
-</script>
+  function updateDarkModeIcon() {
+    if(document.body.classList.contains('dark-mode')){
+      toggleIcon.className = 'bi bi-sun'; // أيقون الشمس لللايت مود
+    } else {
+      toggleIcon.className = 'bi bi-moon'; // أيقون القمر للدارك مود
+    }
+  }
+
+  // عند الضغط
+  toggleBtn.onclick = function() {
+    document.body.classList.toggle("dark-mode");
+    localStorage.setItem("dark-mode", document.body.classList.contains("dark-mode") ? "on" : "off");
+    updateDarkModeIcon();
+  }
+
+  // عند تحميل الصفحة
+  if (localStorage.getItem("dark-mode") === "on") {
+    document.body.classList.add("dark-mode");
+  }
+  updateDarkModeIcon();
+  </script>
