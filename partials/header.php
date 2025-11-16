@@ -1439,6 +1439,46 @@ body.dark-mode #invoiceDate {
     color: #fff !important;
     border-color: #555 !important;
 }
+/* ===== Dark Mode للفلاتر فقط ===== */
+body.dark-mode .filter-form .form-control {
+    background-color: #2c2c2c !important;
+    color: #fff !important;
+    border: 1px solid #555 !important;
+}
+
+body.dark-mode .filter-form .form-label {
+    color: #fff !important;
+}
+
+body.dark-mode .filter-form button.btn-warning {
+    background-color: #ff6a00 !important; /* يظل برتقالي */
+    color: #fff !important;
+    border: none !important;
+}
+@media print {
+  body * { visibility: hidden; }
+  .print-area, .print-area * { visibility: visible; }
+  .print-area { position: absolute; left: 0; top: 0; width: 100%; }
+
+  /* Force Light Mode styles */
+  .print-area {
+    background-color: #fff !important;
+    color: #000 !important;
+    border-color: #ccc !important;
+  }
+
+  .print-area table th {
+    background-color: #f2f2f2 !important;
+    color: #000 !important;
+    border-color: #ccc !important;
+  }
+
+  .print-area table td {
+    background-color: #fff !important;
+    color: #000 !important;
+    border-color: #ccc !important;
+  }
+}
 
 
   </style>
