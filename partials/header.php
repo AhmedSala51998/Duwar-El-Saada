@@ -1673,19 +1673,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
     body.dark-mode .btn[data-bs-toggle="offcanvas"] i {
         color: #fff !important; /* اجبار اللون الأبيض في الداكن */
     }
-    .btn-orange.position-relative {
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      padding: 0 !important; /* لا تضيف padding غير ضروري */
-      font-size: 1.2rem;
-    }
-
-    .btn-orange.position-relative i {
-      position: relative; /* نضمن بقاء الأيقونة في المنتصف */
-      top: 0;
-      left: 0;
-    }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
 </head>
@@ -1715,9 +1702,11 @@ $current_page = basename($_SERVER['PHP_SELF']);
     <!-- مجموعة أزرار الموبايل (القائمة + الداكن) -->
     <div class="mobile-buttons d-md-none position-fixed top-2 d-flex gap-2" style="left:10px; z-index:1050;">
       <?php if(has_permission('settings.light_and_dark_mode')): ?>
-      <button id="toggleDarkMobile" class="btn btn-orange position-relative rounded-circle shadow"
-              style="width:50px; height:50px;">
-        <i class="bi bi-moon" id="toggleIconDesktop"></i>
+      <!-- زر الداكن -->
+      <button id="toggleDark" class="btn btn-orange position-relative overflow-hidden rounded-circle shadow p-2"
+              style="width:45px; height:45px; display:flex; align-items:center; justify-content:center; font-size:1.2rem;">
+        <i class="bi bi-moon" id="toggleIcon"></i>
+        <!-- فقاعات -->
         <span class="bubble bubble1"></span>
         <span class="bubble bubble2"></span>
         <span class="bubble bubble3"></span>
@@ -1752,9 +1741,9 @@ $current_page = basename($_SERVER['PHP_SELF']);
       <?php endif ?>
       <?php if(has_permission('settings.light_and_dark_mode')): ?>
       <li>
-        <button id="toggleDarkDesktop" class="btn btn-orange position-relative rounded-circle shadow"
-                style="width:50px; height:50px;">
-          <i class="bi bi-moon" id="toggleIconDesktop"></i>
+        <button id="toggleDark" class="btn btn-orange position-relative overflow-hidden" style="width:50px; height:50px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.2rem;">
+          <i class="bi bi-moon" id="toggleIcon"></i>
+          <!-- فقاعات -->
           <span class="bubble bubble1"></span>
           <span class="bubble bubble2"></span>
           <span class="bubble bubble3"></span>
@@ -1949,35 +1938,32 @@ $current_page = basename($_SERVER['PHP_SELF']);
     });
   </script>
   <script>
-  const toggleBtns = [
-    {btn: document.getElementById('toggleDarkDesktop'), icon: document.getElementById('toggleIconDesktop')},
-    {btn: document.getElementById('toggleDarkMobile'), icon: document.getElementById('toggleIconMobile')}
-  ];
+  const toggleBtn = document.getElementById('toggleDark');
+  const toggleIcon = document.getElementById('toggleIcon');
   const logoutIcon = document.querySelector('#logoutBtn i');
 
-  function updateDarkModeIcons() {
-    const isDark = document.body.classList.contains('dark-mode');
-    toggleBtns.forEach(t => {
-      if(!t.btn) return;
-      t.icon.className = isDark ? 'bi bi-sun' : 'bi bi-moon';
-      t.icon.style.color = isDark ? '#fff' : '';
-    });
-    logoutIcon.style.color = isDark ? '#fff' : '';
+  function updateDarkModeIcon() {
+    if(document.body.classList.contains('dark-mode')){
+      toggleIcon.className = 'bi bi-sun'; // أيقون الشمس لللايت مود
+      toggleIcon.style.color = '#fff';
+      logoutIcon.style.color = '#fff';
+    } else {
+      toggleIcon.className = 'bi bi-moon'; // أيقون القمر للدارك مود
+      toggleIcon.style.color = '';
+      logoutIcon.style.color = '';
+    }
   }
 
-  // عند الضغط على أي زر
-  toggleBtns.forEach(t => {
-    if(!t.btn) return;
-    t.btn.onclick = function() {
-      document.body.classList.toggle('dark-mode');
-      localStorage.setItem('dark-mode', document.body.classList.contains('dark-mode') ? 'on' : 'off');
-      updateDarkModeIcons();
-    }
-  });
+  // عند الضغط
+  toggleBtn.onclick = function() {
+    document.body.classList.toggle("dark-mode");
+    localStorage.setItem("dark-mode", document.body.classList.contains("dark-mode") ? "on" : "off");
+    updateDarkModeIcon();
+  }
 
   // عند تحميل الصفحة
-  if(localStorage.getItem('dark-mode') === 'on') {
-    document.body.classList.add('dark-mode');
+  if (localStorage.getItem("dark-mode") === "on") {
+    document.body.classList.add("dark-mode");
   }
-  updateDarkModeIcons();
+  updateDarkModeIcon();
   </script>
