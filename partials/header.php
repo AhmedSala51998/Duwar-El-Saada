@@ -1885,7 +1885,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
 <div class="container-fluid">
   <div class="row">
     <!-- Sidebar في الديسكتوب -->
-    <aside class="col-lg-2 col-md-3 border-end min-vh-100 d-none d-md-block">
+    <aside class="col-lg-2 col-md-3 border-end min-vh-120 d-none d-md-block">
       <div class="p-3">
         <div class="text-muted small mb-2">القائمة</div>
         <a class="sidebar-link d-block mb-2 <?= $current_page=='home.php'?'active':'' ?>" href="<?= BASE_URL ?>/home.php"><i class="bi bi-house"></i> الرئيسية</a>
