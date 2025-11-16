@@ -862,42 +862,6 @@ body.dark-mode .form-control:focus {
   border-color: #ff944d !important;
   color: #fff !important;
 }
-/* ======================= */
-/*     DARK MODE FIXES     */
-/* ======================= */
-
-[data-theme="dark"] .stat-card,
-html.dark .stat-card {
-    background: #1e1e1e !important;
-    box-shadow: 0 0 10px rgba(0,0,0,0.4) !important;
-}
-
-[data-theme="dark"] .stat-title,
-html.dark .stat-title {
-    color: #bbb !important;
-}
-
-[data-theme="dark"] .stat-value,
-html.dark .stat-value {
-    color: #fff !important;
-}
-
-[data-theme="dark"] .chart-card,
-html.dark .chart-card {
-    background: #1e1e1e !important;
-    box-shadow: 0 0 15px rgba(0,0,0,0.5) !important;
-}
-
-[data-theme="dark"] h5,
-html.dark h5 {
-    color: #fff !important;
-}
-
-/* أي div داخل chart-js */
-[data-theme="dark"] .chart-card canvas,
-html.dark .chart-card canvas {
-    background-color: #1e1e1e !important;
-}
 
 
   </style>
