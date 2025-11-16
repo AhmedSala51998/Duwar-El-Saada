@@ -1549,6 +1549,51 @@ body.dark-mode .invoice-summary-wrapper {
         border-color: #ccc !important;
     }
 }
+/* ================================================
+   🌙 إجبــار الفاتورة كاملة على الداكن داخل الـ DARK MODE
+================================================ */
+
+body.dark-mode .print-area {
+    background: #0f172a !important;   /* خلفية داكنة */
+    color: #fff !important;           /* نص أبيض */
+    border-color: #1e293b !important; 
+}
+
+/* عناوين الفاتورة */
+body.dark-mode .print-area *,
+body.dark-mode .print-area h2,
+body.dark-mode .print-area strong,
+body.dark-mode .print-area span,
+body.dark-mode .print-area div {
+    color: #fff !important;
+}
+
+/* الكروت / الصناديق داخل الفاتورة */
+body.dark-mode .invoice-header,
+body.dark-mode .invoice-info,
+body.dark-mode .invoice-summary,
+body.dark-mode .invoice-summary-wrapper,
+body.dark-mode .total-words {
+    background: transparent !important;
+    color: #fff !important;
+}
+
+/* الصورة */
+body.dark-mode .invoice-image {
+    border: 1px solid #334155 !important;
+    box-shadow: none !important;
+}
+
+/* يخلي كل شيء داخل الفاتورة يتلون */
+body.dark-mode .print-area table th,
+body.dark-mode .print-area table td {
+    color: #fff !important;
+}
+
+/* يمنع الأبيض اللي جاي من inline styles */
+body.dark-mode .print-area[style] {
+    background: #0f172a !important;
+}
 
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
