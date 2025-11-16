@@ -1652,7 +1652,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
       </li>-->
 
       <!-- خروج -->
-      <li class="nav-item">
+      <li class="nav-item" id="logoutBtn">
         <a class="btn btn-logout" href="<?= BASE_URL ?>/logout.php">
           <i class="bi bi-box-arrow-right me-1"></i> خروج
         </a>
