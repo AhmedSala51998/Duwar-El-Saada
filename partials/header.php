@@ -1527,7 +1527,28 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
     /* placeholder */
     body.dark-mode .search-form .form-control::placeholder {
-      color: #bbb;
+          color: #bbb;
+        }
+        /* ====== Dark Mode للبحث ====== */
+    body.dark-mode .search-form .input-group-text {
+      background-color: #333 !important; /* خلفية داكنة */
+      color: #fff !important;            /* أيقون أبيض */
+      border-color: #555 !important;     /* حدود داكنة */
+    }
+
+    body.dark-mode .search-form .form-control {
+      background-color: #222 !important; /* خلفية الداكنة */
+      color: #fff !important;            /* نص أبيض */
+      border-color: #555 !important;
+    }
+
+    body.dark-mode .search-form .form-control::placeholder {
+      color: #bbb !important;
+    }
+
+    body.dark-mode .search-form button.btn-orange i,
+    body.dark-mode .search-form a.btn-outline-secondary i {
+      color: #fff !important; /* أيقونات الأزرار أبيض */
     }
     /* الزر */
     #toggleDark {
