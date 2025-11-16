@@ -1699,11 +1699,29 @@ $current_page = basename($_SERVER['PHP_SELF']);
     </a>
 
     <!-- ✅ زر القائمة على الشمال (يظهر فقط في الموبايل) -->
-    <button class="btn btn-orange d-md-none rounded-circle shadow position-fixed top-2 p-2 z-3"
-            style="width:45px; height:45px; left:10px;"
-            data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu" aria-label="القائمة">
-      <i class="bi bi-list fs-4 text-white"></i>
-    </button>
+    <!-- مجموعة أزرار الموبايل (القائمة + الداكن) -->
+    <div class="mobile-buttons d-md-none position-fixed top-2 d-flex gap-2" style="left:10px; z-index:1050;">
+      
+      <!-- زر القائمة -->
+      <button class="btn btn-orange rounded-circle shadow p-2"
+              style="width:45px; height:45px;"
+              data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu" aria-label="القائمة">
+        <i class="bi bi-list fs-4 text-white"></i>
+      </button>
+
+      <?php if(has_permission('settings.light_and_dark_mode')): ?>
+      <!-- زر الداكن -->
+      <button id="toggleDark" class="btn btn-orange position-relative overflow-hidden rounded-circle shadow p-2"
+              style="width:45px; height:45px; display:flex; align-items:center; justify-content:center; font-size:1.2rem;">
+        <i class="bi bi-moon" id="toggleIcon"></i>
+        <!-- فقاعات -->
+        <span class="bubble bubble1"></span>
+        <span class="bubble bubble2"></span>
+        <span class="bubble bubble3"></span>
+      </button>
+      <?php endif ?>
+
+    </div>
 
     <!-- ✅ العناصر الثابتة في اليمين الكبير -->
     <ul class="navbar-nav ms-auto align-items-lg-center gap-3 d-none d-md-flex">
@@ -1842,22 +1860,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
     </a>
     <?php endif ?>
 
-    <!-- زر الداكن / الفاتح في الـ Offcanvas -->
-    <?php if(has_permission('settings.light_and_dark_mode')): ?>
-    <div class="px-2 mt-3 d-flex justify-content-center">
-      <button id="toggleDark" class="btn btn-orange position-relative overflow-hidden"
-              style="width:50px; height:50px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.2rem;">
-        <i class="bi bi-moon" id="toggleIcon"></i>
-        <!-- فقاعات -->
-        <span class="bubble bubble1"></span>
-        <span class="bubble bubble2"></span>
-        <span class="bubble bubble3"></span>
-      </button>
-    </div>
-    <?php endif ?>
-
     <!-- ✅ تسجيل الخروج -->
-    <a class="btn btn-logout w-100 mt-2 d-flex align-items-center justify-content-center gap-2" href="<?= BASE_URL ?>/logout.php">
+    <a id="logoutBtn" class="btn btn-logout w-100 mt-2 d-flex align-items-center justify-content-center gap-2" href="<?= BASE_URL ?>/logout.php">
       <i class="bi bi-box-arrow-right"></i> خروج
     </a>
 
