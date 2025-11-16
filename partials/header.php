@@ -1701,14 +1701,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
     <!-- ✅ زر القائمة على الشمال (يظهر فقط في الموبايل) -->
     <!-- مجموعة أزرار الموبايل (القائمة + الداكن) -->
     <div class="mobile-buttons d-md-none position-fixed top-2 d-flex gap-2" style="left:10px; z-index:1050;">
-      
-      <!-- زر القائمة -->
-      <button class="btn btn-orange rounded-circle shadow p-2"
-              style="width:45px; height:45px;"
-              data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu" aria-label="القائمة">
-        <i class="bi bi-list fs-4 text-white"></i>
-      </button>
-
       <?php if(has_permission('settings.light_and_dark_mode')): ?>
       <!-- زر الداكن -->
       <button id="toggleDark" class="btn btn-orange position-relative overflow-hidden rounded-circle shadow p-2"
@@ -1720,6 +1712,12 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <span class="bubble bubble3"></span>
       </button>
       <?php endif ?>
+      <!-- زر القائمة -->
+      <button class="btn btn-orange rounded-circle shadow p-2"
+              style="width:45px; height:45px;"
+              data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu" aria-label="القائمة">
+        <i class="bi bi-list fs-4 text-white"></i>
+      </button>
 
     </div>
 
