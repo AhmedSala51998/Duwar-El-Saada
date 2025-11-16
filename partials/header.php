@@ -862,32 +862,36 @@ body.dark-mode .form-control:focus {
   border-color: #ff944d !important;
   color: #fff !important;
 }
-/* أقوى استهداف ممكن للدارك مود */
-[data-theme="dark"] table,
-html.dark table,
-body.dark table {
+/* خلفية الكونتينر بدل bg-white */
+[data-theme="dark"] .table-responsive,
+html.dark .table-responsive,
+body.dark .table-responsive {
+    background-color: #1a1a1a !important;
+    border-color: #333 !important;
+}
+
+/* خلفية الجدول */
+[data-theme="dark"] .custom-table,
+html.dark .custom-table,
+body.dark .custom-table {
     background-color: #1a1a1a !important;
 }
 
-[data-theme="dark"] table tbody tr td,
-html.dark table tbody tr td,
-body.dark table tbody tr td {
+/* خلايا الجدول */
+[data-theme="dark"] .custom-table td,
+[data-theme="dark"] .custom-table th,
+html.dark .custom-table td,
+html.dark .custom-table th,
+body.dark .custom-table td,
+body.dark .custom-table th {
     background-color: #1e1e1e !important;
     color: #fff !important;
 }
 
-[data-theme="dark"] table thead th,
-html.dark table thead th,
-body.dark table thead th {
+/* الرأس */
+[data-theme="dark"] .custom-table thead th {
     background-color: #222 !important;
     color: #fff !important;
-}
-
-/* الصفوف المتبادلة */
-[data-theme="dark"] table tbody tr:nth-child(even) td,
-html.dark table tbody tr:nth-child(even) td,
-body.dark table tbody tr:nth-child(even) td {
-    background-color: #262626 !important;
 }
 
 
