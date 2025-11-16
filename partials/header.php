@@ -1437,6 +1437,118 @@ body.dark-mode .stat-title {
 body.dark-mode .stat-value {
     color: #ffffff !important;
 }
+/* =========================================================
+   🌙 DARK MODE — صفحة الفاتورة بالكامل
+========================================================= */
+
+body.dark-mode .print-area {
+    background: #0f172a !important;
+    color: #fff !important;
+    border-color: #1e293b !important;
+}
+
+/* 🔹 الهيدر والنصوص */
+body.dark-mode .invoice-header *,
+body.dark-mode .invoice-info *,
+body.dark-mode .invoice-summary *,
+body.dark-mode .invoice-serial,
+body.dark-mode .total-words,
+body.dark-mode h2,
+body.dark-mode strong,
+body.dark-mode span,
+body.dark-mode div {
+    color: #fff !important;
+}
+
+/* 🔹 الصورة */
+body.dark-mode .invoice-image {
+    border: 1px solid #334155 !important;
+    box-shadow: none !important;
+}
+
+/* =========================================================
+   🌙 الجدول داخل الفاتورة
+========================================================= */
+
+body.dark-mode table,
+body.dark-mode #invoiceTable {
+    background: #1e293b !important;
+    color: #fff !important;
+    border-color: #334155 !important;
+}
+
+body.dark-mode table th,
+body.dark-mode table td {
+    background: #1e293b !important;
+    color: #fff !important;
+    border: 1px solid #334155 !important;
+}
+
+body.dark-mode table th {
+    background: #0f172a !important;
+    font-weight: bold;
+    color: #fff !important;
+}
+
+/* الصف المميز */
+body.dark-mode .highlighted-row {
+    background-color: #3f3f00 !important;
+    box-shadow: 0 0 10px #999900 !important;
+}
+
+body.dark-mode .blinking {
+    box-shadow: 0 0 15px #ffff33 !important;
+}
+
+/* =========================================================
+   🌙 عناصر الإدخال (input / select)
+========================================================= */
+
+body.dark-mode input[type="date"],
+body.dark-mode select {
+    background: #0f172a !important;
+    color: #fff !important;
+    border: 1px solid #334155 !important;
+}
+
+/* =========================================================
+   🌙 زر الطباعة
+========================================================= */
+
+body.dark-mode .btn-orange {
+    background: #ea580c !important;
+    color: #fff !important;
+}
+
+/* =========================================================
+   🌙 التوتال / الملخص
+========================================================= */
+
+body.dark-mode .invoice-summary {
+    background: #0f172a !important;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+body.dark-mode .invoice-summary-wrapper {
+    background: transparent !important;
+}
+
+/* =========================================================
+   ❗ استثناء الطباعة (Print يجب يفضل أبيض)
+========================================================= */
+
+@media print {
+    body.dark-mode .print-area,
+    body.dark-mode table,
+    body.dark-mode th,
+    body.dark-mode td,
+    body.dark-mode tr {
+        background: #fff !important;
+        color: #000 !important;
+        border-color: #ccc !important;
+    }
+}
 
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
