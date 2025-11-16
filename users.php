@@ -262,7 +262,7 @@ $rows = $stmt->fetchAll();
 
   <div class="d-flex align-items-center gap-2 flex-wrap">
     <!-- 🔍 مربع البحث -->
-    <form method="get" class="d-flex align-items-center gap-2">
+    <form method="get" class="d-flex align-items-center gap-2 search-form">
       <div class="input-group" style="max-width: 250px;">
         <span class="input-group-text bg-white border-orange text-orange">
           <i class="bi bi-search"></i>
