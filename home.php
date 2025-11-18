@@ -6,7 +6,7 @@
 /* ========================= */
 
 body {
-  background: #f3f4f7 !important;
+  /*background: #f3f4f7 !important;*/
   font-family: 'Cairo', sans-serif;
 }
 
