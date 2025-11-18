@@ -28,7 +28,7 @@ body {
   height: 220px;
   background: rgba(255,255,255,0.35);
   border-radius: 50%;
-  top: -30px;
+  top: -60px;
   right: -60px;
   filter: blur(25px);
 }
@@ -50,7 +50,7 @@ body {
 /* ====== اللوجو الطائر (Animated Floating Logo) ====== */
 .floating-logo {
   position: absolute;
-  top: -30px;   /* 👈 بدّلها كده */
+  top: 4px;   /* 👈 بدّلها كده */
   left: 20px;
   width: 90px;
   height: 90px;
