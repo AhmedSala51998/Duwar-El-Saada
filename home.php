@@ -49,7 +49,7 @@ body {
 /* ====== اللوجو الطائر (Animated Floating Logo) ====== */
 .floating-logo {
   position: absolute;
-  top: -1px;   /* 👈 بدّلها كده */
+  top: 4px;   /* 👈 بدّلها كده */
   left: 20px;
   width: 90px;
   height: 90px;
