@@ -1706,19 +1706,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
 
 
-    /* مودال */
-#addAsset .modal-content {
-  background: #1c1c1c;
-  color: #fff;
-  border-radius: 12px;
-  border: 1px solid #333;
-}
-
-#addAsset .modal-header {
-  background: #111;
-  border-bottom: 1px solid #333;
-}
-
 #addAsset .modal-title {
   font-weight: bold;
   font-size: 1.3rem;
@@ -1728,55 +1715,14 @@ $current_page = basename($_SERVER['PHP_SELF']);
   filter: invert(1);
 }
 
-/* اختيار الدافع ومصدر الدفع */
-#addAsset .form-select, 
-#addAsset .form-control {
-  background: #2a2a2a;
-  border: 1px solid #444;
-  color: #fff;
-}
-
 #addAsset .form-select:focus,
 #addAsset .form-control:focus {
   border-color: #ff9d2d;
   box-shadow: 0 0 0 0.25rem rgba(255, 157, 45, 0.3);
 }
 
-/* الجدول */
-#assetsTable {
-  background: #1a1a1a !important;
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-#assetsTable thead th {
-  background: #222;
-  color: #f0f0f0;
-  text-align: center;
-  padding: 14px;
-  font-size: 0.95rem;
-  border-bottom: 1px solid #333 !important;
-}
-
 #assetsTable tbody td {
   padding: 0 !important;
-}
-
-#assetsTable tbody input,
-#assetsTable tbody select {
-  width: 100%;
-  height: 46px;
-  background: #2b2b2b;
-  border: none;
-  border-bottom: 1px solid #3d3d3d;
-  color: #fff;
-  text-align: center;
-}
-
-#assetsTable tbody input:focus,
-#assetsTable tbody select:focus {
-  background: #333;
-  border-bottom: 1px solid #ff9d2d;
 }
 
 /* زر الحذف */
@@ -1806,18 +1752,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
 #addAssetRow:hover {
   background: #ff7f00;
-}
-
-/* رفع صورة الفاتورة */
-.custom-file-upload {
-  background: #2c2c2c;
-  border: 2px dashed #444;
-  padding: 25px;
-  text-align: center;
-  cursor: pointer;
-  border-radius: 12px;
-  display: block;
-  transition: 0.3s ease;
 }
 
 .custom-file-upload:hover {
