@@ -1689,6 +1689,98 @@ $current_page = basename($_SERVER['PHP_SELF']);
     body.dark-mode .btn[data-bs-toggle="offcanvas"] i {
         color: #fff !important; /* اجبار اللون الأبيض في الداكن */
     }
+
+
+
+
+
+
+
+
+
+
+
+
+    /* ====== Sidebar Container ====== */
+aside {
+  background: #0e0e0e;
+  border-right: 1px solid #1f1f1f !important;
+  padding-top: 15px;
+  min-height: 100vh;
+}
+
+/* عنوان القائمة */
+aside .text-muted.small {
+  color: #888 !important;
+  font-size: 0.85rem;
+  padding-left: 8px;
+  letter-spacing: 1px;
+}
+
+/* ====== Links ====== */
+.sidebar-link {
+  padding: 10px 14px;
+  font-size: 0.95rem;
+  border-radius: 8px;
+  color: #e0e0e0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: 0.25s ease;
+  border: 1px solid transparent;
+}
+
+.sidebar-link i {
+  color: #ff8d2c;
+  font-size: 1.1rem;
+  transition: 0.25s;
+}
+
+/* Hover Effect */
+.sidebar-link:hover {
+  background: rgba(255, 140, 40, 0.08);
+  border-color: rgba(255, 140, 40, 0.25);
+  transform: translateX(-4px);
+}
+
+.sidebar-link:hover i {
+  color: #ffa14a;
+}
+
+/* ===== Active State ===== */
+.sidebar-link.active {
+  background: linear-gradient(90deg, #ff8a1f20, #ff8a1f05);
+  border-color: #ff8d2c66;
+  color: #fff !important;
+  font-weight: bold;
+  transform: translateX(-4px);
+}
+
+.sidebar-link.active i {
+  color: #ff9e3c !important;
+}
+
+/* ====== Divider + Settings Header ====== */
+aside hr {
+  border-color: #222;
+}
+
+aside h6 {
+  color: #888 !important;
+  margin-top: 10px;
+  padding-left: 8px;
+  font-size: 0.8rem;
+}
+
+/* Scrollbar للأجهزة الصغيرة */
+aside::-webkit-scrollbar {
+  width: 5px;
+}
+
+aside::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 3px;
+}
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
 </head>
