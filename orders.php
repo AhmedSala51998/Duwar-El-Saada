@@ -731,7 +731,7 @@ document.addEventListener("DOMContentLoaded", function() {
   $('select[name="purchase_id"]').select2({
     width: '100%',
     placeholder: 'ابحث عن المنتج...',
-    allowClear: true,
+    allowClear: false,
     dropdownParent: $('#addOrder')
   });
 });
