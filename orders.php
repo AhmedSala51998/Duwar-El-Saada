@@ -680,7 +680,7 @@ $stocks = $pdo->query("
 
         <div class="modal-body">
           <div class="table-responsive">
-            <table class="odoo-orders-table" id="ordersTable">
+            <table class="odoo-table" id="ordersTable">
               <thead class="table-light">
                 <tr>
                   <th style="width:350px !important">المنتج</th>
