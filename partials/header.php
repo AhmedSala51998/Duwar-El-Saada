@@ -1834,6 +1834,90 @@ body.dark-mode aside::-webkit-scrollbar-thumb {
   background: #333;
 }
 
+
+/* ===========================
+   🔥 Premium Modern Table Style
+   =========================== */
+
+#itemsTable {
+  border-collapse: separate;
+  border-spacing: 0 8px;
+  width: 100%;
+}
+
+#itemsTable thead th {
+  background: #f8fafc;
+  color: #334155;
+  font-weight: 700;
+  font-size: 15px;
+  padding: 14px 10px;
+  border-bottom: 2px solid #e2e8f0;
+  text-align: center;
+}
+
+#itemsTable tbody tr {
+  background: #ffffff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: 0.2s ease;
+}
+
+#itemsTable tbody tr:hover {
+  transform: scale(1.01);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+#itemsTable tbody td {
+  padding: 10px;
+  vertical-align: middle;
+}
+
+#itemsTable input,
+#itemsTable select {
+  border-radius: 10px !important;
+  border: 1px solid #d1d5db !important;
+  padding: 8px 10px;
+  transition: 0.2s;
+}
+
+#itemsTable input:focus,
+#itemsTable select:focus {
+  border-color: #fb923c !important;
+  box-shadow: 0 0 0 3px rgba(251,146,60,0.3);
+}
+
+.remove-row {
+  background: #ef4444 !important;
+  border: none;
+  transition: 0.2s;
+}
+
+.remove-row:hover {
+  background: #dc2626 !important;
+}
+
+#addRow {
+  border-radius: 12px;
+  padding: 10px 18px;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  #itemsTable thead {
+    display: none;
+  }
+  #itemsTable tbody tr {
+    display: block;
+    margin-bottom: 15px;
+  }
+  #itemsTable tbody td {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px;
+  }
+}
+
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
 </head>
