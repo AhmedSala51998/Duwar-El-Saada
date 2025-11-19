@@ -1991,8 +1991,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
     }
 
     #addOrder .select2-container .select2-selection--single {
-        height: 44px !important;
-        padding: -5px 10px !important;
+        height: 42px !important;
+        padding: 0 10px !important;
         border: 1px solid #d1d5db !important;
         border-radius: 7px !important;
         background: #fafafa !important;
@@ -2001,13 +2001,13 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
     /* النص داخل select2 */
     #addOrder .select2-selection__rendered {
-        line-height:44px !important;
+        line-height:42px !important;
         color: inherit !important;
     }
 
     /* السهم */
     #addOrder .select2-selection__arrow {
-       height: 44px !important;
+       height: 42px !important;
     }
 
     #addOrder .select2-container--default .select2-selection--single:focus,
