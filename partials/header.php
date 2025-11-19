@@ -1922,11 +1922,11 @@ $current_page = basename($_SERVER['PHP_SELF']);
     }
 
     /* ============================
-      📱 Mobile Ultra Responsive (Odoo Style)
+      📱 Mobile Responsive (Label on top)
     =============================== */
     @media (max-width: 768px) {
 
-      /* إصلاح خروج المحتوى من المودال */
+      /* إصلاح خروج المودال */
       .modal-dialog {
         margin: 10px !important;
       }
@@ -1935,9 +1935,15 @@ $current_page = basename($_SERVER['PHP_SELF']);
         overflow: hidden;
       }
 
-      /* الجدول يتحول لكروت – شكل Odoo */
+      /* منع أي Scroll أفقي نهائي */
+      .modal-body {
+        overflow-x: hidden !important;
+      }
+
       .odoo-table {
-        border: none;
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 12px;
       }
 
       .odoo-table thead {
@@ -1947,49 +1953,45 @@ $current_page = basename($_SERVER['PHP_SELF']);
       .odoo-table tbody tr {
         display: block;
         background: #fff;
-        margin-bottom: 15px;
         padding: 15px;
         border-radius: 14px;
         box-shadow: 0 4px 14px rgba(0,0,0,0.05);
         border: 1px solid #eee;
+        margin-bottom: 12px;
+        width: 100%;
       }
 
       .odoo-table tbody td {
-        display: flex;
-        justify-content: space-between;
-        padding: 8px 0;
+        display: block;
+        width: 100%;
         border: none !important;
+        margin-bottom: 12px;
       }
 
-      /* عنوان الحقل يظهر داخل كل صف */
-      .odoo-table tbody td::before {
-        content: attr(data-label);
+      /* العنوان الحقيقي فوق الحقل */
+      .mobile-label {
+        font-size: 13px;
         font-weight: 600;
         color: #444;
-        font-size: 13px;
+        margin-bottom: 4px;
+        display: block;
       }
 
-      /* القيمة */
-      .odoo-table tbody td span,
-      .odoo-table tbody td input {
-        font-size: 13px;
-        text-align: left;
-      }
-
-      /* أي input داخل الجدول */
+      /* الحقول */
       .odoo-table tbody td input,
       .odoo-table tbody td select {
-        width: 60%;
-        padding: 6px 8px;
-        border-radius: 8px;
+        width: 100% !important;
+        padding: 10px 12px;
+        border-radius: 10px;
         border: 1px solid #ccc;
+        font-size: 14px;
+        background: #fafafa;
       }
 
-      /* لو فيه زرار حذف آخر الصف */
+      /* زراير الصف */
       .mobile-row-actions {
-        display: flex;
-        justify-content: flex-end;
-        margin-top: 12px;
+        text-align: left;
+        margin-top: 5px;
       }
     }
 
