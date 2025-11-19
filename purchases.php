@@ -635,7 +635,7 @@ $rows = $stmt->fetchAll();
             </div>
           </div>
           <div class="table-responsive">
-            <table class="odoo-table">
+            <table class="odoo-table" id="itemsTable">
               <thead>
                 <tr>
                   <th>البيان</th>
