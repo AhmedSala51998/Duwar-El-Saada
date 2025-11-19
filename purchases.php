@@ -651,18 +651,18 @@ $rows = $stmt->fetchAll();
               </thead>
               <tbody id="itemsTable">
                 <tr>
-                  <td><input name="name[]" class="form-control" required></td>
+                  <td data-label="اسم المنتج"><input name="name[]" class="form-control" required></td>
                   <td>
-                    <select title="نوع الوحدة" name="unit[]" required class="form-select">
+                    <select data-label="نوع الوحدة" title="نوع الوحدة" name="unit[]" required class="form-select">
                       <option>عدد</option>
                       <option>كيلو</option>
                       <option>لتر</option>
                     </select>
                   </td>
-                  <td><input name="package[]" class="form-control" required title="الوحدة"></td> <!-- حقل العبوة -->
-                  <td><input type="number" step="0.001" min="0" name="quantity[]" class="form-control" required></td>
-                  <td><input type="number" step="0.00000001" min="0" name="price[]" required class="form-control"></td>
-                  <td><input type="number" step="0.001" min="0" name="single_package[]" required class="form-control"></td>
+                  <td data-label="الوحدة /  العبوة"><input name="package[]" class="form-control" required title="الوحدة"></td> <!-- حقل العبوة -->
+                  <td data-label="الكمية"><input type="number" step="0.001" min="0" name="quantity[]" class="form-control" required></td>
+                  <td data-label="السعر"><input type="number" step="0.00000001" min="0" name="price[]" required class="form-control"></td>
+                  <td data-label="الكمية بالوحدة"><input type="number" step="0.001" min="0" name="single_package[]" required class="form-control"></td>
                   <!--<td>
                     <select name="payer_name[]" class="form-select payer-select">
                       <option hidden>اختر</option>
@@ -907,17 +907,17 @@ document.getElementById('addRow').addEventListener('click', function() {
   const newRow = document.createElement('tr');
 
   newRow.innerHTML = `
-    <td><input name="name[]" class="form-control" required></td>
-    <td>
+    <td data-label="اسم المنتج"><input name="name[]" class="form-control" required></td>
+    <td data-label="نوع الوحدة">
       <select title="نوع الوحدة" name="unit[]" class="form-select">
         <option>عدد</option>
         <option>كيلو</option><option>لتر</option>
       </select>
     </td>
-    <td><input name="package[]" class="form-control" title="الوحدة"></td>
-    <td><input type="number" step="0.001" min="0" name="quantity[]" class="form-control" required></td>
-    <td><input type="number" step="0.00000001" min="0" name="price[]" class="form-control"></td>
-    <td><input type="number" step="0.001" min="0" name="single_package[]" class="form-control"></td>
+    <td data-label="الوحدة / العبوة"><input name="package[]" class="form-control" title="الوحدة"></td>
+    <td data-label="الكمية"><input type="number" step="0.001" min="0" name="quantity[]" class="form-control" required></td>
+    <td data-label="السعر"><input type="number" step="0.00000001" min="0" name="price[]" class="form-control"></td>
+    <td data-label="الكمية بالوحدة"><input type="number" step="0.001" min="0" name="single_package[]" class="form-control"></td>
     <!--<td>
       <select name="payer_name[]" class="form-select payer-select">
         <option hidden>اختر</option>

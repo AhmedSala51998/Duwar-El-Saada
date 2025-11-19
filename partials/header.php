@@ -1921,14 +1921,23 @@ $current_page = basename($_SERVER['PHP_SELF']);
       background: #ff9e3c;
     }
 
-    /* ======================================================
-    📱 Ultra Premium Odoo-Style Mobile Responsive Table
-    ====================================================== */
-
+    /* ============================
+      📱 Mobile Ultra Responsive (Odoo Style)
+    =============================== */
     @media (max-width: 768px) {
 
+      /* إصلاح خروج المحتوى من المودال */
+      .modal-dialog {
+        margin: 10px !important;
+      }
+      .modal-content {
+        border-radius: 18px;
+        overflow: hidden;
+      }
+
+      /* الجدول يتحول لكروت – شكل Odoo */
       .odoo-table {
-        border: 0 !important;
+        border: none;
       }
 
       .odoo-table thead {
@@ -1937,54 +1946,50 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
       .odoo-table tbody tr {
         display: block;
-        background: #ffffff;
-        margin-bottom: 14px;
-        padding: 16px 14px;
+        background: #fff;
+        margin-bottom: 15px;
+        padding: 15px;
         border-radius: 14px;
-        box-shadow: 0 4px 14px rgba(0,0,0,0.06);
-        border: 1px solid #f1f1f3;
-        transition: 0.25s ease;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.05);
+        border: 1px solid #eee;
       }
 
-      .odoo-table tbody tr:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 6px 18px rgba(0,0,0,0.10);
-      }
-
-      /* كل خانة */
       .odoo-table tbody td {
         display: flex;
         justify-content: space-between;
-        align-items: center;
-        padding: 6px 0;
-        font-size: 15px;
-        border: 0 !important;
+        padding: 8px 0;
+        border: none !important;
       }
 
-      /* عنوان الخانة */
+      /* عنوان الحقل يظهر داخل كل صف */
       .odoo-table tbody td::before {
         content: attr(data-label);
         font-weight: 600;
-        color: #555;
-        font-size: 14px;
-        opacity: 0.8;
+        color: #444;
+        font-size: 13px;
       }
 
       /* القيمة */
-      .odoo-table tbody td span {
-        font-weight: 600;
-        color: #222;
+      .odoo-table tbody td span,
+      .odoo-table tbody td input {
+        font-size: 13px;
+        text-align: left;
       }
 
-      /* للعمود الأخير لو فيه أزرار */
-      .odoo-table tbody td:last-child {
-        justify-content: flex-start;
-        gap: 10px;
+      /* أي input داخل الجدول */
+      .odoo-table tbody td input,
+      .odoo-table tbody td select {
+        width: 60%;
+        padding: 6px 8px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
       }
 
-      .odoo-table tbody td:last-child button,
-      .odoo-table tbody td:last-child a {
-        flex: none !important;
+      /* لو فيه زرار حذف آخر الصف */
+      .mobile-row-actions {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 12px;
       }
     }
 
