@@ -1701,243 +1701,243 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
 
 
-/* ===================== */
-/*      LIGHT MODE       */
-/* ===================== */
+    /* ===================== */
+    /*      LIGHT MODE       */
+    /* ===================== */
 
-aside {
-  background: #ffffff;
-  border-right: 1px solid #e6e6e6 !important;
-  padding-top: 15px;
-  min-height: 100vh;
-}
+    aside {
+      background: #ffffff;
+      border-right: 1px solid #e6e6e6 !important;
+      padding-top: 15px;
+      min-height: 100vh;
+    }
 
-/* العنوان */
-aside .text-muted.small {
-  color: #8a8a8a !important;
-  font-size: 0.85rem;
-  padding-left: 10px;
-  font-weight: 600;
-}
+    /* العنوان */
+    aside .text-muted.small {
+      color: #8a8a8a !important;
+      font-size: 0.85rem;
+      padding-left: 10px;
+      font-weight: 600;
+    }
 
-/* روابط السايد بار */
-.sidebar-link {
-  padding: 10px 14px;
-  font-size: 0.95rem;
-  color: #333;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  transition: 0.25s ease;
-  border: 1px solid transparent;
-}
+    /* روابط السايد بار */
+    .sidebar-link {
+      padding: 10px 14px;
+      font-size: 0.95rem;
+      color: #333;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: 0.25s ease;
+      border: 1px solid transparent;
+    }
 
-.sidebar-link i {
-  color: #ff8a1f;
-  font-size: 1.1rem;
-  transition: 0.25s ease;
-}
+    .sidebar-link i {
+      color: #ff8a1f;
+      font-size: 1.1rem;
+      transition: 0.25s ease;
+    }
 
-/* Hover Light */
-.sidebar-link:hover {
-  background: rgba(255, 138, 31, 0.08);
-  border-color: rgba(255, 138, 31, 0.25);
-  transform: translateX(-4px);
-}
+    /* Hover Light */
+    .sidebar-link:hover {
+      background: rgba(255, 138, 31, 0.08);
+      border-color: rgba(255, 138, 31, 0.25);
+      transform: translateX(-4px);
+    }
 
-.sidebar-link:hover i {
-  color: #ff993d;
-}
+    .sidebar-link:hover i {
+      color: #ff993d;
+    }
 
-/* Active */
-.sidebar-link.active {
-  background: rgba(255, 138, 31, 0.15);
-  border-color: rgba(255, 138, 31, 0.3);
-  font-weight: bold;
-  color: #222 !important;
-}
+    /* Active */
+    .sidebar-link.active {
+      background: rgba(255, 138, 31, 0.15);
+      border-color: rgba(255, 138, 31, 0.3);
+      font-weight: bold;
+      color: #222 !important;
+    }
 
-.sidebar-link.active i {
-  color: #ff8a1f !important;
-}
+    .sidebar-link.active i {
+      color: #ff8a1f !important;
+    }
 
-/* Divider */
-aside hr {
-  border-color: #e3e3e3;
-}
+    /* Divider */
+    aside hr {
+      border-color: #e3e3e3;
+    }
 
-/* عنوان الإعدادات */
-aside h6 {
-  color: #8a8a8a !important;
-  margin-top: 10px;
-  padding-left: 10px;
-  font-size: 0.82rem;
-  font-weight: 600;
-}
+    /* عنوان الإعدادات */
+    aside h6 {
+      color: #8a8a8a !important;
+      margin-top: 10px;
+      padding-left: 10px;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
 
-/* Scrollbar */
-aside::-webkit-scrollbar {
-  width: 6px;
-}
+    /* Scrollbar */
+    aside::-webkit-scrollbar {
+      width: 6px;
+    }
 
-aside::-webkit-scrollbar-thumb {
-  background: #cfcfcf;
-  border-radius: 4px;
-}
-/* ===================== */
-/*       DARK MODE       */
-/* ===================== */
+    aside::-webkit-scrollbar-thumb {
+      background: #cfcfcf;
+      border-radius: 4px;
+    }
+    /* ===================== */
+    /*       DARK MODE       */
+    /* ===================== */
 
-body.dark-mode aside {
-  background: #0f0f0f;
-  border-right: 1px solid #1f1f1f !important;
-}
+    body.dark-mode aside {
+      background: #0f0f0f;
+      border-right: 1px solid #1f1f1f !important;
+    }
 
-body.dark-mode .text-muted.small,
-body.dark-mode aside h6 {
-  color: #888 !important;
-}
+    body.dark-mode .text-muted.small,
+    body.dark-mode aside h6 {
+      color: #888 !important;
+    }
 
-body.dark-mode .sidebar-link {
-  color: #e0e0e0;
-  border-color: transparent;
-}
+    body.dark-mode .sidebar-link {
+      color: #e0e0e0;
+      border-color: transparent;
+    }
 
-body.dark-mode .sidebar-link i {
-  color: #ff8d2c;
-}
+    body.dark-mode .sidebar-link i {
+      color: #ff8d2c;
+    }
 
-/* Hover */
-body.dark-mode .sidebar-link:hover {
-  background: rgba(255, 140, 40, 0.08);
-  border-color: rgba(255, 140, 40, 0.25);
-}
+    /* Hover */
+    body.dark-mode .sidebar-link:hover {
+      background: rgba(255, 140, 40, 0.08);
+      border-color: rgba(255, 140, 40, 0.25);
+    }
 
-body.dark-mode .sidebar-link:hover i {
-  color: #ffa14a;
-}
+    body.dark-mode .sidebar-link:hover i {
+      color: #ffa14a;
+    }
 
-/* Active */
-body.dark-mode .sidebar-link.active {
-  background: linear-gradient(90deg, #ff8a1f25, #ff8a1f10);
-  border-color: #ff8d2c55;
-  color: #fff !important;
-}
+    /* Active */
+    body.dark-mode .sidebar-link.active {
+      background: linear-gradient(90deg, #ff8a1f25, #ff8a1f10);
+      border-color: #ff8d2c55;
+      color: #fff !important;
+    }
 
-body.dark-mode .sidebar-link.active i {
-  color: #ff9e3c !important;
-}
+    body.dark-mode .sidebar-link.active i {
+      color: #ff9e3c !important;
+    }
 
-/* Scrollbar */
-body.dark-mode aside::-webkit-scrollbar-thumb {
-  background: #333;
-}
+    /* Scrollbar */
+    body.dark-mode aside::-webkit-scrollbar-thumb {
+      background: #333;
+    }
 
 
-/* =======================================
-   🌟 Odoo-like Enterprise Table Styling
-   ======================================= */
+    /* =======================================
+      🌟 Odoo-like Enterprise Table Styling
+      ======================================= */
 
-.odoo-table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0 10px;
-  font-family: "Cairo", sans-serif;
-}
+    .odoo-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 10px;
+      font-family: "Cairo", sans-serif;
+    }
 
-/* ===== Header ===== */
-.odoo-table thead th {
-  background: #f3f4f6;
-  padding: 14px 10px;
-  color: #374151;
-  font-size: 14px;
-  font-weight: 700;
-  border-bottom: 1px solid #e5e7eb;
-  text-align: center;
-}
+    /* ===== Header ===== */
+    .odoo-table thead th {
+      background: #f3f4f6;
+      padding: 14px 10px;
+      color: #ff9e3c;
+      font-size: 14px;
+      font-weight: 700;
+      border-bottom: 1px solid #e5e7eb;
+      text-align: center;
+    }
 
-/* ===== Rows ===== */
-.odoo-table tbody tr {
-  background: #ffffff;
-  border-radius: 14px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-  transition: 0.15s ease;
-}
+    /* ===== Rows ===== */
+    .odoo-table tbody tr {
+      background: #ffffff;
+      border-radius: 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      transition: 0.15s ease;
+    }
 
-.odoo-table tbody tr:hover {
-  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
-}
+    .odoo-table tbody tr:hover {
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+    }
 
-/* ===== Cells ===== */
-.odoo-table tbody td {
-  padding: 12px;
-  vertical-align: middle;
-}
+    /* ===== Cells ===== */
+    .odoo-table tbody td {
+      padding: 12px;
+      vertical-align: middle;
+    }
 
-.odoo-table input,
-.odoo-table select {
-  border: 1px solid #d1d5db !important;
-  padding: 8px 10px;
-  border-radius: 10px !important;
-  font-size: 14px;
-  transition: 0.2s;
-  background: #fafafa;
-}
+    .odoo-table input,
+    .odoo-table select {
+      border: 1px solid #d1d5db !important;
+      padding: 8px 10px;
+      border-radius: 10px !important;
+      font-size: 14px;
+      transition: 0.2s;
+      background: #fafafa;
+    }
 
-.odoo-table input:focus,
-.odoo-table select:focus {
-  background: #fff;
-  border-color: #7c3aed !important; /* لون أودو */
-  box-shadow: 0 0 0 3px rgba(124,58,237,0.25);
-}
+    .odoo-table input:focus,
+    .odoo-table select:focus {
+      background: #fff;
+      border-color: #ff9e3c !important; /* لون أودو */
+      box-shadow: 0 0 0 3px rgba(124,58,237,0.25);
+    }
 
-/* زر الإزالة */
-.remove-row {
-  background: #ef4444 !important;
-  border: none;
-  padding: 6px 10px;
-  border-radius: 8px;
-  transition: 0.2s;
-}
+    /* زر الإزالة */
+    .remove-row {
+      background: #ef4444 !important;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 8px;
+      transition: 0.2s;
+    }
 
-.remove-row:hover {
-  background: #dc2626 !important;
-}
+    .remove-row:hover {
+      background: #dc2626 !important;
+    }
 
-/* زر إضافة صف */
-#addRow {
-  background: #7c3aed;
-  color: #fff;
-  border: none;
-  margin-top: 10px;
-  padding: 10px 18px;
-  border-radius: 10px;
-  font-weight: 600;
-  transition: 0.2s;
-}
+    /* زر إضافة صف */
+    #addRow {
+      background: #ff9e3c;
+      color: #fff;
+      border: none;
+      margin-top: 10px;
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-weight: 600;
+      transition: 0.2s;
+    }
 
-#addRow:hover {
-  background: #6d28d9;
-}
+    #addRow:hover {
+      background: #ff9e3c;
+    }
 
-/* ======================
-   📱 Mobile Responsive
-   ====================== */
-@media (max-width: 768px) {
-  .odoo-table thead {
-    display: none;
-  }
-  .odoo-table tbody tr {
-    display: block;
-    padding: 10px;
-  }
-  .odoo-table tbody td {
-    display: flex;
-    justify-content: space-between;
-    margin: 6px 0;
-  }
-}
+    /* ======================
+      📱 Mobile Responsive
+      ====================== */
+    @media (max-width: 768px) {
+      .odoo-table thead {
+        display: none;
+      }
+      .odoo-table tbody tr {
+        display: block;
+        padding: 10px;
+      }
+      .odoo-table tbody td {
+        display: flex;
+        justify-content: space-between;
+        margin: 6px 0;
+      }
+    }
 
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
