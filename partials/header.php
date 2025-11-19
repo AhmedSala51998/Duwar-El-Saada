@@ -2018,6 +2018,83 @@ $current_page = basename($_SERVER['PHP_SELF']);
         outline: none !important;
     }
 
+    /* ===== Dark Mode للـ Select2 داخل مودال #addOrder ===== */
+    body.dark-mode #addOrder .select2-container .select2-selection--single {
+        background: #2c2c2c !important;       /* خلفية داكنة */
+        border: 1px solid #555 !important;    /* حدود أغمق */
+        color: #eee !important;               /* نص فاتح */
+    }
+
+    /* النص داخل Select2 */
+    body.dark-mode #addOrder .select2-selection__rendered {
+        color: #eee !important;               /* نص فاتح للوضوح */
+    }
+
+    /* السهم */
+    body.dark-mode #addOrder .select2-selection__arrow {
+        color: #eee !important;
+    }
+
+    /* عند التركيز */
+    body.dark-mode #addOrder .select2-container--default .select2-selection--single:focus,
+    body.dark-mode #addOrder .select2-container--default .select2-selection--single.select2-selection--focus {
+        background: #3a3a3a !important;       /* خلفية أغمق عند التركيز */
+        border-color: #ff9e3c !important;
+        box-shadow: 0 0 0 3px rgba(251,146,60,0.35) !important;
+    }
+
+    /* ===== Dark Mode شامل للأزرار واللينكات ===== */
+    body.dark-mode {
+        --btn-bg-dark: #2c2c2c;   /* خلفية الداكنة الأساسية */
+        --btn-hover-dark: #3a3a3a; /* عند hover */
+        --btn-text-dark: #fff;     /* النص والأيقونات باللون الأبيض */
+        --link-dark: #fff;         /* لينكات باللون الأبيض */
+    }
+
+    /* الأزرار */
+    body.dark-mode button,
+    body.dark-mode .btn {
+        background-color: var(--btn-bg-dark) !important;
+        color: var(--btn-text-dark) !important;
+        border-color: var(--btn-bg-dark) !important; /* لو في حدود */
+        transition: background 0.2s ease;
+    }
+
+    /* زر عند hover */
+    body.dark-mode button:hover,
+    body.dark-mode .btn:hover {
+        background-color: var(--btn-hover-dark) !important;
+        color: var(--btn-text-dark) !important;
+    }
+
+    /* زر عند focus */
+    body.dark-mode button:focus,
+    body.dark-mode .btn:focus {
+        background-color: var(--btn-hover-dark) !important;
+        color: var(--btn-text-dark) !important;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(255, 158, 60, 0.35); /* optional تأثير تركيز */
+    }
+
+    /* لينكات */
+    body.dark-mode a,
+    body.dark-mode a.btn {
+        color: var(--link-dark) !important;
+        text-decoration: none;
+    }
+
+    /* لينكات عند hover */
+    body.dark-mode a:hover {
+        color: #ff9e3c !important; /* لون برتقالي عند المرور للفصل عن الخلفية الداكنة */
+    }
+
+    /* أي أيقونات داخل الأزرار أو اللينكات */
+    body.dark-mode button i,
+    body.dark-mode .btn i,
+    body.dark-mode a i {
+        color: var(--btn-text-dark) !important;
+    }
+
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
 </head>
