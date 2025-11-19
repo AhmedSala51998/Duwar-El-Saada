@@ -2232,6 +2232,22 @@ $current_page = basename($_SERVER['PHP_SELF']);
       filter: brightness(0) invert(1); /* يجعل اللون أبيض */
       opacity: 1;
     }
+    /* ======  Number Input Arrows (Dark Mode)  ====== */
+
+    /* الخلفية الداكنة لحقل الرقم */
+    body.dark-mode input[type="number"] {
+      background: #1e1e1e;
+      color: #fff;
+      border-color: #444;
+    }
+
+    /* تأثير على الأسهم */
+    body.dark-mode input[type="number"]::-webkit-inner-spin-button,
+    body.dark-mode input[type="number"]::-webkit-outer-spin-button {
+      background: #333;      /* لون خلفية الأسهم */
+      border-radius: 4px;
+      filter: invert(1);     /* يخلي لون الأسهم أبيض */
+    }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
 </head>
