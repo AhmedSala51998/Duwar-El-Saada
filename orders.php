@@ -228,22 +228,6 @@ $stocks = $pdo->query("
   display: flex;
   flex-direction: column-reverse;
 }
-/* تكبير ارتفاع المربع الأساسي */
-.select2-container .select2-selection--single {
-  height: 38px !important; /* الارتفاع */
-  display: flex !important;
-  align-items: center !important;
-  font-size: 16px; /* تكبير الخط شوية */
-}
-
-/* تكبير السهم والمسافة الداخلية */
-.select2-container--default .select2-selection--single .select2-selection__rendered {
-  line-height: 38px !important;
-  padding-left: 10px !important;
-}
-.select2-container--default .select2-selection--single .select2-selection__arrow {
-  height: 38px !important;
-}
 
 .custom-table {
   border-collapse: separate;
