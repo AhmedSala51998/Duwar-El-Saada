@@ -2120,6 +2120,10 @@ $current_page = basename($_SERVER['PHP_SELF']);
         filter: invert(1) brightness(2);  /* يجعل الأيقونة بيضاء تماماً */
     }
 
+    body.dark-mode .border-end {
+        border-left: 1px solid #3a3a3a !important;
+    }
+
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
 </head>
