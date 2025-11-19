@@ -279,6 +279,28 @@ const expensesData = <?= json_encode(array_values($expensesByMonth)) ?>;
 const assetsLabels = <?= json_encode(array_keys($assetsByPayer)) ?>;
 const assetsData = <?= json_encode(array_values($assetsByPayer)) ?>;
 
+// common options for dark mode
+const darkOptions = {
+  plugins: {
+    legend: { 
+      labels: { color: '#e0e0e0' }, // لون النصوص للدارك مود
+      position: 'bottom'
+    }
+  },
+  scales: {
+    x: {
+      ticks: { color: '#e0e0e0' }, // ألوان التواريخ تحت الأعمدة
+      grid: { drawTicks: false, color: '#444' } // إزالة البروز وخطوط الشبكة الباهتة
+    },
+    y: {
+      ticks: { color: '#e0e0e0' },
+      grid: { color: '#444' }
+    }
+  },
+  maintainAspectRatio: false
+};
+
+// المشتريات
 new Chart(document.getElementById('purchasesChart'), {
   type: 'bar',
   data: {
@@ -286,13 +308,14 @@ new Chart(document.getElementById('purchasesChart'), {
     datasets: [{
       label: 'عدد المشتريات',
       data: purchasesData,
-      backgroundColor: 'rgba(255, 106, 0, 0.85)',
+      backgroundColor: 'rgba(255, 140, 0, 0.8)',
       borderRadius: 8
     }]
   },
-  options: { plugins: { legend: { display: false } }, maintainAspectRatio: false }
+  options: darkOptions
 });
 
+// أوامر التشغيل
 new Chart(document.getElementById('ordersChart'), {
   type: 'line',
   data: {
@@ -300,15 +323,16 @@ new Chart(document.getElementById('ordersChart'), {
     datasets: [{
       label: 'عدد الأوامر',
       data: ordersData,
-      borderColor: '#007bff',
-      backgroundColor: 'rgba(0,123,255,0.12)',
+      borderColor: '#3399ff',
+      backgroundColor: 'rgba(51,153,255,0.2)',
       tension: 0.35,
       fill: true
     }]
   },
-  options: { plugins: { legend: { display: false } }, maintainAspectRatio: false }
+  options: darkOptions
 });
 
+// العهد
 new Chart(document.getElementById('custodiesChart'), {
   type: 'bar',
   data: {
@@ -316,13 +340,14 @@ new Chart(document.getElementById('custodiesChart'), {
     datasets: [{
       label: 'عدد العهد',
       data: custodiesData,
-      backgroundColor: 'rgba(40, 167, 69, 0.85)',
+      backgroundColor: 'rgba(20,120,40,0.8)',
       borderRadius: 8
     }]
   },
-  options: { plugins: { legend: { display: false } }, maintainAspectRatio: false }
+  options: darkOptions
 });
 
+// المصروفات
 new Chart(document.getElementById('expensesChart'), {
   type: 'bar',
   data: {
@@ -330,23 +355,24 @@ new Chart(document.getElementById('expensesChart'), {
     datasets: [{
       label: 'المصروفات',
       data: expensesData,
-      backgroundColor: 'rgba(108,117,125,0.85)',
+      backgroundColor: 'rgba(80,80,80,0.8)',
       borderRadius: 8
     }]
   },
-  options: { plugins: { legend: { display: false } }, maintainAspectRatio: false }
+  options: darkOptions
 });
 
+// الأصول
 new Chart(document.getElementById('assetsChart'), {
   type: 'doughnut',
   data: {
     labels: assetsLabels,
     datasets: [{
       data: assetsData,
-      backgroundColor: ['#ff6a00','#007bff','#28a745','#ffc107','#dc3545']
+      backgroundColor: ['#bb5500','#0055aa','#117733','#aa7700','#aa3333'] // ألوان داكنة
     }]
   },
-  options: { plugins: { legend: { position: 'bottom' } }, maintainAspectRatio: false }
+  options: darkOptions
 });
 </script>
 
