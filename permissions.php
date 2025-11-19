@@ -371,10 +371,10 @@ $permissions = $stmt->fetchAll(PDO::FETCH_ASSOC);
               </tbody>
             </table>
           </div>
-
-          <div class="text-end mt-3">
+          <button type="button" id="addRow" class="btn btn-secondary">+ إضافة صف</button>
+          <!--<div class="text-end mt-3">
             <button type="button" class="btn btn-sm btn-outline-success" id="addRow"><i class="bi bi-plus-lg"></i> إضافة صف جديد</button>
-          </div>
+          </div>-->
         </div>
 
         <div class="modal-footer">
