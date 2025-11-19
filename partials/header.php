@@ -2014,7 +2014,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
     #addOrder .select2-container--default .select2-selection--single.select2-selection--focus {
         background: #fff !important;
         border-color: #ff9e3c !important;
-        box-shadow: none !important;
+        box-shadow: 0 0 0 3px rgba(251, 146, 60, 0.35) !important;
         outline: none !important;
     }
 
