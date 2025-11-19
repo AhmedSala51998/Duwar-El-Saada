@@ -224,7 +224,7 @@
       </div>
 
       <div class="col-md-4 d-flex align-items-end">
-        <button type="submit" class="btn btn-warning w-100" style="background-color: #ff6a00; border: none; color:#FFF">
+        <button type="submit" class="btn btn-warning w-100" style="border: none; color:#FFF">
           <i class="bi bi-funnel"></i> تطبيق الفلتر
         </button>
       </div>

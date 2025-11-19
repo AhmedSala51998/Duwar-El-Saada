@@ -2128,6 +2128,17 @@ $current_page = basename($_SERVER['PHP_SELF']);
         border: 1px solid #3a3a3a !important;
     }
 
+    /* إزالة الشادو البرتقالي من زر تبديل المود في Dark Mode */
+    body.dark-mode #toggleDarkDesktop,
+    body.dark-mode #toggleDarkDesktop:focus,
+    body.dark-mode #toggleDarkDesktop:hover {
+        box-shadow: none !important;
+    }
+
+    body.dark-mode .btn-orange {
+        box-shadow: none !important;
+    }
+
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
 </head>
