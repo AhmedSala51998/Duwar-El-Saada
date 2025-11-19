@@ -215,22 +215,6 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
     background-color: #e85d00;
     color: #fff;
   }
-  /* جعل جسم المودال يحتوي scroll عند كثرة المحتوى */
-  #addMultipleUsers .modal-body {
-    max-height: 60vh; /* أقصى ارتفاع لجسم المودال */
-    overflow-y: auto; /* تفعيل التمرير العمودي */
-    padding-right: 0.5rem; /* لتجنب اختفاء scroll بسبب padding */
-  }
-
-  /* إذا أردت جدول محدد للتمرير */
-  #multiUsersTable {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-  }
-  #multiUsersTable tbody tr {
-    transition: all 0.2s ease-in-out;
-  }
 </style>
 <?php 
 /*$rows = $pdo->query("
@@ -541,7 +525,7 @@ $rows = $stmt->fetchAll();
 </div>
 
 <div class="modal fade" id="addMultipleUsers">
-  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+  <div class="modal-dialog-scrollable">
     <div class="modal-content">
       <form method="post" action="users_add_multiple">
         <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
