@@ -2044,55 +2044,64 @@ $current_page = basename($_SERVER['PHP_SELF']);
     }
 
     /* ===== Dark Mode شامل للأزرار واللينكات ===== */
+    /* ===== Dark Mode شامل للأزرار واللينكات ===== */
     body.dark-mode {
-        --btn-bg-dark: #2c2c2c;   /* خلفية الداكنة الأساسية */
+        --btn-bg-dark: #2c2c2c;   /* خلفية الداكنة */
         --btn-hover-dark: #3a3a3a; /* عند hover */
-        --btn-text-dark: #fff;     /* النص والأيقونات باللون الأبيض */
-        --link-dark: #fff;         /* لينكات باللون الأبيض */
+        --btn-text-dark: #fff;     /* نص وأيقونات */
     }
 
-    /* الأزرار */
-    body.dark-mode button,
-    body.dark-mode .btn {
+    /* كل الأزرار العادية */
+    body.dark-mode button:not(.btn-close),
+    body.dark-mode .btn:not(.btn-close) {
         background-color: var(--btn-bg-dark) !important;
         color: var(--btn-text-dark) !important;
-        border-color: var(--btn-bg-dark) !important; /* لو في حدود */
+        border-color: var(--btn-bg-dark) !important;
         transition: background 0.2s ease;
     }
 
-    /* زر عند hover */
-    body.dark-mode button:hover,
-    body.dark-mode .btn:hover {
+    body.dark-mode button:not(.btn-close):hover,
+    body.dark-mode .btn:not(.btn-close):hover {
         background-color: var(--btn-hover-dark) !important;
         color: var(--btn-text-dark) !important;
     }
 
-    /* زر عند focus */
-    body.dark-mode button:focus,
-    body.dark-mode .btn:focus {
+    body.dark-mode button:not(.btn-close):focus,
+    body.dark-mode .btn:not(.btn-close):focus {
         background-color: var(--btn-hover-dark) !important;
         color: var(--btn-text-dark) !important;
         outline: none;
-        box-shadow: 0 0 0 3px rgba(255, 158, 60, 0.35); /* optional تأثير تركيز */
+        box-shadow: 0 0 0 3px rgba(255, 158, 60, 0.35);
     }
 
-    /* لينكات */
+    /* كل اللينكات */
     body.dark-mode a,
     body.dark-mode a.btn {
-        color: var(--link-dark) !important;
+        color: var(--btn-text-dark) !important;
         text-decoration: none;
     }
 
-    /* لينكات عند hover */
     body.dark-mode a:hover {
-        color: #ff9e3c !important; /* لون برتقالي عند المرور للفصل عن الخلفية الداكنة */
+        color: #ff9e3c !important; /* لون برتقالي عند hover */
     }
 
-    /* أي أيقونات داخل الأزرار أو اللينكات */
+    /* الأيقونات داخل الأزرار واللينكات */
     body.dark-mode button i,
     body.dark-mode .btn i,
     body.dark-mode a i {
         color: var(--btn-text-dark) !important;
+    }
+
+    /* زر إغلاق المودال */
+    body.dark-mode .btn-close {
+        background: none !important;   /* بدون خلفية */
+        color: #fff !important;        /* الأيقونة بيضاء */
+        opacity: 1 !important;         /* إزالة الشفافية الافتراضية */
+    }
+
+    body.dark-mode .btn-close:hover {
+        background: none !important;
+        color: #ff9e3c !important;     /* لون برتقالي عند hover */
     }
 
   </style>
