@@ -2172,6 +2172,27 @@ $current_page = basename($_SERVER['PHP_SELF']);
         color: #fff !important;
     }
 
+    /* === Dark Mode للـ Hero Card === */
+    body.dark-mode .hero-card {
+        background: #1e1e1e !important;    /* خلفية داكنة جذابة */
+        color: #fff !important;            /* نص أبيض */
+        border: 1px solid #333 !important; /* حدّ بسيط داكن */
+    }
+
+    /* عنوان البطاقة */
+    body.dark-mode .hero-card .hero-title {
+        color: #fff !important;
+    }
+
+    /* النص تحت العنوان */
+    body.dark-mode .hero-card .hero-sub {
+        color: #ddd !important;  /* درجة رمادي فاتح ناعمة */
+    }
+
+    /* اللوجو لو عايزه أفتح في الدارك مود */
+    body.dark-mode .hero-card .floating-logo img {
+        filter: brightness(1.3); /* اختياري – يجعل الشعار أوضح */
+    }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
 </head>
