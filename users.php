@@ -286,6 +286,11 @@ $rows = $stmt->fetchAll();
         <i class="bi bi-plus-lg"></i> مستخدم
       </button>
     <?php endif ?>
+    <?php if(has_permission('users.add_group')): ?>
+      <button class="btn btn-orange" data-bs-toggle="modal" data-bs-target="#addMultipleUsers">
+        <i class="bi bi-people-fill"></i> إضافة متعددة
+      </button>
+    <?php endif; ?>
   </div>
 </div>
 
@@ -519,4 +524,104 @@ $rows = $stmt->fetchAll();
   </div>
 </div>
 
+<div class="modal fade" id="addMultipleUsers">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+    <div class="modal-content">
+      <form method="post" action="users_add_multiple">
+        <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
+
+        <div class="modal-header">
+          <h5 class="modal-title">
+            <i class="bi bi-people"></i> إضافة مستخدمين متعددين
+          </h5>
+          <button class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+          <table class="odoo-table" id="multiUsersTable">
+            <thead class="table-light text-center">
+              <tr>
+                <th>#</th>
+                <th>اسم المستخدم</th>
+                <th>كلمة المرور</th>
+                <th>الدور</th>
+                <th>حذف</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="text-center">1</td>
+                <td>
+                  <input name="username[]" class="form-control" required>
+                </td>
+                <td>
+                  <input name="password[]" type="password" class="form-control" required>
+                </td>
+                <td>
+                  <select name="role_id[]" class="form-select" required>
+                    <option value="">اختر الدور</option>
+                    <?php foreach($roles as $ro): ?>
+                    <option value="<?= $ro['id'] ?>"><?= esc($ro['name']) ?></option>
+                    <?php endforeach; ?>
+                  </select>
+                </td>
+                <td class="text-center">
+                  <button type="button" class="btn btn-danger btn-sm remove-row">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <button type="button" class="btn btn-orange w-100" id="addRowBtn">
+            <i class="bi bi-plus-lg"></i> إضافة صف جديد
+          </button>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-orange">حفظ الكل</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 <?php require __DIR__.'/partials/footer.php'; ?>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  let table = document.querySelector("#multiUsersTable tbody");
+  let addBtn = document.querySelector("#addRowBtn");
+
+  addBtn.addEventListener("click", () => {
+    let rowCount = table.rows.length + 1;
+
+    let row = document.createElement("tr");
+    row.innerHTML = `
+      <td class="text-center">${rowCount}</td>
+      <td><input name="username[]" class="form-control" required></td>
+      <td><input name="password[]" type="password" class="form-control" required></td>
+      <td>
+        <select name="role_id[]" class="form-select" required>
+          <option value="">اختر الدور</option>
+          <?php foreach($roles as $ro): ?>
+            <option value="<?= $ro['id'] ?>"><?= esc($ro['name']) ?></option>
+          <?php endforeach; ?>
+        </select>
+      </td>
+      <td class="text-center">
+        <button type="button" class="btn btn-danger btn-sm remove-row">
+          <i class="bi bi-trash"></i>
+        </button>
+      </td>
+    `;
+    table.appendChild(row);
+  });
+
+  document.addEventListener("click", (e) => {
+    if (e.target.closest(".remove-row")) {
+      e.target.closest("tr").remove();
+    }
+  });
+});
+</script>
