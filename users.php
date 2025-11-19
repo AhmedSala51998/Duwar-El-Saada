@@ -525,7 +525,7 @@ $rows = $stmt->fetchAll();
 </div>
 
 <div class="modal fade" id="addMultipleUsers">
-  <div class="modal-dialog-scrollable">
+  <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <form method="post" action="users_add_multiple">
         <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
