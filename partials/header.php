@@ -1939,6 +1939,112 @@ $current_page = basename($_SERVER['PHP_SELF']);
       }
     }
 
+    /* =======================================
+   🌟 Odoo-like Enterprise Table Styling
+   (Orange Edition)
+   ======================================= */
+
+.odoo-orders-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 10px;
+  font-family: "Cairo", sans-serif;
+}
+
+/* ===== رأس الجدول ===== */
+.odoo-orders-table thead th {
+  background: #f3f4f6;
+  padding: 14px 10px;
+  color: #374151;
+  font-size: 14px;
+  font-weight: 700;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: center;
+}
+
+/* ===== الصفوف ===== */
+.odoo-orders-table tbody tr {
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  transition: 0.15s ease;
+}
+
+.odoo-orders-table tbody tr:hover {
+  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+  transform: scale(1.01);
+}
+
+/* ===== الخلايا ===== */
+.odoo-orders-table tbody td {
+  padding: 12px;
+  vertical-align: middle;
+}
+
+.odoo-orders-table select,
+.odoo-orders-table input {
+  border: 1px solid #d1d5db !important;
+  padding: 8px 10px;
+  border-radius: 10px !important;
+  font-size: 14px;
+  background: #fafafa;
+  transition: 0.25s;
+}
+
+.odoo-orders-table select:focus,
+.odoo-orders-table input:focus {
+  background: #fff;
+  border-color: #fb923c !important;
+  box-shadow: 0 0 0 3px rgba(251, 146, 60, 0.30);
+}
+
+/* ===== زر الحذف ===== */
+.removeRow {
+  background: #ef4444 !important;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 8px;
+  transition: 0.2s;
+}
+
+.removeRow:hover {
+  background: #dc2626 !important;
+}
+
+/* ===== زر إضافة الصف ===== */
+#addRow {
+  border-radius: 12px;
+  padding: 10px 18px;
+  font-weight: 600;
+  border: 1px solid #fb923c;
+  color: #fb923c;
+  transition: 0.2s;
+}
+
+#addRow:hover {
+  background: #fb923c;
+  color: #fff;
+}
+
+/* ======================
+   📱 Responsive Mobile
+   ====================== */
+@media (max-width: 768px) {
+  .odoo-orders-table thead {
+    display: none;
+  }
+  .odoo-orders-table tbody tr {
+    display: block;
+    padding: 12px;
+  }
+  .odoo-orders-table tbody td {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 6px;
+  }
+}
+
+
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
 </head>
