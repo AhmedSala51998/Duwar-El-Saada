@@ -366,7 +366,7 @@ $permissions = $stmt->fetchAll(PDO::FETCH_ASSOC);
                   <td><input type="text" name="codes[]" class="form-control" placeholder="مثال: users.create" required></td>
                   <td><input type="text" name="labels[]" class="form-control" placeholder="مثال: إنشاء مستخدم" required></td>
                   <td><input type="text" name="descriptions[]" class="form-control" placeholder="اختياري..."></td>
-                  <td><button type="button" class="btn btn-outline-danger btn-sm remove-row"><i class="bi bi-x-lg"></i></button></td>
+                  <td><button type="button" class="btn btn-danger btn-sm remove-row"><i class="bi bi-x-lg"></i></button></td>
                 </tr>
               </tbody>
             </table>
