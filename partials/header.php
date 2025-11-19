@@ -1960,6 +1960,36 @@ $current_page = basename($_SERVER['PHP_SELF']);
       }
     }
 
+
+    /* تحديث شكل select2 ليكون مثل باقي الحقول */
+    .select2-container .select2-selection--single {
+        height: 42px !important;
+        padding: 6px 10px !important;
+        border: 1px solid #d1d5db !important;
+        border-radius: 10px !important;
+        background: #fafafa !important;
+        font-size: 14px !important;
+    }
+
+    /* النص داخل select2 */
+    .select2-selection__rendered {
+        line-height: 42px !important;
+        color: inherit !important;
+    }
+
+    /* السهم */
+    .select2-selection__arrow {
+        height: 42px !important;
+    }
+
+    .select2-container--default .select2-selection--single:focus,
+    .select2-container--default .select2-selection--single.select2-selection--focus {
+        background: #fff !important;
+        border-color: #ff9e3c !important;
+        box-shadow: 0 0 0 3px rgba(251, 146, 60, 0.35) !important;
+        outline: none !important;
+    }
+
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
 </head>
