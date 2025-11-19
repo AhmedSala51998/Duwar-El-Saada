@@ -3,7 +3,7 @@
 </div>
 
 <!-- ====== Footer ====== -->
-<footer class="custom-footer text-center py-3 mt-4">
+<footer class="custom-footer text-center py-3">
   <div class="container">
     <span>© جميع الحقوق محفوظة لدى <b>مطعم دوار السعادة</b> <?= date('Y') ?></span>
   </div>
