@@ -1927,24 +1927,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
         border-radius: 8px !important;
     }
 
-    /* ======================
-      📱 Mobile Responsive
-      ====================== */
-    @media (max-width: 768px) {
-      .odoo-table thead {
-        display: none;
-      }
-      .odoo-table tbody tr {
-        display: block;
-        padding: 10px;
-      }
-      .odoo-table tbody td {
-        display: flex;
-        justify-content: space-between;
-        margin: 6px 0;
-      }
-    }
-
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
 </head>
