@@ -1921,8 +1921,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
       background: #ff9e3c;
     }
 
-    #ordersTable .form-control,
-    #ordersTable .form-select {
+    .odoo-table .form-control,
+    .odoo-table .form-select {
         height: 42px !important;
         border-radius: 8px !important;
     }
