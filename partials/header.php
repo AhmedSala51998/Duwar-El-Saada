@@ -1963,7 +1963,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
     /* تحديث شكل select2 ليكون مثل باقي الحقول */
     .select2-container .select2-selection--single {
-        height: 20px !important;
+        height: 35px !important;
         padding: -5px 10px !important;
         border: 1px solid #d1d5db !important;
         border-radius: 10px !important;
