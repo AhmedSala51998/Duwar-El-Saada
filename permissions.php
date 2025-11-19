@@ -352,7 +352,7 @@ $permissions = $stmt->fetchAll(PDO::FETCH_ASSOC);
           </p>
 
           <div class="table-responsive">
-            <table class="table table-bordered align-middle text-center mb-0" id="permTable">
+            <table class="odoo-table" id="permTable">
               <thead class="table-light">
                 <tr>
                   <th style="width:25%">الكود (code)</th>

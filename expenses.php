@@ -672,7 +672,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
           </div>
 
           <div class="table-responsive">
-          <table class="table table-bordered" id="multipleExpensesTable">
+          <table class="odoo-table" id="multipleExpensesTable">
           <thead>
             <tr>
               <th>#</th>

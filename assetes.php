@@ -671,7 +671,7 @@ $rows=$s->fetchAll();
           </div>
 
           <div class="table-responsive">
-            <table class="table table-bordered" id="assetsTable">
+            <table class="odoo-table" id="assetsTable">
               <thead>
                 <tr>
                   <th>رقم الفاتورة</th>
