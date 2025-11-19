@@ -1990,41 +1990,32 @@ $current_page = basename($_SERVER['PHP_SELF']);
         outline: none !important;
     }
 
-    /* ====== شكل خاص للـ select داخل مودال addOrder ====== */
-    #addOrder .form-select {
-        background-color: #fff7f0; /* خلفية خفيفة */
-        border: 2px solid #ffb676;
-        border-radius: 12px;
-        padding: 10px 14px;
-        font-weight: 600;
-        color: #444;
-        font-size: 15px;
-        transition: all .2s ease-in-out;
+    #addOrder .select2-container .select2-selection--single {
+        height: 44px !important;
+        padding: -5px 10px !important;
+        border: 1px solid #d1d5db !important;
+        border-radius: 7px !important;
+        background: #fafafa !important;
+        font-size: 14px !important;
     }
 
-    /* الفوكس */
-    #addOrder .form-select:focus {
-        background-color: #fff;
-        border-color: #ff8a2b;
-        box-shadow: 0 0 0 4px rgba(255,138,43,0.25);
-        outline: none;
+    /* النص داخل select2 */
+    #addOrder .select2-selection__rendered {
+        line-height:44px !important;
+        color: inherit !important;
     }
 
-    /* تغيير شكل السهم */
-    #addOrder .form-select {
-        background-image:
-            linear-gradient(45deg, transparent 50%, #ff8a2b 50%),
-            linear-gradient(135deg, #ff8a2b 50%, transparent 50%);
-        background-position:
-            calc(100% - 20px) calc(1em + 2px),
-            calc(100% - 15px) calc(1em + 2px);
-        background-size: 5px 5px;
-        background-repeat: no-repeat;
+    /* السهم */
+    #addOrder .select2-selection__arrow {
+       height: 44px !important;
     }
 
-    /* هوفر بسيط */
-    #addOrder .form-select:hover {
-        border-color: #ff9d4f;
+    #addOrder .select2-container--default .select2-selection--single:focus,
+    #addOrder .select2-container--default .select2-selection--single.select2-selection--focus {
+        background: #fff !important;
+        border-color: #ff9e3c !important;
+        box-shadow: 0 0 0 3px rgba(251, 146, 60, 0.35) !important;
+        outline: none !important;
     }
 
   </style>
