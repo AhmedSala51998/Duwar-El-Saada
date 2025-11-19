@@ -1835,61 +1835,69 @@ body.dark-mode aside::-webkit-scrollbar-thumb {
 }
 
 
-/* ===========================
-   🔥 Premium Modern Table Style
-   =========================== */
+/* =======================================
+   🌟 Odoo-like Enterprise Table Styling
+   ======================================= */
 
-#itemsTable {
-  border-collapse: separate;
-  border-spacing: 0 8px;
+.odoo-table {
   width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 10px;
+  font-family: "Cairo", sans-serif;
 }
 
-#itemsTable thead th {
-  background: #f8fafc;
-  color: #334155;
-  font-weight: 700;
-  font-size: 15px;
+/* ===== Header ===== */
+.odoo-table thead th {
+  background: #f3f4f6;
   padding: 14px 10px;
-  border-bottom: 2px solid #e2e8f0;
+  color: #374151;
+  font-size: 14px;
+  font-weight: 700;
+  border-bottom: 1px solid #e5e7eb;
   text-align: center;
 }
 
-#itemsTable tbody tr {
+/* ===== Rows ===== */
+.odoo-table tbody tr {
   background: #ffffff;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-  border-radius: 12px;
-  overflow: hidden;
-  transition: 0.2s ease;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  transition: 0.15s ease;
 }
 
-#itemsTable tbody tr:hover {
-  transform: scale(1.01);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+.odoo-table tbody tr:hover {
+  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
 }
 
-#itemsTable tbody td {
-  padding: 10px;
+/* ===== Cells ===== */
+.odoo-table tbody td {
+  padding: 12px;
   vertical-align: middle;
 }
 
-#itemsTable input,
-#itemsTable select {
-  border-radius: 10px !important;
+.odoo-table input,
+.odoo-table select {
   border: 1px solid #d1d5db !important;
   padding: 8px 10px;
+  border-radius: 10px !important;
+  font-size: 14px;
   transition: 0.2s;
+  background: #fafafa;
 }
 
-#itemsTable input:focus,
-#itemsTable select:focus {
-  border-color: #fb923c !important;
-  box-shadow: 0 0 0 3px rgba(251,146,60,0.3);
+.odoo-table input:focus,
+.odoo-table select:focus {
+  background: #fff;
+  border-color: #7c3aed !important; /* لون أودو */
+  box-shadow: 0 0 0 3px rgba(124,58,237,0.25);
 }
 
+/* زر الإزالة */
 .remove-row {
   background: #ef4444 !important;
   border: none;
+  padding: 6px 10px;
+  border-radius: 8px;
   transition: 0.2s;
 }
 
@@ -1897,24 +1905,37 @@ body.dark-mode aside::-webkit-scrollbar-thumb {
   background: #dc2626 !important;
 }
 
+/* زر إضافة صف */
 #addRow {
-  border-radius: 12px;
+  background: #7c3aed;
+  color: #fff;
+  border: none;
+  margin-top: 10px;
   padding: 10px 18px;
+  border-radius: 10px;
   font-weight: 600;
+  transition: 0.2s;
 }
 
+#addRow:hover {
+  background: #6d28d9;
+}
+
+/* ======================
+   📱 Mobile Responsive
+   ====================== */
 @media (max-width: 768px) {
-  #itemsTable thead {
+  .odoo-table thead {
     display: none;
   }
-  #itemsTable tbody tr {
+  .odoo-table tbody tr {
     display: block;
-    margin-bottom: 15px;
+    padding: 10px;
   }
-  #itemsTable tbody td {
+  .odoo-table tbody td {
     display: flex;
     justify-content: space-between;
-    padding: 12px;
+    margin: 6px 0;
   }
 }
 

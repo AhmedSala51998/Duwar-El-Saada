@@ -635,7 +635,7 @@ $rows = $stmt->fetchAll();
             </div>
           </div>
           <div class="table-responsive">
-            <table class="table table-bordered" id="itemsTable">
+            <table class="odoo-table">
               <thead>
                 <tr>
                   <th>البيان</th>
@@ -649,7 +649,7 @@ $rows = $stmt->fetchAll();
                   <th>إزالة</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody id="itemsTable">
                 <tr>
                   <td><input name="name[]" class="form-control" required></td>
                   <td>
