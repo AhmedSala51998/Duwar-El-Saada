@@ -574,7 +574,7 @@ $rows = $stmt->fetchAll();
             </tbody>
           </table>
 
-          <button type="button" class="btn btn-orange w-100" id="addRowBtn">
+          <button type="button" class="btn btn-orange" id="addRowBtn">
             <i class="bi bi-plus-lg"></i> إضافة صف جديد
           </button>
         </div>
