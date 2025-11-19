@@ -2092,14 +2092,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
         color: var(--btn-text-dark) !important;
     }
 
-    /* عند hover على زر الإغلاق */
-    /* زر إغلاق المودال في الدارك مود */
-    body.dark-mode .btn-close:hover {
-        background: transparent !important; /* بدون خلفية */
-        opacity: 1 !important;
-        filter: invert(1) brightness(2);  /* يجعل الأيقونة بيضاء تماماً */
-    }
-
     body.dark-mode .border-end {
         border-left: 1px solid #3a3a3a !important;
     }
@@ -2229,8 +2221,9 @@ $current_page = basename($_SERVER['PHP_SELF']);
       filter: invert(1);     /* يخلي لون الأسهم أبيض */
     }
     /* زر إغلاق المودال — لون أبيض في الدارك مود */
+    /* زر إغلاق المودال — لون أبيض في الدارك مود */
     body.dark-mode .btn-close {
-        color: #FFF !important; /* يجعل الأيقونة بيضاء تماماً */
+        filter: invert(1) brightness(200%); /* يجعل الأيقونة بيضاء تماماً */
     }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
