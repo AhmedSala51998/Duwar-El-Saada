@@ -2227,6 +2227,11 @@ $current_page = basename($_SERVER['PHP_SELF']);
     body.dark-mode ::-webkit-scrollbar-thumb:hover {
         background: #555;
     }
+    /* 🎨 أيقونة الكالندر بيضاء في الدارك مود */
+    body.dark-mode input[type="date"]::-webkit-calendar-picker-indicator {
+      filter: brightness(0) invert(1); /* يجعل اللون أبيض */
+      opacity: 1;
+    }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
 </head>
