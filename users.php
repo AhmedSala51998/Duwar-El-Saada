@@ -590,14 +590,15 @@ $rows = $stmt->fetchAll();
 <?php require __DIR__.'/partials/footer.php'; ?>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-  let table = document.querySelector("#multiUsersTable tbody");
-  let addBtn = document.querySelector("#addRowBtn");
+  const tableBody = document.querySelector("#multiUsersTable tbody");
+  const addRowBtn = document.getElementById("addRowBtn");
 
-  addBtn.addEventListener("click", () => {
-    let rowCount = table.rows.length + 1;
+  // وظيفة إضافة صف جديد
+  addRowBtn.addEventListener("click", () => {
+    const rowCount = tableBody.querySelectorAll("tr").length + 1;
 
-    let row = document.createElement("tr");
-    row.innerHTML = `
+    const newRow = document.createElement("tr");
+    newRow.innerHTML = `
       <td class="text-center">${rowCount}</td>
       <td><input name="username[]" class="form-control" required></td>
       <td><input name="password[]" type="password" class="form-control" required></td>
@@ -615,12 +616,19 @@ document.addEventListener("DOMContentLoaded", () => {
         </button>
       </td>
     `;
-    table.appendChild(row);
+    tableBody.appendChild(newRow);
   });
 
-  document.addEventListener("click", (e) => {
+  // وظيفة حذف الصف عند الضغط على زر الحذف
+  tableBody.addEventListener("click", (e) => {
     if (e.target.closest(".remove-row")) {
-      e.target.closest("tr").remove();
+      const row = e.target.closest("tr");
+      row.remove();
+
+      // تحديث أرقام الصفوف بعد الحذف
+      tableBody.querySelectorAll("tr").forEach((tr, index) => {
+        tr.querySelector("td:first-child").textContent = index + 1;
+      });
     }
   });
 });
