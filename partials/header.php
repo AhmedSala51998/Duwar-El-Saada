@@ -2135,17 +2135,17 @@ $current_page = basename($_SERVER['PHP_SELF']);
         box-shadow: none !important;
     }
 
-    body.dark-mode #logoutBtn {
+    body.dark-mode #logoutBtn .btn.btn-logout{
         box-shadow: none !important;
     }
 
-    body.dark-mode .btn.btn-warning {
+    body.dark-mode .filter_button {
         background-color: #2c2c2c !important;   /* خلفية داكنة */
         color: #fff !important;                 /* نص وأيقونات بيضاء */
         border: 1px solid #444 !important;      /* بوردر داكن بسيط */
     }
 
-    body.dark-mode .btn.btn-warning:hover {
+    body.dark-mode .filter_button:hover {
         background-color: #3a3a3a !important;   /* عند الـ hover */
         color: #fff !important;
     }
