@@ -225,35 +225,35 @@ $assetsByPayer = $pdo->query("SELECT payer_name, COUNT(*) c FROM assets GROUP BY
     <div class="col-md-6">
       <div class="chart-card">
         <h5 class="mb-3"><i class="bi bi-bag text-warning me-1"></i> المشتريات (آخر 6 شهور)</h5>
-        <canvas id="purchasesChart" height="180"></canvas>
+        <canvas id="purchasesChart" style="height: calc(100% - 2.5rem); width: 100%;"></canvas>
       </div>
     </div>
 
     <div class="col-md-6">
       <div class="chart-card">
         <h5 class="mb-3"><i class="bi bi-gear text-primary me-1"></i> أوامر التشغيل</h5>
-        <canvas id="ordersChart" height="180"></canvas>
+        <canvas id="ordersChart" style="height: calc(100% - 2.5rem); width: 100%;"></canvas>
       </div>
     </div>
 
     <div class="col-md-6">
       <div class="chart-card">
         <h5 class="mb-3"><i class="bi bi-wallet2 text-success me-1"></i> العهد (آخر 6 شهور)</h5>
-        <canvas id="custodiesChart" height="180"></canvas>
+        <canvas id="custodiesChart" style="height: calc(100% - 2.5rem); width: 100%;"></canvas>
       </div>
     </div>
 
     <div class="col-md-6">
       <div class="chart-card">
         <h5 class="mb-3"><i class="bi bi-cash-stack text-secondary me-1"></i> المصروفات حسب الشهر</h5>
-        <canvas id="expensesChart" height="180"></canvas>
+        <canvas id="expensesChart" style="height: calc(100% - 2.5rem); width: 100%;"></canvas>
       </div>
     </div>
 
     <div class="col-md-6">
       <div class="chart-card">
         <h5 class="mb-3"><i class="bi bi-building text-success me-1"></i> الأصول حسب الدافع</h5>
-        <canvas id="assetsChart" height="200"></canvas>
+        <canvas id="assetsChart" style="height: calc(100% - 2.5rem); width: 100%;"></canvas>
       </div>
     </div>
 
