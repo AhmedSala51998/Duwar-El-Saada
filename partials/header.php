@@ -1921,10 +1921,71 @@ $current_page = basename($_SERVER['PHP_SELF']);
       background: #ff9e3c;
     }
 
-    .odoo-table .form-control,
-    .odoo-table .form-select {
-        height: 42px !important;
-        border-radius: 8px !important;
+    /* ======================================================
+    📱 Ultra Premium Odoo-Style Mobile Responsive Table
+    ====================================================== */
+
+    @media (max-width: 768px) {
+
+      .odoo-table {
+        border: 0 !important;
+      }
+
+      .odoo-table thead {
+        display: none !important;
+      }
+
+      .odoo-table tbody tr {
+        display: block;
+        background: #ffffff;
+        margin-bottom: 14px;
+        padding: 16px 14px;
+        border-radius: 14px;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+        border: 1px solid #f1f1f3;
+        transition: 0.25s ease;
+      }
+
+      .odoo-table tbody tr:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 18px rgba(0,0,0,0.10);
+      }
+
+      /* كل خانة */
+      .odoo-table tbody td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 6px 0;
+        font-size: 15px;
+        border: 0 !important;
+      }
+
+      /* عنوان الخانة */
+      .odoo-table tbody td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #555;
+        font-size: 14px;
+        opacity: 0.8;
+      }
+
+      /* القيمة */
+      .odoo-table tbody td span {
+        font-weight: 600;
+        color: #222;
+      }
+
+      /* للعمود الأخير لو فيه أزرار */
+      .odoo-table tbody td:last-child {
+        justify-content: flex-start;
+        gap: 10px;
+      }
+
+      .odoo-table tbody td:last-child button,
+      .odoo-table tbody td:last-child a {
+        flex: none !important;
+      }
     }
 
   </style>
