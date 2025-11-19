@@ -1963,8 +1963,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
     /* تحديث شكل select2 ليكون مثل باقي الحقول */
     .select2-container .select2-selection--single {
-        height: 42px !important;
-        padding: 6px 10px !important;
+        height: 30px !important;
+        padding: 8px 10px !important;
         border: 1px solid #d1d5db !important;
         border-radius: 10px !important;
         background: #fafafa !important;
@@ -1973,13 +1973,13 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
     /* النص داخل select2 */
     .select2-selection__rendered {
-        line-height: 42px !important;
+        line-height: 30px !important;
         color: inherit !important;
     }
 
     /* السهم */
     .select2-selection__arrow {
-        height: 42px !important;
+        height: 30px !important;
     }
 
     .select2-container--default .select2-selection--single:focus,
