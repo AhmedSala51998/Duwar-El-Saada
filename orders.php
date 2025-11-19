@@ -230,7 +230,7 @@ $stocks = $pdo->query("
 }
 /* تكبير ارتفاع المربع الأساسي */
 .select2-container .select2-selection--single {
-  height: 48px !important; /* الارتفاع */
+  height: 38px !important; /* الارتفاع */
   display: flex !important;
   align-items: center !important;
   font-size: 16px; /* تكبير الخط شوية */
@@ -238,11 +238,11 @@ $stocks = $pdo->query("
 
 /* تكبير السهم والمسافة الداخلية */
 .select2-container--default .select2-selection--single .select2-selection__rendered {
-  line-height: 48px !important;
+  line-height: 38px !important;
   padding-left: 10px !important;
 }
 .select2-container--default .select2-selection--single .select2-selection__arrow {
-  height: 48px !important;
+  height: 38px !important;
 }
 
 .custom-table {
