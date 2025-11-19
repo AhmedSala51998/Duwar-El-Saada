@@ -215,6 +215,22 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
     background-color: #e85d00;
     color: #fff;
   }
+  /* جعل جسم المودال يحتوي scroll عند كثرة المحتوى */
+  #addMultipleUsers .modal-body {
+    max-height: 60vh; /* أقصى ارتفاع لجسم المودال */
+    overflow-y: auto; /* تفعيل التمرير العمودي */
+    padding-right: 0.5rem; /* لتجنب اختفاء scroll بسبب padding */
+  }
+
+  /* إذا أردت جدول محدد للتمرير */
+  #multiUsersTable {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+  #multiUsersTable tbody tr {
+    transition: all 0.2s ease-in-out;
+  }
 </style>
 <?php 
 /*$rows = $pdo->query("
@@ -590,15 +606,14 @@ $rows = $stmt->fetchAll();
 <?php require __DIR__.'/partials/footer.php'; ?>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-  const tableBody = document.querySelector("#multiUsersTable tbody");
-  const addRowBtn = document.getElementById("addRowBtn");
+  let table = document.querySelector("#multiUsersTable tbody");
+  let addBtn = document.querySelector("#addRowBtn");
 
-  // وظيفة إضافة صف جديد
-  addRowBtn.addEventListener("click", () => {
-    const rowCount = tableBody.querySelectorAll("tr").length + 1;
+  addBtn.addEventListener("click", () => {
+    let rowCount = table.rows.length + 1;
 
-    const newRow = document.createElement("tr");
-    newRow.innerHTML = `
+    let row = document.createElement("tr");
+    row.innerHTML = `
       <td class="text-center">${rowCount}</td>
       <td><input name="username[]" class="form-control" required></td>
       <td><input name="password[]" type="password" class="form-control" required></td>
@@ -616,19 +631,12 @@ document.addEventListener("DOMContentLoaded", () => {
         </button>
       </td>
     `;
-    tableBody.appendChild(newRow);
+    table.appendChild(row);
   });
 
-  // وظيفة حذف الصف عند الضغط على زر الحذف
-  tableBody.addEventListener("click", (e) => {
+  document.addEventListener("click", (e) => {
     if (e.target.closest(".remove-row")) {
-      const row = e.target.closest("tr");
-      row.remove();
-
-      // تحديث أرقام الصفوف بعد الحذف
-      tableBody.querySelectorAll("tr").forEach((tr, index) => {
-        tr.querySelector("td:first-child").textContent = index + 1;
-      });
+      e.target.closest("tr").remove();
     }
   });
 });
