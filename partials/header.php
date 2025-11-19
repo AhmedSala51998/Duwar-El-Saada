@@ -1850,7 +1850,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
     .odoo-table thead th {
       background: #f3f4f6;
       padding: 14px 10px;
-      color: #ff9e3c;
+      color: #374151;
       font-size: 14px;
       font-weight: 700;
       border-bottom: 1px solid #e5e7eb;
