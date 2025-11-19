@@ -2236,7 +2236,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
     /* الخلفية الداكنة لحقل الرقم */
     body.dark-mode input[type="number"] {
-      background: #1f1f1f;
+      background: #555;
       color: #fff;
       border-color: #444;
     }
@@ -2244,7 +2244,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
     /* تأثير على الأسهم */
     body.dark-mode input[type="number"]::-webkit-inner-spin-button,
     body.dark-mode input[type="number"]::-webkit-outer-spin-button {
-      background: #1f1f1f;      /* لون خلفية الأسهم */
+      background: #555;      /* لون خلفية الأسهم */
       border-radius: 4px;
       filter: invert(1);     /* يخلي لون الأسهم أبيض */
     }
