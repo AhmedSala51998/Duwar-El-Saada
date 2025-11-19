@@ -555,7 +555,7 @@ $stocks = $pdo->query("
         </div>
 
         <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
-          <table class="table table-bordered align-middle mb-0" id="stocksTable">
+          <table class="odoo-table" id="stocksTable">
             <thead class="table-light">
               <tr>
                 <th>اسم الصنف</th>
