@@ -2139,13 +2139,17 @@ $current_page = basename($_SERVER['PHP_SELF']);
         box-shadow: none !important;
     }
 
-    body.dark-mode .filter-form .filter_button {
+    body.dark-mode .users_text{
+        color: #FFF !important;
+    }
+
+    body.dark-mode .filter-form button.btn-warning {
         background-color: #2c2c2c !important;   /* خلفية داكنة */
         color: #fff !important;                 /* نص وأيقونات بيضاء */
         border: 1px solid #444 !important;      /* بوردر داكن بسيط */
     }
 
-    body.dark-mode .filter-form .filter_button:hover {
+    body.dark-mode .filter-form button.btn-warning:hover {
         background-color: #3a3a3a !important;   /* عند الـ hover */
         color: #fff !important;
     }
@@ -2210,7 +2214,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
       <!-- المستخدمون -->
       <?php if(has_permission('users.view')): ?>
       <li class="nav-item">
-        <a class="nav-link <?= $current_page=='users.php'?'active':'' ?>" href="<?= BASE_URL ?>/users.php">
+        <a class="users_text nav-link <?= $current_page=='users.php'?'active':'' ?>" href="<?= BASE_URL ?>/users.php">
           <i class="bi bi-people me-1"></i> المستخدمون
         </a>
       </li>
