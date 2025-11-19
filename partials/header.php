@@ -2092,26 +2092,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
         color: var(--btn-text-dark) !important;
     }
 
-    /* زر إغلاق المودال */
-    body.dark-mode .btn-close {
-        background: none !important;   /* بدون خلفية */
-        color: #fff !important;        /* الأيقونة بيضاء */
-        opacity: 1 !important;         /* إزالة الشفافية الافتراضية */
-    }
-
-    body.dark-mode .btn-close:hover {
-        background: none !important;
-        color: #ff9e3c !important;     /* لون برتقالي عند hover */
-    }
-
-    /* زر إغلاق المودال في Dark Mode */
-    /* زر إغلاق المودال في الدارك مود */
-    body.dark-mode .btn-close {
-        background: transparent !important; /* بدون خلفية */
-        opacity: 1 !important;
-        filter: invert(1) brightness(2);  /* يجعل الأيقونة بيضاء تماماً */
-    }
-
     /* عند hover على زر الإغلاق */
     /* زر إغلاق المودال في الدارك مود */
     body.dark-mode .btn-close:hover {
