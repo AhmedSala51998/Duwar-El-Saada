@@ -2193,6 +2193,40 @@ $current_page = basename($_SERVER['PHP_SELF']);
     body.dark-mode .hero-card .floating-logo img {
         filter: brightness(1.3); /* اختياري – يجعل الشعار أوضح */
     }
+
+    /* ===== Dark Mode - Modal Header ===== */
+    body.dark-mode .modal-header {
+        background: #1f1f1f !important;   /* خلفية داكنة */
+        color: #fff !important;           /* نص أبيض */
+        border-bottom: 1px solid #333 !important;
+    }
+
+    /* عنوان المودال */
+    body.dark-mode .modal-header .modal-title {
+        color: #fff !important;
+    }
+
+    /* زر الإغلاق */
+    body.dark-mode .modal-header .btn-close {
+        filter: invert(1) brightness(2) !important;  /* أيقونة بيضاء */
+    }
+    /* ===== Dark Mode Scrollbar Styling ===== */
+    body.dark-mode ::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    body.dark-mode ::-webkit-scrollbar-track {
+        background: #1f1f1f;   /* خلفية الداكن */
+    }
+
+    body.dark-mode ::-webkit-scrollbar-thumb {
+        background: #444;       /* جزء التحريك */
+        border-radius: 10px;
+    }
+
+    body.dark-mode ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
 </head>
