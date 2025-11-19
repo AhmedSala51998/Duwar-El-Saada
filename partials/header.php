@@ -2250,7 +2250,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
     }
     /* زر إغلاق المودال — لون أبيض في الدارك مود */
     body.dark-mode .btn-close {
-        filter: invert(1) brightness(200%) !important; /* يجعل الأيقونة بيضاء تماماً */
+        color: #FFF !important; /* يجعل الأيقونة بيضاء تماماً */
     }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
