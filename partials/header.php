@@ -1889,7 +1889,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
     .odoo-table select:focus {
       background: #fff;
       border-color: #ff9e3c !important; /* لون أودو */
-      box-shadow: 0 0 0 3px rgba(124,58,237,0.25);
+      box-shadow: 0 0 0 3px rgba(251, 146, 60, 0.35);
     }
 
     /* زر الإزالة */
