@@ -561,7 +561,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         <div class="modal-body">
           <div class="table-responsive">
-            <table class="table table-bordered align-middle text-center" id="rolesTable">
+            <table class="odoo-table" id="rolesTable">
               <thead class="table-light">
                 <tr>
                   <th style="width:20%">اسم الدور</th>
