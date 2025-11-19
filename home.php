@@ -133,6 +133,7 @@ body {
   border-radius: 25px;
   box-shadow: 0 8px 25px rgba(0,0,0,0.06);
   transition: .3s;
+  height: 450px;
 }
 
 .chart-card:hover {
