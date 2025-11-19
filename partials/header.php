@@ -2104,6 +2104,19 @@ $current_page = basename($_SERVER['PHP_SELF']);
         color: #ff9e3c !important;     /* لون برتقالي عند hover */
     }
 
+    /* زر إغلاق المودال في Dark Mode */
+    body.dark-mode .btn-close {
+        background: none !important;   /* لا خلفية */
+        color: #fff !important;        /* الأيقونة باللون الأبيض */
+        opacity: 1 !important;         /* إزالة الشفافية الافتراضية */
+    }
+
+    /* عند hover على زر الإغلاق */
+    body.dark-mode .btn-close:hover {
+        background: none !important;   /* لا خلفية */
+        color: #fff !important;        /* يبقى أبيض حتى عند hover */
+    }
+
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
 </head>
