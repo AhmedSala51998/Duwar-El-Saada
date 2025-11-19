@@ -2131,7 +2131,10 @@ $current_page = basename($_SERVER['PHP_SELF']);
     /* إزالة الشادو البرتقالي من زر تبديل المود في Dark Mode */
     body.dark-mode #toggleDarkDesktop,
     body.dark-mode #toggleDarkDesktop:focus,
-    body.dark-mode #toggleDarkDesktop:hover {
+    body.dark-mode #toggleDarkDesktop:hover,
+    body.dark-mode #toggleDarkMobile,
+    body.dark-mode #toggleDarkMobile:focus,
+    body.dark-mode #toggleDarkMobile:hover {
         box-shadow: none !important;
     }
 
@@ -2139,8 +2142,23 @@ $current_page = basename($_SERVER['PHP_SELF']);
         box-shadow: none !important;
     }
 
+    body.dark-mode #logoutBtn{
+        box-shadow: none !important;
+    }
+
     body.dark-mode .users_text{
         color: #FFF !important;
+    }
+
+    .filter-form button.btn-warning {
+        background-color: #ff9e3c !important;   /* خلفية داكنة */
+        color: #fff !important;                 /* نص وأيقونات بيضاء */
+        border: 1px solid #ff9e3c !important;      /* بوردر داكن بسيط */
+    }
+
+    .filter-form button.btn-warning:hover {
+        background-color: #ff9e3c !important;   /* عند الـ hover */
+        color: #fff !important;
     }
 
     body.dark-mode .filter-form button.btn-warning {
