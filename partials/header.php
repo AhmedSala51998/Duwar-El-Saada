@@ -2124,6 +2124,10 @@ $current_page = basename($_SERVER['PHP_SELF']);
         border-left: 1px solid #3a3a3a !important;
     }
 
+    body.dark-mode .filter-form {
+        border: 1px solid #3a3a3a !important;
+    }
+
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
 </head>
