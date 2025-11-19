@@ -1963,8 +1963,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
     /* تحديث شكل select2 ليكون مثل باقي الحقول */
     .select2-container .select2-selection--single {
-        height: 10px !important;
-        padding: 8px 10px !important;
+        height: 5px !important;
+        padding: 0 10px !important;
         border: 1px solid #d1d5db !important;
         border-radius: 10px !important;
         background: #fafafa !important;
@@ -1973,13 +1973,13 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
     /* النص داخل select2 */
     .select2-selection__rendered {
-        line-height: 10px !important;
+        line-height: 5px !important;
         color: inherit !important;
     }
 
     /* السهم */
     .select2-selection__arrow {
-        height: 10px !important;
+        height: 5px !important;
     }
 
     .select2-container--default .select2-selection--single:focus,
@@ -1988,38 +1988,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
         border-color: #ff9e3c !important;
         box-shadow: 0 0 0 3px rgba(251, 146, 60, 0.35) !important;
         outline: none !important;
-    }
-
-
-    /* إجبار الـ container إنه يأخذ نفس ارتفاع الـ input */
-    .select2-container {
-        width: 100% !important;
-    }
-
-    /* ستايل العنصر الحقيقي */
-    .select2-container .select2-selection--single {
-        height: 42px !important;
-        border: 1px solid #d1d5db !important;
-        border-radius: 10px !important;
-        background: #fafafa !important;
-        display: flex !important;
-        align-items: center !important;
-        padding-right: 10px !important;
-    }
-
-    /* النص داخل السلكت */
-    .select2-selection__rendered {
-        line-height: 38px !important;
-        padding-right: 5px !important;
-        padding-left: 5px !important;
-    }
-
-    /* سهم السلكت */
-    .select2-selection__arrow {
-        height: 100% !important;
-        top: 0 !important;
-        display: flex !important;
-        align-items: center !important;
     }
 
   </style>
