@@ -554,7 +554,7 @@ $total_balance = $total_in - $total_out;
 
         <div class="modal-body">
           <div class="table-responsive">
-            <table class="table table-bordered align-middle" id="custodiesTable">
+            <table class="odoo-table" id="custodiesTable">
               <thead class="table-light">
                 <tr>
                   <th>اسم الشخص</th>
