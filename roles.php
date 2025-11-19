@@ -591,7 +591,7 @@ document.addEventListener('DOMContentLoaded', function() {
                           $groups[$perm['category']][] = $perm;
                         }
                         foreach ($groups as $groupName => $perms): ?>
-                          <div class="mb-2 border rounded p-2 bg-light">
+                          <div class="mb-2 border rounded p-2">
                             <strong class="text-primary d-block mb-1"><?= esc($groupName) ?></strong>
                             <div class="row g-2">
                               <?php foreach ($perms as $p): ?>
