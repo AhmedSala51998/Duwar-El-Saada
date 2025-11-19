@@ -395,7 +395,7 @@ document.addEventListener('DOMContentLoaded', function() {
       <td><input type="text" name="codes[]" class="form-control" placeholder="مثال: users.edit" required></td>
       <td><input type="text" name="labels[]" class="form-control" placeholder="مثال: تعديل مستخدم" required></td>
       <td><input type="text" name="descriptions[]" class="form-control" placeholder="اختياري..."></td>
-      <td><button type="button" class="btn btn-outline-danger btn-sm remove-row"><i class="bi bi-x-lg"></i></button></td>
+      <td><button type="button" class="btn btn-danger btn-sm remove-row"><i class="bi bi-x-lg"></i></button></td>
     `;
     permTable.appendChild(row);
   });
