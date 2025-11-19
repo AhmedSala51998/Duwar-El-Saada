@@ -1875,7 +1875,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
       vertical-align: middle;
     }
 
-    .odoo-table input,
+    .odoo-table input:not([type="checkbox"]),
     .odoo-table select {
       border: 1px solid #d1d5db !important;
       padding: 8px 10px;
