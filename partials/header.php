@@ -2599,6 +2599,7 @@ function updateDarkModeIcons() {
         document.body.classList.toggle("dark-mode");
         localStorage.setItem("dark-mode", document.body.classList.contains("dark-mode") ? "on" : "off");
         updateDarkModeIcons();
+        updateChartsColors(); // 🔥 حدث الشارتات فوراً
     }
 });
 
@@ -2606,5 +2607,6 @@ if (localStorage.getItem("dark-mode") === "on") {
     document.body.classList.add("dark-mode");
 }
 updateDarkModeIcons();
+updateChartsColors(); // 🔥 حدث الشارتات عند تحميل الصفحة
 </script>
 
