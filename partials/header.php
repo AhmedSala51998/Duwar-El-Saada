@@ -2225,6 +2225,10 @@ $current_page = basename($_SERVER['PHP_SELF']);
     body.dark-mode .btn-close {
         filter: invert(1) brightness(200%); /* يجعل الأيقونة بيضاء تماماً */
     }
+    body.dark-mode .floating-logo {
+      background: #222 !important;
+      border-color: #ff8a2a !important;
+    }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
 </head>
