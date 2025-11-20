@@ -22,7 +22,7 @@ $stmt = $pdo->prepare("SELECT r.name
 $stmt->execute([$user_id]);
 $current_role = $stmt->fetchColumn();
 
-if ($current_role !== 'admin') {
+if ($current_role !== 'مدير المظام') {
     echo json_encode(['success' => false, 'message' => 'غير مسموح']);
     exit;
 }
