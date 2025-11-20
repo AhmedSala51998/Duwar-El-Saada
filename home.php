@@ -213,6 +213,13 @@ $custodiesValueByMonth = $pdo->query("
     GROUP BY m
     ORDER BY m DESC
 ")->fetchAll(PDO::FETCH_KEY_PAIR);
+
+$expensesCountByMonth = $pdo->query("
+    SELECT DATE_FORMAT(created_at,'%Y-%m') AS m, COUNT(*) AS c
+    FROM expenses
+    GROUP BY m
+    ORDER BY m DESC
+")->fetchAll(PDO::FETCH_KEY_PAIR);
 ?>
 
 <div class="container">
@@ -291,6 +298,13 @@ $custodiesValueByMonth = $pdo->query("
 
     <div class="col-md-6">
       <div class="chart-card">
+        <h5 class="mb-3"><i class="bi bi-cash-stack text-secondary me-1"></i> عدد المصروفات حسب الشهر</h5>
+        <canvas id="expensesCountChart" height="200"></canvas>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="chart-card">
         <h5 class="mb-3"><i class="bi bi-cash-stack text-secondary me-1"></i> قيمة المصروفات حسب الشهر</h5>
         <canvas id="expensesChart" height="200"></canvas>
       </div>
@@ -364,6 +378,8 @@ const purchasesAmountLabels= <?= json_encode(array_keys($purchasesAmountByMonth)
 const purchasesAmountData  = <?= json_encode(array_values($purchasesAmountByMonth)) ?>;
 const custodiesValueLabels = <?= json_encode(array_keys($custodiesValueByMonth)) ?>;
 const custodiesValueData   = <?= json_encode(array_values($custodiesValueByMonth)) ?>;
+const expensesCountLabels = <?= json_encode(array_keys($expensesCountByMonth)) ?>;
+const expensesCountData   = <?= json_encode(array_values($expensesCountByMonth)) ?>;
 
 // ================================
 // 🟢 مصفوفة لتخزين كل الشارتات
@@ -480,6 +496,21 @@ function createCharts() {
           data: custodiesValueData,
           backgroundColor: 'rgba(40, 167, 69, 0.85)',      // نفس لون العهد الأساسي
           hoverBackgroundColor: 'rgba(60, 190, 90, 1)',
+          borderRadius: 10
+        }]
+      },
+      options: getBaseOptions()
+    }));
+
+    charts.push(new Chart(document.getElementById('expensesCountChart'), {
+      type: 'bar',
+      data: {
+        labels: expensesCountLabels,
+        datasets: [{
+          label: 'عدد المصروفات',
+          data: expensesCountData,
+          backgroundColor: 'rgba(108,117,125,0.85)',      // نفس لون المصروفات
+          hoverBackgroundColor: 'rgba(130,140,150,1)',
           borderRadius: 10
         }]
       },
