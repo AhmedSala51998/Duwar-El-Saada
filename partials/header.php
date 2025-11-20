@@ -2227,8 +2227,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
     }
     body.dark-mode .floating-logo {
       background: #222 !important;
-      border-color: #ff8a2a !important;
-      border: 6px solid #555 !important;
+      border-color: #555 !important;
     }
     /* ========================================================= */
     /* 🌙🔥 Ultra Premium Dark Charts Theme */
