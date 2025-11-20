@@ -849,17 +849,21 @@ createChartWithFilter('assetsValueChart', assetsValueDataBy, 'قيمة الأص�
 
 // Pie Chart لعدد الأصول حسب الدافع
 function createChartWithFilterPie(canvasId, dataBy, label, colors, filterId) {
-    const ctx = document.getElementById(canvasId).getContext('2d');
+    const ctx = document.getElementById(canvasId).getContext("2d");
 
-    let defaultType = 'month';
+    // Default = month
+    let type = "month";
+
+    // آخر فترة موجودة
+    let lastPeriod = Object.keys(dataBy[type]).pop();
 
     const chart = new Chart(ctx, {
-        type: 'pie',
+        type: "pie",
         data: {
-            labels: Object.keys(dataBy[defaultType]),
+            labels: Object.keys(dataBy[type][lastPeriod]),
             datasets: [{
                 label: label,
-                data: Object.values(dataBy[defaultType]),
+                data: Object.values(dataBy[type][lastPeriod]),
                 backgroundColor: colors
             }]
         },
@@ -868,29 +872,35 @@ function createChartWithFilterPie(canvasId, dataBy, label, colors, filterId) {
 
     charts[canvasId] = chart;
 
-    document.getElementById(filterId).addEventListener('change', function() {
+    // FLTER
+    document.getElementById(filterId).addEventListener("change", function () {
         const type = this.value;
 
-        chart.data.labels = Object.keys(dataBy[type]);
-        chart.data.datasets[0].data = Object.values(dataBy[type]);
+        const periods = Object.keys(dataBy[type]);
+        if (periods.length === 0) return;
+
+        const lastPeriod = periods[periods.length - 1]; // آخر فترة
+
+        chart.data.labels = Object.keys(dataBy[type][lastPeriod]);
+        chart.data.datasets[0].data = Object.values(dataBy[type][lastPeriod]);
         chart.update();
     });
 }
 
-
 // Bar Chart لعدد الأصول حسب الدافع
 function createChartWithFilterBar(canvasId, dataBy, label, color, filterId) {
-    const ctx = document.getElementById(canvasId).getContext('2d');
+    const ctx = document.getElementById(canvasId).getContext("2d");
 
-    let defaultType = 'month';
+    let type = "month";
+    let lastPeriod = Object.keys(dataBy[type]).pop();
 
     const chart = new Chart(ctx, {
-        type: 'bar',
+        type: "bar",
         data: {
-            labels: Object.keys(dataBy[defaultType]),
+            labels: Object.keys(dataBy[type][lastPeriod]),
             datasets: [{
                 label: label,
-                data: Object.values(dataBy[defaultType]),
+                data: Object.values(dataBy[type][lastPeriod]),
                 backgroundColor: color,
                 borderRadius: 10
             }]
@@ -900,11 +910,16 @@ function createChartWithFilterBar(canvasId, dataBy, label, color, filterId) {
 
     charts[canvasId] = chart;
 
-    document.getElementById(filterId).addEventListener('change', function() {
+    document.getElementById(filterId).addEventListener("change", function () {
         const type = this.value;
 
-        chart.data.labels = Object.keys(dataBy[type]);
-        chart.data.datasets[0].data = Object.values(dataBy[type]);
+        const periods = Object.keys(dataBy[type]);
+        if (periods.length === 0) return;
+
+        const lastPeriod = periods[periods.length - 1];
+
+        chart.data.labels = Object.keys(dataBy[type][lastPeriod]);
+        chart.data.datasets[0].data = Object.values(dataBy[type][lastPeriod]);
         chart.update();
     });
 }
