@@ -384,59 +384,52 @@ $assetsValueByYear = $pdo->query("SELECT DATE_FORMAT(created_at,'%Y') AS y, SUM(
 // عدد الأصول حسب الدافع (Payer)
 // ===========================
 
-function groupPayersTotals($rows) {
+// الأسبوع: السنة-رقم الأسبوع (ISO week)
+$assetsByWeek_payer_raw = $pdo->query("
+    SELECT DATE_FORMAT(created_at,'%x-%v') AS period, payer_name AS label, COUNT(*) AS c
+    FROM assets
+    GROUP BY period, payer_name
+    ORDER BY period ASC
+")->fetchAll(PDO::FETCH_ASSOC);
+
+// الشهر: السنة-شهر
+$assetsByMonth_payer_raw = $pdo->query("
+    SELECT DATE_FORMAT(created_at,'%Y-%m') AS period, payer_name AS label, COUNT(*) AS c
+    FROM assets
+    GROUP BY period, payer_name
+    ORDER BY period ASC
+")->fetchAll(PDO::FETCH_ASSOC);
+
+// السنة
+$assetsByYear_payer_raw = $pdo->query("
+    SELECT DATE_FORMAT(created_at,'%Y') AS period, payer_name AS label, COUNT(*) AS c
+    FROM assets
+    GROUP BY period, payer_name
+    ORDER BY period ASC
+")->fetchAll(PDO::FETCH_ASSOC);
+
+// تحويل البيانات لمصفوفة JS
+function groupByPeriod($raw) {
     $result = [];
-
-    foreach ($rows as $row) {
-        $payer = $row['label'];
-        $count = $row['c'];
-
-        if (!isset($result[$payer])) {
-            $result[$payer] = 0;
-        }
-        $result[$payer] += $count;
+    foreach ($raw as $row) {
+        $period = $row['period'];
+        $label = $row['label'];
+        $count = (int)$row['c'];
+        if (!isset($result[$period])) $result[$period] = [];
+        $result[$period][$label] = $count;
     }
-
     return $result;
 }
 
-// ****** جلب البيانات ******
-
-// Week
-$assetsByWeek_payer_raw = $pdo->query("
-    SELECT payer_name AS label, DATE_FORMAT(created_at,'%x-%v') AS period, COUNT(*) AS c
-    FROM assets
-    GROUP BY period, payer_name
-")->fetchAll(PDO::FETCH_ASSOC);
-
-// Month
-$assetsByMonth_payer_raw = $pdo->query("
-    SELECT payer_name AS label, DATE_FORMAT(created_at,'%Y-%m') AS period, COUNT(*) AS c
-    FROM assets
-    GROUP BY period, payer_name
-")->fetchAll(PDO::FETCH_ASSOC);
-
-// Year
-$assetsByYear_payer_raw = $pdo->query("
-    SELECT payer_name AS label, DATE_FORMAT(created_at,'%Y') AS period, COUNT(*) AS c
-    FROM assets
-    GROUP BY period, payer_name
-")->fetchAll(PDO::FETCH_ASSOC);
-
-// ****** تجميع كل الفترات ******
-
-$assetsByWeek_payer  = groupPayersTotals($assetsByWeek_payer_raw);
-$assetsByMonth_payer = groupPayersTotals($assetsByMonth_payer_raw);
-$assetsByYear_payer  = groupPayersTotals($assetsByYear_payer_raw);
-
-// ****** إرسال البيانات للـ JS ******
+$assetsByWeek_payer  = groupByPeriod($assetsByWeek_payer_raw);
+$assetsByMonth_payer = groupByPeriod($assetsByMonth_payer_raw);
+$assetsByYear_payer  = groupByPeriod($assetsByYear_payer_raw);
 
 $assetsDataBy_payer = [
     'week'  => $assetsByWeek_payer,
     'month' => $assetsByMonth_payer,
     'year'  => $assetsByYear_payer
 ];
-
 ?>
 
 <div class="container">
@@ -923,7 +916,6 @@ function createChartWithFilterBar(canvasId, dataBy, label, color, filterId) {
         chart.update();
     });
 }
-
 
 // ألوان Pie
 const pieColors = [
