@@ -820,11 +820,14 @@ createChartWithFilter('assetsValueChart', assetsValueDataBy, 'قيمة الأص�
 
 function createChartWithFilterPie(canvasId, dataBy, label, colors, filterId) {
     const ctx = document.getElementById(canvasId).getContext('2d');
-    const defaultPeriod = 'month'; // الفترة الافتراضية
+
+    // اختر أول مفتاح موجود في dataBy كـ default (week/month/year)
+    const defaultPeriod = Object.keys(dataBy)[0];
+
     const chart = new Chart(ctx, {
         type: 'pie',
         data: {
-            labels: Object.keys(dataBy[defaultPeriod]),
+            labels: Object.keys(dataBy[defaultPeriod]),  // الآن هذا حسب الدافع
             datasets: [{
                 label: label,
                 data: Object.values(dataBy[defaultPeriod]),
@@ -838,8 +841,8 @@ function createChartWithFilterPie(canvasId, dataBy, label, colors, filterId) {
 
     // Filter
     document.getElementById(filterId).addEventListener('change', function() {
-        const period = this.value;
-        chart.data.labels = Object.keys(dataBy[period]);
+        const period = this.value; // week / month / year
+        chart.data.labels = Object.keys(dataBy[period]); // كل فترة حسب الدافع
         chart.data.datasets[0].data = Object.values(dataBy[period]);
         chart.update();
     });
