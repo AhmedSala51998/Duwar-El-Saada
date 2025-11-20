@@ -380,32 +380,36 @@ $assetsValueByWeek = $pdo->query("SELECT DATE_FORMAT(created_at,'%x-%v') AS w, S
 $assetsValueByMonth = $pdo->query("SELECT DATE_FORMAT(created_at,'%Y-%m') AS m, SUM(total_amount) AS total FROM assets GROUP BY m ORDER BY m DESC")->fetchAll(PDO::FETCH_KEY_PAIR);
 $assetsValueByYear = $pdo->query("SELECT DATE_FORMAT(created_at,'%Y') AS y, SUM(total_amount) AS total FROM assets GROUP BY y ORDER BY y DESC")->fetchAll(PDO::FETCH_KEY_PAIR);
 
-// عدد الأصول حسب الدافع لكل فترة
-$assetsByWeek_payer = $pdo->query("
-    SELECT payer_name AS label, COUNT(*) AS c
-    FROM assets
-    WHERE created_at >= DATE_SUB(NOW(), INTERVAL 1 WEEK)
-    GROUP BY payer_name
-")->fetchAll(PDO::FETCH_KEY_PAIR);
+// ===========================
+// عدد الأصول حسب الدافع (Payer)
+// ===========================
 
-$assetsByMonth_payer = $pdo->query("
-    SELECT payer_name AS label, COUNT(*) AS c
-    FROM assets
-    WHERE created_at >= DATE_SUB(NOW(), INTERVAL 1 MONTH)
-    GROUP BY payer_name
-")->fetchAll(PDO::FETCH_KEY_PAIR);
+// دالة للحصول على بيانات كل فترة حسب payer_name
+function getAssetsByPayer($pdo, $interval) {
+    $stmt = $pdo->prepare("
+        SELECT payer_name AS label, COUNT(*) AS c
+        FROM assets
+        WHERE created_at >= DATE_SUB(NOW(), INTERVAL :interval)
+        GROUP BY payer_name
+    ");
+    $stmt->execute(['interval' => $interval]);
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    $result = [];
+    foreach($rows as $row) {
+        $result[$row['label']] = (int)$row['c'];
+    }
+    return $result;
+}
 
-$assetsByYear_payer = $pdo->query("
-    SELECT payer_name AS label, COUNT(*) AS c
-    FROM assets
-    WHERE created_at >= DATE_SUB(NOW(), INTERVAL 1 YEAR)
-    GROUP BY payer_name
-")->fetchAll(PDO::FETCH_KEY_PAIR);
+$assetsByWeek_payer  = getAssetsByPayer($pdo, '1 WEEK');
+$assetsByMonth_payer = getAssetsByPayer($pdo, '1 MONTH');
+$assetsByYear_payer  = getAssetsByPayer($pdo, '1 YEAR');
 
 $assetsDataBy_payer = [
-    'week' => $assetsByWeek_payer,
+    'week'  => $assetsByWeek_payer,
     'month' => $assetsByMonth_payer,
-    'year' => $assetsByYear_payer
+    'year'  => $assetsByYear_payer
 ];
 ?>
 
@@ -815,19 +819,19 @@ function createChartWithFilter(canvasId, dataBy, label, color, filterId) {
 
 // إنشاء شارتات الأصول
 createChartWithFilter('assetsMonthChart', assetsMonthDataBy, 'عدد الأصول حسب الشهر', 'rgba(0,123,255,0.85)', 'assetsMonthFilter');
-createChartWithFilter('assetsBarChart', assetsDataBy_payer, 'عدد الأصول حسب الدافع', 'rgba(255,193,7,0.85)', 'assetsBarFilter');
 createChartWithFilter('assetsValueChart', assetsValueDataBy, 'قيمة الأصول حسب الشهر', 'rgba(255,110,20,0.85)', 'assetsValueFilter');
 
+// Pie Chart لعدد الأصول حسب الدافع
 function createChartWithFilterPie(canvasId, dataBy, label, colors, filterId) {
     const ctx = document.getElementById(canvasId).getContext('2d');
 
-    // اختر أول مفتاح موجود في dataBy كـ default (week/month/year)
+    // اختر أول فترة موجودة كافتراضية
     const defaultPeriod = Object.keys(dataBy)[0];
 
     const chart = new Chart(ctx, {
         type: 'pie',
         data: {
-            labels: Object.keys(dataBy[defaultPeriod]),  // الآن هذا حسب الدافع
+            labels: Object.keys(dataBy[defaultPeriod]),
             datasets: [{
                 label: label,
                 data: Object.values(dataBy[defaultPeriod]),
@@ -841,14 +845,43 @@ function createChartWithFilterPie(canvasId, dataBy, label, colors, filterId) {
 
     // Filter
     document.getElementById(filterId).addEventListener('change', function() {
-        const period = this.value; // week / month / year
-        chart.data.labels = Object.keys(dataBy[period]); // كل فترة حسب الدافع
+        const period = this.value; 
+        chart.data.labels = Object.keys(dataBy[period]);
         chart.data.datasets[0].data = Object.values(dataBy[period]);
         chart.update();
     });
 }
 
-// ألوان متنوعة للPie
+// Bar Chart لعدد الأصول حسب الدافع
+function createChartWithFilterBar(canvasId, dataBy, label, color, filterId) {
+    const ctx = document.getElementById(canvasId).getContext('2d');
+    const defaultPeriod = Object.keys(dataBy)[0];
+
+    const chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: Object.keys(dataBy[defaultPeriod]),
+            datasets: [{
+                label: label,
+                data: Object.values(dataBy[defaultPeriod]),
+                backgroundColor: color,
+                borderRadius: 10
+            }]
+        },
+        options: getBaseOptions()
+    });
+
+    charts[canvasId] = chart;
+
+    document.getElementById(filterId).addEventListener('change', function() {
+        const period = this.value;
+        chart.data.labels = Object.keys(dataBy[period]);
+        chart.data.datasets[0].data = Object.values(dataBy[period]);
+        chart.update();
+    });
+}
+
+// ألوان Pie
 const pieColors = [
     'rgba(40,167,69,0.85)',
     'rgba(0,123,255,0.85)',
@@ -858,8 +891,9 @@ const pieColors = [
     'rgba(160,160,170,0.85)'
 ];
 
-// إنشاء Pie Chart لعدد الأصول حسب الدافع
+// إنشاء الشارتات
 createChartWithFilterPie('assetsChart', assetsDataBy_payer, 'عدد الأصول حسب الدافع', pieColors, 'assetsFilter');
+createChartWithFilterBar('assetsBarChart', assetsDataBy_payer, 'عدد الأصول حسب الدافع', 'rgba(255,193,7,0.85)', 'assetsBarFilter');
 </script>
 
 
