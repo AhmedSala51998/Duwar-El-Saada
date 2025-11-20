@@ -4,6 +4,7 @@ error_reporting(E_ALL);
 
 session_start();
 header('Content-Type: application/json');
+require __DIR__ . '/config/config.php';
 
 // التحقق من أن المستخدم مسجل الدخول
 if (empty($_SESSION['user_id'])) {
@@ -11,12 +12,10 @@ if (empty($_SESSION['user_id'])) {
     exit;
 }
 
-require __DIR__ . '/config/config.php'; // وصل هنا قاعدة البيانات PDO
-
 $user_id = $_SESSION['user_id'];
 
 // تحقق من أن المستخدم أدمن
-$stmt = $pdo->prepare("SELECT r.name 
+$stmt = $pdo->prepare("SELECT r.username 
                        FROM users u
                        JOIN roles r ON r.id = u.role_id
                        WHERE u.id = ?");
