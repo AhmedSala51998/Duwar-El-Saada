@@ -364,7 +364,7 @@ const baseOptions = {
     tooltip: {
       backgroundColor: "#000",
       titleColor: "#fff",
-      bodyColor: "#ddd",
+      bodyColor: chartTextColor ,
       borderColor: "#444",
       borderWidth: 1,
       padding: 10
