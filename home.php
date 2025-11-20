@@ -844,16 +844,28 @@ createChartWithFilter('assetsValueChart', assetsValueDataBy, 'قيمة الأص�
 function createChartWithFilterPie(canvasId, dataBy, label, colors, filterId) {
     const ctx = document.getElementById(canvasId).getContext('2d');
 
-    // اختر أول فترة موجودة كافتراضية
-    const defaultPeriod = Object.keys(dataBy)[0];
+    // اختر أول period فيه بيانات
+    let defaultPeriodType, defaultPeriod;
+    outer: for (let type in dataBy) {
+        for (let p in dataBy[type]) {
+            defaultPeriodType = type;
+            defaultPeriod = p;
+            break outer;
+        }
+    }
+
+    if (!defaultPeriod) {
+        console.warn('No data to display');
+        return;
+    }
 
     const chart = new Chart(ctx, {
         type: 'pie',
         data: {
-            labels: Object.keys(dataBy[defaultPeriod]),
+            labels: Object.keys(dataBy[defaultPeriodType][defaultPeriod]),
             datasets: [{
                 label: label,
-                data: Object.values(dataBy[defaultPeriod]),
+                data: Object.values(dataBy[defaultPeriodType][defaultPeriod]),
                 backgroundColor: colors
             }]
         },
@@ -863,26 +875,44 @@ function createChartWithFilterPie(canvasId, dataBy, label, colors, filterId) {
     charts[canvasId] = chart;
 
     // Filter
-    document.getElementById(filterId).addEventListener('change', function() {
-        const period = this.value; 
-        chart.data.labels = Object.keys(dataBy[period]);
-        chart.data.datasets[0].data = Object.values(dataBy[period]);
-        chart.update();
-    });
+    const filterEl = document.getElementById(filterId);
+    if (filterEl) {
+        filterEl.addEventListener('change', function() {
+            const period = this.value; // مثلا "2025-07"
+            if (dataBy[defaultPeriodType][period]) {
+                chart.data.labels = Object.keys(dataBy[defaultPeriodType][period]);
+                chart.data.datasets[0].data = Object.values(dataBy[defaultPeriodType][period]);
+                chart.update();
+            }
+        });
+    }
 }
 
 // Bar Chart لعدد الأصول حسب الدافع
 function createChartWithFilterBar(canvasId, dataBy, label, color, filterId) {
     const ctx = document.getElementById(canvasId).getContext('2d');
-    const defaultPeriod = Object.keys(dataBy)[0];
+
+    let defaultPeriodType, defaultPeriod;
+    outer: for (let type in dataBy) {
+        for (let p in dataBy[type]) {
+            defaultPeriodType = type;
+            defaultPeriod = p;
+            break outer;
+        }
+    }
+
+    if (!defaultPeriod) {
+        console.warn('No data to display');
+        return;
+    }
 
     const chart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: Object.keys(dataBy[defaultPeriod]),
+            labels: Object.keys(dataBy[defaultPeriodType][defaultPeriod]),
             datasets: [{
                 label: label,
-                data: Object.values(dataBy[defaultPeriod]),
+                data: Object.values(dataBy[defaultPeriodType][defaultPeriod]),
                 backgroundColor: color,
                 borderRadius: 10
             }]
@@ -892,13 +922,19 @@ function createChartWithFilterBar(canvasId, dataBy, label, color, filterId) {
 
     charts[canvasId] = chart;
 
-    document.getElementById(filterId).addEventListener('change', function() {
-        const period = this.value;
-        chart.data.labels = Object.keys(dataBy[period]);
-        chart.data.datasets[0].data = Object.values(dataBy[period]);
-        chart.update();
-    });
+    const filterEl = document.getElementById(filterId);
+    if (filterEl) {
+        filterEl.addEventListener('change', function() {
+            const period = this.value;
+            if (dataBy[defaultPeriodType][period]) {
+                chart.data.labels = Object.keys(dataBy[defaultPeriodType][period]);
+                chart.data.datasets[0].data = Object.values(dataBy[defaultPeriodType][period]);
+                chart.update();
+            }
+        });
+    }
 }
+
 
 // ألوان Pie
 const pieColors = [
