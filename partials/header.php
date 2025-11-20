@@ -2637,10 +2637,15 @@ function switchRole(role) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ role })
-    }).then(res => res.json()).then(data => {
+    })
+    .then(res => res.json())
+    .then(data => {
         if(data.success){
-            location.reload(); // إعادة تحميل الصفحة بعد تغيير الدور
+            location.reload();
+        } else {
+            alert(data.message);
         }
-    });
+    })
+    .catch(err => console.error('Fetch error:', err));
 }
 </script>
