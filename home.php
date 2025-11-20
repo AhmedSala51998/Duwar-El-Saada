@@ -384,7 +384,8 @@ $assetsValueByYear = $pdo->query("SELECT DATE_FORMAT(created_at,'%Y') AS y, SUM(
 // عدد الأصول حسب الدافع (Payer)
 // ===========================
 
-// الأسبوع: صيغة السنة-أسبوع (ISO week)
+// 1. جلب البيانات الخام من قاعدة البيانات
+// الأسبوع: السنة-رقم الأسبوع (ISO week)
 $assetsByWeek_payer_raw = $pdo->query("
     SELECT DATE_FORMAT(created_at,'%x-%v') AS period, payer_name AS label, COUNT(*) AS c
     FROM assets
@@ -392,7 +393,7 @@ $assetsByWeek_payer_raw = $pdo->query("
     ORDER BY period DESC
 ")->fetchAll(PDO::FETCH_ASSOC);
 
-// الشهر: صيغة السنة-شهر
+// الشهر: السنة-شهر
 $assetsByMonth_payer_raw = $pdo->query("
     SELECT DATE_FORMAT(created_at,'%Y-%m') AS period, payer_name AS label, COUNT(*) AS c
     FROM assets
