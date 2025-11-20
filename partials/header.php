@@ -2274,6 +2274,59 @@ $current_page = basename($_SERVER['PHP_SELF']);
       background: transparent !important;
     }
 
+    /* ===== Dropdown Button & Arrow ===== */
+    .role-badge {
+        transition: background-color 0.3s, color 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 180px;
+    }
+
+    /* تحريك السهم */
+    .dropdown-toggle::after {
+        display: none; /* نخفي السهم الافتراضي */
+    }
+
+    #roleArrow {
+        transition: transform 0.3s;
+    }
+
+    /* إذا dropdown مفتوح */
+    .dropdown.show #roleArrow {
+        transform: rotate(180deg); /* السهم للأعلى */
+    }
+
+    /* Active role */
+    .dropdown-item.active-role {
+        background-color: orange !important;
+        color: #fff !important;
+    }
+
+    /* نصوص الأدوار العادية */
+    .dropdown-item {
+        color: #111;
+    }
+
+    /* Dark mode */
+    body.dark-mode .dropdown-menu {
+        background-color: #333;
+    }
+
+    body.dark-mode .dropdown-item {
+        color: #fff;
+    }
+
+    body.dark-mode .dropdown-item.active-role {
+        background-color: orange;
+        color: #fff;
+    }
+
+    /* Soft open/close */
+    .dropdown-menu {
+        transition: all 0.3s ease;
+    }
+
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
 </head>
@@ -2340,22 +2393,25 @@ $current_page = basename($_SERVER['PHP_SELF']);
           <!-- Dropdown للأدمن -->
           <div class="dropdown">
             <button class="btn btn-secondary dropdown-toggle role-badge" type="button" id="roleDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-              <i class="bi bi-person-badge me-1"></i> <?= esc(current_role()) ?>
+              <i class="bi bi-person-badge me-1"></i> <span id="currentRoleText"><?= esc(current_role()) ?></span>
+              <i class="bi bi-chevron-down ms-1" id="roleArrow"></i>
             </button>
             <ul class="dropdown-menu" aria-labelledby="roleDropdown">
               <?php
-              // جلب كل الأدوار من قاعدة البيانات
               $stmt = $pdo->query("SELECT name FROM roles ORDER BY name ASC");
               $roles = $stmt->fetchAll(PDO::FETCH_COLUMN);
               foreach ($roles as $role):
-                $active = $role === current_role() ? 'active' : '';
+                $active = $role === current_role() ? 'active-role' : '';
               ?>
-                <li><a class="dropdown-item <?= $active ?>" href="#" onclick="switchRole('<?= $role ?>')"><?= esc($role) ?></a></li>
+                <li>
+                  <a class="dropdown-item <?= $active ?>" href="#" onclick="switchRole('<?= $role ?>'); return false;">
+                    <?= esc($role) ?>
+                  </a>
+                </li>
               <?php endforeach; ?>
             </ul>
           </div>
         <?php else: ?>
-          <!-- Badge عادي لبقية المستخدمين -->
           <span class="badge role-badge">
             <i class="bi bi-person-badge me-1"></i> <?= esc(current_role()) ?>
           </span>
