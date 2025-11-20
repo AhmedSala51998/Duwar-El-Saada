@@ -155,6 +155,18 @@ input[type="file"]{display:none}
     text-align: center;
     font-size: 0.75rem;
 }
+.custom-table th:nth-child(11),
+.custom-table td:nth-child(11) {
+    width: 80px; /* عرض ثابت */
+    font-size: 0.75rem; /* تصغير الخط */
+    text-align: center;
+}
+
+.custom-table th:nth-child(11),
+.custom-table td:nth-child(11) {
+    text-align: center;
+    font-size: 0.75rem;
+}
 .stat-icon {
   width: 50px;
   height: 50px;
@@ -347,7 +359,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 
         <td data-label="الدافع"><?= esc($r['payer_name'] ?? '') ?></td>
         <td data-label="مصدر الدفع"><?= esc($r['payment_source'] ?? '') ?></td>
-        <td data-label="التاريخ"><?= esc($r['created_at'] ?? '') ?></td>
+        <td data-label="التاريخ"><?= esc($r['created_at'] ? date('Y-m-d', strtotime($r['created_at'])) : '') ?></td>
 
         <?php if(has_permission('expenses.processes')): ?>
         <td class="text-center">
