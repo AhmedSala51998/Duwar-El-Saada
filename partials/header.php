@@ -2326,9 +2326,30 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
       <!-- الدور -->
       <li class="nav-item">
-        <span class="badge role-badge">
-          <i class="bi bi-person-badge me-1"></i> <?= esc(current_role()) ?>
-        </span>
+        <?php if(current_role() === 'admin'): ?>
+          <!-- Dropdown للأدمن -->
+          <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle role-badge" type="button" id="roleDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi bi-person-badge me-1"></i> <?= esc(current_role()) ?>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="roleDropdown">
+              <?php
+              // جلب كل الأدوار من قاعدة البيانات
+              $stmt = $pdo->query("SELECT name FROM roles ORDER BY name ASC");
+              $roles = $stmt->fetchAll(PDO::FETCH_COLUMN);
+              foreach ($roles as $role):
+                $active = $role === current_role() ? 'active' : '';
+              ?>
+                <li><a class="dropdown-item <?= $active ?>" href="#" onclick="switchRole('<?= $role ?>')"><?= esc($role) ?></a></li>
+              <?php endforeach; ?>
+            </ul>
+          </div>
+        <?php else: ?>
+          <!-- Badge عادي لبقية المستخدمين -->
+          <span class="badge role-badge">
+            <i class="bi bi-person-badge me-1"></i> <?= esc(current_role()) ?>
+          </span>
+        <?php endif; ?>
       </li>
 
       <!-- المستخدمون -->
@@ -2609,4 +2630,17 @@ if (localStorage.getItem("dark-mode") === "on") {
 updateDarkModeIcons();
 updateChartsColors(); // 🔥 حدث الشارتات عند تحميل الصفحة
 </script>
-
+<script>
+function switchRole(role) {
+    // هنا تضيف كود تغيير الدور، ممكن يكون طلب AJAX لتحديث الدور في الجلسة
+    fetch('switch_role.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ role })
+    }).then(res => res.json()).then(data => {
+        if(data.success){
+            location.reload(); // إعادة تحميل الصفحة بعد تغيير الدور
+        }
+    });
+}
+</script>
