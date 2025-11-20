@@ -384,34 +384,48 @@ $assetsValueByYear = $pdo->query("SELECT DATE_FORMAT(created_at,'%Y') AS y, SUM(
 // عدد الأصول حسب الدافع (Payer)
 // ===========================
 
-// 1. جلب البيانات الخام من قاعدة البيانات
+// الأسبوع: صيغة السنة-أسبوع (ISO week)
 $assetsByWeek_payer_raw = $pdo->query("
-    SELECT payer_name AS label, COUNT(*) AS c
+    SELECT DATE_FORMAT(created_at,'%x-%v') AS period, payer_name AS label, COUNT(*) AS c
     FROM assets
-    WHERE created_at >= DATE_SUB(NOW(), INTERVAL 1 WEEK)
-    GROUP BY payer_name
+    GROUP BY period, payer_name
+    ORDER BY period DESC
 ")->fetchAll(PDO::FETCH_ASSOC);
 
+// الشهر: صيغة السنة-شهر
 $assetsByMonth_payer_raw = $pdo->query("
-    SELECT payer_name AS label, COUNT(*) AS c
+    SELECT DATE_FORMAT(created_at,'%Y-%m') AS period, payer_name AS label, COUNT(*) AS c
     FROM assets
-    WHERE created_at >= DATE_SUB(NOW(), INTERVAL 1 MONTH)
-    GROUP BY payer_name
+    GROUP BY period, payer_name
+    ORDER BY period DESC
 ")->fetchAll(PDO::FETCH_ASSOC);
 
+// السنة
 $assetsByYear_payer_raw = $pdo->query("
-    SELECT payer_name AS label, COUNT(*) AS c
+    SELECT DATE_FORMAT(created_at,'%Y') AS period, payer_name AS label, COUNT(*) AS c
     FROM assets
-    WHERE created_at >= DATE_SUB(NOW(), INTERVAL 1 YEAR)
-    GROUP BY payer_name
+    GROUP BY period, payer_name
+    ORDER BY period DESC
 ")->fetchAll(PDO::FETCH_ASSOC);
 
 // 2. تحويل البيانات إلى key => value
-$assetsByWeek_payer  = array_column($assetsByWeek_payer_raw, 'c', 'label');
-$assetsByMonth_payer = array_column($assetsByMonth_payer_raw, 'c', 'label');
-$assetsByYear_payer  = array_column($assetsByYear_payer_raw, 'c', 'label');
+function groupByPeriod($raw) {
+    $result = [];
+    foreach ($raw as $row) {
+        $period = $row['period'];
+        $label = $row['label'];
+        $count = (int)$row['c'];
+        if (!isset($result[$period])) $result[$period] = [];
+        $result[$period][$label] = $count;
+    }
+    return $result;
+}
 
-// 3. تحضير مصفوفة JS
+$assetsByWeek_payer  = groupByPeriod($assetsByWeek_payer_raw);
+$assetsByMonth_payer = groupByPeriod($assetsByMonth_payer_raw);
+$assetsByYear_payer  = groupByPeriod($assetsByYear_payer_raw);
+
+// مصفوفة JS جاهزة
 $assetsDataBy_payer = [
     'week'  => $assetsByWeek_payer,
     'month' => $assetsByMonth_payer,
