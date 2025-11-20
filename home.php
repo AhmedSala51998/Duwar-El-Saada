@@ -790,14 +790,6 @@ function updateChartsColors() {
     });
 }
 
-// Example: toggle dark mode button
-document.querySelectorAll('.toggle-dark-mode').forEach(btn => {
-    btn.addEventListener('click', () => {
-        document.body.classList.toggle('dark-mode');
-        updateChartsColors();
-    });
-});
-
 const assetsDataBy = { week: <?= json_encode($assetsByWeek) ?>, month: <?= json_encode($assetsByMonth) ?>, year: <?= json_encode($assetsByYear) ?> };
 const assetsMonthDataBy = { week: <?= json_encode($assetsMonthByWeek) ?>, month: <?= json_encode($assetsMonthByMonth) ?>, year: <?= json_encode($assetsMonthByYear) ?> };
 const assetsBarDataBy = { week: <?= json_encode($assetsBarByWeek) ?>, month: <?= json_encode($assetsBarByMonth) ?>, year: <?= json_encode($assetsBarByYear) ?> };
