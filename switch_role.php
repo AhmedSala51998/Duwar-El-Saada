@@ -15,14 +15,14 @@ if (empty($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id'];
 
 // تحقق من أن المستخدم أدمن
-$stmt = $pdo->prepare("SELECT r.name 
+$stmt = $pdo->prepare("SELECT u.username 
                        FROM users u
                        JOIN roles r ON r.id = u.role_id
                        WHERE u.id = ?");
 $stmt->execute([$user_id]);
 $current_role = $stmt->fetchColumn();
 
-if ($current_role !== 'مدير المظام') {
+if ($current_role !== 'admin') {
     echo json_encode(['success' => false, 'message' => 'غير مسموح']);
     exit;
 }
