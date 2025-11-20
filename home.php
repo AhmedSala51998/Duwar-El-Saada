@@ -206,6 +206,13 @@ $purchasesAmountByMonth = $pdo->query("
     GROUP BY m
     ORDER BY m DESC
 ")->fetchAll(PDO::FETCH_KEY_PAIR);
+
+$custodiesValueByMonth = $pdo->query("
+    SELECT DATE_FORMAT(taken_at,'%Y-%m') AS m, SUM(main_amount) AS total
+    FROM custodies
+    GROUP BY m
+    ORDER BY m DESC
+")->fetchAll(PDO::FETCH_KEY_PAIR);
 ?>
 
 <div class="container">
@@ -272,6 +279,13 @@ $purchasesAmountByMonth = $pdo->query("
       <div class="chart-card">
         <h5 class="mb-3"><i class="bi bi-wallet2 text-success me-1"></i>عدد العهد حسب الشهر</h5>
         <canvas id="custodiesChart" height="200"></canvas>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="chart-card">
+        <h5 class="mb-3"><i class="bi bi-wallet2 text-success me-1"></i> قيمة العهد حسب الشهر</h5>
+        <canvas id="custodiesValueChart" height="200"></canvas>
       </div>
     </div>
 
@@ -348,6 +362,8 @@ const assetsValueLabels    = <?= json_encode(array_keys($assetsValueByMonth)) ?>
 const assetsValueData      = <?= json_encode(array_values($assetsValueByMonth)) ?>;
 const purchasesAmountLabels= <?= json_encode(array_keys($purchasesAmountByMonth)) ?>;
 const purchasesAmountData  = <?= json_encode(array_values($purchasesAmountByMonth)) ?>;
+const custodiesValueLabels = <?= json_encode(array_keys($custodiesValueByMonth)) ?>;
+const custodiesValueData   = <?= json_encode(array_values($custodiesValueByMonth)) ?>;
 
 // ================================
 // 🟢 مصفوفة لتخزين كل الشارتات
@@ -453,6 +469,21 @@ function createCharts() {
         type:'bar',
         data: { labels: purchasesAmountLabels, datasets:[{label:'قيمة المشتريات', data:purchasesAmountData, backgroundColor:'rgba(255,140,30,0.85)', hoverBackgroundColor:'rgba(255,160,50,1)', borderRadius:10}] },
         options: getBaseOptions()
+    }));
+
+     charts.push(new Chart(document.getElementById('custodiesValueChart'), {
+      type: 'bar',
+      data: {
+        labels: custodiesValueLabels,
+        datasets: [{
+          label: 'قيمة العهد',
+          data: custodiesValueData,
+          backgroundColor: 'rgba(40, 167, 69, 0.85)',      // نفس لون العهد الأساسي
+          hoverBackgroundColor: 'rgba(60, 190, 90, 1)',
+          borderRadius: 10
+        }]
+      },
+      options: baseOptions
     }));
 }
 
