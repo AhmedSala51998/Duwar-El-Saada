@@ -181,6 +181,15 @@ $custodiesByMonth = $pdo->query("SELECT DATE_FORMAT(taken_at,'%Y-%m') m, COUNT(*
   FROM custodies GROUP BY m ORDER BY m DESC LIMIT 6")->fetchAll(PDO::FETCH_KEY_PAIR);
 
 $assetsByPayer = $pdo->query("SELECT payer_name, COUNT(*) c FROM assets GROUP BY payer_name")->fetchAll(PDO::FETCH_KEY_PAIR);
+
+$assetsByMonth = $pdo->query("
+    SELECT DATE_FORMAT(created_at, '%Y-%m') AS m,
+           COUNT(*) AS c
+    FROM assets
+    GROUP BY m
+    ORDER BY m DESC
+    LIMIT 6
+")->fetchAll(PDO::FETCH_KEY_PAIR);
 ?>
 
 <div class="container">
@@ -257,6 +266,20 @@ $assetsByPayer = $pdo->query("SELECT payer_name, COUNT(*) c FROM assets GROUP BY
       </div>
     </div>
 
+    <div class="col-md-6">
+      <div class="chart-card">
+        <h5 class="mb-3"><i class="bi bi-building text-info me-1"></i> الأصول حسب الشهر</h5>
+        <canvas id="assetsMonthChart" height="200"></canvas>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="chart-card">
+        <h5 class="mb-3"><i class="bi bi-building text-warning me-1"></i> الأصول حسب الدافع</h5>
+        <canvas id="assetsBarChart" height="200"></canvas>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -278,6 +301,9 @@ const expensesData    = <?= json_encode(array_values($expensesByMonth)) ?>;
 
 const assetsLabels    = <?= json_encode(array_keys($assetsByPayer)) ?>;
 const assetsData      = <?= json_encode(array_values($assetsByPayer)) ?>;
+
+const assetsMonthLabels = <?= json_encode(array_keys($assetsByMonth)) ?>;
+const assetsMonthData   = <?= json_encode(array_values($assetsByMonth)) ?>;
 
 
 // ================================
@@ -422,6 +448,54 @@ new Chart(document.getElementById('assetsChart'), {
     },
     maintainAspectRatio: false
   }
+});
+
+// ================================
+// 🟧 Assets (Bar Chart جديد)
+// ================================
+new Chart(document.getElementById('assetsBarChart'), {
+  type: 'bar',
+  data: {
+    labels: assetsLabels,
+    datasets: [{
+      label: 'عدد الأصول',
+      data: assetsData,
+      backgroundColor: [
+        'rgba(255,110,20,0.85)',
+        'rgba(0,123,255,0.85)',
+        'rgba(40,167,69,0.85)',
+        'rgba(255,180,20,0.85)',
+        'rgba(220,53,69,0.85)'
+      ],
+      hoverBackgroundColor: [
+        'rgba(255,130,40,1)',
+        'rgba(20,140,255,1)',
+        'rgba(60,190,90,1)',
+        'rgba(255,200,40,1)',
+        'rgba(240,70,90,1)'
+      ],
+      borderRadius: 10
+    }]
+  },
+  options: baseOptions
+});
+
+// ================================
+// 🟦 Assets By Month (Bar Chart)
+// ================================
+new Chart(document.getElementById('assetsMonthChart'), {
+  type: 'bar',
+  data: {
+    labels: assetsMonthLabels,
+    datasets: [{
+      label: 'عدد الأصول',
+      data: assetsMonthData,
+      backgroundColor: 'rgba(0, 180, 255, 0.85)',
+      hoverBackgroundColor: 'rgba(30, 200, 255, 1)',
+      borderRadius: 10
+    }]
+  },
+  options: baseOptions
 });
 </script>
 

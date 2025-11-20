@@ -2230,50 +2230,49 @@ $current_page = basename($_SERVER['PHP_SELF']);
       border-color: #ff8a2a !important;
     }
     /* ========================================================= */
-/* 🌙🔥 Ultra Premium Dark Charts Theme */
-/* ========================================================= */
+    /* 🌙🔥 Ultra Premium Dark Charts Theme */
+    /* ========================================================= */
 
-body.dark-mode {
-  background: #111 !important;
-  color: #eee;
-}
+    body.dark-mode {
+      background: #111 !important;
+      color: #eee;
+    }
 
-/* ===== كروت الشارتات ===== */
-body.dark-mode .chart-card {
-  background: #181818 !important;
-  border-radius: 28px;
-  border: 1px solid #222;
-  box-shadow: 0 0 35px rgba(0,0,0,0.55);
-  transition: .3s;
-}
+    /* ===== كروت الشارتات ===== */
+    body.dark-mode .chart-card {
+      background: #181818 !important;
+      border-radius: 28px;
+      border: 1px solid #222;
+      box-shadow: 0 0 35px rgba(0,0,0,0.55);
+      transition: .3s;
+    }
 
-body.dark-mode .chart-card:hover {
-  box-shadow: 0 0 45px rgba(255,106,0,0.20);
-}
+    body.dark-mode .chart-card:hover {
+      box-shadow: 0 0 45px rgba(255,106,0,0.20);
+    }
 
-body.dark-mode .chart-card h5 {
-  color: #fff;
-}
+    body.dark-mode .chart-card h5 {
+      color: #fff;
+    }
 
-/* ===== ألوان الأعمدة الاحترافية الداكنة ===== */
-:root {
-  --orange-dark: rgba(255,110,10,0.85);
-  --blue-dark: rgba(0,123,255,0.85);
-  --green-dark: rgba(40,167,69,0.85);
-  --gray-dark: rgba(140,140,150,0.85);
+    /* ===== ألوان الأعمدة الاحترافية الداكنة ===== */
+    :root {
+      --orange-dark: rgba(255,110,10,0.85);
+      --blue-dark: rgba(0,123,255,0.85);
+      --green-dark: rgba(40,167,69,0.85);
+      --gray-dark: rgba(140,140,150,0.85);
 
-  /* درجات فخمة للـ hover */
-  --orange-dark-hover: rgba(255,120,20,1);
-  --blue-dark-hover: rgba(20,140,255,1);
-  --green-dark-hover: rgba(50,190,90,1);
-  --gray-dark-hover: rgba(160,160,170,1);
-}
+      /* درجات فخمة للـ hover */
+      --orange-dark-hover: rgba(255,120,20,1);
+      --blue-dark-hover: rgba(20,140,255,1);
+      --green-dark-hover: rgba(50,190,90,1);
+      --gray-dark-hover: rgba(160,160,170,1);
+    }
 
-/* ===== تنعيم الشارت نفسه ===== */
-body.dark-mode canvas {
-  background: transparent !important;
-}
-
+    /* ===== تنعيم الشارت نفسه ===== */
+    body.dark-mode canvas {
+      background: transparent !important;
+    }
 
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
