@@ -174,7 +174,7 @@ $purchasesByMonth = $pdo->query("SELECT DATE_FORMAT(op.created_at, '%Y-%m') AS m
 
 $ordersByMonth = $pdo->query("SELECT DATE_FORMAT(created_at,'%Y-%m') m, COUNT(*) c FROM orders GROUP BY m ORDER BY m DESC LIMIT 6")->fetchAll(PDO::FETCH_KEY_PAIR);
 
-$expensesByMonth = $pdo->query("SELECT DATE_FORMAT(created_at,'%Y-%m') m, SUM(expense_amount) total
+$expensesByMonth = $pdo->query("SELECT DATE_FORMAT(created_at,'%Y-%m') m, SUM(total_amount) total
   FROM expenses GROUP BY m ORDER BY m DESC LIMIT 6")->fetchAll(PDO::FETCH_KEY_PAIR);
 
 $custodiesByMonth = $pdo->query("SELECT DATE_FORMAT(taken_at,'%Y-%m') m, COUNT(*) c
@@ -185,6 +185,15 @@ $assetsByPayer = $pdo->query("SELECT payer_name, COUNT(*) c FROM assets GROUP BY
 $assetsByMonth = $pdo->query("
     SELECT DATE_FORMAT(created_at, '%Y-%m') AS m,
            COUNT(*) AS c
+    FROM assets
+    GROUP BY m
+    ORDER BY m DESC
+    LIMIT 6
+")->fetchAll(PDO::FETCH_KEY_PAIR);
+
+$assetsValueByMonth = $pdo->query("
+    SELECT DATE_FORMAT(created_at, '%Y-%m') AS m,
+           SUM(total_amount) AS total
     FROM assets
     GROUP BY m
     ORDER BY m DESC
@@ -268,7 +277,7 @@ $assetsByMonth = $pdo->query("
 
     <div class="col-md-6">
       <div class="chart-card">
-        <h5 class="mb-3"><i class="bi bi-building text-info me-1"></i> الأصول حسب الشهر</h5>
+        <h5 class="mb-3"><i class="bi bi-building text-info me-1"></i> عدد الأصول حسب الشهر</h5>
         <canvas id="assetsMonthChart" height="200"></canvas>
       </div>
     </div>
@@ -277,6 +286,13 @@ $assetsByMonth = $pdo->query("
       <div class="chart-card">
         <h5 class="mb-3"><i class="bi bi-building text-warning me-1"></i> الأصول حسب الدافع</h5>
         <canvas id="assetsBarChart" height="200"></canvas>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="chart-card">
+        <h5 class="mb-3"><i class="bi bi-building text-warning me-1"></i> قيمة الأصول حسب الشهر</h5>
+        <canvas id="assetsValueChart" height="200"></canvas>
       </div>
     </div>
 
@@ -304,6 +320,9 @@ const assetsData      = <?= json_encode(array_values($assetsByPayer)) ?>;
 
 const assetsMonthLabels = <?= json_encode(array_keys($assetsByMonth)) ?>;
 const assetsMonthData   = <?= json_encode(array_values($assetsByMonth)) ?>;
+
+const assetsValueLabels = <?= json_encode(array_keys($assetsValueByMonth)) ?>;
+const assetsValueData   = <?= json_encode(array_values($assetsValueByMonth)) ?>;
 
 
 // ================================
@@ -492,6 +511,24 @@ new Chart(document.getElementById('assetsMonthChart'), {
       data: assetsMonthData,
       backgroundColor: 'rgba(0, 180, 255, 0.85)',
       hoverBackgroundColor: 'rgba(30, 200, 255, 1)',
+      borderRadius: 10
+    }]
+  },
+  options: baseOptions
+});
+
+// ================================
+// 🟨 Assets Value By Month (SUM)
+// ================================
+new Chart(document.getElementById('assetsValueChart'), {
+  type: 'bar',
+  data: {
+    labels: assetsValueLabels,
+    datasets: [{
+      label: 'قيمة الأصول',
+      data: assetsValueData,
+      backgroundColor: 'rgba(255, 193, 7, 0.85)',          // أصفر داكن
+      hoverBackgroundColor: 'rgba(255, 210, 40, 1)',
       borderRadius: 10
     }]
   },
