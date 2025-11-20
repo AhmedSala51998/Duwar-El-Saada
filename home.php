@@ -839,24 +839,48 @@ function createChartWithFilter(canvasId, dataBy, label, color, filterId) {
 // إنشاء شارتات الأصول
 createChartWithFilter('assetsMonthChart', assetsMonthDataBy, 'عدد الأصول حسب الشهر', 'rgba(0,123,255,0.85)', 'assetsMonthFilter');
 createChartWithFilter('assetsValueChart', assetsValueDataBy, 'قيمة الأصول حسب الشهر', 'rgba(255,110,20,0.85)', 'assetsValueFilter');
+function getAllPayers(dataBy) {
+    const payers = new Set();
+
+    Object.values(dataBy).forEach(periods => {
+        Object.values(periods).forEach(p => {
+            Object.keys(p).forEach(k => payers.add(k));
+        });
+    });
+
+    return Array.from(payers);
+}
+
 
 // Pie Chart لعدد الأصول حسب الدافع
 function createChartWithFilterPie(canvasId, dataBy, label, colors, filterId) {
     const ctx = document.getElementById(canvasId).getContext("2d");
+    let currentType = "month";
 
-    // Default = month
-    let type = "month";
+    const payers = getAllPayers(dataBy);
 
-    // آخر فترة موجودة
-    let lastPeriod = Object.keys(dataBy[type]).pop();
+    function buildTotals(type) {
+        const totals = {};
+        payers.forEach(p => totals[p] = 0);
+
+        Object.values(dataBy[type]).forEach(period => {
+            Object.keys(period).forEach(payer => {
+                totals[payer] += period[payer];
+            });
+        });
+
+        return totals;
+    }
+
+    const totals = buildTotals(currentType);
 
     const chart = new Chart(ctx, {
         type: "pie",
         data: {
-            labels: Object.keys(dataBy[type][lastPeriod]),
+            labels: Object.keys(totals),
             datasets: [{
                 label: label,
-                data: Object.values(dataBy[type][lastPeriod]),
+                data: Object.values(totals),
                 backgroundColor: colors
             }]
         },
@@ -865,17 +889,14 @@ function createChartWithFilterPie(canvasId, dataBy, label, colors, filterId) {
 
     charts[canvasId] = chart;
 
-    // FLTER
     document.getElementById(filterId).addEventListener("change", function () {
-        const type = this.value;
+        currentType = this.value;
 
-        const periods = Object.keys(dataBy[type]);
-        if (periods.length === 0) return;
+        const newTotals = buildTotals(currentType);
 
-        const lastPeriod = periods[periods.length - 1]; // آخر فترة
+        chart.data.labels = Object.keys(newTotals);
+        chart.data.datasets[0].data = Object.values(newTotals);
 
-        chart.data.labels = Object.keys(dataBy[type][lastPeriod]);
-        chart.data.datasets[0].data = Object.values(dataBy[type][lastPeriod]);
         chart.update();
     });
 }
@@ -884,19 +905,29 @@ function createChartWithFilterPie(canvasId, dataBy, label, colors, filterId) {
 function createChartWithFilterBar(canvasId, dataBy, label, color, filterId) {
     const ctx = document.getElementById(canvasId).getContext("2d");
 
-    let type = "month";
-    let lastPeriod = Object.keys(dataBy[type]).pop();
+    let currentType = "month";
+
+    const payers = getAllPayers(dataBy);
+
+    function buildDataset(type) {
+        const periods = Object.keys(dataBy[type]);
+        const datasets = payers.map(payer => ({
+            label: payer,
+            data: periods.map(period => dataBy[type][period][payer] || 0),
+            backgroundColor: color,
+            borderRadius: 8
+        }));
+
+        return { periods, datasets };
+    }
+
+    const initial = buildDataset(currentType);
 
     const chart = new Chart(ctx, {
         type: "bar",
         data: {
-            labels: Object.keys(dataBy[type][lastPeriod]),
-            datasets: [{
-                label: label,
-                data: Object.values(dataBy[type][lastPeriod]),
-                backgroundColor: color,
-                borderRadius: 10
-            }]
+            labels: initial.periods,
+            datasets: initial.datasets
         },
         options: getBaseOptions()
     });
@@ -904,18 +935,17 @@ function createChartWithFilterBar(canvasId, dataBy, label, color, filterId) {
     charts[canvasId] = chart;
 
     document.getElementById(filterId).addEventListener("change", function () {
-        const type = this.value;
+        currentType = this.value;
 
-        const periods = Object.keys(dataBy[type]);
-        if (periods.length === 0) return;
+        const newData = buildDataset(currentType);
 
-        const lastPeriod = periods[periods.length - 1];
+        chart.data.labels = newData.periods;
+        chart.data.datasets = newData.datasets;
 
-        chart.data.labels = Object.keys(dataBy[type][lastPeriod]);
-        chart.data.datasets[0].data = Object.values(dataBy[type][lastPeriod]);
         chart.update();
     });
 }
+
 
 // ألوان Pie
 const pieColors = [
