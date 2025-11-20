@@ -853,35 +853,60 @@ function getAllPayers(dataBy) {
 
 
 // Pie Chart لعدد الأصول حسب الدافع
+// مساعدات
+function sortPeriods(periods, type) {
+    // بسيطة: لو الperiods بصيغة YYYY-MM نرتبها كسترينج طبيعية،
+    // لو بصيغة ISO-week '%x-%v' نرتب كسلسلة أيضاً (يعمل غالباً)
+    // يمكن تعديلها لاحقاً لو احتجت ترتيب خاص.
+    return periods.slice().sort();
+}
+
+function buildPeriodTotals(dataBy, type) {
+    // يرجع object: { period1: total, period2: total, ... }
+    const totals = {};
+    const periods = Object.keys(dataBy[type] || {});
+    periods.forEach(period => {
+        const periodObj = dataBy[type][period] || {};
+        let sum = 0;
+        Object.values(periodObj).forEach(v => {
+            sum += Number(v) || 0;
+        });
+        totals[period] = sum;
+    });
+    return totals;
+}
+
+// البديل الجديد لـ createChartWithFilterPie
 function createChartWithFilterPie(canvasId, dataBy, label, colors, filterId) {
     const ctx = document.getElementById(canvasId).getContext("2d");
     let currentType = "month";
 
-    const payers = getAllPayers(dataBy);
-
-    function buildTotals(type) {
-        const totals = {};
-        payers.forEach(p => totals[p] = 0);
-
-        Object.values(dataBy[type]).forEach(period => {
-            Object.keys(period).forEach(payer => {
-                totals[payer] += period[payer];
-            });
-        });
-
-        return totals;
+    // بناء الداتا الأولية (period -> total)
+    function getChartData(type) {
+        const totalsObj = buildPeriodTotals(dataBy, type); // { "2025-05": 1, ... }
+        const periods = sortPeriods(Object.keys(totalsObj), type);
+        const values = periods.map(p => totalsObj[p] || 0);
+        return { periods, values, totalsObj };
     }
 
-    const totals = buildTotals(currentType);
+    const initial = getChartData(currentType);
 
     const chart = new Chart(ctx, {
         type: "pie",
         data: {
-            labels: Object.keys(totals),
+            labels: initial.periods,
             datasets: [{
                 label: label,
-                data: Object.values(totals),
-                backgroundColor: colors
+                data: initial.values,
+                backgroundColor: (function generateColors(n) {
+                    // لو الألوان اللي بعتها أصغر من العدد، نكرر أو ننشئ ألوان جديدة
+                    if (Array.isArray(colors) && colors.length >= n) return colors;
+                    const out = [];
+                    for (let i = 0; i < n; i++) {
+                        out.push(colors[i % colors.length] || `rgba(${(i*47)%255},${(i*97)%255},${(i*151)%255},0.85)`);
+                    }
+                    return out;
+                })(initial.periods.length)
             }]
         },
         options: getBaseOptions()
@@ -889,17 +914,29 @@ function createChartWithFilterPie(canvasId, dataBy, label, colors, filterId) {
 
     charts[canvasId] = chart;
 
-    document.getElementById(filterId).addEventListener("change", function () {
-        currentType = this.value;
+    // عند تغيير الفلتر: نعيد بناء الداتا بالكامل (كل الفترات)
+    const filterEl = document.getElementById(filterId);
+    if (filterEl) {
+        filterEl.addEventListener("change", function () {
+            currentType = this.value;
+            const newData = getChartData(currentType);
 
-        const newTotals = buildTotals(currentType);
+            chart.data.labels = newData.periods;
+            chart.data.datasets[0].data = newData.values;
+            chart.data.datasets[0].backgroundColor = (function generateColors(n) {
+                if (Array.isArray(colors) && colors.length >= n) return colors;
+                const out = [];
+                for (let i = 0; i < n; i++) {
+                    out.push(colors[i % colors.length] || `rgba(${(i*47)%255},${(i*97)%255},${(i*151)%255},0.85)`);
+                }
+                return out;
+            })(newData.periods.length);
 
-        chart.data.labels = Object.keys(newTotals);
-        chart.data.datasets[0].data = Object.values(newTotals);
-
-        chart.update();
-    });
+            chart.update();
+        });
+    }
 }
+
 
 // Bar Chart لعدد الأصول حسب الدافع
 function createChartWithFilterBar(canvasId, dataBy, label, color, filterId) {
