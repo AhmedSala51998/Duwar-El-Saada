@@ -402,7 +402,11 @@ $assetsByYear_payer = $pdo->query("
     GROUP BY payer_name
 ")->fetchAll(PDO::FETCH_KEY_PAIR);
 
-$assetsDataBy = ['week' => $assetsByWeek, 'month' => $assetsByMonth, 'year' => $assetsByYear];
+$assetsDataBy_payer = [
+    'week' => $assetsByWeek_payer,
+    'month' => $assetsByMonth_payer,
+    'year' => $assetsByYear_payer
+];
 ?>
 
 <div class="container">
@@ -583,7 +587,7 @@ $assetsDataBy = ['week' => $assetsByWeek, 'month' => $assetsByMonth, 'year' => $
     <div class="col-md-6">
       <div class="chart-card">
         <div class="d-flex justify-content-between align-items-center mb-2">
-          <h5 class="mb-0"><i class="bi bi-building text-warning me-1"></i> عدد الأصول حسب الدافع (Bar)</h5>
+          <h5 class="mb-0"><i class="bi bi-building text-warning me-1"></i> عدد الأصول حسب الدافع</h5>
           <select class="form-select form-select-sm" id="assetsBarFilter" style="width:auto">
             <option value="week">أسبوع</option>
             <option value="month" selected>شهر</option>
@@ -816,18 +820,20 @@ createChartWithFilter('assetsValueChart', assetsValueDataBy, 'قيمة الأص�
 
 function createChartWithFilterPie(canvasId, dataBy, label, colors, filterId) {
     const ctx = document.getElementById(canvasId).getContext('2d');
+    const defaultPeriod = 'month'; // الفترة الافتراضية
     const chart = new Chart(ctx, {
         type: 'pie',
         data: {
-            labels: Object.keys(dataBy.month),
+            labels: Object.keys(dataBy[defaultPeriod]),
             datasets: [{
                 label: label,
-                data: Object.values(dataBy.month),
+                data: Object.values(dataBy[defaultPeriod]),
                 backgroundColor: colors
             }]
         },
         options: getBaseOptions()
     });
+
     charts[canvasId] = chart;
 
     // Filter
@@ -839,7 +845,7 @@ function createChartWithFilterPie(canvasId, dataBy, label, colors, filterId) {
     });
 }
 
-// Example: استخدم ألوان متنوعة للPie
+// ألوان متنوعة للPie
 const pieColors = [
     'rgba(40,167,69,0.85)',
     'rgba(0,123,255,0.85)',
