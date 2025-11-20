@@ -369,7 +369,7 @@ $assetsByMonth = $pdo->query("
 
 // الأصول (قيمة)
 $assetsValueByMonth = $pdo->query("
-    SELECT DATE_FORMAT(created_at,'%Y-%m') AS m, SUM(value) AS total
+    SELECT DATE_FORMAT(created_at,'%Y-%m') AS m, SUM(total_amount) AS total
     FROM assets
     GROUP BY m ORDER BY m DESC
 ")->fetchAll(PDO::FETCH_KEY_PAIR);
