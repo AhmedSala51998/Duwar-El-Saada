@@ -167,7 +167,7 @@ $ac = (int)$pdo->query("SELECT COUNT(*) c FROM assets")->fetch()['c'];
 $cc = (int)$pdo->query("SELECT COUNT(*) c FROM custodies")->fetch()['c'];
 $expenses_count = (int)$pdo->query("SELECT COUNT(*) c FROM expenses")->fetch()['c'];
 
-$purchasesByMonth = $pdo->query("SELECT DATE_FORMAT(op.created_at, '%Y-%m') AS m, COUNT(DISTINCT op.id) AS c
+/*$purchasesByMonth = $pdo->query("SELECT DATE_FORMAT(op.created_at, '%Y-%m') AS m, COUNT(DISTINCT op.id) AS c
   FROM orders_purchases op
   INNER JOIN purchases p ON op.id = p.order_id
   GROUP BY m ORDER BY m DESC")->fetchAll(PDO::FETCH_KEY_PAIR);
@@ -219,6 +219,122 @@ $expensesCountByMonth = $pdo->query("
     FROM expenses
     GROUP BY m
     ORDER BY m DESC
+")->fetchAll(PDO::FETCH_KEY_PAIR);*/
+
+
+// ===================================
+// 🟢 PHP: تجهيز البيانات لكل فلتر
+// ===================================
+
+// Purchases
+$purchasesByWeek = $pdo->query("
+    SELECT DATE_FORMAT(op.created_at, '%x-%v') AS w, COUNT(DISTINCT op.id) AS c
+    FROM orders_purchases op
+    INNER JOIN purchases p ON op.id = p.order_id
+    GROUP BY w ORDER BY w DESC
+")->fetchAll(PDO::FETCH_KEY_PAIR);
+
+$purchasesByMonth = $pdo->query("
+    SELECT DATE_FORMAT(op.created_at, '%Y-%m') AS m, COUNT(DISTINCT op.id) AS c
+    FROM orders_purchases op
+    INNER JOIN purchases p ON op.id = p.order_id
+    GROUP BY m ORDER BY m DESC
+")->fetchAll(PDO::FETCH_KEY_PAIR);
+
+$purchasesByYear = $pdo->query("
+    SELECT DATE_FORMAT(op.created_at, '%Y') AS y, COUNT(DISTINCT op.id) AS c
+    FROM orders_purchases op
+    INNER JOIN purchases p ON op.id = p.order_id
+    GROUP BY y ORDER BY y DESC
+")->fetchAll(PDO::FETCH_KEY_PAIR);
+
+// Orders
+$ordersByWeek = $pdo->query("
+    SELECT DATE_FORMAT(created_at, '%x-%v') AS w, COUNT(*) AS c
+    FROM orders
+    GROUP BY w ORDER BY w DESC
+")->fetchAll(PDO::FETCH_KEY_PAIR);
+
+$ordersByMonth = $pdo->query("
+    SELECT DATE_FORMAT(created_at, '%Y-%m') AS m, COUNT(*) AS c
+    FROM orders
+    GROUP BY m ORDER BY m DESC
+")->fetchAll(PDO::FETCH_KEY_PAIR);
+
+$ordersByYear = $pdo->query("
+    SELECT DATE_FORMAT(created_at, '%Y') AS y, COUNT(*) AS c
+    FROM orders
+    GROUP BY y ORDER BY y DESC
+")->fetchAll(PDO::FETCH_KEY_PAIR);
+
+// Expenses (عدد)
+$expensesCountByWeek = $pdo->query("
+    SELECT DATE_FORMAT(created_at, '%x-%v') AS w, COUNT(*) AS c
+    FROM expenses
+    GROUP BY w ORDER BY w DESC
+")->fetchAll(PDO::FETCH_KEY_PAIR);
+
+$expensesCountByMonth = $pdo->query("
+    SELECT DATE_FORMAT(created_at, '%Y-%m') AS m, COUNT(*) AS c
+    FROM expenses
+    GROUP BY m ORDER BY m DESC
+")->fetchAll(PDO::FETCH_KEY_PAIR);
+
+$expensesCountByYear = $pdo->query("
+    SELECT DATE_FORMAT(created_at, '%Y') AS y, COUNT(*) AS c
+    FROM expenses
+    GROUP BY y ORDER BY y DESC
+")->fetchAll(PDO::FETCH_KEY_PAIR);
+
+// Expenses (قيمة)
+$expensesValueByWeek = $pdo->query("
+    SELECT DATE_FORMAT(created_at, '%x-%v') AS w, SUM(total_amount) AS total
+    FROM expenses
+    GROUP BY w ORDER BY w DESC
+")->fetchAll(PDO::FETCH_KEY_PAIR);
+
+$expensesValueByMonth = $pdo->query("
+    SELECT DATE_FORMAT(created_at, '%Y-%m') AS m, SUM(total_amount) AS total
+    FROM expenses
+    GROUP BY m ORDER BY m DESC
+")->fetchAll(PDO::FETCH_KEY_PAIR);
+
+$expensesValueByYear = $pdo->query("
+    SELECT DATE_FORMAT(created_at, '%Y') AS y, SUM(total_amount) AS total
+    FROM expenses
+    GROUP BY y ORDER BY y DESC
+")->fetchAll(PDO::FETCH_KEY_PAIR);
+
+// Custodies (عدد)
+$custodiesByWeek = $pdo->query("
+    SELECT DATE_FORMAT(taken_at,'%x-%v') AS w, COUNT(*) AS c
+    FROM custodies GROUP BY w ORDER BY w DESC
+")->fetchAll(PDO::FETCH_KEY_PAIR);
+
+$custodiesByMonth = $pdo->query("
+    SELECT DATE_FORMAT(taken_at,'%Y-%m') AS m, COUNT(*) AS c
+    FROM custodies GROUP BY m ORDER BY m DESC
+")->fetchAll(PDO::FETCH_KEY_PAIR);
+
+$custodiesByYear = $pdo->query("
+    SELECT DATE_FORMAT(taken_at,'%Y') AS y, COUNT(*) AS c
+    FROM custodies GROUP BY y ORDER BY y DESC
+")->fetchAll(PDO::FETCH_KEY_PAIR);
+
+// Custodies (قيمة)
+$custodiesValueByWeek = $pdo->query("
+    SELECT DATE_FORMAT(taken_at,'%x-%v') AS w, SUM(main_amount) AS total
+    FROM custodies GROUP BY w ORDER BY w DESC
+")->fetchAll(PDO::FETCH_KEY_PAIR);
+
+$custodiesValueByMonth = $pdo->query("
+    SELECT DATE_FORMAT(taken_at,'%Y-%m') AS m, SUM(main_amount) AS total
+    FROM custodies GROUP BY m ORDER BY m DESC
+")->fetchAll(PDO::FETCH_KEY_PAIR);
+
+$custodiesValueByYear = $pdo->query("
+    SELECT DATE_FORMAT(taken_at,'%Y') AS y, SUM(main_amount) AS total
+    FROM custodies GROUP BY y ORDER BY y DESC
 ")->fetchAll(PDO::FETCH_KEY_PAIR);
 ?>
 
@@ -261,55 +377,112 @@ $expensesCountByMonth = $pdo->query("
   <!-- ===== الشارتات ===== -->
   <div class="row g-4">
 
+    <!-- عدد المشتريات -->
     <div class="col-md-6">
       <div class="chart-card">
-        <h5 class="mb-3"><i class="bi bi-bag text-warning me-1"></i> عدد المشتريات حسب الشهر</h5>
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h5 class="mb-0"><i class="bi bi-bag text-warning me-1"></i> عدد المشتريات</h5>
+          <select class="form-select form-select-sm" id="purchasesFilter" style="width:auto">
+            <option value="week">أسبوع</option>
+            <option value="month" selected>شهر</option>
+            <option value="year">سنة</option>
+          </select>
+        </div>
         <canvas id="purchasesChart" height="200"></canvas>
       </div>
     </div>
 
+    <!-- قيمة المشتريات -->
     <div class="col-md-6">
       <div class="chart-card">
-        <h5 class="mb-3"><i class="bi bi-bag text-warning me-1"></i> قيمة المشتريات حسب الشهر</h5>
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h5 class="mb-0"><i class="bi bi-bag text-warning me-1"></i> قيمة المشتريات</h5>
+          <select class="form-select form-select-sm" id="purchasesAmountFilter" style="width:auto">
+            <option value="week">أسبوع</option>
+            <option value="month" selected>شهر</option>
+            <option value="year">سنة</option>
+          </select>
+        </div>
         <canvas id="purchasesAmountChart" height="200"></canvas>
       </div>
     </div>
 
+    <!-- أوامر التشغيل -->
     <div class="col-md-6">
       <div class="chart-card">
-        <h5 class="mb-3"><i class="bi bi-gear text-primary me-1"></i> أوامر التشغيل</h5>
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h5 class="mb-0"><i class="bi bi-gear text-primary me-1"></i> أوامر التشغيل</h5>
+          <select class="form-select form-select-sm" id="ordersFilter" style="width:auto">
+            <option value="week">أسبوع</option>
+            <option value="month" selected>شهر</option>
+            <option value="year">سنة</option>
+          </select>
+        </div>
         <canvas id="ordersChart" height="200"></canvas>
       </div>
     </div>
 
+    <!-- عدد العهد -->
     <div class="col-md-6">
       <div class="chart-card">
-        <h5 class="mb-3"><i class="bi bi-wallet2 text-success me-1"></i>عدد العهد حسب الشهر</h5>
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h5 class="mb-0"><i class="bi bi-wallet2 text-success me-1"></i> عدد العهد</h5>
+          <select class="form-select form-select-sm" id="custodiesFilter" style="width:auto">
+            <option value="week">أسبوع</option>
+            <option value="month" selected>شهر</option>
+            <option value="year">سنة</option>
+          </select>
+        </div>
         <canvas id="custodiesChart" height="200"></canvas>
       </div>
     </div>
 
+    <!-- قيمة العهد -->
     <div class="col-md-6">
       <div class="chart-card">
-        <h5 class="mb-3"><i class="bi bi-wallet2 text-success me-1"></i> قيمة العهد حسب الشهر</h5>
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h5 class="mb-0"><i class="bi bi-wallet2 text-success me-1"></i> قيمة العهد</h5>
+          <select class="form-select form-select-sm" id="custodiesValueFilter" style="width:auto">
+            <option value="week">أسبوع</option>
+            <option value="month" selected>شهر</option>
+            <option value="year">سنة</option>
+          </select>
+        </div>
         <canvas id="custodiesValueChart" height="200"></canvas>
       </div>
     </div>
 
+    <!-- عدد المصروفات -->
     <div class="col-md-6">
       <div class="chart-card">
-        <h5 class="mb-3"><i class="bi bi-cash-stack text-secondary me-1"></i> عدد المصروفات حسب الشهر</h5>
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h5 class="mb-0"><i class="bi bi-cash-stack text-secondary me-1"></i> عدد المصروفات</h5>
+          <select class="form-select form-select-sm" id="expensesCountFilter" style="width:auto">
+            <option value="week">أسبوع</option>
+            <option value="month" selected>شهر</option>
+            <option value="year">سنة</option>
+          </select>
+        </div>
         <canvas id="expensesCountChart" height="200"></canvas>
       </div>
     </div>
 
+    <!-- قيمة المصروفات -->
     <div class="col-md-6">
       <div class="chart-card">
-        <h5 class="mb-3"><i class="bi bi-cash-stack text-secondary me-1"></i> قيمة المصروفات حسب الشهر</h5>
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h5 class="mb-0"><i class="bi bi-cash-stack text-secondary me-1"></i> قيمة المصروفات</h5>
+          <select class="form-select form-select-sm" id="expensesValueFilter" style="width:auto">
+            <option value="week">أسبوع</option>
+            <option value="month" selected>شهر</option>
+            <option value="year">سنة</option>
+          </select>
+        </div>
         <canvas id="expensesChart" height="200"></canvas>
       </div>
     </div>
 
+    <!-- عدد الأصول حسب الدافع -->
     <div class="col-md-6">
       <div class="chart-card">
         <h5 class="mb-3"><i class="bi bi-building text-success me-1"></i> عدد الأصول حسب الدافع</h5>
@@ -317,6 +490,7 @@ $expensesCountByMonth = $pdo->query("
       </div>
     </div>
 
+    <!-- عدد الأصول حسب الشهر -->
     <div class="col-md-6">
       <div class="chart-card">
         <h5 class="mb-3"><i class="bi bi-building text-info me-1"></i> عدد الأصول حسب الشهر</h5>
@@ -324,6 +498,7 @@ $expensesCountByMonth = $pdo->query("
       </div>
     </div>
 
+    <!-- عدد الأصول حسب الدافع (Bar) -->
     <div class="col-md-6">
       <div class="chart-card">
         <h5 class="mb-3"><i class="bi bi-building text-warning me-1"></i> عدد الأصول حسب الدافع</h5>
@@ -331,6 +506,7 @@ $expensesCountByMonth = $pdo->query("
       </div>
     </div>
 
+    <!-- قيمة الأصول حسب الشهر -->
     <div class="col-md-6">
       <div class="chart-card">
         <h5 class="mb-3"><i class="bi bi-building text-warning me-1"></i> قيمة الأصول حسب الشهر</h5>
@@ -345,7 +521,7 @@ $expensesCountByMonth = $pdo->query("
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 // ================================
-// 🟢 إعداد المتغيرات الديناميكية للألوان
+// 🟢 Get colors based on Dark/Light
 // ================================
 function getChartColors() {
     const isDark = document.body.classList.contains("dark-mode");
@@ -358,45 +534,13 @@ function getChartColors() {
 }
 
 // ================================
-// 🟢 تحويل بيانات PHP إلى JS
-// ================================
-const purchasesLabels      = <?= json_encode(array_keys($purchasesByMonth)) ?>;
-const purchasesData        = <?= json_encode(array_values($purchasesByMonth)) ?>;
-const ordersLabels         = <?= json_encode(array_keys($ordersByMonth)) ?>;
-const ordersData           = <?= json_encode(array_values($ordersByMonth)) ?>;
-const custodiesLabels      = <?= json_encode(array_keys($custodiesByMonth)) ?>;
-const custodiesData        = <?= json_encode(array_values($custodiesByMonth)) ?>;
-const expensesLabels       = <?= json_encode(array_keys($expensesByMonth)) ?>;
-const expensesData         = <?= json_encode(array_values($expensesByMonth)) ?>;
-const assetsLabels         = <?= json_encode(array_keys($assetsByPayer)) ?>;
-const assetsData           = <?= json_encode(array_values($assetsByPayer)) ?>;
-const assetsMonthLabels    = <?= json_encode(array_keys($assetsByMonth)) ?>;
-const assetsMonthData      = <?= json_encode(array_values($assetsByMonth)) ?>;
-const assetsValueLabels    = <?= json_encode(array_keys($assetsValueByMonth)) ?>;
-const assetsValueData      = <?= json_encode(array_values($assetsValueByMonth)) ?>;
-const purchasesAmountLabels= <?= json_encode(array_keys($purchasesAmountByMonth)) ?>;
-const purchasesAmountData  = <?= json_encode(array_values($purchasesAmountByMonth)) ?>;
-const custodiesValueLabels = <?= json_encode(array_keys($custodiesValueByMonth)) ?>;
-const custodiesValueData   = <?= json_encode(array_values($custodiesValueByMonth)) ?>;
-const expensesCountLabels = <?= json_encode(array_keys($expensesCountByMonth)) ?>;
-const expensesCountData   = <?= json_encode(array_values($expensesCountByMonth)) ?>;
-
-// ================================
-// 🟢 مصفوفة لتخزين كل الشارتات
-// ================================
-let charts = [];
-
-// ================================
-// 🟢 دالة إنشاء Base Options
+// 🟢 Base Options
 // ================================
 function getBaseOptions() {
     const { chartTextColor, chartGridColor, chartTooltipBg, chartTooltipText } = getChartColors();
     return {
         plugins: { 
-            legend: { 
-                display: false,
-                labels: { color: chartTextColor }
-            },
+            legend: { labels: { color: chartTextColor } },
             tooltip: {
                 backgroundColor: chartTooltipBg,
                 titleColor: chartTooltipText,
@@ -415,141 +559,125 @@ function getBaseOptions() {
 }
 
 // ================================
-// 🟧 إنشاء كل الشارتات وتخزينها
+// 🟢 Convert PHP arrays to JS
 // ================================
-function createCharts() {
-    charts = []; // إعادة تعيين المصفوفة
+const purchasesDataBy = {
+  week: <?= json_encode($purchasesByWeek) ?>,
+  month: <?= json_encode($purchasesByMonth) ?>,
+  year: <?= json_encode($purchasesByYear) ?>
+};
 
-    // Purchases
-    charts.push(new Chart(document.getElementById('purchasesChart'), {
+const ordersDataBy = {
+  week: <?= json_encode($ordersByWeek) ?>,
+  month: <?= json_encode($ordersByMonth) ?>,
+  year: <?= json_encode($ordersByYear) ?>
+};
+
+const expensesCountDataBy = {
+  week: <?= json_encode($expensesCountByWeek) ?>,
+  month: <?= json_encode($expensesCountByMonth) ?>,
+  year: <?= json_encode($expensesCountByYear) ?>
+};
+
+const expensesValueDataBy = {
+  week: <?= json_encode($expensesValueByWeek) ?>,
+  month: <?= json_encode($expensesValueByMonth) ?>,
+  year: <?= json_encode($expensesValueByYear) ?> 
+};
+
+const custodiesDataBy = {
+  week: <?= json_encode($custodiesByWeek) ?>,
+  month: <?= json_encode($custodiesByMonth) ?>,
+  year: <?= json_encode($custodiesByYear) ?>
+};
+
+const custodiesValueDataBy = {
+  week: <?= json_encode($custodiesValueByWeek) ?>,
+  month: <?= json_encode($custodiesValueByMonth) ?>,
+  year: <?= json_encode($custodiesValueByYear) ?>
+};
+
+// ================================
+// 🟢 Charts array
+// ================================
+let charts = {};
+
+// ================================
+// 🟢 Create Charts
+// ================================
+function createChart(canvasId, dataBy, label, color) {
+    const ctx = document.getElementById(canvasId).getContext('2d');
+    const labels = Object.keys(dataBy.month); // default month
+    const data = Object.values(dataBy.month);
+
+    const chart = new Chart(ctx, {
         type: 'bar',
-        data: { labels: purchasesLabels, datasets: [{ label: 'عدد المشتريات', data: purchasesData, backgroundColor: 'rgba(255,110,20,0.85)', hoverBackgroundColor:'rgba(255,130,40,1)', borderRadius: 10 }] },
+        data: { labels, datasets: [{ label, data, backgroundColor: color, borderRadius: 10 }] },
         options: getBaseOptions()
-    }));
+    });
 
-    // Orders
-    const ordersCtx = document.getElementById('ordersChart').getContext('2d');
-    const lineGradient = ordersCtx.createLinearGradient(0,0,0,350);
-    lineGradient.addColorStop(0, "rgba(0,123,255,0.45)");
-    lineGradient.addColorStop(1, "rgba(0,123,255,0)");
-    charts.push(new Chart(ordersCtx, {
-        type: 'line',
-        data: { labels: ordersLabels, datasets: [{ label: 'عدد الأوامر', data: ordersData, borderColor:'#0d6efd', backgroundColor:lineGradient, tension:0.35, borderWidth:3, pointRadius:4, pointHoverRadius:6, fill:true }] },
-        options: getBaseOptions()
-    }));
+    // store chart
+    charts[canvasId] = chart;
 
-    // Custodies
-    charts.push(new Chart(document.getElementById('custodiesChart'), {
-        type: 'bar',
-        data: { labels: custodiesLabels, datasets:[{label:'عدد العهد', data:custodiesData, backgroundColor:'rgba(40,167,69,0.85)', hoverBackgroundColor:'rgba(60,190,90,1)', borderRadius:10}] },
-        options: getBaseOptions()
-    }));
-
-    // Expenses
-    charts.push(new Chart(document.getElementById('expensesChart'), {
-        type: 'bar',
-        data: { labels: expensesLabels, datasets:[{label:'المصروفات', data:expensesData, backgroundColor:'rgba(160,160,170,0.85)', hoverBackgroundColor:'rgba(180,180,190,1)', borderRadius:10}] },
-        options: getBaseOptions()
-    }));
-
-    // Assets Doughnut
-    charts.push(new Chart(document.getElementById('assetsChart'), {
-        type: 'doughnut',
-        data: { labels: assetsLabels, datasets:[{ data: assetsData, backgroundColor:['rgba(255,110,20,0.85)','rgba(0,123,255,0.85)','rgba(40,167,69,0.85)','rgba(255,180,20,0.85)','rgba(220,53,69,0.85)'] }] },
-        options: { plugins:{ legend:{ position:'bottom', labels:{ color:getChartColors().chartTextColor } } }, maintainAspectRatio:false }
-    }));
-
-    // Assets Bar
-    charts.push(new Chart(document.getElementById('assetsBarChart'), {
-        type: 'bar',
-        data: { labels: assetsLabels, datasets:[{label:'عدد الأصول', data:assetsData, backgroundColor:['rgba(255,110,20,0.85)','rgba(0,123,255,0.85)','rgba(40,167,69,0.85)','rgba(255,180,20,0.85)','rgba(220,53,69,0.85)'], hoverBackgroundColor:['rgba(255,130,40,1)','rgba(20,140,255,1)','rgba(60,190,90,1)','rgba(255,200,40,1)','rgba(240,70,90,1)'], borderRadius:10}] },
-        options: getBaseOptions()
-    }));
-
-    // Assets By Month
-    charts.push(new Chart(document.getElementById('assetsMonthChart'), {
-        type: 'bar',
-        data: { labels: assetsMonthLabels, datasets:[{label:'عدد الأصول', data:assetsMonthData, backgroundColor:'rgba(0,180,255,0.85)', hoverBackgroundColor:'rgba(30,200,255,1)', borderRadius:10}] },
-        options: getBaseOptions()
-    }));
-
-    // Assets Value By Month
-    charts.push(new Chart(document.getElementById('assetsValueChart'), {
-        type:'bar',
-        data: { labels: assetsValueLabels, datasets:[{label:'قيمة الأصول', data:assetsValueData, backgroundColor:'rgba(255,193,7,0.85)', hoverBackgroundColor:'rgba(255,210,40,1)', borderRadius:10}] },
-        options: getBaseOptions()
-    }));
-
-    // Purchases Amount By Month
-    charts.push(new Chart(document.getElementById('purchasesAmountChart'), {
-        type:'bar',
-        data: { labels: purchasesAmountLabels, datasets:[{label:'قيمة المشتريات', data:purchasesAmountData, backgroundColor:'rgba(255,140,30,0.85)', hoverBackgroundColor:'rgba(255,160,50,1)', borderRadius:10}] },
-        options: getBaseOptions()
-    }));
-
-     charts.push(new Chart(document.getElementById('custodiesValueChart'), {
-      type: 'bar',
-      data: {
-        labels: custodiesValueLabels,
-        datasets: [{
-          label: 'قيمة العهد',
-          data: custodiesValueData,
-          backgroundColor: 'rgba(40, 167, 69, 0.85)',      // نفس لون العهد الأساسي
-          hoverBackgroundColor: 'rgba(60, 190, 90, 1)',
-          borderRadius: 10
-        }]
-      },
-      options: getBaseOptions()
-    }));
-
-    charts.push(new Chart(document.getElementById('expensesCountChart'), {
-      type: 'bar',
-      data: {
-        labels: expensesCountLabels,
-        datasets: [{
-          label: 'عدد المصروفات',
-          data: expensesCountData,
-          backgroundColor: 'rgba(108,117,125,0.85)',      // نفس لون المصروفات
-          hoverBackgroundColor: 'rgba(130,140,150,1)',
-          borderRadius: 10
-        }]
-      },
-      options: getBaseOptions()
-    }));
+    return chart;
 }
 
-// إنشاء الشارتات أول مرة
-createCharts();
+// إنشاء كل الشارتات
+createChart('purchasesChart', purchasesDataBy, 'عدد المشتريات', 'rgba(255,110,20,0.85)');
+createChart('ordersChart', ordersDataBy, 'عدد الأوامر', 'rgba(0,123,255,0.85)');
+createChart('expensesCountChart', expensesCountDataBy, 'عدد المصروفات', 'rgba(108,117,125,0.85)');
+createChart('expensesChart', expensesValueDataBy, 'قيمة المصروفات', 'rgba(160,160,170,0.85)');
+createChart('custodiesChart', custodiesDataBy, 'عدد العهد', 'rgba(40,167,69,0.85)');
+createChart('custodiesValueChart', custodiesValueDataBy, 'قيمة العهد', 'rgba(40,167,69,0.85)');
 
 // ================================
-// 🟢 دالة تحديث الألوان مباشرة عند تبديل Dark/Light
+// 🟢 Filter Event Listeners
 // ================================
-function updateChartsColors() {
-    const { chartTextColor, chartGridColor, chartTooltipBg, chartTooltipText } = getChartColors();
-
-    charts.forEach(chart => {
-        // تحديث المحاور
-        if(chart.options.scales) {
-            if(chart.options.scales.x) { chart.options.scales.x.ticks.color = chartTextColor; chart.options.scales.x.grid.color = chartGridColor; }
-            if(chart.options.scales.y) { chart.options.scales.y.ticks.color = chartTextColor; chart.options.scales.y.grid.color = chartGridColor; }
-        }
-
-        // تحديث الليجيند
-        if(chart.options.plugins && chart.options.plugins.legend) {
-            chart.options.plugins.legend.labels.color = chartTextColor;
-        }
-
-        // تحديث التولتيب
-        if(chart.options.plugins && chart.options.plugins.tooltip) {
-            chart.options.plugins.tooltip.backgroundColor = chartTooltipBg;
-            chart.options.plugins.tooltip.titleColor = chartTooltipText;
-            chart.options.plugins.tooltip.bodyColor  = chartTooltipText;
-            chart.options.plugins.tooltip.borderColor= chartGridColor;
-        }
-
+function setupFilter(filterId, canvasId, dataBy) {
+    document.getElementById(filterId).addEventListener('change', function(){
+        const value = this.value; // week/month/year
+        const chart = charts[canvasId];
+        chart.data.labels = Object.keys(dataBy[value]);
+        chart.data.datasets[0].data = Object.values(dataBy[value]);
         chart.update();
     });
 }
+
+// إعداد كل الفلاتر
+setupFilter('purchasesFilter', 'purchasesChart', purchasesDataBy);
+setupFilter('ordersFilter', 'ordersChart', ordersDataBy);
+setupFilter('expensesCountFilter', 'expensesCountChart', expensesCountDataBy);
+setupFilter('expensesValueFilter', 'expensesChart', expensesValueDataBy);
+setupFilter('custodiesFilter', 'custodiesChart', custodiesDataBy);
+setupFilter('custodiesValueFilter', 'custodiesValueChart', custodiesValueDataBy);
+
+// ================================
+// 🟢 Dark/Light Mode update
+// ================================
+function updateChartsColors() {
+    Object.values(charts).forEach(chart => {
+        const { chartTextColor, chartGridColor, chartTooltipBg, chartTooltipText } = getChartColors();
+        chart.options.scales.x.ticks.color = chartTextColor;
+        chart.options.scales.x.grid.color = chartGridColor;
+        chart.options.scales.y.ticks.color = chartTextColor;
+        chart.options.scales.y.grid.color = chartGridColor;
+
+        chart.options.plugins.legend.labels.color = chartTextColor;
+        chart.options.plugins.tooltip.backgroundColor = chartTooltipBg;
+        chart.options.plugins.tooltip.titleColor = chartTooltipText;
+        chart.options.plugins.tooltip.bodyColor = chartTooltipText;
+        chart.options.plugins.tooltip.borderColor = chartGridColor;
+        chart.update();
+    });
+}
+
+// Example: toggle dark mode button
+document.querySelectorAll('.toggle-dark-mode').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        updateChartsColors();
+    });
+});
 </script>
 
 
