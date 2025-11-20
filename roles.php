@@ -301,7 +301,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         <h2 class="accordion-header" id="heading<?= $group.$r['id'] ?>">
                         <?php
                         $group_names = [
-                            'home' => 'الرئيسية',
                             'users' => 'المستخدمين',
                             'roles' => 'الأدوار',
                             'settings' => 'الإعدادات',
@@ -312,6 +311,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             'assets' => 'الأصول',
                             'expenses' => 'المصروفات',
                             'reports' => 'التقارير',
+                            'home' => 'الرئيسية',
                         ];
                         ?>
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<?= $group.$r['id'] ?>">
@@ -497,7 +497,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     <h2 class="accordion-header" id="headingAdd<?= $group ?>">
                     <?php
                     $group_names = [
-                        'home' => 'الرئيسية',
                         'users' => 'المستخدمين',
                         'roles' => 'الأدوار',
                         'settings' => 'الإعدادات',
@@ -508,6 +507,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         'assets' => 'الأصول',
                         'expenses' => 'المصروفات',
                         'reports' => 'التقارير',
+                        'home' => 'الرئيسية',
                     ];
                     ?>
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAdd<?= $group ?>">
