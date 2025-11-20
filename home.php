@@ -443,27 +443,35 @@ $assetsDataBy_payer = [
   </div>
 
   <!-- ===== كروت الإحصائيات ===== -->
+  <!-- ===== كروت الإحصائيات ===== -->
   <div class="row g-4 mb-4">
     <?php
     $cards = [
-      ["الأصناف", $pc, "bi-bag", "text-warning", "purchases.php"],
-      ["أوامر التشغيل", $oc, "bi-gear", "text-primary", "orders.php"],
-      ["الأصول", $ac, "bi-building", "text-success", "assetes.php"],
-      ["العهد", $cc, "bi-wallet2", "text-dark", "custodies.php"],
-      ["المصروفات", $expenses_count, "bi-cash-stack", "text-secondary", "expenses.php"],
-      ["التقارير", 6, "bi-graph-up-arrow", "text-purple", "reports.php"],
+      ["الأصناف", $pc, "bi-bag", "text-warning", "purchases.php", 'home.purchases_view'],
+      ["أوامر التشغيل", $oc, "bi-gear", "text-primary", "orders.php", 'home.orders_view'],
+      ["الأصول", $ac, "bi-building", "text-success", "assetes.php", 'home.assets_view'],
+      ["العهد", $cc, "bi-wallet2", "text-dark", "custodies.php", 'home.custodies_view'],
+      ["المصروفات", $expenses_count, "bi-cash-stack", "text-secondary", "expenses.php", 'home.expenses_view'],
+      ["التقارير", 6, "bi-graph-up-arrow", "text-purple", "reports.php", 'home.reports_view'],
     ];
-    foreach ($cards as $c): ?>
-      <div class="col-6 col-md-4 col-lg-2">
-        <a href="<?= $c[4] ?>" class="text-decoration-none">
-          <div class="stat-card">
-            <div class="stat-icon <?= $c[3] ?>"><i class="bi <?= $c[2] ?>"></i></div>
-            <div class="stat-title"><?= $c[0] ?></div>
-            <div class="stat-value"><?= $c[1] ?></div>
-          </div>
-        </a>
-      </div>
-    <?php endforeach; ?>
+
+    foreach ($cards as $c):
+      // فحص الصلاحية قبل عرض الكارت
+      if (has_permission($c[5])):
+    ?>
+        <div class="col-6 col-md-4 col-lg-2">
+          <a href="<?= $c[4] ?>" class="text-decoration-none">
+            <div class="stat-card">
+              <div class="stat-icon <?= $c[3] ?>"><i class="bi <?= $c[2] ?>"></i></div>
+              <div class="stat-title"><?= $c[0] ?></div>
+              <div class="stat-value"><?= $c[1] ?></div>
+            </div>
+          </a>
+        </div>
+    <?php 
+      endif;
+    endforeach; 
+    ?>
   </div>
 
   <hr class="my-5">
@@ -471,170 +479,214 @@ $assetsDataBy_payer = [
   <!-- ===== الشارتات ===== -->
   <div class="row g-4">
 
+    <?php if(has_permission('home.purchases_number_chart')): ?>
     <!-- عدد المشتريات -->
     <div class="col-md-6">
       <div class="chart-card">
         <div class="d-flex justify-content-between align-items-center mb-2">
           <h5 class="mb-0"><i class="bi bi-bag text-warning me-1"></i> عدد المشتريات</h5>
+          <?php if(has_permission('home.purchases_number_filter_chart')): ?>
           <select class="form-select form-select-sm" id="purchasesFilter" style="width:auto">
             <option value="week">أسبوع</option>
             <option value="month" selected>شهر</option>
             <option value="year">سنة</option>
           </select>
+          <?php endif ?>
         </div>
         <canvas id="purchasesChart" height="200"></canvas>
       </div>
     </div>
+    <?php endif ?>
 
+    <?php if(has_permission('home.purchases_value_chart')): ?>
     <!-- قيمة المشتريات -->
     <div class="col-md-6">
       <div class="chart-card">
         <div class="d-flex justify-content-between align-items-center mb-2">
           <h5 class="mb-0"><i class="bi bi-bag text-warning me-1"></i> قيمة المشتريات</h5>
+          <?php if(has_permission('home.purchases_value_filter_chart')): ?>
           <select class="form-select form-select-sm" id="purchasesAmountFilter" style="width:auto">
             <option value="week">أسبوع</option>
             <option value="month" selected>شهر</option>
             <option value="year">سنة</option>
           </select>
+          <?php endif ?>
         </div>
         <canvas id="purchasesAmountChart" height="200"></canvas>
       </div>
     </div>
+    <?php endif ?>
 
+    <?php if(has_permission('home.orders_chart')): ?>
     <!-- أوامر التشغيل -->
     <div class="col-md-6">
       <div class="chart-card">
         <div class="d-flex justify-content-between align-items-center mb-2">
           <h5 class="mb-0"><i class="bi bi-gear text-primary me-1"></i> أوامر التشغيل</h5>
+          <?php if(has_permission('home.orders_filter_chart')): ?>
           <select class="form-select form-select-sm" id="ordersFilter" style="width:auto">
             <option value="week">أسبوع</option>
             <option value="month" selected>شهر</option>
             <option value="year">سنة</option>
           </select>
+          <?php endif ?>
         </div>
         <canvas id="ordersChart" height="200"></canvas>
       </div>
     </div>
+    <?php endif ?>
 
+    <?php if(has_permission('home.custodies_number_chart')): ?>
     <!-- عدد العهد -->
     <div class="col-md-6">
       <div class="chart-card">
         <div class="d-flex justify-content-between align-items-center mb-2">
           <h5 class="mb-0"><i class="bi bi-wallet2 text-success me-1"></i> عدد العهد</h5>
+          <?php if(has_permission('home.custodies_number_filter_chart')): ?>
           <select class="form-select form-select-sm" id="custodiesFilter" style="width:auto">
             <option value="week">أسبوع</option>
             <option value="month" selected>شهر</option>
             <option value="year">سنة</option>
           </select>
+          <?php endif ?>
         </div>
         <canvas id="custodiesChart" height="200"></canvas>
       </div>
     </div>
+    <?php endif ?>
 
+    <?php if(has_permission('home.custodies_value_chart')): ?>
     <!-- قيمة العهد -->
     <div class="col-md-6">
       <div class="chart-card">
         <div class="d-flex justify-content-between align-items-center mb-2">
           <h5 class="mb-0"><i class="bi bi-wallet2 text-success me-1"></i> قيمة العهد</h5>
+          <?php if(has_permission('home.custodies_value_filter_chart')): ?>
           <select class="form-select form-select-sm" id="custodiesValueFilter" style="width:auto">
             <option value="week">أسبوع</option>
             <option value="month" selected>شهر</option>
             <option value="year">سنة</option>
           </select>
+          <?php endif ?>
         </div>
         <canvas id="custodiesValueChart" height="200"></canvas>
       </div>
     </div>
+    <?php endif ?>
 
+    <?php if(has_permission('home.expenses_number_chart')): ?>
     <!-- عدد المصروفات -->
     <div class="col-md-6">
       <div class="chart-card">
         <div class="d-flex justify-content-between align-items-center mb-2">
           <h5 class="mb-0"><i class="bi bi-cash-stack text-secondary me-1"></i> عدد المصروفات</h5>
+          <?php if(has_permission('home.expenses_number_filter_chart')): ?>
           <select class="form-select form-select-sm" id="expensesCountFilter" style="width:auto">
             <option value="week">أسبوع</option>
             <option value="month" selected>شهر</option>
             <option value="year">سنة</option>
           </select>
+          <?php endif ?>
         </div>
         <canvas id="expensesCountChart" height="200"></canvas>
       </div>
     </div>
+    <?php endif ?>
 
+    <?php if(has_permission('home.expenses_value_chart')): ?>
     <!-- قيمة المصروفات -->
     <div class="col-md-6">
       <div class="chart-card">
         <div class="d-flex justify-content-between align-items-center mb-2">
           <h5 class="mb-0"><i class="bi bi-cash-stack text-secondary me-1"></i> قيمة المصروفات</h5>
+          <?php if(has_permission('home.expenses_value_filter_chart')): ?>
           <select class="form-select form-select-sm" id="expensesValueFilter" style="width:auto">
             <option value="week">أسبوع</option>
             <option value="month" selected>شهر</option>
             <option value="year">سنة</option>
           </select>
+          <?php endif ?>
         </div>
         <canvas id="expensesChart" height="200"></canvas>
       </div>
     </div>
+    <?php endif ?>
 
+    <?php if(has_permission('home.assets_number_payer_bie_chart')): ?>
     <!-- عدد الأصول حسب الدافع -->
     <div class="col-md-6">
       <div class="chart-card">
         <div class="d-flex justify-content-between align-items-center mb-2">
           <h5 class="mb-0"><i class="bi bi-building text-success me-1"></i> عدد الأصول حسب الدافع</h5>
+          <?php if(has_permission('home.assets_number_payer_filter_bie_chart')): ?>
           <select class="form-select form-select-sm" id="assetsFilter" style="width:auto">
             <option value="week">أسبوع</option>
             <option value="month" selected>شهر</option>
             <option value="year">سنة</option>
           </select>
+          <?php endif ?>
         </div>
         <canvas id="assetsChart" height="200"></canvas>
       </div>
     </div>
+    <?php endif ?>
 
+    <?php if(has_permission('home.assets_number_month_chart')): ?>
     <!-- عدد الأصول حسب الشهر -->
     <div class="col-md-6">
       <div class="chart-card">
         <div class="d-flex justify-content-between align-items-center mb-2">
           <h5 class="mb-0"><i class="bi bi-building text-info me-1"></i> عدد الأصول حسب الشهر</h5>
+          <?php if(has_permission('home.assets_number_month_filter_chart')): ?>
           <select class="form-select form-select-sm" id="assetsMonthFilter" style="width:auto">
             <option value="week">أسبوع</option>
             <option value="month" selected>شهر</option>
             <option value="year">سنة</option>
           </select>
+          <?php endif ?>
         </div>
         <canvas id="assetsMonthChart" height="200"></canvas>
       </div>
     </div>
+    <?php endif ?>
 
+    <?php if(has_permission('home.assets_number_payer_bar_chart')): ?>
     <!-- عدد الأصول حسب الدافع (Bar) -->
     <div class="col-md-6">
       <div class="chart-card">
         <div class="d-flex justify-content-between align-items-center mb-2">
           <h5 class="mb-0"><i class="bi bi-building text-warning me-1"></i> عدد الأصول حسب الدافع</h5>
+          <?php if(has_permission('home.assets_number_payer_filter_bar_chart')): ?>
           <select class="form-select form-select-sm" id="assetsBarFilter" style="width:auto">
             <option value="week">أسبوع</option>
             <option value="month" selected>شهر</option>
             <option value="year">سنة</option>
           </select>
+          <?php endif ?>
         </div>
         <canvas id="assetsBarChart" height="200"></canvas>
       </div>
     </div>
+    <?php endif ?>
 
+    <?php if(has_permission('home.assets_value_chart')): ?>
     <!-- قيمة الأصول حسب الشهر -->
     <div class="col-md-6">
       <div class="chart-card">
         <div class="d-flex justify-content-between align-items-center mb-2">
           <h5 class="mb-0"><i class="bi bi-building text-warning me-1"></i> قيمة الأصول حسب الشهر</h5>
+          <?php if(has_permission('home.assets_value_filter_chart')): ?>
           <select class="form-select form-select-sm" id="assetsValueFilter" style="width:auto">
             <option value="week">أسبوع</option>
             <option value="month" selected>شهر</option>
             <option value="year">سنة</option>
           </select>
+          <?php endif ?>
         </div>
         <canvas id="assetsValueChart" height="200"></canvas>
       </div>
     </div>
+    <?php endif ?>
 
   </div>
 </div>

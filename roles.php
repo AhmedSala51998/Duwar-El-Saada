@@ -301,6 +301,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <h2 class="accordion-header" id="heading<?= $group.$r['id'] ?>">
                         <?php
                         $group_names = [
+                            'home' => 'الرئيسية',
                             'users' => 'المستخدمين',
                             'roles' => 'الأدوار',
                             'settings' => 'الإعدادات',
@@ -496,6 +497,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <h2 class="accordion-header" id="headingAdd<?= $group ?>">
                     <?php
                     $group_names = [
+                        'home' => 'الرئيسية',
                         'users' => 'المستخدمين',
                         'roles' => 'الأدوار',
                         'settings' => 'الإعدادات',
