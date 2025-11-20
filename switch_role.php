@@ -15,7 +15,7 @@ if (empty($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id'];
 
 // تحقق من أن المستخدم أدمن
-$stmt = $pdo->prepare("SELECT r.username 
+$stmt = $pdo->prepare("SELECT r.name 
                        FROM users u
                        JOIN roles r ON r.id = u.role_id
                        WHERE u.id = ?");
