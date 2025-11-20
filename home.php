@@ -336,6 +336,43 @@ $custodiesValueByYear = $pdo->query("
     SELECT DATE_FORMAT(taken_at,'%Y') AS y, SUM(main_amount) AS total
     FROM custodies GROUP BY y ORDER BY y DESC
 ")->fetchAll(PDO::FETCH_KEY_PAIR);
+
+
+// المشتريات (قيمة)
+$purchasesAmountByWeek = $pdo->query("
+    SELECT DATE_FORMAT(op.created_at, '%x-%v') AS w, SUM(p.unit_all_total) AS total
+    FROM orders_purchases op
+    INNER JOIN purchases p ON op.id = p.order_id
+    GROUP BY w ORDER BY w DESC
+")->fetchAll(PDO::FETCH_KEY_PAIR);
+
+$purchasesAmountByMonth = $pdo->query("
+    SELECT DATE_FORMAT(op.created_at, '%Y-%m') AS m, SUM(p.unit_all_total) AS total
+    FROM orders_purchases op
+    INNER JOIN purchases p ON op.id = p.order_id
+    GROUP BY m ORDER BY m DESC
+")->fetchAll(PDO::FETCH_KEY_PAIR);
+
+$purchasesAmountByYear = $pdo->query("
+    SELECT DATE_FORMAT(op.created_at, '%Y') AS y, SUM(p.unit_all_total) AS total
+    FROM orders_purchases op
+    INNER JOIN purchases p ON op.id = p.order_id
+    GROUP BY y ORDER BY y DESC
+")->fetchAll(PDO::FETCH_KEY_PAIR);
+
+// الأصول (عدد)
+$assetsByMonth = $pdo->query("
+    SELECT DATE_FORMAT(created_at,'%Y-%m') AS m, COUNT(*) AS c
+    FROM assets
+    GROUP BY m ORDER BY m DESC
+")->fetchAll(PDO::FETCH_KEY_PAIR);
+
+// الأصول (قيمة)
+$assetsValueByMonth = $pdo->query("
+    SELECT DATE_FORMAT(created_at,'%Y-%m') AS m, SUM(value) AS total
+    FROM assets
+    GROUP BY m ORDER BY m DESC
+")->fetchAll(PDO::FETCH_KEY_PAIR);
 ?>
 
 <div class="container">
@@ -597,6 +634,20 @@ const custodiesValueDataBy = {
   year: <?= json_encode($custodiesValueByYear) ?>
 };
 
+const purchasesAmountDataBy = {
+  week: <?= json_encode($purchasesAmountByWeek) ?>,
+  month: <?= json_encode($purchasesAmountByMonth) ?>,
+  year: <?= json_encode($purchasesAmountByYear) ?>
+};
+
+const assetsDataByMonth = {
+  month: <?= json_encode($assetsByMonth) ?>
+};
+
+const assetsValueDataByMonth = {
+  month: <?= json_encode($assetsValueByMonth) ?>
+};
+
 // ================================
 // 🟢 Charts array
 // ================================
@@ -629,6 +680,16 @@ createChart('expensesCountChart', expensesCountDataBy, 'عدد المصروفا�
 createChart('expensesChart', expensesValueDataBy, 'قيمة المصروفات', 'rgba(160,160,170,0.85)');
 createChart('custodiesChart', custodiesDataBy, 'عدد العهد', 'rgba(40,167,69,0.85)');
 createChart('custodiesValueChart', custodiesValueDataBy, 'قيمة العهد', 'rgba(40,167,69,0.85)');
+// المشتريات بالمبالغ
+createChart('purchasesAmountChart', purchasesAmountDataBy, 'قيمة المشتريات', 'rgba(255,140,30,0.85)');
+setupFilter('purchasesAmountFilter', 'purchasesAmountChart', purchasesAmountDataBy);
+
+// الأصول عدد
+createChart('assetsMonthChart', assetsDataByMonth, 'عدد الأصول حسب الشهر', 'rgba(0,123,255,0.85)');
+
+// الأصول قيمة
+createChart('assetsValueChart', assetsValueDataByMonth, 'قيمة الأصول حسب الشهر', 'rgba(255,193,7,0.85)');
+
 
 // ================================
 // 🟢 Filter Event Listeners
