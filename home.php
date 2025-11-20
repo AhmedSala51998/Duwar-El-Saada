@@ -483,7 +483,7 @@ function createCharts() {
           borderRadius: 10
         }]
       },
-      options: baseOptions
+      options: getBaseOptions()
     }));
 }
 
