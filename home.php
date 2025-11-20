@@ -881,32 +881,44 @@ function createChartWithFilterPie(canvasId, dataBy, label, colors, filterId) {
     const ctx = document.getElementById(canvasId).getContext("2d");
     let currentType = "month";
 
-    // بناء الداتا الأولية (period -> total)
-    function getChartData(type) {
-        const totalsObj = buildPeriodTotals(dataBy, type); // { "2025-05": 1, ... }
-        const periods = sortPeriods(Object.keys(totalsObj), type);
-        const values = periods.map(p => totalsObj[p] || 0);
-        return { periods, values, totalsObj };
+    function getAllPayers(dataBy) {
+        const payersSet = new Set();
+        Object.values(dataBy).forEach(periods => {
+            Object.values(periods).forEach(periodObj => {
+                Object.keys(periodObj).forEach(p => payersSet.add(p));
+            });
+        });
+        return Array.from(payersSet);
     }
 
-    const initial = getChartData(currentType);
+    const payers = getAllPayers(dataBy);
+
+    function buildData(type) {
+        const periods = Object.keys(dataBy[type]).sort(); // ترتيب أبجدي أو زمني
+        const labels = [];
+        const values = [];
+
+        periods.forEach(period => {
+            const periodObj = dataBy[type][period] || {};
+            Object.keys(periodObj).forEach(payer => {
+                labels.push(`${payer} (${period})`);
+                values.push(periodObj[payer]);
+            });
+        });
+
+        return { labels, values };
+    }
+
+    let chartData = buildData(currentType);
 
     const chart = new Chart(ctx, {
         type: "pie",
         data: {
-            labels: initial.periods,
+            labels: chartData.labels,
             datasets: [{
                 label: label,
-                data: initial.values,
-                backgroundColor: (function generateColors(n) {
-                    // لو الألوان اللي بعتها أصغر من العدد، نكرر أو ننشئ ألوان جديدة
-                    if (Array.isArray(colors) && colors.length >= n) return colors;
-                    const out = [];
-                    for (let i = 0; i < n; i++) {
-                        out.push(colors[i % colors.length] || `rgba(${(i*47)%255},${(i*97)%255},${(i*151)%255},0.85)`);
-                    }
-                    return out;
-                })(initial.periods.length)
+                data: chartData.values,
+                backgroundColor: chartData.labels.map((_, i) => colors[i % colors.length])
             }]
         },
         options: getBaseOptions()
@@ -914,27 +926,17 @@ function createChartWithFilterPie(canvasId, dataBy, label, colors, filterId) {
 
     charts[canvasId] = chart;
 
-    // عند تغيير الفلتر: نعيد بناء الداتا بالكامل (كل الفترات)
-    const filterEl = document.getElementById(filterId);
-    if (filterEl) {
-        filterEl.addEventListener("change", function () {
-            currentType = this.value;
-            const newData = getChartData(currentType);
+    // تغيير الفلتر
+    document.getElementById(filterId).addEventListener("change", function () {
+        currentType = this.value;
+        const newData = buildData(currentType);
 
-            chart.data.labels = newData.periods;
-            chart.data.datasets[0].data = newData.values;
-            chart.data.datasets[0].backgroundColor = (function generateColors(n) {
-                if (Array.isArray(colors) && colors.length >= n) return colors;
-                const out = [];
-                for (let i = 0; i < n; i++) {
-                    out.push(colors[i % colors.length] || `rgba(${(i*47)%255},${(i*97)%255},${(i*151)%255},0.85)`);
-                }
-                return out;
-            })(newData.periods.length);
+        chart.data.labels = newData.labels;
+        chart.data.datasets[0].data = newData.values;
+        chart.data.datasets[0].backgroundColor = newData.labels.map((_, i) => colors[i % colors.length]);
 
-            chart.update();
-        });
-    }
+        chart.update();
+    });
 }
 
 
