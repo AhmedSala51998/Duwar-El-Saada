@@ -263,9 +263,28 @@ $assetsByPayer = $pdo->query("SELECT payer_name, COUNT(*) c FROM assets GROUP BY
 <!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-  // Global Dark Mode Chart Style
-Chart.defaults.color = "#ccc";
-Chart.defaults.borderColor = "rgba(255,255,255,0.08)";
+// Convert PHP arrays to JS safely
+const purchasesLabels = <?= json_encode(array_keys($purchasesByMonth)) ?>;
+const purchasesData   = <?= json_encode(array_values($purchasesByMonth)) ?>;
+
+const ordersLabels    = <?= json_encode(array_keys($ordersByMonth)) ?>;
+const ordersData      = <?= json_encode(array_values($ordersByMonth)) ?>;
+
+const custodiesLabels = <?= json_encode(array_keys($custodiesByMonth)) ?>;
+const custodiesData   = <?= json_encode(array_values($custodiesByMonth)) ?>;
+
+const expensesLabels  = <?= json_encode(array_keys($expensesByMonth)) ?>;
+const expensesData    = <?= json_encode(array_values($expensesByMonth)) ?>;
+
+const assetsLabels    = <?= json_encode(array_keys($assetsByPayer)) ?>;
+const assetsData      = <?= json_encode(array_values($assetsByPayer)) ?>;
+
+
+// ================================
+// 🎨 Global Dark Mode Styling
+// ================================
+Chart.defaults.color = "#ccc"; // خط فاتح
+Chart.defaults.borderColor = "rgba(255,255,255,0.08)"; // جريد خفيف جداً
 
 const baseOptions = {
   plugins: { 
@@ -276,6 +295,7 @@ const baseOptions = {
       bodyColor: "#ddd",
       borderColor: "#444",
       borderWidth: 1,
+      padding: 10
     }
   },
   scales: {
@@ -289,15 +309,19 @@ const baseOptions = {
   maintainAspectRatio: false
 };
 
-// ======= المشتريات - Bar =======  
+
+// ================================
+// 🟧 Purchases (Bar)
+// ================================
 new Chart(document.getElementById('purchasesChart'), {
   type: 'bar',
   data: {
     labels: purchasesLabels,
     datasets: [{
+      label: 'عدد المشتريات',
       data: purchasesData,
-      backgroundColor: "var(--orange-dark)",
-      hoverBackgroundColor: "var(--orange-dark-hover)",
+      backgroundColor: 'rgba(255, 110, 20, 0.85)',        // لون داكن فخم
+      hoverBackgroundColor: 'rgba(255, 130, 40, 1)',       // لمعة لما تمر فوق
       borderRadius: 10
     }]
   },
@@ -305,9 +329,11 @@ new Chart(document.getElementById('purchasesChart'), {
 });
 
 
-// ======= أوامر التشغيل - Line Gradient =======  
+// ================================
+// 🔵 Orders (Line + Gradient)
+// ================================
 const ordersCtx = document.getElementById('ordersChart').getContext('2d');
-const lineGradient = ordersCtx.createLinearGradient(0,0,0,300);
+const lineGradient = ordersCtx.createLinearGradient(0,0,0,350);
 lineGradient.addColorStop(0, "rgba(0,123,255,0.45)");
 lineGradient.addColorStop(1, "rgba(0,123,255,0)");
 
@@ -316,120 +342,24 @@ new Chart(ordersCtx, {
   data: {
     labels: ordersLabels,
     datasets: [{
+      label: 'عدد الأوامر',
       data: ordersData,
-      borderColor: "#0d6efd",
+      borderColor: '#0d6efd',
       backgroundColor: lineGradient,
-      fill: true,
       tension: 0.35,
       borderWidth: 3,
       pointRadius: 4,
-      pointHoverRadius: 6
-    }]
-  },
-  options: baseOptions
-});
-
-
-// ======= العهد =======  
-new Chart(document.getElementById('custodiesChart'), {
-  type: 'bar',
-  data: {
-    labels: custodiesLabels,
-    datasets: [{
-      data: custodiesData,
-      backgroundColor: "var(--green-dark)",
-      hoverBackgroundColor: "var(--green-dark-hover)",
-      borderRadius: 10
-    }]
-  },
-  options: baseOptions
-});
-
-
-// ======= المصروفات =======  
-new Chart(document.getElementById('expensesChart'), {
-  type: 'bar',
-  data: {
-    labels: expensesLabels,
-    datasets: [{
-      data: expensesData,
-      backgroundColor: "var(--gray-dark)",
-      hoverBackgroundColor: "var(--gray-dark-hover)",
-      borderRadius: 10
-    }]
-  },
-  options: baseOptions
-});
-
-
-// ======= الأصول (دونات داكن) =======  
-new Chart(document.getElementById('assetsChart'), {
-  type: 'doughnut',
-  data: {
-    labels: assetsLabels,
-    datasets: [{
-      data: assetsData,
-      backgroundColor: [
-        "var(--orange-dark)",
-        "var(--blue-dark)",
-        "var(--green-dark)",
-        "var(--gray-dark)",
-        "rgba(255,50,50,0.85)"
-      ]
-    }]
-  },
-  options: {
-    plugins: { legend: { position: 'bottom', labels:{ color:"#ddd" } } },
-    maintainAspectRatio: false
-  }
-});
-
-// Convert PHP arrays to JS safely
-const purchasesLabels = <?= json_encode(array_keys($purchasesByMonth)) ?>;
-const purchasesData = <?= json_encode(array_values($purchasesByMonth)) ?>;
-
-const ordersLabels = <?= json_encode(array_keys($ordersByMonth)) ?>;
-const ordersData = <?= json_encode(array_values($ordersByMonth)) ?>;
-
-const custodiesLabels = <?= json_encode(array_keys($custodiesByMonth)) ?>;
-const custodiesData = <?= json_encode(array_values($custodiesByMonth)) ?>;
-
-const expensesLabels = <?= json_encode(array_keys($expensesByMonth)) ?>;
-const expensesData = <?= json_encode(array_values($expensesByMonth)) ?>;
-
-const assetsLabels = <?= json_encode(array_keys($assetsByPayer)) ?>;
-const assetsData = <?= json_encode(array_values($assetsByPayer)) ?>;
-
-new Chart(document.getElementById('purchasesChart'), {
-  type: 'bar',
-  data: {
-    labels: purchasesLabels,
-    datasets: [{
-      label: 'عدد المشتريات',
-      data: purchasesData,
-      backgroundColor: 'rgba(255, 106, 0, 0.85)',
-      borderRadius: 8
-    }]
-  },
-  options: { plugins: { legend: { display: false } }, maintainAspectRatio: false }
-});
-
-new Chart(document.getElementById('ordersChart'), {
-  type: 'line',
-  data: {
-    labels: ordersLabels,
-    datasets: [{
-      label: 'عدد الأوامر',
-      data: ordersData,
-      borderColor: '#007bff',
-      backgroundColor: 'rgba(0,123,255,0.12)',
-      tension: 0.35,
+      pointHoverRadius: 6,
       fill: true
     }]
   },
-  options: { plugins: { legend: { display: false } }, maintainAspectRatio: false }
+  options: baseOptions
 });
 
+
+// ================================
+// 🟩 Custodies (Bar)
+// ================================
 new Chart(document.getElementById('custodiesChart'), {
   type: 'bar',
   data: {
@@ -438,12 +368,17 @@ new Chart(document.getElementById('custodiesChart'), {
       label: 'عدد العهد',
       data: custodiesData,
       backgroundColor: 'rgba(40, 167, 69, 0.85)',
-      borderRadius: 8
+      hoverBackgroundColor: 'rgba(60, 190, 90, 1)',
+      borderRadius: 10
     }]
   },
-  options: { plugins: { legend: { display: false } }, maintainAspectRatio: false }
+  options: baseOptions
 });
 
+
+// ================================
+// ⚪ Expenses (Gray Bar)
+// ================================
 new Chart(document.getElementById('expensesChart'), {
   type: 'bar',
   data: {
@@ -451,24 +386,44 @@ new Chart(document.getElementById('expensesChart'), {
     datasets: [{
       label: 'المصروفات',
       data: expensesData,
-      backgroundColor: 'rgba(108,117,125,0.85)',
-      borderRadius: 8
+      backgroundColor: 'rgba(160, 160, 170, 0.85)',
+      hoverBackgroundColor: 'rgba(180, 180, 190, 1)',
+      borderRadius: 10
     }]
   },
-  options: { plugins: { legend: { display: false } }, maintainAspectRatio: false }
+  options: baseOptions
 });
 
+
+// ================================
+// 🍩 Assets (Doughnut)
+// ================================
 new Chart(document.getElementById('assetsChart'), {
   type: 'doughnut',
   data: {
     labels: assetsLabels,
     datasets: [{
       data: assetsData,
-      backgroundColor: ['#ff6a00','#007bff','#28a745','#ffc107','#dc3545']
+      backgroundColor: [
+        'rgba(255,110,20,0.85)',
+        'rgba(0,123,255,0.85)',
+        'rgba(40,167,69,0.85)',
+        'rgba(255,180,20,0.85)',
+        'rgba(220,53,69,0.85)'
+      ]
     }]
   },
-  options: { plugins: { legend: { position: 'bottom' } }, maintainAspectRatio: false }
+  options: {
+    plugins: { 
+      legend: { 
+        position: 'bottom',
+        labels: { color: '#ddd' }
+      } 
+    },
+    maintainAspectRatio: false
+  }
 });
 </script>
+
 
 <?php require __DIR__.'/partials/footer.php'; ?>
