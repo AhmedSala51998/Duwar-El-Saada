@@ -2633,7 +2633,7 @@ updateChartsColors(); // 🔥 حدث الشارتات عند تحميل الصف
 <script>
 function switchRole(role) {
     // هنا تضيف كود تغيير الدور، ممكن يكون طلب AJAX لتحديث الدور في الجلسة
-    fetch('switch_role.php', {
+    fetch('switch_role', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ role })
