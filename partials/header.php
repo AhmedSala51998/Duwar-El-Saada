@@ -2225,41 +2225,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
     body.dark-mode .btn-close {
         filter: invert(1) brightness(200%); /* يجعل الأيقونة بيضاء تماماً */
     }
-
-    /* ========== 🎨 Dark Mode for Charts ========== */
-body.dark-mode {
-  background: #121212 !important;
-  color: #eee !important;
-}
-
-body.dark-mode .chart-card {
-  background: #1e1f22 !important;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.35) !important;
-}
-
-body.dark-mode .chart-card h5 {
-  color: #e9e9e9 !important;
-}
-
-body.dark-mode .stat-card {
-  background: #1f1f1f !important;
-  color: #ddd !important;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.4) !important;
-}
-
-body.dark-mode .stat-icon {
-  background: rgba(255,106,0,0.12) !important;
-}
-
-body.dark-mode .hero-card {
-  background: linear-gradient(135deg, #7a3800, #b55b00, #ff9d3b) !important;
-}
-
-body.dark-mode .floating-logo {
-  background: #222 !important;
-  border-color: #ff8a2a !important;
-}
-
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
 </head>

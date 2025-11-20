@@ -263,186 +263,91 @@ $assetsByPayer = $pdo->query("SELECT payer_name, COUNT(*) c FROM assets GROUP BY
 <!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-const isDark = document.body.classList.contains("dark-mode");
+// Convert PHP arrays to JS safely
+const purchasesLabels = <?= json_encode(array_keys($purchasesByMonth)) ?>;
+const purchasesData = <?= json_encode(array_values($purchasesByMonth)) ?>;
 
-const chartText = isDark ? "#dcdcdc" : "#333";
-const gridColor = isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.06)";
-const borderColor = isDark ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.1)";
-</script>
-<script>
-// =========== إعداد الألوان حسب الثيم ===========
-const isDarkMode = document.body.classList.contains("dark-mode");
+const ordersLabels = <?= json_encode(array_keys($ordersByMonth)) ?>;
+const ordersData = <?= json_encode(array_values($ordersByMonth)) ?>;
 
-const baseText = isDarkMode ? "#e7e7e7" : "#333";
-const gridLine = isDarkMode ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.06)";
-const tooltipBg = isDarkMode ? "#2c2c2c" : "#fff";
+const custodiesLabels = <?= json_encode(array_keys($custodiesByMonth)) ?>;
+const custodiesData = <?= json_encode(array_values($custodiesByMonth)) ?>;
 
-// =========== Helper لإنشاء Gradient ===========
-function createGradient(ctx, color1, color2) {
-  const gradient = ctx.createLinearGradient(0, 0, 0, 300);
-  gradient.addColorStop(0, color1);
-  gradient.addColorStop(1, color2);
-  return gradient;
-}
+const expensesLabels = <?= json_encode(array_keys($expensesByMonth)) ?>;
+const expensesData = <?= json_encode(array_values($expensesByMonth)) ?>;
 
-// =========== المشتريات (Bar + Gradient) ===========
-{
-  const ctx = document.getElementById('purchasesChart').getContext('2d');
-  new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: purchasesLabels,
-      datasets: [{
-        label: "عدد المشتريات",
-        data: purchasesData,
-        backgroundColor: createGradient(ctx,
-          "rgba(255,120,40,0.9)",
-          "rgba(255,120,40,0.25)"
-        ),
-        borderRadius: 12,
-      }]
-    },
-    options: {
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          backgroundColor: tooltipBg,
-          titleColor: baseText,
-          bodyColor: baseText,
-        }
-      },
-      scales: {
-        x: { ticks: { color: baseText }, grid: { display: false } },
-        y: { ticks: { color: baseText }, grid: { color: gridLine } }
-      }
-    }
-  });
-}
+const assetsLabels = <?= json_encode(array_keys($assetsByPayer)) ?>;
+const assetsData = <?= json_encode(array_values($assetsByPayer)) ?>;
 
-// =========== الأوامر (Smooth Line + Glow) ===========
-{
-  const ctx = document.getElementById('ordersChart').getContext('2d');
-  new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: ordersLabels,
-      datasets: [{
-        label: 'عدد الأوامر',
-        data: ordersData,
-        borderColor: "#4da3ff",
-        borderWidth: 3,
-        fill: true,
-        backgroundColor: createGradient(ctx,
-          "rgba(0,140,255,0.45)",
-          "rgba(0,140,255,0.05)"
-        ),
-        tension: 0.35
-      }]
-    },
-    options: {
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          backgroundColor: tooltipBg,
-          titleColor: baseText,
-          bodyColor: baseText,
-        }
-      },
-      scales: {
-        x: { ticks: { color: baseText }, grid: { display: false } },
-        y: { ticks: { color: baseText }, grid: { color: gridLine } }
-      }
-    }
-  });
-}
+new Chart(document.getElementById('purchasesChart'), {
+  type: 'bar',
+  data: {
+    labels: purchasesLabels,
+    datasets: [{
+      label: 'عدد المشتريات',
+      data: purchasesData,
+      backgroundColor: 'rgba(255, 106, 0, 0.85)',
+      borderRadius: 8
+    }]
+  },
+  options: { plugins: { legend: { display: false } }, maintainAspectRatio: false }
+});
 
-// =========== العهد ===========
-{
-  const ctx = document.getElementById('custodiesChart').getContext('2d');
-  new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: custodiesLabels,
-      datasets: [{
-        data: custodiesData,
-        backgroundColor: createGradient(ctx,
-          "rgba(40,167,69,0.9)",
-          "rgba(40,167,69,0.25)"
-        ),
-        borderRadius: 12
-      }]
-    },
-    options: {
-      maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: {
-        x: { ticks: { color: baseText }, grid: { display: false } },
-        y: { ticks: { color: baseText }, grid: { color: gridLine } }
-      }
-    }
-  });
-}
+new Chart(document.getElementById('ordersChart'), {
+  type: 'line',
+  data: {
+    labels: ordersLabels,
+    datasets: [{
+      label: 'عدد الأوامر',
+      data: ordersData,
+      borderColor: '#007bff',
+      backgroundColor: 'rgba(0,123,255,0.12)',
+      tension: 0.35,
+      fill: true
+    }]
+  },
+  options: { plugins: { legend: { display: false } }, maintainAspectRatio: false }
+});
 
-// =========== المصروفات ===========
-{
-  const ctx = document.getElementById('expensesChart').getContext('2d');
-  new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: expensesLabels,
-      datasets: [{
-        data: expensesData,
-        backgroundColor: createGradient(ctx,
-          "rgba(180,180,180,0.9)",
-          "rgba(180,180,180,0.3)"
-        ),
-        borderRadius: 12
-      }]
-    },
-    options: {
-      maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: {
-        x: { ticks: { color: baseText }, grid: { display: false } },
-        y: { ticks: { color: baseText }, grid: { color: gridLine } }
-      }
-    }
-  });
-}
+new Chart(document.getElementById('custodiesChart'), {
+  type: 'bar',
+  data: {
+    labels: custodiesLabels,
+    datasets: [{
+      label: 'عدد العهد',
+      data: custodiesData,
+      backgroundColor: 'rgba(40, 167, 69, 0.85)',
+      borderRadius: 8
+    }]
+  },
+  options: { plugins: { legend: { display: false } }, maintainAspectRatio: false }
+});
 
-// =========== الأصول (Doughnut محترف) ===========
-{
-  const ctx = document.getElementById('assetsChart').getContext('2d');
-  new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      labels: assetsLabels,
-      datasets: [{
-        data: assetsData,
-        borderWidth: 2,
-        borderColor: isDarkMode ? "#222" : "#fff",
-        backgroundColor: [
-          "#ff6a00",
-          "#007bff",
-          "#28a745",
-          "#ffc107",
-          "#dc3545"
-        ],
-      }]
-    },
-    options: {
-      plugins: {
-        legend: {
-          position: "bottom",
-          labels: { color: baseText }
-        }
-      },
-      maintainAspectRatio: false
-    }
-  });
-}
+new Chart(document.getElementById('expensesChart'), {
+  type: 'bar',
+  data: {
+    labels: expensesLabels,
+    datasets: [{
+      label: 'المصروفات',
+      data: expensesData,
+      backgroundColor: 'rgba(108,117,125,0.85)',
+      borderRadius: 8
+    }]
+  },
+  options: { plugins: { legend: { display: false } }, maintainAspectRatio: false }
+});
+
+new Chart(document.getElementById('assetsChart'), {
+  type: 'doughnut',
+  data: {
+    labels: assetsLabels,
+    datasets: [{
+      data: assetsData,
+      backgroundColor: ['#ff6a00','#007bff','#28a745','#ffc107','#dc3545']
+    }]
+  },
+  options: { plugins: { legend: { position: 'bottom' } }, maintainAspectRatio: false }
+});
 </script>
 
 <?php require __DIR__.'/partials/footer.php'; ?>
