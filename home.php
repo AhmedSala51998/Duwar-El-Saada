@@ -263,6 +263,127 @@ $assetsByPayer = $pdo->query("SELECT payer_name, COUNT(*) c FROM assets GROUP BY
 <!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
+  // Global Dark Mode Chart Style
+Chart.defaults.color = "#ccc";
+Chart.defaults.borderColor = "rgba(255,255,255,0.08)";
+
+const baseOptions = {
+  plugins: { 
+    legend: { display: false },
+    tooltip: {
+      backgroundColor: "#000",
+      titleColor: "#fff",
+      bodyColor: "#ddd",
+      borderColor: "#444",
+      borderWidth: 1,
+    }
+  },
+  scales: {
+    x: {
+      grid: { display: false }
+    },
+    y: {
+      grid: { color: "rgba(255,255,255,0.05)" }
+    }
+  },
+  maintainAspectRatio: false
+};
+
+// ======= المشتريات - Bar =======  
+new Chart(document.getElementById('purchasesChart'), {
+  type: 'bar',
+  data: {
+    labels: purchasesLabels,
+    datasets: [{
+      data: purchasesData,
+      backgroundColor: "var(--orange-dark)",
+      hoverBackgroundColor: "var(--orange-dark-hover)",
+      borderRadius: 10
+    }]
+  },
+  options: baseOptions
+});
+
+
+// ======= أوامر التشغيل - Line Gradient =======  
+const ordersCtx = document.getElementById('ordersChart').getContext('2d');
+const lineGradient = ordersCtx.createLinearGradient(0,0,0,300);
+lineGradient.addColorStop(0, "rgba(0,123,255,0.45)");
+lineGradient.addColorStop(1, "rgba(0,123,255,0)");
+
+new Chart(ordersCtx, {
+  type: 'line',
+  data: {
+    labels: ordersLabels,
+    datasets: [{
+      data: ordersData,
+      borderColor: "#0d6efd",
+      backgroundColor: lineGradient,
+      fill: true,
+      tension: 0.35,
+      borderWidth: 3,
+      pointRadius: 4,
+      pointHoverRadius: 6
+    }]
+  },
+  options: baseOptions
+});
+
+
+// ======= العهد =======  
+new Chart(document.getElementById('custodiesChart'), {
+  type: 'bar',
+  data: {
+    labels: custodiesLabels,
+    datasets: [{
+      data: custodiesData,
+      backgroundColor: "var(--green-dark)",
+      hoverBackgroundColor: "var(--green-dark-hover)",
+      borderRadius: 10
+    }]
+  },
+  options: baseOptions
+});
+
+
+// ======= المصروفات =======  
+new Chart(document.getElementById('expensesChart'), {
+  type: 'bar',
+  data: {
+    labels: expensesLabels,
+    datasets: [{
+      data: expensesData,
+      backgroundColor: "var(--gray-dark)",
+      hoverBackgroundColor: "var(--gray-dark-hover)",
+      borderRadius: 10
+    }]
+  },
+  options: baseOptions
+});
+
+
+// ======= الأصول (دونات داكن) =======  
+new Chart(document.getElementById('assetsChart'), {
+  type: 'doughnut',
+  data: {
+    labels: assetsLabels,
+    datasets: [{
+      data: assetsData,
+      backgroundColor: [
+        "var(--orange-dark)",
+        "var(--blue-dark)",
+        "var(--green-dark)",
+        "var(--gray-dark)",
+        "rgba(255,50,50,0.85)"
+      ]
+    }]
+  },
+  options: {
+    plugins: { legend: { position: 'bottom', labels:{ color:"#ddd" } } },
+    maintainAspectRatio: false
+  }
+});
+
 // Convert PHP arrays to JS safely
 const purchasesLabels = <?= json_encode(array_keys($purchasesByMonth)) ?>;
 const purchasesData = <?= json_encode(array_values($purchasesByMonth)) ?>;
