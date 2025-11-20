@@ -384,52 +384,59 @@ $assetsValueByYear = $pdo->query("SELECT DATE_FORMAT(created_at,'%Y') AS y, SUM(
 // عدد الأصول حسب الدافع (Payer)
 // ===========================
 
-// الأسبوع: السنة-رقم الأسبوع (ISO week)
-$assetsByWeek_payer_raw = $pdo->query("
-    SELECT DATE_FORMAT(created_at,'%x-%v') AS period, payer_name AS label, COUNT(*) AS c
-    FROM assets
-    GROUP BY period, payer_name
-    ORDER BY period ASC
-")->fetchAll(PDO::FETCH_ASSOC);
-
-// الشهر: السنة-شهر
-$assetsByMonth_payer_raw = $pdo->query("
-    SELECT DATE_FORMAT(created_at,'%Y-%m') AS period, payer_name AS label, COUNT(*) AS c
-    FROM assets
-    GROUP BY period, payer_name
-    ORDER BY period ASC
-")->fetchAll(PDO::FETCH_ASSOC);
-
-// السنة
-$assetsByYear_payer_raw = $pdo->query("
-    SELECT DATE_FORMAT(created_at,'%Y') AS period, payer_name AS label, COUNT(*) AS c
-    FROM assets
-    GROUP BY period, payer_name
-    ORDER BY period ASC
-")->fetchAll(PDO::FETCH_ASSOC);
-
-// تحويل البيانات لمصفوفة JS
-function groupByPeriod($raw) {
+function groupPayersTotals($rows) {
     $result = [];
-    foreach ($raw as $row) {
-        $period = $row['period'];
-        $label = $row['label'];
-        $count = (int)$row['c'];
-        if (!isset($result[$period])) $result[$period] = [];
-        $result[$period][$label] = $count;
+
+    foreach ($rows as $row) {
+        $payer = $row['label'];
+        $count = $row['c'];
+
+        if (!isset($result[$payer])) {
+            $result[$payer] = 0;
+        }
+        $result[$payer] += $count;
     }
+
     return $result;
 }
 
-$assetsByWeek_payer  = groupByPeriod($assetsByWeek_payer_raw);
-$assetsByMonth_payer = groupByPeriod($assetsByMonth_payer_raw);
-$assetsByYear_payer  = groupByPeriod($assetsByYear_payer_raw);
+// ****** جلب البيانات ******
+
+// Week
+$assetsByWeek_payer_raw = $pdo->query("
+    SELECT payer_name AS label, DATE_FORMAT(created_at,'%x-%v') AS period, COUNT(*) AS c
+    FROM assets
+    GROUP BY period, payer_name
+")->fetchAll(PDO::FETCH_ASSOC);
+
+// Month
+$assetsByMonth_payer_raw = $pdo->query("
+    SELECT payer_name AS label, DATE_FORMAT(created_at,'%Y-%m') AS period, COUNT(*) AS c
+    FROM assets
+    GROUP BY period, payer_name
+")->fetchAll(PDO::FETCH_ASSOC);
+
+// Year
+$assetsByYear_payer_raw = $pdo->query("
+    SELECT payer_name AS label, DATE_FORMAT(created_at,'%Y') AS period, COUNT(*) AS c
+    FROM assets
+    GROUP BY period, payer_name
+")->fetchAll(PDO::FETCH_ASSOC);
+
+// ****** تجميع كل الفترات ******
+
+$assetsByWeek_payer  = groupPayersTotals($assetsByWeek_payer_raw);
+$assetsByMonth_payer = groupPayersTotals($assetsByMonth_payer_raw);
+$assetsByYear_payer  = groupPayersTotals($assetsByYear_payer_raw);
+
+// ****** إرسال البيانات للـ JS ******
 
 $assetsDataBy_payer = [
     'week'  => $assetsByWeek_payer,
     'month' => $assetsByMonth_payer,
     'year'  => $assetsByYear_payer
 ];
+
 ?>
 
 <div class="container">
@@ -844,18 +851,15 @@ createChartWithFilter('assetsValueChart', assetsValueDataBy, 'قيمة الأص�
 function createChartWithFilterPie(canvasId, dataBy, label, colors, filterId) {
     const ctx = document.getElementById(canvasId).getContext('2d');
 
-    // اختر أول نوع فترة متاح
-    let defaultType = 'month'; // ممكن تحدد حسب default في select
-    let periods = Object.keys(dataBy[defaultType]);
-    let defaultPeriod = periods[periods.length - 1]; // آخر فترة موجودة
+    let defaultType = 'month';
 
     const chart = new Chart(ctx, {
         type: 'pie',
         data: {
-            labels: Object.keys(dataBy[defaultType][defaultPeriod]),
+            labels: Object.keys(dataBy[defaultType]),
             datasets: [{
                 label: label,
-                data: Object.values(dataBy[defaultType][defaultPeriod]),
+                data: Object.values(dataBy[defaultType]),
                 backgroundColor: colors
             }]
         },
@@ -864,34 +868,29 @@ function createChartWithFilterPie(canvasId, dataBy, label, colors, filterId) {
 
     charts[canvasId] = chart;
 
-    // Filter
     document.getElementById(filterId).addEventListener('change', function() {
-        const type = this.value; // week/month/year
-        const periods = Object.keys(dataBy[type]);
-        if (periods.length === 0) return;
+        const type = this.value;
 
-        const period = periods[periods.length - 1]; // آخر فترة موجودة
-        chart.data.labels = Object.keys(dataBy[type][period]);
-        chart.data.datasets[0].data = Object.values(dataBy[type][period]);
+        chart.data.labels = Object.keys(dataBy[type]);
+        chart.data.datasets[0].data = Object.values(dataBy[type]);
         chart.update();
     });
 }
+
 
 // Bar Chart لعدد الأصول حسب الدافع
 function createChartWithFilterBar(canvasId, dataBy, label, color, filterId) {
     const ctx = document.getElementById(canvasId).getContext('2d');
 
     let defaultType = 'month';
-    let periods = Object.keys(dataBy[defaultType]);
-    let defaultPeriod = periods[periods.length - 1];
 
     const chart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: Object.keys(dataBy[defaultType][defaultPeriod]),
+            labels: Object.keys(dataBy[defaultType]),
             datasets: [{
                 label: label,
-                data: Object.values(dataBy[defaultType][defaultPeriod]),
+                data: Object.values(dataBy[defaultType]),
                 backgroundColor: color,
                 borderRadius: 10
             }]
@@ -901,18 +900,15 @@ function createChartWithFilterBar(canvasId, dataBy, label, color, filterId) {
 
     charts[canvasId] = chart;
 
-    const filterEl = document.getElementById(filterId);
-    filterEl.addEventListener('change', function() {
+    document.getElementById(filterId).addEventListener('change', function() {
         const type = this.value;
-        const periods = Object.keys(dataBy[type]);
-        if (periods.length === 0) return;
 
-        const period = periods[periods.length - 1];
-        chart.data.labels = Object.keys(dataBy[type][period]);
-        chart.data.datasets[0].data = Object.values(dataBy[type][period]);
+        chart.data.labels = Object.keys(dataBy[type]);
+        chart.data.datasets[0].data = Object.values(dataBy[type]);
         chart.update();
     });
 }
+
 
 // ألوان Pie
 const pieColors = [
