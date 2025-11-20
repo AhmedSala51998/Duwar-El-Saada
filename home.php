@@ -316,269 +316,178 @@ $purchasesAmountByMonth = $pdo->query("
 <!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-
-// detect dark mode
-const isDark = document.body.classList.contains("dark-mode");
-
-// colors based on mode
-const chartTextColor = isDark ? "#ccc" : "#111";
-const chartGridColor = isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.08)";
-const chartTooltipBg = isDark ? "#000" : "#fff";
-const chartTooltipText = isDark ? "#fff" : "#000";
-
-// Convert PHP arrays to JS safely
-const purchasesLabels = <?= json_encode(array_keys($purchasesByMonth)) ?>;
-const purchasesData   = <?= json_encode(array_values($purchasesByMonth)) ?>;
-
-const ordersLabels    = <?= json_encode(array_keys($ordersByMonth)) ?>;
-const ordersData      = <?= json_encode(array_values($ordersByMonth)) ?>;
-
-const custodiesLabels = <?= json_encode(array_keys($custodiesByMonth)) ?>;
-const custodiesData   = <?= json_encode(array_values($custodiesByMonth)) ?>;
-
-const expensesLabels  = <?= json_encode(array_keys($expensesByMonth)) ?>;
-const expensesData    = <?= json_encode(array_values($expensesByMonth)) ?>;
-
-const assetsLabels    = <?= json_encode(array_keys($assetsByPayer)) ?>;
-const assetsData      = <?= json_encode(array_values($assetsByPayer)) ?>;
-
-const assetsMonthLabels = <?= json_encode(array_keys($assetsByMonth)) ?>;
-const assetsMonthData   = <?= json_encode(array_values($assetsByMonth)) ?>;
-
-const assetsValueLabels = <?= json_encode(array_keys($assetsValueByMonth)) ?>;
-const assetsValueData   = <?= json_encode(array_values($assetsValueByMonth)) ?>;
-
-const purchasesAmountLabels = <?= json_encode(array_keys($purchasesAmountByMonth)) ?>;
-const purchasesAmountData   = <?= json_encode(array_values($purchasesAmountByMonth)) ?>;
-
+// ================================
+// 🟢 إعداد المتغيرات الديناميكية للألوان
+// ================================
+function getChartColors() {
+    const isDark = document.body.classList.contains("dark-mode");
+    return {
+        chartTextColor: isDark ? "#ccc" : "#111",
+        chartGridColor: isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.08)",
+        chartTooltipBg: isDark ? "#000" : "#fff",
+        chartTooltipText: isDark ? "#fff" : "#000"
+    };
+}
 
 // ================================
-// 🎨 Global Dark Mode Styling
+// 🟢 تحويل بيانات PHP إلى JS
 // ================================
-Chart.defaults.color = chartTextColor;
-Chart.defaults.borderColor = chartGridColor;
-
-const baseOptions = {
-  plugins: { 
-    legend: { display: false },
-    tooltip: {
-      backgroundColor: "#000",
-      titleColor: "#fff",
-      bodyColor: chartTextColor ,
-      borderColor: "#444",
-      borderWidth: 1,
-      padding: 10
-    }
-  },
-  scales: {
-    x: {
-      grid: { display: false }
-    },
-    y: {
-      grid: { color: "rgba(255,255,255,0.05)" }
-    }
-  },
-  maintainAspectRatio: false
-};
-
+const purchasesLabels      = <?= json_encode(array_keys($purchasesByMonth)) ?>;
+const purchasesData        = <?= json_encode(array_values($purchasesByMonth)) ?>;
+const ordersLabels         = <?= json_encode(array_keys($ordersByMonth)) ?>;
+const ordersData           = <?= json_encode(array_values($ordersByMonth)) ?>;
+const custodiesLabels      = <?= json_encode(array_keys($custodiesByMonth)) ?>;
+const custodiesData        = <?= json_encode(array_values($custodiesByMonth)) ?>;
+const expensesLabels       = <?= json_encode(array_keys($expensesByMonth)) ?>;
+const expensesData         = <?= json_encode(array_values($expensesByMonth)) ?>;
+const assetsLabels         = <?= json_encode(array_keys($assetsByPayer)) ?>;
+const assetsData           = <?= json_encode(array_values($assetsByPayer)) ?>;
+const assetsMonthLabels    = <?= json_encode(array_keys($assetsByMonth)) ?>;
+const assetsMonthData      = <?= json_encode(array_values($assetsByMonth)) ?>;
+const assetsValueLabels    = <?= json_encode(array_keys($assetsValueByMonth)) ?>;
+const assetsValueData      = <?= json_encode(array_values($assetsValueByMonth)) ?>;
+const purchasesAmountLabels= <?= json_encode(array_keys($purchasesAmountByMonth)) ?>;
+const purchasesAmountData  = <?= json_encode(array_values($purchasesAmountByMonth)) ?>;
 
 // ================================
-// 🟧 Purchases (Bar)
+// 🟢 مصفوفة لتخزين كل الشارتات
 // ================================
-new Chart(document.getElementById('purchasesChart'), {
-  type: 'bar',
-  data: {
-    labels: purchasesLabels,
-    datasets: [{
-      label: 'عدد المشتريات',
-      data: purchasesData,
-      backgroundColor: 'rgba(255, 110, 20, 0.85)',        // لون داكن فخم
-      hoverBackgroundColor: 'rgba(255, 130, 40, 1)',       // لمعة لما تمر فوق
-      borderRadius: 10
-    }]
-  },
-  options: baseOptions
-});
-
+let charts = [];
 
 // ================================
-// 🔵 Orders (Line + Gradient)
+// 🟢 دالة إنشاء Base Options
 // ================================
-const ordersCtx = document.getElementById('ordersChart').getContext('2d');
-const lineGradient = ordersCtx.createLinearGradient(0,0,0,350);
-lineGradient.addColorStop(0, "rgba(0,123,255,0.45)");
-lineGradient.addColorStop(1, "rgba(0,123,255,0)");
-
-new Chart(ordersCtx, {
-  type: 'line',
-  data: {
-    labels: ordersLabels,
-    datasets: [{
-      label: 'عدد الأوامر',
-      data: ordersData,
-      borderColor: '#0d6efd',
-      backgroundColor: lineGradient,
-      tension: 0.35,
-      borderWidth: 3,
-      pointRadius: 4,
-      pointHoverRadius: 6,
-      fill: true
-    }]
-  },
-  options: baseOptions
-});
-
-
-// ================================
-// 🟩 Custodies (Bar)
-// ================================
-new Chart(document.getElementById('custodiesChart'), {
-  type: 'bar',
-  data: {
-    labels: custodiesLabels,
-    datasets: [{
-      label: 'عدد العهد',
-      data: custodiesData,
-      backgroundColor: 'rgba(40, 167, 69, 0.85)',
-      hoverBackgroundColor: 'rgba(60, 190, 90, 1)',
-      borderRadius: 10
-    }]
-  },
-  options: baseOptions
-});
-
+function getBaseOptions() {
+    const { chartTextColor, chartGridColor, chartTooltipBg, chartTooltipText } = getChartColors();
+    return {
+        plugins: { 
+            legend: { 
+                display: false,
+                labels: { color: chartTextColor }
+            },
+            tooltip: {
+                backgroundColor: chartTooltipBg,
+                titleColor: chartTooltipText,
+                bodyColor: chartTooltipText,
+                borderColor: chartGridColor,
+                borderWidth: 1,
+                padding: 10
+            }
+        },
+        scales: {
+            x: { ticks: { color: chartTextColor }, grid: { color: chartGridColor } },
+            y: { ticks: { color: chartTextColor }, grid: { color: chartGridColor } }
+        },
+        maintainAspectRatio: false
+    };
+}
 
 // ================================
-// ⚪ Expenses (Gray Bar)
+// 🟧 إنشاء كل الشارتات وتخزينها
 // ================================
-new Chart(document.getElementById('expensesChart'), {
-  type: 'bar',
-  data: {
-    labels: expensesLabels,
-    datasets: [{
-      label: 'المصروفات',
-      data: expensesData,
-      backgroundColor: 'rgba(160, 160, 170, 0.85)',
-      hoverBackgroundColor: 'rgba(180, 180, 190, 1)',
-      borderRadius: 10
-    }]
-  },
-  options: baseOptions
-});
+function createCharts() {
+    charts = []; // إعادة تعيين المصفوفة
 
+    // Purchases
+    charts.push(new Chart(document.getElementById('purchasesChart'), {
+        type: 'bar',
+        data: { labels: purchasesLabels, datasets: [{ label: 'عدد المشتريات', data: purchasesData, backgroundColor: 'rgba(255,110,20,0.85)', hoverBackgroundColor:'rgba(255,130,40,1)', borderRadius: 10 }] },
+        options: getBaseOptions()
+    }));
 
-// ================================
-// 🍩 Assets (Doughnut)
-// ================================
-new Chart(document.getElementById('assetsChart'), {
-  type: 'doughnut',
-  data: {
-    labels: assetsLabels,
-    datasets: [{
-      data: assetsData,
-      backgroundColor: [
-        'rgba(255,110,20,0.85)',
-        'rgba(0,123,255,0.85)',
-        'rgba(40,167,69,0.85)',
-        'rgba(255,180,20,0.85)',
-        'rgba(220,53,69,0.85)'
-      ]
-    }]
-  },
-  options: {
-    plugins: { 
-      legend: { 
-        position: 'bottom',
-        labels: { color: '#ddd' }
-      } 
-    },
-    maintainAspectRatio: false
-  }
-});
+    // Orders
+    const ordersCtx = document.getElementById('ordersChart').getContext('2d');
+    const lineGradient = ordersCtx.createLinearGradient(0,0,0,350);
+    lineGradient.addColorStop(0, "rgba(0,123,255,0.45)");
+    lineGradient.addColorStop(1, "rgba(0,123,255,0)");
+    charts.push(new Chart(ordersCtx, {
+        type: 'line',
+        data: { labels: ordersLabels, datasets: [{ label: 'عدد الأوامر', data: ordersData, borderColor:'#0d6efd', backgroundColor:lineGradient, tension:0.35, borderWidth:3, pointRadius:4, pointHoverRadius:6, fill:true }] },
+        options: getBaseOptions()
+    }));
 
-// ================================
-// 🟧 Assets (Bar Chart جديد)
-// ================================
-new Chart(document.getElementById('assetsBarChart'), {
-  type: 'bar',
-  data: {
-    labels: assetsLabels,
-    datasets: [{
-      label: 'عدد الأصول',
-      data: assetsData,
-      backgroundColor: [
-        'rgba(255,110,20,0.85)',
-        'rgba(0,123,255,0.85)',
-        'rgba(40,167,69,0.85)',
-        'rgba(255,180,20,0.85)',
-        'rgba(220,53,69,0.85)'
-      ],
-      hoverBackgroundColor: [
-        'rgba(255,130,40,1)',
-        'rgba(20,140,255,1)',
-        'rgba(60,190,90,1)',
-        'rgba(255,200,40,1)',
-        'rgba(240,70,90,1)'
-      ],
-      borderRadius: 10
-    }]
-  },
-  options: baseOptions
-});
+    // Custodies
+    charts.push(new Chart(document.getElementById('custodiesChart'), {
+        type: 'bar',
+        data: { labels: custodiesLabels, datasets:[{label:'عدد العهد', data:custodiesData, backgroundColor:'rgba(40,167,69,0.85)', hoverBackgroundColor:'rgba(60,190,90,1)', borderRadius:10}] },
+        options: getBaseOptions()
+    }));
 
-// ================================
-// 🟦 Assets By Month (Bar Chart)
-// ================================
-new Chart(document.getElementById('assetsMonthChart'), {
-  type: 'bar',
-  data: {
-    labels: assetsMonthLabels,
-    datasets: [{
-      label: 'عدد الأصول',
-      data: assetsMonthData,
-      backgroundColor: 'rgba(0, 180, 255, 0.85)',
-      hoverBackgroundColor: 'rgba(30, 200, 255, 1)',
-      borderRadius: 10
-    }]
-  },
-  options: baseOptions
-});
+    // Expenses
+    charts.push(new Chart(document.getElementById('expensesChart'), {
+        type: 'bar',
+        data: { labels: expensesLabels, datasets:[{label:'المصروفات', data:expensesData, backgroundColor:'rgba(160,160,170,0.85)', hoverBackgroundColor:'rgba(180,180,190,1)', borderRadius:10}] },
+        options: getBaseOptions()
+    }));
+
+    // Assets Doughnut
+    charts.push(new Chart(document.getElementById('assetsChart'), {
+        type: 'doughnut',
+        data: { labels: assetsLabels, datasets:[{ data: assetsData, backgroundColor:['rgba(255,110,20,0.85)','rgba(0,123,255,0.85)','rgba(40,167,69,0.85)','rgba(255,180,20,0.85)','rgba(220,53,69,0.85)'] }] },
+        options: { plugins:{ legend:{ position:'bottom', labels:{ color:getChartColors().chartTextColor } } }, maintainAspectRatio:false }
+    }));
+
+    // Assets Bar
+    charts.push(new Chart(document.getElementById('assetsBarChart'), {
+        type: 'bar',
+        data: { labels: assetsLabels, datasets:[{label:'عدد الأصول', data:assetsData, backgroundColor:['rgba(255,110,20,0.85)','rgba(0,123,255,0.85)','rgba(40,167,69,0.85)','rgba(255,180,20,0.85)','rgba(220,53,69,0.85)'], hoverBackgroundColor:['rgba(255,130,40,1)','rgba(20,140,255,1)','rgba(60,190,90,1)','rgba(255,200,40,1)','rgba(240,70,90,1)'], borderRadius:10}] },
+        options: getBaseOptions()
+    }));
+
+    // Assets By Month
+    charts.push(new Chart(document.getElementById('assetsMonthChart'), {
+        type: 'bar',
+        data: { labels: assetsMonthLabels, datasets:[{label:'عدد الأصول', data:assetsMonthData, backgroundColor:'rgba(0,180,255,0.85)', hoverBackgroundColor:'rgba(30,200,255,1)', borderRadius:10}] },
+        options: getBaseOptions()
+    }));
+
+    // Assets Value By Month
+    charts.push(new Chart(document.getElementById('assetsValueChart'), {
+        type:'bar',
+        data: { labels: assetsValueLabels, datasets:[{label:'قيمة الأصول', data:assetsValueData, backgroundColor:'rgba(255,193,7,0.85)', hoverBackgroundColor:'rgba(255,210,40,1)', borderRadius:10}] },
+        options: getBaseOptions()
+    }));
+
+    // Purchases Amount By Month
+    charts.push(new Chart(document.getElementById('purchasesAmountChart'), {
+        type:'bar',
+        data: { labels: purchasesAmountLabels, datasets:[{label:'قيمة المشتريات', data:purchasesAmountData, backgroundColor:'rgba(255,140,30,0.85)', hoverBackgroundColor:'rgba(255,160,50,1)', borderRadius:10}] },
+        options: getBaseOptions()
+    }));
+}
+
+// إنشاء الشارتات أول مرة
+createCharts();
 
 // ================================
-// 🟨 Assets Value By Month (SUM)
+// 🟢 دالة تحديث الألوان مباشرة عند تبديل Dark/Light
 // ================================
-new Chart(document.getElementById('assetsValueChart'), {
-  type: 'bar',
-  data: {
-    labels: assetsValueLabels,
-    datasets: [{
-      label: 'قيمة الأصول',
-      data: assetsValueData,
-      backgroundColor: 'rgba(255, 193, 7, 0.85)',          // أصفر داكن
-      hoverBackgroundColor: 'rgba(255, 210, 40, 1)',
-      borderRadius: 10
-    }]
-  },
-  options: baseOptions
-});
+function updateChartsColors() {
+    const { chartTextColor, chartGridColor, chartTooltipBg, chartTooltipText } = getChartColors();
 
-// ================================
-// 🟧 Purchases Amount By Month (SUM)
-// ================================
-new Chart(document.getElementById('purchasesAmountChart'), {
-  type: 'bar',
-  data: {
-    labels: purchasesAmountLabels,
-    datasets: [{
-      label: 'قيمة المشتريات',
-      data: purchasesAmountData,
-      backgroundColor: 'rgba(255,140,30,0.85)',
-      hoverBackgroundColor: 'rgba(255,160,50,1)',
-      borderRadius: 10
-    }]
-  },
-  options: baseOptions
-});
+    charts.forEach(chart => {
+        // تحديث المحاور
+        if(chart.options.scales) {
+            if(chart.options.scales.x) { chart.options.scales.x.ticks.color = chartTextColor; chart.options.scales.x.grid.color = chartGridColor; }
+            if(chart.options.scales.y) { chart.options.scales.y.ticks.color = chartTextColor; chart.options.scales.y.grid.color = chartGridColor; }
+        }
+
+        // تحديث الليجيند
+        if(chart.options.plugins && chart.options.plugins.legend) {
+            chart.options.plugins.legend.labels.color = chartTextColor;
+        }
+
+        // تحديث التولتيب
+        if(chart.options.plugins && chart.options.plugins.tooltip) {
+            chart.options.plugins.tooltip.backgroundColor = chartTooltipBg;
+            chart.options.plugins.tooltip.titleColor = chartTooltipText;
+            chart.options.plugins.tooltip.bodyColor  = chartTooltipText;
+            chart.options.plugins.tooltip.borderColor= chartGridColor;
+        }
+
+        chart.update();
+    });
+}
 </script>
 
 

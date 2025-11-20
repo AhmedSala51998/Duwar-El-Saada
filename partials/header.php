@@ -2537,41 +2537,76 @@ $current_page = basename($_SERVER['PHP_SELF']);
       }
     });
   </script>
-  <script>
-    // الموبايل
-    const toggleBtnMobile = document.getElementById('toggleDarkMobile');
-    const toggleIconMobile = document.getElementById('toggleIconMobile');
+<script>
+// ================================
+// 🟢 دالة تحديث ألوان الشارتات
+// ================================
+function getChartColors() {
+    const isDark = document.body.classList.contains("dark-mode");
+    return {
+        chartTextColor: isDark ? "#ccc" : "#111",
+        chartGridColor: isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.08)",
+        chartTooltipBg: isDark ? "#000" : "#fff",
+        chartTooltipText: isDark ? "#fff" : "#000"
+    };
+}
 
-    // الديسكتوب
-    const toggleBtnDesktop = document.getElementById('toggleDarkDesktop');
-    const toggleIconDesktop = document.getElementById('toggleIconDesktop');
+function updateChartsColors() {
+    const { chartTextColor, chartGridColor, chartTooltipBg, chartTooltipText } = getChartColors();
+    charts.forEach(chart => {
+        // تحديث المحاور
+        if(chart.options.scales) {
+            if(chart.options.scales.x) { chart.options.scales.x.ticks.color = chartTextColor; chart.options.scales.x.grid.color = chartGridColor; }
+            if(chart.options.scales.y) { chart.options.scales.y.ticks.color = chartTextColor; chart.options.scales.y.grid.color = chartGridColor; }
+        }
+        // تحديث الليجيند
+        if(chart.options.plugins && chart.options.plugins.legend) {
+            chart.options.plugins.legend.labels.color = chartTextColor;
+        }
+        // تحديث التولتيب
+        if(chart.options.plugins && chart.options.plugins.tooltip) {
+            chart.options.plugins.tooltip.backgroundColor = chartTooltipBg;
+            chart.options.plugins.tooltip.titleColor = chartTooltipText;
+            chart.options.plugins.tooltip.bodyColor  = chartTooltipText;
+            chart.options.plugins.tooltip.borderColor= chartGridColor;
+        }
+        chart.update();
+    });
+}
 
-    const logoutIcon = document.querySelector('#logoutBtn i');
+// ================================
+// 🟢 كود التبديل بين الداكن/الليت (موجود عندك)
+// ================================
+const toggleBtnMobile = document.getElementById('toggleDarkMobile');
+const toggleIconMobile = document.getElementById('toggleIconMobile');
 
-    function updateDarkModeIcons() {
-      const dark = document.body.classList.contains('dark-mode');
-      // أيقونات الداكن
-      toggleIconMobile.className = dark ? 'bi bi-sun' : 'bi bi-moon';
-      toggleIconDesktop.className = dark ? 'bi bi-sun' : 'bi bi-moon';
+const toggleBtnDesktop = document.getElementById('toggleDarkDesktop');
+const toggleIconDesktop = document.getElementById('toggleIconDesktop');
 
-      // ألوان الأيقونات
-      toggleIconMobile.style.color = dark ? '#fff' : '';
-      toggleIconDesktop.style.color = dark ? '#fff' : '';
-      logoutIcon.style.color = dark ? '#fff' : '';
-    }
+const logoutIcon = document.querySelector('#logoutBtn i');
 
-    // عند الضغط على أي زر
-    [toggleBtnMobile, toggleBtnDesktop].forEach(btn => {
-      btn.onclick = function() {
+function updateDarkModeIcons() {
+    const dark = document.body.classList.contains('dark-mode');
+    toggleIconMobile.className = dark ? 'bi bi-sun' : 'bi bi-moon';
+    toggleIconDesktop.className = dark ? 'bi bi-sun' : 'bi bi-moon';
+    toggleIconMobile.style.color = dark ? '#fff' : '';
+    toggleIconDesktop.style.color = dark ? '#fff' : '';
+    logoutIcon.style.color = dark ? '#fff' : '';
+}
+
+[toggleBtnMobile, toggleBtnDesktop].forEach(btn => {
+    btn.onclick = function() {
         document.body.classList.toggle("dark-mode");
         localStorage.setItem("dark-mode", document.body.classList.contains("dark-mode") ? "on" : "off");
         updateDarkModeIcons();
-      }
-    });
-
-    // عند تحميل الصفحة
-    if (localStorage.getItem("dark-mode") === "on") {
-      document.body.classList.add("dark-mode");
+        updateChartsColors(); // 🔥 حدث الشارتات فوراً
     }
-    updateDarkModeIcons();
-  </script>
+});
+
+if (localStorage.getItem("dark-mode") === "on") {
+    document.body.classList.add("dark-mode");
+}
+updateDarkModeIcons();
+updateChartsColors(); // 🔥 حدث الشارتات عند تحميل الصفحة
+</script>
+
