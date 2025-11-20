@@ -170,15 +170,15 @@ $expenses_count = (int)$pdo->query("SELECT COUNT(*) c FROM expenses")->fetch()['
 $purchasesByMonth = $pdo->query("SELECT DATE_FORMAT(op.created_at, '%Y-%m') AS m, COUNT(DISTINCT op.id) AS c
   FROM orders_purchases op
   INNER JOIN purchases p ON op.id = p.order_id
-  GROUP BY m ORDER BY m DESC LIMIT 6")->fetchAll(PDO::FETCH_KEY_PAIR);
+  GROUP BY m ORDER BY m DESC")->fetchAll(PDO::FETCH_KEY_PAIR);
 
-$ordersByMonth = $pdo->query("SELECT DATE_FORMAT(created_at,'%Y-%m') m, COUNT(*) c FROM orders GROUP BY m ORDER BY m DESC LIMIT 6")->fetchAll(PDO::FETCH_KEY_PAIR);
+$ordersByMonth = $pdo->query("SELECT DATE_FORMAT(created_at,'%Y-%m') m, COUNT(*) c FROM orders GROUP BY m ORDER BY m DESC")->fetchAll(PDO::FETCH_KEY_PAIR);
 
 $expensesByMonth = $pdo->query("SELECT DATE_FORMAT(created_at,'%Y-%m') m, SUM(total_amount) total
-  FROM expenses GROUP BY m ORDER BY m DESC LIMIT 6")->fetchAll(PDO::FETCH_KEY_PAIR);
+  FROM expenses GROUP BY m ORDER BY m DESC")->fetchAll(PDO::FETCH_KEY_PAIR);
 
 $custodiesByMonth = $pdo->query("SELECT DATE_FORMAT(taken_at,'%Y-%m') m, COUNT(*) c
-  FROM custodies GROUP BY m ORDER BY m DESC LIMIT 6")->fetchAll(PDO::FETCH_KEY_PAIR);
+  FROM custodies GROUP BY m ORDER BY m DESC")->fetchAll(PDO::FETCH_KEY_PAIR);
 
 $assetsByPayer = $pdo->query("SELECT payer_name, COUNT(*) c FROM assets GROUP BY payer_name")->fetchAll(PDO::FETCH_KEY_PAIR);
 
@@ -188,7 +188,6 @@ $assetsByMonth = $pdo->query("
     FROM assets
     GROUP BY m
     ORDER BY m DESC
-    LIMIT 6
 ")->fetchAll(PDO::FETCH_KEY_PAIR);
 
 $assetsValueByMonth = $pdo->query("
@@ -197,7 +196,15 @@ $assetsValueByMonth = $pdo->query("
     FROM assets
     GROUP BY m
     ORDER BY m DESC
-    LIMIT 6
+")->fetchAll(PDO::FETCH_KEY_PAIR);
+
+$purchasesAmountByMonth = $pdo->query("
+    SELECT DATE_FORMAT(op.created_at, '%Y-%m') AS m,
+           SUM(p.unit_all_total) AS total
+    FROM orders_purchases op
+    INNER JOIN purchases p ON op.id = p.order_id
+    GROUP BY m
+    ORDER BY m DESC
 ")->fetchAll(PDO::FETCH_KEY_PAIR);
 ?>
 
@@ -242,8 +249,15 @@ $assetsValueByMonth = $pdo->query("
 
     <div class="col-md-6">
       <div class="chart-card">
-        <h5 class="mb-3"><i class="bi bi-bag text-warning me-1"></i> المشتريات (آخر 6 شهور)</h5>
+        <h5 class="mb-3"><i class="bi bi-bag text-warning me-1"></i> عدد المشتريات حسب الشهر</h5>
         <canvas id="purchasesChart" height="200"></canvas>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="chart-card">
+        <h5 class="mb-3"><i class="bi bi-bag text-warning me-1"></i> قيمة المشتريات حسب الشهر</h5>
+        <canvas id="purchasesAmountChart" height="200"></canvas>
       </div>
     </div>
 
@@ -256,21 +270,21 @@ $assetsValueByMonth = $pdo->query("
 
     <div class="col-md-6">
       <div class="chart-card">
-        <h5 class="mb-3"><i class="bi bi-wallet2 text-success me-1"></i> العهد (آخر 6 شهور)</h5>
+        <h5 class="mb-3"><i class="bi bi-wallet2 text-success me-1"></i>عدد العهد حسب الشهر</h5>
         <canvas id="custodiesChart" height="200"></canvas>
       </div>
     </div>
 
     <div class="col-md-6">
       <div class="chart-card">
-        <h5 class="mb-3"><i class="bi bi-cash-stack text-secondary me-1"></i> المصروفات حسب الشهر</h5>
+        <h5 class="mb-3"><i class="bi bi-cash-stack text-secondary me-1"></i> قيمة المصروفات حسب الشهر</h5>
         <canvas id="expensesChart" height="200"></canvas>
       </div>
     </div>
 
     <div class="col-md-6">
       <div class="chart-card">
-        <h5 class="mb-3"><i class="bi bi-building text-success me-1"></i> الأصول حسب الدافع</h5>
+        <h5 class="mb-3"><i class="bi bi-building text-success me-1"></i> عدد الأصول حسب الدافع</h5>
         <canvas id="assetsChart" height="200"></canvas>
       </div>
     </div>
@@ -284,7 +298,7 @@ $assetsValueByMonth = $pdo->query("
 
     <div class="col-md-6">
       <div class="chart-card">
-        <h5 class="mb-3"><i class="bi bi-building text-warning me-1"></i> الأصول حسب الدافع</h5>
+        <h5 class="mb-3"><i class="bi bi-building text-warning me-1"></i> عدد الأصول حسب الدافع</h5>
         <canvas id="assetsBarChart" height="200"></canvas>
       </div>
     </div>
@@ -323,6 +337,9 @@ const assetsMonthData   = <?= json_encode(array_values($assetsByMonth)) ?>;
 
 const assetsValueLabels = <?= json_encode(array_keys($assetsValueByMonth)) ?>;
 const assetsValueData   = <?= json_encode(array_values($assetsValueByMonth)) ?>;
+
+const purchasesAmountLabels = <?= json_encode(array_keys($purchasesAmountByMonth)) ?>;
+const purchasesAmountData   = <?= json_encode(array_values($purchasesAmountByMonth)) ?>;
 
 
 // ================================
@@ -529,6 +546,24 @@ new Chart(document.getElementById('assetsValueChart'), {
       data: assetsValueData,
       backgroundColor: 'rgba(255, 193, 7, 0.85)',          // أصفر داكن
       hoverBackgroundColor: 'rgba(255, 210, 40, 1)',
+      borderRadius: 10
+    }]
+  },
+  options: baseOptions
+});
+
+// ================================
+// 🟧 Purchases Amount By Month (SUM)
+// ================================
+new Chart(document.getElementById('purchasesAmountChart'), {
+  type: 'bar',
+  data: {
+    labels: purchasesAmountLabels,
+    datasets: [{
+      label: 'قيمة المشتريات',
+      data: purchasesAmountData,
+      backgroundColor: 'rgba(255,140,30,0.85)',
+      hoverBackgroundColor: 'rgba(255,160,50,1)',
       borderRadius: 10
     }]
   },
