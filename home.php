@@ -360,19 +360,25 @@ $purchasesAmountByYear = $pdo->query("
     GROUP BY y ORDER BY y DESC
 ")->fetchAll(PDO::FETCH_KEY_PAIR);
 
-// الأصول (عدد)
-$assetsByMonth = $pdo->query("
-    SELECT DATE_FORMAT(created_at,'%Y-%m') AS m, COUNT(*) AS c
-    FROM assets
-    GROUP BY m ORDER BY m DESC
-")->fetchAll(PDO::FETCH_KEY_PAIR);
+// Assets عدد حسب الدافع
+$assetsByWeek = $pdo->query("SELECT DATE_FORMAT(created_at,'%x-%v') AS w, COUNT(*) AS c FROM assets GROUP BY w ORDER BY w DESC")->fetchAll(PDO::FETCH_KEY_PAIR);
+$assetsByMonth = $pdo->query("SELECT DATE_FORMAT(created_at,'%Y-%m') AS m, COUNT(*) AS c FROM assets GROUP BY m ORDER BY m DESC")->fetchAll(PDO::FETCH_KEY_PAIR);
+$assetsByYear = $pdo->query("SELECT DATE_FORMAT(created_at,'%Y') AS y, COUNT(*) AS c FROM assets GROUP BY y ORDER BY y DESC")->fetchAll(PDO::FETCH_KEY_PAIR);
 
-// الأصول (قيمة)
-$assetsValueByMonth = $pdo->query("
-    SELECT DATE_FORMAT(created_at,'%Y-%m') AS m, SUM(total_amount) AS total
-    FROM assets
-    GROUP BY m ORDER BY m DESC
-")->fetchAll(PDO::FETCH_KEY_PAIR);
+// Assets عدد حسب الشهر
+$assetsMonthByWeek = $assetsByWeek;
+$assetsMonthByMonth = $assetsByMonth;
+$assetsMonthByYear = $assetsByYear;
+
+// Assets عدد حسب الدافع (Bar)
+$assetsBarByWeek = $assetsByWeek;
+$assetsBarByMonth = $assetsByMonth;
+$assetsBarByYear = $assetsByYear;
+
+// Assets قيمة حسب الشهر
+$assetsValueByWeek = $pdo->query("SELECT DATE_FORMAT(created_at,'%x-%v') AS w, SUM(total_amount) AS total FROM assets GROUP BY w ORDER BY w DESC")->fetchAll(PDO::FETCH_KEY_PAIR);
+$assetsValueByMonth = $pdo->query("SELECT DATE_FORMAT(created_at,'%Y-%m') AS m, SUM(total_amount) AS total FROM assets GROUP BY m ORDER BY m DESC")->fetchAll(PDO::FETCH_KEY_PAIR);
+$assetsValueByYear = $pdo->query("SELECT DATE_FORMAT(created_at,'%Y') AS y, SUM(total_amount) AS total FROM assets GROUP BY y ORDER BY y DESC")->fetchAll(PDO::FETCH_KEY_PAIR);
 ?>
 
 <div class="container">
@@ -522,7 +528,14 @@ $assetsValueByMonth = $pdo->query("
     <!-- عدد الأصول حسب الدافع -->
     <div class="col-md-6">
       <div class="chart-card">
-        <h5 class="mb-3"><i class="bi bi-building text-success me-1"></i> عدد الأصول حسب الدافع</h5>
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h5 class="mb-0"><i class="bi bi-building text-success me-1"></i> عدد الأصول حسب الدافع</h5>
+          <select class="form-select form-select-sm" id="assetsFilter" style="width:auto">
+            <option value="week">أسبوع</option>
+            <option value="month" selected>شهر</option>
+            <option value="year">سنة</option>
+          </select>
+        </div>
         <canvas id="assetsChart" height="200"></canvas>
       </div>
     </div>
@@ -530,7 +543,14 @@ $assetsValueByMonth = $pdo->query("
     <!-- عدد الأصول حسب الشهر -->
     <div class="col-md-6">
       <div class="chart-card">
-        <h5 class="mb-3"><i class="bi bi-building text-info me-1"></i> عدد الأصول حسب الشهر</h5>
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h5 class="mb-0"><i class="bi bi-building text-info me-1"></i> عدد الأصول حسب الشهر</h5>
+          <select class="form-select form-select-sm" id="assetsMonthFilter" style="width:auto">
+            <option value="week">أسبوع</option>
+            <option value="month" selected>شهر</option>
+            <option value="year">سنة</option>
+          </select>
+        </div>
         <canvas id="assetsMonthChart" height="200"></canvas>
       </div>
     </div>
@@ -538,7 +558,14 @@ $assetsValueByMonth = $pdo->query("
     <!-- عدد الأصول حسب الدافع (Bar) -->
     <div class="col-md-6">
       <div class="chart-card">
-        <h5 class="mb-3"><i class="bi bi-building text-warning me-1"></i> عدد الأصول حسب الدافع</h5>
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h5 class="mb-0"><i class="bi bi-building text-warning me-1"></i> عدد الأصول حسب الدافع (Bar)</h5>
+          <select class="form-select form-select-sm" id="assetsBarFilter" style="width:auto">
+            <option value="week">أسبوع</option>
+            <option value="month" selected>شهر</option>
+            <option value="year">سنة</option>
+          </select>
+        </div>
         <canvas id="assetsBarChart" height="200"></canvas>
       </div>
     </div>
@@ -546,7 +573,14 @@ $assetsValueByMonth = $pdo->query("
     <!-- قيمة الأصول حسب الشهر -->
     <div class="col-md-6">
       <div class="chart-card">
-        <h5 class="mb-3"><i class="bi bi-building text-warning me-1"></i> قيمة الأصول حسب الشهر</h5>
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h5 class="mb-0"><i class="bi bi-building text-warning me-1"></i> قيمة الأصول حسب الشهر</h5>
+          <select class="form-select form-select-sm" id="assetsValueFilter" style="width:auto">
+            <option value="week">أسبوع</option>
+            <option value="month" selected>شهر</option>
+            <option value="year">سنة</option>
+          </select>
+        </div>
         <canvas id="assetsValueChart" height="200"></canvas>
       </div>
     </div>
@@ -640,14 +674,6 @@ const purchasesAmountDataBy = {
   year: <?= json_encode($purchasesAmountByYear) ?>
 };
 
-const assetsDataByMonth = {
-  month: <?= json_encode($assetsByMonth) ?>
-};
-
-const assetsValueDataByMonth = {
-  month: <?= json_encode($assetsValueByMonth) ?>
-};
-
 // ================================
 // 🟢 Charts array
 // ================================
@@ -683,12 +709,6 @@ createChart('custodiesValueChart', custodiesValueDataBy, 'قيمة العهد', 
 // المشتريات بالمبالغ
 createChart('purchasesAmountChart', purchasesAmountDataBy, 'قيمة المشتريات', 'rgba(255,140,30,0.85)');
 setupFilter('purchasesAmountFilter', 'purchasesAmountChart', purchasesAmountDataBy);
-
-// الأصول عدد
-createChart('assetsMonthChart', assetsDataByMonth, 'عدد الأصول حسب الشهر', 'rgba(0,123,255,0.85)');
-
-// الأصول قيمة
-createChart('assetsValueChart', assetsValueDataByMonth, 'قيمة الأصول حسب الشهر', 'rgba(255,193,7,0.85)');
 
 
 // ================================
@@ -739,6 +759,35 @@ document.querySelectorAll('.toggle-dark-mode').forEach(btn => {
         updateChartsColors();
     });
 });
+
+const assetsDataBy = { week: <?= json_encode($assetsByWeek) ?>, month: <?= json_encode($assetsByMonth) ?>, year: <?= json_encode($assetsByYear) ?> };
+const assetsMonthDataBy = { week: <?= json_encode($assetsMonthByWeek) ?>, month: <?= json_encode($assetsMonthByMonth) ?>, year: <?= json_encode($assetsMonthByYear) ?> };
+const assetsBarDataBy = { week: <?= json_encode($assetsBarByWeek) ?>, month: <?= json_encode($assetsBarByMonth) ?>, year: <?= json_encode($assetsBarByYear) ?> };
+const assetsValueDataBy = { week: <?= json_encode($assetsValueByWeek) ?>, month: <?= json_encode($assetsValueByMonth) ?>, year: <?= json_encode($assetsValueByYear) ?> };
+
+function createChartWithFilter(canvasId, dataBy, label, color, filterId) {
+    const ctx = document.getElementById(canvasId).getContext('2d');
+    const chart = new Chart(ctx, {
+        type:'bar',
+        data: { labels:Object.keys(dataBy.month), datasets:[{label,label,data:Object.values(dataBy.month),backgroundColor:color,borderRadius:10}]},
+        options:getBaseOptions()
+    });
+    charts[canvasId] = chart;
+
+    // Filter
+    document.getElementById(filterId).addEventListener('change', function(){
+        const period = this.value;
+        chart.data.labels = Object.keys(dataBy[period]);
+        chart.data.datasets[0].data = Object.values(dataBy[period]);
+        chart.update();
+    });
+}
+
+// إنشاء شارتات الأصول
+createChartWithFilter('assetsChart', assetsDataBy, 'عدد الأصول حسب الدافع', 'rgba(40,167,69,0.85)', 'assetsFilter');
+createChartWithFilter('assetsMonthChart', assetsMonthDataBy, 'عدد الأصول حسب الشهر', 'rgba(0,123,255,0.85)', 'assetsMonthFilter');
+createChartWithFilter('assetsBarChart', assetsBarDataBy, 'عدد الأصول حسب الدافع (Bar)', 'rgba(255,193,7,0.85)', 'assetsBarFilter');
+createChartWithFilter('assetsValueChart', assetsValueDataBy, 'قيمة الأصول حسب الشهر', 'rgba(255,110,20,0.85)', 'assetsValueFilter');
 </script>
 
 
