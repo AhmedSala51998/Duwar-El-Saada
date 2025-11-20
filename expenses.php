@@ -310,6 +310,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
         <th>الإجمالي بعد الضريبة</th>
         <th>الدافع</th>
         <th>مصدر الدفع</th>
+        <th>التاريخ</th>
         <?php if(has_permission('expenses.processes')): ?><th>عمليات</th><?php endif; ?>
       </tr>
     </thead>
@@ -346,6 +347,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 
         <td data-label="الدافع"><?= esc($r['payer_name'] ?? '') ?></td>
         <td data-label="مصدر الدفع"><?= esc($r['payment_source'] ?? '') ?></td>
+        <td data-label="التاريخ"><?= esc($r['created_at'] ?? '') ?></td>
 
         <?php if(has_permission('expenses.processes')): ?>
         <td class="text-center">
