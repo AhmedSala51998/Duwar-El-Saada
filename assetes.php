@@ -324,6 +324,7 @@ $rows=$s->fetchAll();
         <th>الإجمالي بعد الضريبة</th>
         <th>الدافع</th>
         <th>مصدر الدفع</th>
+        <th>التاريخ</th>
         <?php if(has_permission('assets.processes')): ?><th>عمليات</th><?php endif; ?>
       </tr>
     </thead>
@@ -351,7 +352,7 @@ $rows=$s->fetchAll();
         <td data-label="الاجمالي بعد الضريبة" class="fw-bold text-dark"><?= number_format((float)$r['total_amount'],2) ?></td>
         <td data-label="الدافع"><?= esc($r['payer_name'] ?? '-') ?></td>
         <td data-label="مصدر الدفع"><?= esc($r['payment_source'] ?? '-') ?></td>
-
+        <td data-label="التاريخ"><?= esc($r['created_at'] ? date('Y-m-d', strtotime($r['created_at'])) : '') ?></td>
         <?php if(has_permission('assets.processes')): ?>
         <td class="text-center">
           <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#actionsAsset<?= $r['id'] ?>">
