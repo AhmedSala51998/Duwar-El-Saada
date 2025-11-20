@@ -379,6 +379,30 @@ $assetsBarByYear = $assetsByYear;
 $assetsValueByWeek = $pdo->query("SELECT DATE_FORMAT(created_at,'%x-%v') AS w, SUM(total_amount) AS total FROM assets GROUP BY w ORDER BY w DESC")->fetchAll(PDO::FETCH_KEY_PAIR);
 $assetsValueByMonth = $pdo->query("SELECT DATE_FORMAT(created_at,'%Y-%m') AS m, SUM(total_amount) AS total FROM assets GROUP BY m ORDER BY m DESC")->fetchAll(PDO::FETCH_KEY_PAIR);
 $assetsValueByYear = $pdo->query("SELECT DATE_FORMAT(created_at,'%Y') AS y, SUM(total_amount) AS total FROM assets GROUP BY y ORDER BY y DESC")->fetchAll(PDO::FETCH_KEY_PAIR);
+
+// عدد الأصول حسب الدافع لكل فترة
+$assetsByWeek_payer = $pdo->query("
+    SELECT payer_name AS label, COUNT(*) AS c
+    FROM assets
+    WHERE created_at >= DATE_SUB(NOW(), INTERVAL 1 WEEK)
+    GROUP BY payer_name
+")->fetchAll(PDO::FETCH_KEY_PAIR);
+
+$assetsByMonth_payer = $pdo->query("
+    SELECT payer_name AS label, COUNT(*) AS c
+    FROM assets
+    WHERE created_at >= DATE_SUB(NOW(), INTERVAL 1 MONTH)
+    GROUP BY payer_name
+")->fetchAll(PDO::FETCH_KEY_PAIR);
+
+$assetsByYear_payer = $pdo->query("
+    SELECT payer_name AS label, COUNT(*) AS c
+    FROM assets
+    WHERE created_at >= DATE_SUB(NOW(), INTERVAL 1 YEAR)
+    GROUP BY payer_name
+")->fetchAll(PDO::FETCH_KEY_PAIR);
+
+$assetsDataBy = ['week' => $assetsByWeek, 'month' => $assetsByMonth, 'year' => $assetsByYear];
 ?>
 
 <div class="container">
@@ -765,6 +789,8 @@ const assetsMonthDataBy = { week: <?= json_encode($assetsMonthByWeek) ?>, month:
 const assetsBarDataBy = { week: <?= json_encode($assetsBarByWeek) ?>, month: <?= json_encode($assetsBarByMonth) ?>, year: <?= json_encode($assetsBarByYear) ?> };
 const assetsValueDataBy = { week: <?= json_encode($assetsValueByWeek) ?>, month: <?= json_encode($assetsValueByMonth) ?>, year: <?= json_encode($assetsValueByYear) ?> };
 
+const assetsDataBy_payer = { week: <?= json_encode($assetsByWeek_payer) ?>, month: <?= json_encode($assetsByMonth_payer) ?>, year: <?= json_encode($assetsByYear_payer) ?> };
+
 function createChartWithFilter(canvasId, dataBy, label, color, filterId) {
     const ctx = document.getElementById(canvasId).getContext('2d');
     const chart = new Chart(ctx, {
@@ -785,7 +811,7 @@ function createChartWithFilter(canvasId, dataBy, label, color, filterId) {
 
 // إنشاء شارتات الأصول
 createChartWithFilter('assetsMonthChart', assetsMonthDataBy, 'عدد الأصول حسب الشهر', 'rgba(0,123,255,0.85)', 'assetsMonthFilter');
-createChartWithFilter('assetsBarChart', assetsBarDataBy, 'عدد الأصول حسب الدافع', 'rgba(255,193,7,0.85)', 'assetsBarFilter');
+createChartWithFilter('assetsBarChart', assetsDataBy_payer, 'عدد الأصول حسب الدافع', 'rgba(255,193,7,0.85)', 'assetsBarFilter');
 createChartWithFilter('assetsValueChart', assetsValueDataBy, 'قيمة الأصول حسب الشهر', 'rgba(255,110,20,0.85)', 'assetsValueFilter');
 
 function createChartWithFilterPie(canvasId, dataBy, label, colors, filterId) {
@@ -824,7 +850,7 @@ const pieColors = [
 ];
 
 // إنشاء Pie Chart لعدد الأصول حسب الدافع
-createChartWithFilterPie('assetsChart', assetsDataBy, 'عدد الأصول حسب الدافع', pieColors, 'assetsFilter');
+createChartWithFilterPie('assetsChart', assetsDataBy_payer, 'عدد الأصول حسب الدافع', pieColors, 'assetsFilter');
 </script>
 
 
