@@ -844,28 +844,18 @@ createChartWithFilter('assetsValueChart', assetsValueDataBy, 'قيمة الأص�
 function createChartWithFilterPie(canvasId, dataBy, label, colors, filterId) {
     const ctx = document.getElementById(canvasId).getContext('2d');
 
-    // اختر أول period فيه بيانات
-    let defaultPeriodType, defaultPeriod;
-    outer: for (let type in dataBy) {
-        for (let p in dataBy[type]) {
-            defaultPeriodType = type;
-            defaultPeriod = p;
-            break outer;
-        }
-    }
-
-    if (!defaultPeriod) {
-        console.warn('No data to display');
-        return;
-    }
+    // اختر أول نوع فترة متاح
+    let defaultType = 'month'; // ممكن تحدد حسب default في select
+    let periods = Object.keys(dataBy[defaultType]);
+    let defaultPeriod = periods[periods.length - 1]; // آخر فترة موجودة
 
     const chart = new Chart(ctx, {
         type: 'pie',
         data: {
-            labels: Object.keys(dataBy[defaultPeriodType][defaultPeriod]),
+            labels: Object.keys(dataBy[defaultType][defaultPeriod]),
             datasets: [{
                 label: label,
-                data: Object.values(dataBy[defaultPeriodType][defaultPeriod]),
+                data: Object.values(dataBy[defaultType][defaultPeriod]),
                 backgroundColor: colors
             }]
         },
@@ -875,44 +865,33 @@ function createChartWithFilterPie(canvasId, dataBy, label, colors, filterId) {
     charts[canvasId] = chart;
 
     // Filter
-    const filterEl = document.getElementById(filterId);
-    if (filterEl) {
-        filterEl.addEventListener('change', function() {
-            const period = this.value; // مثلا "2025-07"
-            if (dataBy[defaultPeriodType][period]) {
-                chart.data.labels = Object.keys(dataBy[defaultPeriodType][period]);
-                chart.data.datasets[0].data = Object.values(dataBy[defaultPeriodType][period]);
-                chart.update();
-            }
-        });
-    }
+    document.getElementById(filterId).addEventListener('change', function() {
+        const type = this.value; // week/month/year
+        const periods = Object.keys(dataBy[type]);
+        if (periods.length === 0) return;
+
+        const period = periods[periods.length - 1]; // آخر فترة موجودة
+        chart.data.labels = Object.keys(dataBy[type][period]);
+        chart.data.datasets[0].data = Object.values(dataBy[type][period]);
+        chart.update();
+    });
 }
 
 // Bar Chart لعدد الأصول حسب الدافع
 function createChartWithFilterBar(canvasId, dataBy, label, color, filterId) {
     const ctx = document.getElementById(canvasId).getContext('2d');
 
-    let defaultPeriodType, defaultPeriod;
-    outer: for (let type in dataBy) {
-        for (let p in dataBy[type]) {
-            defaultPeriodType = type;
-            defaultPeriod = p;
-            break outer;
-        }
-    }
-
-    if (!defaultPeriod) {
-        console.warn('No data to display');
-        return;
-    }
+    let defaultType = 'month';
+    let periods = Object.keys(dataBy[defaultType]);
+    let defaultPeriod = periods[periods.length - 1];
 
     const chart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: Object.keys(dataBy[defaultPeriodType][defaultPeriod]),
+            labels: Object.keys(dataBy[defaultType][defaultPeriod]),
             datasets: [{
                 label: label,
-                data: Object.values(dataBy[defaultPeriodType][defaultPeriod]),
+                data: Object.values(dataBy[defaultType][defaultPeriod]),
                 backgroundColor: color,
                 borderRadius: 10
             }]
@@ -923,18 +902,17 @@ function createChartWithFilterBar(canvasId, dataBy, label, color, filterId) {
     charts[canvasId] = chart;
 
     const filterEl = document.getElementById(filterId);
-    if (filterEl) {
-        filterEl.addEventListener('change', function() {
-            const period = this.value;
-            if (dataBy[defaultPeriodType][period]) {
-                chart.data.labels = Object.keys(dataBy[defaultPeriodType][period]);
-                chart.data.datasets[0].data = Object.values(dataBy[defaultPeriodType][period]);
-                chart.update();
-            }
-        });
-    }
-}
+    filterEl.addEventListener('change', function() {
+        const type = this.value;
+        const periods = Object.keys(dataBy[type]);
+        if (periods.length === 0) return;
 
+        const period = periods[periods.length - 1];
+        chart.data.labels = Object.keys(dataBy[type][period]);
+        chart.data.datasets[0].data = Object.values(dataBy[type][period]);
+        chart.update();
+    });
+}
 
 // ألوان Pie
 const pieColors = [
