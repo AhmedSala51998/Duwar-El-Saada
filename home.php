@@ -911,10 +911,11 @@ function createChartWithFilterBar(canvasId, dataBy, label, color, filterId) {
 
     function buildDataset(type) {
         const periods = Object.keys(dataBy[type]);
-        const datasets = payers.map(payer => ({
+
+        const datasets = payers.map((payer, index) => ({
             label: payer,
             data: periods.map(period => dataBy[type][period][payer] || 0),
-            backgroundColor: color,
+            backgroundColor: payerColors[index % payerColors.length], // 🎨 لون مختلف لكل دافع
             borderRadius: 8
         }));
 
@@ -947,6 +948,7 @@ function createChartWithFilterBar(canvasId, dataBy, label, color, filterId) {
 }
 
 
+
 // ألوان Pie
 const pieColors = [
     'rgba(40,167,69,0.85)',
@@ -955,6 +957,15 @@ const pieColors = [
     'rgba(255,110,20,0.85)',
     'rgba(108,117,125,0.85)',
     'rgba(160,160,170,0.85)'
+];
+
+const payerColors = [
+    "rgba(255, 99, 132, 0.85)",   // لون للبسام
+    "rgba(54, 162, 235, 0.85)",   // لون للمؤسسة
+    "rgba(255, 206, 86, 0.85)",   // لون لأي دافع ثالث
+    "rgba(75, 192, 192, 0.85)",
+    "rgba(153, 102, 255, 0.85)",
+    "rgba(255, 159, 64, 0.85)"
 ];
 console.log(assetsDataBy_payer);
 // إنشاء الشارتات
