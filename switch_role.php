@@ -1,4 +1,7 @@
 <?php
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
 session_start();
 header('Content-Type: application/json');
 
@@ -8,7 +11,7 @@ if (empty($_SESSION['user_id'])) {
     exit;
 }
 
-require __DIR__ . '/db.php'; // وصل هنا قاعدة البيانات PDO
+require __DIR__ . '/config/config.php'; // وصل هنا قاعدة البيانات PDO
 
 $user_id = $_SESSION['user_id'];
 
