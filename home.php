@@ -316,6 +316,16 @@ $purchasesAmountByMonth = $pdo->query("
 <!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
+
+// detect dark mode
+const isDark = document.body.classList.contains("dark-mode");
+
+// colors based on mode
+const chartTextColor = isDark ? "#ccc" : "#111";
+const chartGridColor = isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.08)";
+const chartTooltipBg = isDark ? "#000" : "#fff";
+const chartTooltipText = isDark ? "#fff" : "#000";
+
 // Convert PHP arrays to JS safely
 const purchasesLabels = <?= json_encode(array_keys($purchasesByMonth)) ?>;
 const purchasesData   = <?= json_encode(array_values($purchasesByMonth)) ?>;
@@ -345,8 +355,8 @@ const purchasesAmountData   = <?= json_encode(array_values($purchasesAmountByMon
 // ================================
 // 🎨 Global Dark Mode Styling
 // ================================
-Chart.defaults.color = "#ccc"; // خط فاتح
-Chart.defaults.borderColor = "rgba(255,255,255,0.08)"; // جريد خفيف جداً
+Chart.defaults.color = chartTextColor;
+Chart.defaults.borderColor = chartGridColor;
 
 const baseOptions = {
   plugins: { 
