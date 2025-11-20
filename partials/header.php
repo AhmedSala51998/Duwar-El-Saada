@@ -2278,6 +2278,16 @@ $current_page = basename($_SERVER['PHP_SELF']);
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
 </head>
 <body>
+  <div class="position-fixed top-0 end-0 p-3" style="z-index: 1080;">
+    <div id="roleToast" class="toast align-items-center text-white bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body" id="roleToastBody">
+          <!-- الرسالة ستوضع هنا -->
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
+  </div>
   <div class="loader">
     <div class="circle">
       <div class="loader-text">دوار السعادة</div>
@@ -2631,8 +2641,19 @@ updateDarkModeIcons();
 updateChartsColors(); // 🔥 حدث الشارتات عند تحميل الصفحة
 </script>
 <script>
+function showToast(message, isSuccess = true) {
+    const toastEl = document.getElementById('roleToast');
+    const toastBody = document.getElementById('roleToastBody');
+
+    toastBody.innerText = message;
+    toastEl.classList.remove('bg-success', 'bg-danger', 'bg-primary');
+    toastEl.classList.add(isSuccess ? 'bg-success' : 'bg-danger');
+
+    const toast = new bootstrap.Toast(toastEl);
+    toast.show();
+}
+
 function switchRole(role) {
-    // هنا تضيف كود تغيير الدور، ممكن يكون طلب AJAX لتحديث الدور في الجلسة
     fetch('switch_role.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -2641,11 +2662,12 @@ function switchRole(role) {
     .then(res => res.json())
     .then(data => {
         if(data.success){
-            location.reload();
+            showToast('تم تغيير الدور بنجاح!', true);
+            setTimeout(() => location.reload(), 1200); // إعادة تحميل بعد ثواني قليلة
         } else {
-            alert(data.message);
+            showToast(data.message, false);
         }
     })
-    .catch(err => console.error('Fetch error:', err));
+    .catch(err => showToast('حدث خطأ أثناء الاتصال بالسيرفر', false));
 }
 </script>
