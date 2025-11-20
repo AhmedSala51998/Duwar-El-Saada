@@ -2577,6 +2577,7 @@ function updateChartsColors() {
 // ================================
 // 🟢 كود التبديل بين الداكن/الليت (موجود عندك)
 // ================================
+let charts = {};
 const toggleBtnMobile = document.getElementById('toggleDarkMobile');
 const toggleIconMobile = document.getElementById('toggleIconMobile');
 
