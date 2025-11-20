@@ -383,9 +383,9 @@ $assetsValueByYear = $pdo->query("SELECT DATE_FORMAT(created_at,'%Y') AS y, SUM(
 // ===========================
 // عدد الأصول حسب الدافع (Payer)
 // ===========================
+// ====================== PHP ======================
 
-// 1. جلب البيانات الخام من قاعدة البيانات
-// الأسبوع: السنة-رقم الأسبوع (ISO week)
+// جلب البيانات من قاعدة البيانات باستخدام نفس طريقة التاريخ للفترات
 $assetsByWeek_payer_raw = $pdo->query("
     SELECT DATE_FORMAT(created_at,'%x-%v') AS period, payer_name AS label, COUNT(*) AS c
     FROM assets
@@ -393,7 +393,6 @@ $assetsByWeek_payer_raw = $pdo->query("
     ORDER BY period DESC
 ")->fetchAll(PDO::FETCH_ASSOC);
 
-// الشهر: السنة-شهر
 $assetsByMonth_payer_raw = $pdo->query("
     SELECT DATE_FORMAT(created_at,'%Y-%m') AS period, payer_name AS label, COUNT(*) AS c
     FROM assets
@@ -401,7 +400,6 @@ $assetsByMonth_payer_raw = $pdo->query("
     ORDER BY period DESC
 ")->fetchAll(PDO::FETCH_ASSOC);
 
-// السنة
 $assetsByYear_payer_raw = $pdo->query("
     SELECT DATE_FORMAT(created_at,'%Y') AS period, payer_name AS label, COUNT(*) AS c
     FROM assets
@@ -409,7 +407,7 @@ $assetsByYear_payer_raw = $pdo->query("
     ORDER BY period DESC
 ")->fetchAll(PDO::FETCH_ASSOC);
 
-// 2. تحويل البيانات إلى key => value
+// دالة لتحويل البيانات للشكل المطلوب
 function groupByPeriod($raw) {
     $result = [];
     foreach ($raw as $row) {
@@ -842,65 +840,7 @@ function createChartWithFilter(canvasId, dataBy, label, color, filterId) {
 createChartWithFilter('assetsMonthChart', assetsMonthDataBy, 'عدد الأصول حسب الشهر', 'rgba(0,123,255,0.85)', 'assetsMonthFilter');
 createChartWithFilter('assetsValueChart', assetsValueDataBy, 'قيمة الأصول حسب الشهر', 'rgba(255,110,20,0.85)', 'assetsValueFilter');
 
-// Pie Chart لعدد الأصول حسب الدافع
-function createChartWithFilterPie(canvasId, dataBy, label, colors, filterId) {
-    const ctx = document.getElementById(canvasId).getContext('2d');
-
-    // اختر أول فترة موجودة كافتراضية
-    const defaultPeriod = Object.keys(dataBy)[0];
-
-    const chart = new Chart(ctx, {
-        type: 'pie',
-        data: {
-            labels: Object.keys(dataBy[defaultPeriod]),
-            datasets: [{
-                label: label,
-                data: Object.values(dataBy[defaultPeriod]),
-                backgroundColor: colors
-            }]
-        },
-        options: getBaseOptions()
-    });
-
-    charts[canvasId] = chart;
-
-    // Filter
-    document.getElementById(filterId).addEventListener('change', function() {
-        const period = this.value; 
-        chart.data.labels = Object.keys(dataBy[period]);
-        chart.data.datasets[0].data = Object.values(dataBy[period]);
-        chart.update();
-    });
-}
-
-// Bar Chart لعدد الأصول حسب الدافع
-function createChartWithFilterBar(canvasId, dataBy, label, color, filterId) {
-    const ctx = document.getElementById(canvasId).getContext('2d');
-    const defaultPeriod = Object.keys(dataBy)[0];
-
-    const chart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: Object.keys(dataBy[defaultPeriod]),
-            datasets: [{
-                label: label,
-                data: Object.values(dataBy[defaultPeriod]),
-                backgroundColor: color,
-                borderRadius: 10
-            }]
-        },
-        options: getBaseOptions()
-    });
-
-    charts[canvasId] = chart;
-
-    document.getElementById(filterId).addEventListener('change', function() {
-        const period = this.value;
-        chart.data.labels = Object.keys(dataBy[period]);
-        chart.data.datasets[0].data = Object.values(dataBy[period]);
-        chart.update();
-    });
-}
+const assetsDataBy_payer = <?= json_encode($assetsDataBy_payer) ?>;
 
 // ألوان Pie
 const pieColors = [
@@ -911,8 +851,120 @@ const pieColors = [
     'rgba(108,117,125,0.85)',
     'rgba(160,160,170,0.85)'
 ];
-console.log(assetsDataBy_payer);
-// إنشاء الشارتات
+
+// قاعدة الخيارات
+function getBaseOptionss() {
+    return {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'bottom'
+            },
+            tooltip: {
+                mode: 'index'
+            }
+        }
+    };
+}
+
+// ========== Pie Chart ==========
+function createChartWithFilterPie(canvasId, dataBy, label, colors, filterId) {
+    const ctx = document.getElementById(canvasId).getContext('2d');
+
+    // اختر أول period موجود فيه بيانات
+    let defaultPeriod, defaultSubPeriod;
+    outer: for (let pType in dataBy) {
+        for (let p in dataBy[pType]) {
+            defaultPeriod = pType;
+            defaultSubPeriod = p;
+            break outer;
+        }
+    }
+
+    if (!defaultPeriod) {
+        console.warn('No data available for Pie chart');
+        return;
+    }
+
+    const chart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: Object.keys(dataBy[defaultPeriod][defaultSubPeriod]),
+            datasets: [{
+                label: label,
+                data: Object.values(dataBy[defaultPeriod][defaultSubPeriod]),
+                backgroundColor: colors
+            }]
+        },
+        options: getBaseOptionss()
+    });
+
+    charts[canvasId] = chart;
+
+    // Filter
+    const filterEl = document.getElementById(filterId);
+    if (filterEl) {
+        filterEl.addEventListener('change', function() {
+            const period = this.value;
+            if (dataBy[defaultPeriod][period]) {
+                chart.data.labels = Object.keys(dataBy[defaultPeriod][period]);
+                chart.data.datasets[0].data = Object.values(dataBy[defaultPeriod][period]);
+                chart.update();
+            }
+        });
+    }
+}
+
+// ========== Bar Chart ==========
+function createChartWithFilterBar(canvasId, dataBy, label, color, filterId) {
+    const ctx = document.getElementById(canvasId).getContext('2d');
+
+    // اختر أول period موجود فيه بيانات
+    let defaultPeriod, defaultSubPeriod;
+    outer: for (let pType in dataBy) {
+        for (let p in dataBy[pType]) {
+            defaultPeriod = pType;
+            defaultSubPeriod = p;
+            break outer;
+        }
+    }
+
+    if (!defaultPeriod) {
+        console.warn('No data available for Bar chart');
+        return;
+    }
+
+    const chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: Object.keys(dataBy[defaultPeriod][defaultSubPeriod]),
+            datasets: [{
+                label: label,
+                data: Object.values(dataBy[defaultPeriod][defaultSubPeriod]),
+                backgroundColor: color,
+                borderRadius: 10
+            }]
+        },
+        options: getBaseOptionss()
+    });
+
+    charts[canvasId] = chart;
+
+    const filterEl = document.getElementById(filterId);
+    if (filterEl) {
+        filterEl.addEventListener('change', function() {
+            const period = this.value;
+            if (dataBy[defaultPeriod][period]) {
+                chart.data.labels = Object.keys(dataBy[defaultPeriod][period]);
+                chart.data.datasets[0].data = Object.values(dataBy[defaultPeriod][period]);
+                chart.update();
+            }
+        });
+    }
+}
+
+// ====================== إنشاء الشارتات ======================
+
 createChartWithFilterPie('assetsChart', assetsDataBy_payer, 'عدد الأصول حسب الدافع', pieColors, 'assetsFilter');
 createChartWithFilterBar('assetsBarChart', assetsDataBy_payer, 'عدد الأصول حسب الدافع', 'rgba(255,193,7,0.85)', 'assetsBarFilter');
 </script>
