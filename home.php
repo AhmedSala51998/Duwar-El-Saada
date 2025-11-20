@@ -891,7 +891,7 @@ const pieColors = [
     'rgba(108,117,125,0.85)',
     'rgba(160,160,170,0.85)'
 ];
-
+console.log(assetsDataBy_payer);
 // إنشاء الشارتات
 createChartWithFilterPie('assetsChart', assetsDataBy_payer, 'عدد الأصول حسب الدافع', pieColors, 'assetsFilter');
 createChartWithFilterBar('assetsBarChart', assetsDataBy_payer, 'عدد الأصول حسب الدافع', 'rgba(255,193,7,0.85)', 'assetsBarFilter');
