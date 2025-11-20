@@ -385,23 +385,24 @@ $assetsValueByYear = $pdo->query("SELECT DATE_FORMAT(created_at,'%Y') AS y, SUM(
 // ===========================
 
 // دالة للحصول على بيانات كل فترة حسب payer_name
-function getAssetsByPayer($pdo, $interval) {
-    $stmt = $pdo->prepare("
+function getAssetsByPayer($pdo, $intervalSql) {
+    $sql = "
         SELECT payer_name AS label, COUNT(*) AS c
         FROM assets
-        WHERE created_at >= DATE_SUB(NOW(), INTERVAL :interval)
+        WHERE created_at >= NOW() - INTERVAL $intervalSql
         GROUP BY payer_name
-    ");
-    $stmt->execute(['interval' => $interval]);
+    ";
+    $stmt = $pdo->query($sql);
     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
+
     $result = [];
-    foreach($rows as $row) {
+    foreach ($rows as $row) {
         $result[$row['label']] = (int)$row['c'];
     }
     return $result;
 }
 
+// الآن تمرر النص مباشرة
 $assetsByWeek_payer  = getAssetsByPayer($pdo, '1 WEEK');
 $assetsByMonth_payer = getAssetsByPayer($pdo, '1 MONTH');
 $assetsByYear_payer  = getAssetsByPayer($pdo, '1 YEAR');
