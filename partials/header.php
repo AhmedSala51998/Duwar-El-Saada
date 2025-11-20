@@ -2541,6 +2541,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
 // ================================
 // 🟢 دالة تحديث ألوان الشارتات
 // ================================
+let charts = charts || {}; // لو معرفش، اعمل object فاضي
 function getChartColors() {
     const isDark = document.body.classList.contains("dark-mode");
     return {

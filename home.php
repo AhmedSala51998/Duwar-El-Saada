@@ -1006,7 +1006,6 @@ const payerColors = [
     "rgba(153, 102, 255, 0.85)",
     "rgba(255, 159, 64, 0.85)"
 ];
-console.log(assetsDataBy_payer);
 // إنشاء الشارتات
 createChartWithFilterPie('assetsChart', assetsDataBy_payer, 'عدد الأصول حسب الدافع', pieColors, 'assetsFilter');
 createChartWithFilterBar('assetsBarChart', assetsDataBy_payer, 'عدد الأصول حسب الدافع', 'rgba(255,193,7,0.85)', 'assetsBarFilter');
