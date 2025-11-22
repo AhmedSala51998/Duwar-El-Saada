@@ -44,6 +44,40 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 .custom-table td img { max-width: 80px; border-radius:5px; }
 .btn-orange { background-color: #ff6a00; color: #fff; border:none; transition: all 0.3s ease;}
 .btn-orange:hover { background-color: #e85d00; }
+.custom-file-upload {
+    border: 2px dashed #ccc;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 20px;
+    text-align: center;
+    transition: all 0.3s ease-in-out;
+    background: #f9f9f9;
+}
+.custom-file-upload:hover {
+    border-color: #0d6efd;
+    background: #eef5ff;
+}
+.custom-file-upload i {
+    font-size: 40px;
+    color: #0d6efd;
+    margin-bottom: 10px;
+}
+.custom-file-upload span {
+    font-size: 14px;
+    color: #666;
+}
+.custom-file-upload img {
+    max-height: 120px;
+    margin-top: 10px;
+    border-radius: 8px;
+}
+input[type="file"] {
+    display: none;
+}
 </style>
 
 <?php
@@ -86,7 +120,7 @@ $rows = $stmt->fetchAll();
     </form>
 
     <!-- زر إضافة -->
-    <?php if(has_permission('settings.add')): ?>
+    <?php if(has_permission('systems_settings.add')): ?>
       <button class="btn btn-orange" data-bs-toggle="modal" data-bs-target="#addSetting">
         <i class="bi bi-plus-lg"></i> إضافة
       </button>
