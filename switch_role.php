@@ -15,15 +15,15 @@ $user_id = $_SESSION['user_id'];
 
 /* 🔥 اجلب الدور الحالي الصحيح */
 $stmt = $pdo->prepare("
-    SELECT r.name 
+    SELECT U.username 
     FROM users u
     JOIN roles r ON r.id = u.role_id
     WHERE u.id = ?
 ");
 $stmt->execute([$user_id]);
-$current_role = $stmt->fetchColumn();
+$current_user = $stmt->fetchColumn();
 
-if ($current_role !== 'مدير النظام') {
+if ($current_user !== 'admin') {
     echo json_encode(['success' => false, 'message' => 'غير مسموح']);
     exit;
 }

@@ -2760,6 +2760,7 @@ function showToast(message, isSuccess = true) {
 
 function switchRole(role) {
 
+    condole.log(role);
     const btn = document.getElementById('roleDropdown');
     btn.classList.add("loading-btn");
 
