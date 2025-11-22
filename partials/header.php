@@ -2526,11 +2526,12 @@ $current_page = basename($_SERVER['PHP_SELF']);
                       <?php endforeach; ?>
                   </ul>
               </div>
-          <?php else: ?>
-              <span class="badge role-badge">
-                  <i class="bi bi-person-badge me-1"></i> <?= esc(current_role()) ?>
-              </span>
-          <?php endif; ?>
+              <?php else: ?>
+                  <span class="btn role-badge" style="cursor: default;">
+                      <i class="bi bi-person-badge me-1"></i>
+                      <span id="currentRoleText"><?= esc(current_role()) ?></span>
+                  </span>
+              <?php endif; ?>
       </li>
 
       <!-- المستخدمون -->
