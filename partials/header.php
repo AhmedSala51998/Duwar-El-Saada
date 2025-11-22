@@ -2326,48 +2326,48 @@ $current_page = basename($_SERVER['PHP_SELF']);
    .dropdown-menu {
         transition: all 0.3s ease;
     }
-    .role-badge, #roleDropdown {
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    color: #555;
-    font-weight: 600;
-    border-radius: 12px;
-    padding: 8px 14px;
-    transition: .2s;
-}
+  .role-badge, #roleDropdown {
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      color: #555;
+      font-weight: 600;
+      border-radius: 20px;
+      padding: 8px 14px;
+      transition: .2s;
+  }
 
-#roleDropdown:hover {
-    background: #f8f9fa;
-    border-color: #d0d7de;
-}
+  #roleDropdown:hover {
+      background: #f8f9fa;
+      border-color: #d0d7de;
+  }
 
-.dropdown-menu {
-    border-radius: 14px;
-    padding: 8px;
-    border: 1px solid #e6e6e6 !important;
-    box-shadow: 0px 10px 30px rgba(0,0,0,0.08);
-}
+  .dropdown-menu {
+      border-radius: 14px;
+      padding: 8px;
+      border: 1px solid #e6e6e6 !important;
+      box-shadow: 0px 10px 30px rgba(0,0,0,0.08);
+  }
 
-.dropdown-menu .dropdown-item {
-    border-radius: 10px;
-    font-weight: 500;
-    padding: 8px 14px;
-    transition: .15s;
-}
+  .dropdown-menu .dropdown-item {
+      border-radius: 10px;
+      font-weight: 500;
+      padding: 8px 14px;
+      transition: .15s;
+  }
 
-.dropdown-menu .dropdown-item:hover {
-    background: #f3f4f6;
-}
+  .dropdown-menu .dropdown-item:hover {
+      background: #f3f4f6;
+  }
 
-.active-role {
-    background: #2563eb !important;
-    color: white !important;
-}
+  .active-role {
+      background: #2563eb !important;
+      color: white !important;
+  }
 
-.loading-btn {
-    opacity: 0.6;
-    pointer-events: none;
-}
+  .loading-btn {
+      opacity: 0.6;
+      pointer-events: none;
+  }
 
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
