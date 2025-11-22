@@ -2436,6 +2436,10 @@ $current_page = basename($_SERVER['PHP_SELF']);
   .dropdown-menu.show {
       border: 1px solid #ccc;
   }
+  /* لون الأيقونة في العنصر النشط */
+  .role-dropdown .dropdown-item.active-role i {
+      color: #fff; /* أبيض */
+  }
 
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
