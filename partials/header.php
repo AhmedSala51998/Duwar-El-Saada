@@ -2434,7 +2434,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
   /* إزالة الخلفية الافتراضية للـ dropdown */
   .dropdown-menu.show {
-      background: transparent;
       border: 1px solid #ccc;
   }
 
