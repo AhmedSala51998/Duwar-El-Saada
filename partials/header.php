@@ -2446,18 +2446,21 @@ $current_page = basename($_SERVER['PHP_SELF']);
               <i class="bi bi-chevron-down ms-1" id="roleArrow"></i>
             </button>
             <ul class="dropdown-menu" aria-labelledby="roleDropdown">
-              <?php
-              $stmt = $pdo->query("SELECT name FROM roles ORDER BY name ASC");
-              $roles = $stmt->fetchAll(PDO::FETCH_COLUMN);
-              foreach ($roles as $role):
-                $active = $role === current_role() ? 'active-role' : '';
-              ?>
-                <li>
-                  <a class="dropdown-item <?= $active ?>" href="#" onclick="switchRole('<?= $role ?>'); return false;">
-                    <?= esc($role) ?>
-                  </a>
-                </li>
-              <?php endforeach; ?>
+                <?php
+                $stmt = $pdo->query("SELECT id, name FROM roles ORDER BY id ASC");
+                $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                foreach ($roles as $role):
+                    $active = $role['name'] === current_role() ? 'active-role' : '';
+                ?>
+                    <li>
+                        <a class="dropdown-item <?= $active ?>" 
+                          href="#" 
+                          onclick="switchRole(<?= $role['id'] ?>, '<?= $role['name'] ?>'); return false;">
+                            <?= esc($role['name']) ?>
+                        </a>
+                    </li>
+                <?php endforeach; ?>
             </ul>
           </div>
         <?php else: ?>
@@ -2758,16 +2761,16 @@ function showToast(message, isSuccess = true) {
     toast.show();
 }
 
-function switchRole(role) {
+function switchRole(role_id, role_name) {
+    console.log("ROLE ID =", role_id);
 
-    console.log(role);
     const btn = document.getElementById('roleDropdown');
     btn.classList.add("loading-btn");
 
     fetch('switch_role.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ role })
+        body: JSON.stringify({ role_id, role_name })
     })
     .then(res => res.json())
     .then(data => {

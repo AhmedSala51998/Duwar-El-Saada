@@ -13,41 +13,53 @@ if (empty($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
-/* 🔥 اجلب الدور الحالي الصحيح */
+/* ⭐ اجلب بيانات المستخدم */
 $stmt = $pdo->prepare("
-    SELECT U.username 
+    SELECT u.role_id, u.username, r.name AS role_name
     FROM users u
     JOIN roles r ON r.id = u.role_id
     WHERE u.id = ?
 ");
 $stmt->execute([$user_id]);
-$current_user = $stmt->fetchColumn();
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-if ($current_user !== 'admin') {
+/* ⭐ تأكيد إنه admin */
+if ($user['username'] !== 'admin') {
     echo json_encode(['success' => false, 'message' => 'غير مسموح']);
     exit;
 }
 
-/* استقبل البيانات */
-$input = json_decode(file_get_contents('php://input'), true);
-$new_role = $input['role'] ?? '';
+/* ⭐ استقبل البيانات من fetch POST */
+$data = json_decode(file_get_contents("php://input"), true);
+$new_role_id = $data['role_id'] ?? null;
 
-if (!$new_role) {
-    echo json_encode(['success' => false, 'message' => 'الدور غير محدد']);
+if (!$new_role_id) {
+    echo json_encode(['success' => false, 'message' => 'رقم الدور غير مُرسل']);
     exit;
 }
 
-/* تحقق إن الدور موجود */
-$stmt = $pdo->prepare("SELECT COUNT(*) FROM roles WHERE name = ?");
-$stmt->execute([$new_role]);
+/* ⭐ تأكد إن role_id فعلاً موجود */
+$stmt = $pdo->prepare("SELECT name FROM roles WHERE id = ?");
+$stmt->execute([$new_role_id]);
+$role_name = $stmt->fetchColumn();
 
-if ($stmt->fetchColumn() == 0) {
+if (!$role_name) {
     echo json_encode(['success' => false, 'message' => 'الدور غير صالح']);
     exit;
 }
 
-/* حفظ الدور الجديد في السيشن */
-$_SESSION['current_role'] = $new_role;
+/* ⭐ تحديث دور المستخدم */
+$stmt = $pdo->prepare("UPDATE users SET role_id = ? WHERE id = ?");
+$stmt->execute([$new_role_id, $user_id]);
 
-echo json_encode(['success' => true, 'role' => $new_role]);
+/* ⭐ حفظ الدور الجديد في السيشن */
+$_SESSION['current_role_id'] = $new_role_id;
+$_SESSION['current_role'] = $role_name;
+
+echo json_encode([
+    'success' => true,
+    'message' => 'تم تحديث الدور',
+    'role_id' => $new_role_id,
+    'role_name' => $role_name
+]);
 exit;
