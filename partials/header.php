@@ -2275,7 +2275,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
     }
 
     /* ===== Dropdown Button & Arrow ===== */
-    .role-badge {
+    .role-badge_drop {
         transition: background-color 0.3s, color 0.3s;
         display: flex;
         align-items: center;
@@ -2326,7 +2326,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
    .dropdown-menu {
         transition: all 0.3s ease;
     }
-  .role-badge, #roleDropdown {
+  .role-badge_drop, #roleDropdown {
       background: #ffffff;
       border: 1px solid #e5e7eb;
       color: #555;
@@ -2377,7 +2377,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
   }
 
   /* ======== زر الدروب ======== */
-  .role-badge {
+  .role-badge_drop {
       display: flex;
       align-items: center;
       padding: 6px 12px;
@@ -2391,12 +2391,12 @@ $current_page = basename($_SERVER['PHP_SELF']);
       box-shadow:none !important
   }
 
-  .role-badge:hover {
+  .role-badge_drop:hover {
       background: rgba(0,0,0,0.05);
   }
 
   /* السهم المثلث الممتلئ */
-  .role-badge .bi-caret-down-fill {
+  .role-badge_drop .bi-caret-down-fill {
       font-size: 0.75rem;
       vertical-align: middle;
   }
@@ -2505,7 +2505,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
       <li class="nav-item">
           <?php if(current_user_id() === 1): ?>
               <div class="dropdown">
-                  <button class="btn role-badge dropdown-toggle" type="button" id="roleDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                  <button class="btn role-badge_drop dropdown-toggle" type="button" id="roleDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                       <i class="bi bi-person-badge me-1"></i>
                       <span id="currentRoleText"><?= esc(current_role()) ?></span>
                       <i class="bi bi-caret-down-fill ms-1" id="roleArrow"></i>
