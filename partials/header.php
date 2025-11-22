@@ -2503,34 +2503,34 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
       <!-- الدور -->
       <li class="nav-item">
-          <?php if(current_user_id() === 1): ?>
-              <div class="dropdown">
-                  <button class="btn role-badge_drop dropdown-toggle" type="button" id="roleDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                      <i class="bi bi-person-badge me-1"></i>
-                      <span id="currentRoleText"><?= esc(current_role()) ?></span>
-                      <i class="bi bi-caret-down-fill ms-1" id="roleArrow"></i>
-                  </button>
-                  <ul class="dropdown-menu role-dropdown" aria-labelledby="roleDropdown">
-                      <?php
-                      $stmt = $pdo->query("SELECT id, name FROM roles ORDER BY id ASC");
-                      $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        <?php if(current_user_id() === 1): ?>
+            <div class="dropdown">
+                <button class="btn role-badge_drop dropdown-toggle" type="button" id="roleDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-person-badge me-1"></i>
+                    <span id="currentRoleText"><?= esc(current_role()) ?></span>
+                    <i class="bi bi-caret-down-fill ms-1" id="roleArrow"></i>
+                </button>
+                <ul class="dropdown-menu role-dropdown" aria-labelledby="roleDropdown">
+                    <?php
+                    $stmt = $pdo->query("SELECT id, name FROM roles ORDER BY id ASC");
+                    $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                      foreach ($roles as $role):
-                          $active = $role['name'] === current_role() ? 'active-role' : '';
-                      ?>
-                      <li>
-                          <a class="dropdown-item <?= $active ?>" href="#" onclick="switchRole(<?= $role['id'] ?>, '<?= $role['name'] ?>'); return false;">
-                              <i class="bi bi-person-circle me-2"></i> <?= esc($role['name']) ?>
-                          </a>
-                      </li>
-                      <?php endforeach; ?>
-                  </ul>
-              </div>
-              <?php else: ?>
-                <span class="badge role-badge">
-                  <i class="bi bi-person-badge me-1"></i> <?= esc(current_role()) ?>
-                </span>
-              <?php endif; ?>
+                    foreach ($roles as $role):
+                        $active = $role['name'] === current_role() ? 'active-role' : '';
+                    ?>
+                    <li>
+                        <a class="dropdown-item <?= $active ?>" href="#" onclick="switchRole(<?= $role['id'] ?>, '<?= $role['name'] ?>'); return false;">
+                            <i class="bi bi-person-circle me-2"></i> <?= esc($role['name']) ?>
+                        </a>
+                    </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+            <?php else: ?>
+              <span class="badge role-badge">
+                <i class="bi bi-person-badge me-1"></i> <?= esc(current_role()) ?>
+              </span>
+            <?php endif; ?>
       </li>
 
       <!-- المستخدمون -->
@@ -2647,12 +2647,44 @@ $current_page = basename($_SERVER['PHP_SELF']);
     <hr class="my-3">
 
     <!-- ✅ معلومات المستخدم -->
-    <div class="px-2 mb-3">
+    <!--<div class="px-2 mb-3">
       <span class="badge bg-light text-dark w-100 d-flex align-items-center justify-content-center py-2">
         <i class="bi bi-person-badge me-2 text-orange"></i>
         <span><?= esc(current_role()) ?></span>
       </span>
-    </div>
+    </div>-->
+
+    <div class="px-2 mb-3">
+      <?php if(current_user_id() === 1): ?>
+          <div class="dropdown w-100">
+              <button class="btn role-badge_drop dropdown-toggle w-100 d-flex align-items-center justify-content-center" type="button" id="mobileRoleDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="bi bi-person-badge me-2"></i>
+                  <span id="currentRoleText"><?= esc(current_role()) ?></span>
+                  <i class="bi bi-caret-down-fill ms-1"></i>
+              </button>
+              <ul class="dropdown-menu role-dropdown w-100" aria-labelledby="mobileRoleDropdown">
+                  <?php
+                  $stmt = $pdo->query("SELECT id, name FROM roles ORDER BY id ASC");
+                  $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                  foreach ($roles as $role):
+                      $active = $role['name'] === current_role() ? 'active-role' : '';
+                  ?>
+                  <li>
+                      <a class="dropdown-item <?= $active ?>" href="#" onclick="switchRole(<?= $role['id'] ?>, '<?= $role['name'] ?>'); return false;">
+                          <i class="bi bi-person-circle me-2"></i> <?= esc($role['name']) ?>
+                      </a>
+                  </li>
+                  <?php endforeach; ?>
+              </ul>
+          </div>
+      <?php else: ?>
+          <span class="badge role-badge w-100 d-flex align-items-center justify-content-center py-2">
+              <i class="bi bi-person-badge me-2 text-orange"></i>
+              <span><?= esc(current_role()) ?></span>
+          </span>
+      <?php endif; ?>
+  </div>
 
     <?php if(has_permission('users.view')): ?>
     <a class="sidebar-link d-block mb-2 <?= $current_page=='users.php'?'active':'' ?>" href="<?= BASE_URL ?>/users.php">
