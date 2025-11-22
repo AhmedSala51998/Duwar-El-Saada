@@ -2439,6 +2439,76 @@ $current_page = basename($_SERVER['PHP_SELF']);
       border: 1px solid #ccc;
   }
 
+  /* Dropdown Buttons */
+  .role-badge {
+      display: flex;
+      align-items: center;
+      padding: 6px 12px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #333;
+      background: transparent;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+  }
+
+  .role-badge:hover {
+      background: rgba(0,0,0,0.05);
+  }
+
+  /* Arrow filled */
+  .role-badge .bi-caret-down-fill {
+      font-size: 0.75rem;
+      vertical-align: middle;
+  }
+
+  /* Dropdown menu */
+  .role-dropdown {
+      min-width: 180px;
+      background: transparent !important; /* شفاف لجميع الوضعيات */
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 4px 5px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+
+  /* Dark mode example */
+  body.dark-mode .role-dropdown {
+      background: rgba(0,0,0,0.8) !important;
+      border-color: #555;
+  }
+
+  /* Dropdown items */
+  .role-dropdown .dropdown-item {
+      display: flex;
+      align-items: center;
+      padding: 6px 12px;
+      font-size: 14px;
+      color: #333;
+      margin-bottom: 3px;
+      transition: background 0.2s;
+      background: transparent !important;
+  }
+
+  .role-dropdown .dropdown-item i {
+      font-size: 16px;
+      color: #555;
+  }
+
+  .role-dropdown .dropdown-item:hover,
+  .role-dropdown .dropdown-item.active-role {
+      background: rgba(0,0,0,0.08);
+      color: #000;
+  }
+
+  /* Prevent Bootstrap default bg */
+  .dropdown-menu.show {
+      background: transparent !important;
+      border: 1px solid #ccc;
+  }
+
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
 </head>
