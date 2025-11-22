@@ -2442,13 +2442,13 @@ $current_page = basename($_SERVER['PHP_SELF']);
   }
 
   .sidebar-dropdown .dropdown-icon {
+      display: inline-block;
       transition: transform 0.3s ease;
   }
 
-  /* عندما تكون الـ collapse مفتوحة، قم بتدوير السهم */
-  .sidebar-dropdown .collapse.show ~ a .dropdown-icon,
+  /* تدوير المثلث عند فتح القائمة */
   .sidebar-dropdown a[aria-expanded="true"] .dropdown-icon {
-      transform: rotate(180deg);
+      transform: rotate(90deg); /* من ▶ إلى ▼ */
   }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
@@ -2763,7 +2763,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
             <a class="sidebar-link d-block <?= $current_page=='settings.php'?'active':'' ?>" 
               data-bs-toggle="collapse" href="#settingsDropdown" role="button" aria-expanded="false" aria-controls="settingsDropdown">
                 <i class="bi bi-gear-fill me-1"></i> إعدادات النظام
-                <i class="bi bi-chevron-down float-end dropdown-icon"></i>
+                <span class="dropdown-icon float-end">&#9654;</span>
             </a>
             <div class="collapse ps-3 mt-1" id="settingsDropdown">
                 <?php if(has_permission('roles.view')): ?>
