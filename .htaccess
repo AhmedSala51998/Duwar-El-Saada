@@ -2,6 +2,9 @@ DirectoryIndex home.php
 
 RewriteEngine On
 
+# استثناء switch_role.php
+RewriteCond %{REQUEST_URI} !^/switch_role\.php$
+
 # لو دخل المستخدم الرابط مع .php، حوله للرابط بدون .php
 RewriteCond %{THE_REQUEST} \s([^.]+)\.php[?\s] [NC]
 RewriteRule ^ %1 [R=301,L]
