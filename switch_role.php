@@ -31,12 +31,9 @@ if ($user['username'] !== 'admin') {
 
 /* ⭐ استقبل البيانات من fetch POST */
 $data = json_decode(file_get_contents("php://input"), true);
-
-file_put_contents("debug.txt", print_r($data, true)); // 🔥 اختبر البيانات
-
 $new_role_id = $data['role_id'] ?? null;
 
-if ($new_role_id === null) {
+if (!$new_role_id) {
     echo json_encode(['success' => false, 'message' => 'رقم الدور غير مُرسل']);
     exit;
 }

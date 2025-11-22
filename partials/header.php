@@ -2769,7 +2769,10 @@ function switchRole(role_id, role_name) {
 
     fetch('switch_role.php', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
         body: JSON.stringify({ role_id, role_name })
     })
     .then(res => res.json())
