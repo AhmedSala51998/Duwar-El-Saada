@@ -6,7 +6,6 @@ session_start();
 header('Content-Type: application/json');
 require __DIR__ . '/config/config.php';
 
-// التحقق من أن المستخدم مسجل الدخول
 if (empty($_SESSION['user_id'])) {
     echo json_encode(['success' => false, 'message' => 'غير مسموح']);
     exit;
@@ -14,20 +13,22 @@ if (empty($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
-// تحقق من أن المستخدم أدمن
-$stmt = $pdo->prepare("SELECT u.username 
-                       FROM users u
-                       JOIN roles r ON r.id = u.role_id
-                       WHERE u.id = ?");
+/* 🔥 اجلب الدور الحالي الصحيح */
+$stmt = $pdo->prepare("
+    SELECT r.name 
+    FROM users u
+    JOIN roles r ON r.id = u.role_id
+    WHERE u.id = ?
+");
 $stmt->execute([$user_id]);
 $current_role = $stmt->fetchColumn();
 
-if ($current_role !== 'admin') {
+if ($current_role !== 'مدير النظام') {
     echo json_encode(['success' => false, 'message' => 'غير مسموح']);
     exit;
 }
 
-// استقبال البيانات من AJAX
+/* استقبل البيانات */
 $input = json_decode(file_get_contents('php://input'), true);
 $new_role = $input['role'] ?? '';
 
@@ -36,16 +37,17 @@ if (!$new_role) {
     exit;
 }
 
-// تحقق أن الدور موجود فعليًا في قاعدة البيانات
+/* تحقق إن الدور موجود */
 $stmt = $pdo->prepare("SELECT COUNT(*) FROM roles WHERE name = ?");
 $stmt->execute([$new_role]);
+
 if ($stmt->fetchColumn() == 0) {
     echo json_encode(['success' => false, 'message' => 'الدور غير صالح']);
     exit;
 }
 
-// حدث الدور في الجلسة فقط (أو حسب احتياجك يمكن تغييره في قاعدة البيانات)
+/* حفظ الدور الجديد في السيشن */
 $_SESSION['current_role'] = $new_role;
 
-echo json_encode(['success' => true]);
+echo json_encode(['success' => true, 'role' => $new_role]);
 exit;

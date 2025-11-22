@@ -2323,9 +2323,51 @@ $current_page = basename($_SERVER['PHP_SELF']);
     }
 
     /* Soft open/close */
-    .dropdown-menu {
+   .dropdown-menu {
         transition: all 0.3s ease;
     }
+    .role-badge, #roleDropdown {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    color: #555;
+    font-weight: 600;
+    border-radius: 12px;
+    padding: 8px 14px;
+    transition: .2s;
+}
+
+#roleDropdown:hover {
+    background: #f8f9fa;
+    border-color: #d0d7de;
+}
+
+.dropdown-menu {
+    border-radius: 14px;
+    padding: 8px;
+    border: 1px solid #e6e6e6 !important;
+    box-shadow: 0px 10px 30px rgba(0,0,0,0.08);
+}
+
+.dropdown-menu .dropdown-item {
+    border-radius: 10px;
+    font-weight: 500;
+    padding: 8px 14px;
+    transition: .15s;
+}
+
+.dropdown-menu .dropdown-item:hover {
+    background: #f3f4f6;
+}
+
+.active-role {
+    background: #2563eb !important;
+    color: white !important;
+}
+
+.loading-btn {
+    opacity: 0.6;
+    pointer-events: none;
+}
 
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
@@ -2710,6 +2752,10 @@ function showToast(message, isSuccess = true) {
 }
 
 function switchRole(role) {
+
+    const btn = document.getElementById('roleDropdown');
+    btn.classList.add("loading-btn");
+
     fetch('switch_role.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -2717,13 +2763,18 @@ function switchRole(role) {
     })
     .then(res => res.json())
     .then(data => {
+        btn.classList.remove("loading-btn");
+
         if(data.success){
-            showToast('تم تغيير الدور بنجاح!', true);
-            setTimeout(() => location.reload(), 1200); // إعادة تحميل بعد ثواني قليلة
+            showToast('✔ تم تغيير الدور بنجاح!', true);
+            setTimeout(() => location.reload(), 800);
         } else {
             showToast(data.message, false);
         }
     })
-    .catch(err => showToast('حدث خطأ أثناء الاتصال بالسيرفر', false));
+    .catch(err => {
+        btn.classList.remove("loading-btn");
+        showToast('⚠ خطأ في الاتصال بالسيرفر', false);
+    });
 }
 </script>
