@@ -435,11 +435,11 @@ $assetsDataBy_payer = [
 <div class="container">
   <div class="hero-card mb-5 text-end">
     <div class="floating-logo">
-      <img src="<?= BASE_URL ?>/assets/logo.png" alt="Logo" />
+      <img src="<?= BASE_URL ?>/assets/<?= esc(getSystemSettings('secondary_logo') ?: 'logo_header2.png') ?>" alt="Logo" />
     </div>
 
-    <h2 class="hero-title">مرحبًا <?= esc(current_user()) ?> 👋</h2>
-    <p class="hero-sub">تحكم كامل بالمشتريات، الأوامر، العُهد، المصروفات، والأصول.</p>
+    <h2 class="hero-title"><?= esc(getSystemSettings('text1') ?: 'مرحبا') ?> <?= esc(current_user()) ?> 👋</h2>
+    <p class="hero-sub"><?= esc(getSystemSettings('text2') ?: '') ?> <?= esc(current_user()) ?></p>
   </div>
 
   <!-- ===== كروت الإحصائيات ===== -->

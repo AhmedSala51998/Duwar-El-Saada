@@ -2493,7 +2493,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
     <!-- ✅ اللوجو على اليمين -->
     <a class="navbar-brand d-flex align-items-center" href="<?= BASE_URL ?>/home.php" style="text-decoration:none;">
-      <img src="<?= BASE_URL ?>/assets/logo_header2.png" alt="Logo" class="logo-modern">
+      <img src="<?= BASE_URL ?>/assets/<?= esc(getSystemSettings('main_logo') ?: 'logo_header2.png') ?>" alt="Logo" class="logo-modern">
     </a>
 
     <!-- ✅ زر القائمة على الشمال (يظهر فقط في الموبايل) -->
@@ -2595,7 +2595,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
   <div class="offcanvas-header border-bottom" style="padding: 6px 10px; height: 65px; min-height: unset;">
     <a href="<?= BASE_URL ?>/home.php" 
       class="navbar-brand d-flex align-items-center text-decoration-none">
-      <img src="<?= BASE_URL ?>/assets/logo_header2.png" 
+      <img src="<?= BASE_URL ?>/assets/<?= esc(getSystemSettings('main_logo') ?: 'logo_header2.png') ?>" 
           style="height: 32px; width: auto; transform: scale(1.5); margin-right: 30px;"
           alt="logo" 
           class="rounded">

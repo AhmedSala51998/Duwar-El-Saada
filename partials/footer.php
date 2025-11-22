@@ -5,7 +5,7 @@
 <!-- ====== Footer ====== -->
 <footer class="custom-footer text-center py-3">
   <div class="container">
-    <span>© جميع الحقوق محفوظة لدى <b>مطعم دوار السعادة</b> <?= date('Y') ?></span>
+    <span><?= esc(getSystemSettings('footer_text') ?: 'Default footer text') ?><b>مطعم دوار السعادة</b> <?= date('Y') ?></span>
   </div>
 </footer>
 

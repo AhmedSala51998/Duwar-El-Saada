@@ -24,6 +24,36 @@ if (!function_exists('esc')) {
     function esc($s){ return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); }
 }
 
+
+if (!function_exists('getSystemSettings')) {
+    /**
+     * ترجع إعدادات النظام من جدول system_settings
+     * @param string|null $key اسم العمود المطلوب
+     * @return mixed القيمة أو مصفوفة كاملة
+     */
+    function getSystemSettings($key = null) {
+        global $pdo; // الاتصال PDO الموجود عندك
+
+        static $settings = null;
+
+        // جلب البيانات مرة واحدة فقط لكل طلب
+        if ($settings === null) {
+            try {
+                $stmt = $pdo->query("SELECT * FROM system_settings LIMIT 1");
+                $settings = $stmt->fetch(PDO::FETCH_ASSOC);
+            } catch (Exception $e) {
+                $settings = [];
+            }
+        }
+
+        if ($key !== null) {
+            return isset($settings[$key]) ? $settings[$key] : null;
+        }
+
+        return $settings;
+    }
+}
+
 if (!function_exists('is_auth')) {
     function is_auth(){ return !empty($_SESSION['user_id']); }
 }
