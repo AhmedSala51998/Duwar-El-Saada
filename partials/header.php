@@ -2384,11 +2384,11 @@ $current_page = basename($_SERVER['PHP_SELF']);
       font-size: 14px;
       font-weight: 500;
       color: #333;
-      background: transparent;
       border: 1px solid #ccc;
       border-radius: 8px;
       cursor: pointer;
       transition: all 0.2s;
+      box-shadow:none !important
   }
 
   .role-badge:hover {
