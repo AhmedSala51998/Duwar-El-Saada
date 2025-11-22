@@ -2407,7 +2407,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
       background: transparent; /* شفافة */
       border: 1px solid #ccc;
       border-radius: 8px;
-      padding: 4px 0;
+      padding: 4px 5px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   }
 
