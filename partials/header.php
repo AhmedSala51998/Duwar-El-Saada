@@ -2503,7 +2503,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
       <!-- الدور -->
       <li class="nav-item">
-          <?php if(current_user() === 'admin'): ?>
+          <?php if(current_user_id() === 1): ?>
               <div class="dropdown">
                   <button class="btn role-badge dropdown-toggle" type="button" id="roleDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                       <i class="bi bi-person-badge me-1"></i>

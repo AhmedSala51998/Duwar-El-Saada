@@ -24,7 +24,7 @@ $stmt->execute([$user_id]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
 /* ⭐ تأكيد إنه admin */
-if ($user['username'] !== 'admin') {
+if ($user_id !== 1) {
     echo json_encode(['success' => false, 'message' => 'غير مسموح']);
     exit;
 }
