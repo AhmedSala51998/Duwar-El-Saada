@@ -2643,10 +2643,11 @@ $current_page = basename($_SERVER['PHP_SELF']);
     <?php endif ?>
     <?php endif ?>
 
-    <a class="sidebar-link d-block mb-2 <?= $current_page=='system_settings.php'?'active':'' ?>" href="<?= BASE_URL ?>/system_settings.php">
-        <i class="bi bi-gear-fill me-1"></i> إعدادات النظام
-    </a>
-
+    <?php if(has_permission('systems_settings.view')): ?>
+      <a class="sidebar-link d-block mb-2 <?= $current_page=='settings.php'?'active':'' ?>" href="<?= BASE_URL ?>/settings.php">
+          <i class="bi bi-gear-fill me-1"></i> إعدادات النظام
+      </a>
+    <?php endif ?>
     <!-- ✅ خط فاصل قبل المستخدم -->
     <hr class="my-3">
 
@@ -2748,9 +2749,11 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <?php endif ?>
         <?php endif ?>
 
-        <a class="sidebar-link d-block mb-2 <?= $current_page=='system_settings.php'?'active':'' ?>" href="<?= BASE_URL ?>/system_settings.php">
+        <?php if(has_permission('systems_settings.view')): ?>
+        <a class="sidebar-link d-block mb-2 <?= $current_page=='settings.php'?'active':'' ?>" href="<?= BASE_URL ?>/settings.php">
             <i class="bi bi-gear-fill me-1"></i> إعدادات النظام
         </a>
+        <?php endif ?>
       </div>
     </aside>
 
