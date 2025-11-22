@@ -312,6 +312,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             'expenses' => 'المصروفات',
                             'reports' => 'التقارير',
                             'home' => 'الرئيسية',
+                            'systems_settings' => 'اعدادات النظام',
                         ];
                         ?>
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<?= $group.$r['id'] ?>">
@@ -508,6 +509,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         'expenses' => 'المصروفات',
                         'reports' => 'التقارير',
                         'home' => 'الرئيسية',
+                        'systems_settings' => 'اعدادات النظام',
                     ];
                     ?>
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAdd<?= $group ?>">
