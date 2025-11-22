@@ -2762,7 +2762,7 @@ function showToast(message, isSuccess = true) {
 }
 
 function switchRole(role_id, role_name) {
-    console.log("ROLE ID =", role_id);
+    console.log(JSON.stringify({ role_id, role_name }));
 
     const btn = document.getElementById('roleDropdown');
     btn.classList.add("loading-btn");
