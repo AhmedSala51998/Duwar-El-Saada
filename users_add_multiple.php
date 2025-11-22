@@ -22,17 +22,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
         $pdo->beginTransaction();
 
         $insert = $pdo->prepare("
-            INSERT INTO users (username, password_hash, role_id)
-            VALUES (?, ?, ?)
+            INSERT INTO users (username, password_hash, role_id, user_id_seq)
+            VALUES (?, ?, ?, ?)
         ");
 
         $check = $pdo->prepare("SELECT COUNT(*) FROM users WHERE username = ?");
+
+        // ⭐ جلب آخر user_id_seq قبل البدء
+        $stmtSeq = $pdo->query("SELECT user_id_seq FROM users ORDER BY id DESC LIMIT 1");
+        $lastSeq = $stmtSeq->fetchColumn();
+        $num = $lastSeq ? ((int)substr($lastSeq, 2)) + 1 : 1;
 
         $rowsAdded = 0;
         $duplicates = [];
 
         foreach ($usernames as $i => $u) {
-
             $u = trim($u);
             $p = trim($passwords[$i] ?? '');
             $r = (int)($roles[$i] ?? 0);
@@ -49,11 +53,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
                 continue;
             }
 
-            // إدراج
+            // إنشاء user_id_seq الجديد
+            $newSeq = 'Ad' . str_pad($num, 4, '0', STR_PAD_LEFT);
+            $num++; // زود الرقم للصف التالي
+
+            // إدراج المستخدم
             $insert->execute([
                 $u,
                 password_hash($p, PASSWORD_DEFAULT),
-                $r
+                $r,
+                $newSeq
             ]);
 
             $rowsAdded++;
