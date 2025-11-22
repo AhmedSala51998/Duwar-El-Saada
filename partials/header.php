@@ -2376,6 +2376,14 @@ $current_page = basename($_SERVER['PHP_SELF']);
       transform: rotate(180deg);
   }
 
+  #roleArrow11 {
+      transition: transform 0.25s ease;
+  }
+
+  #roleDropdown.show #roleArrow11 {
+      transform: rotate(180deg);
+  }
+
   /* ======== زر الدروب ======== */
   .role-badge_drop {
       display: flex;
@@ -2778,7 +2786,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
             <a class="sidebar-link d-flex align-items-center justify-content-between <?= in_array($current_page, $subpages)?'active':'' ?>" 
               data-bs-toggle="collapse" href="#settingsDropdown" role="button" aria-expanded="<?= $ariaExpanded ?>" aria-controls="settingsDropdown">
                 <span><i class="bi bi-gear-fill me-1"></i> إعدادات النظام</span>
-                <span class="dropdown-icon">&#9650;</span> <!-- السهم لأعلى بشكل افتراضي -->
+                <!--<span class="dropdown-icon">&#9650;</span>-->
+                <i class="bi bi-caret-down-fill ms-1" id="roleArrow11"></i>
             </a>
             <div class="collapse ps-3 mt-1 <?= $isOpen ?>" id="settingsDropdown">
                 <?php if(has_permission('roles.view')): ?>
