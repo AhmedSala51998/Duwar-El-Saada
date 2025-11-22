@@ -135,8 +135,8 @@ $rows = $stmt->fetchAll();
       <th>#</th>
       <th>الشعار الرئيسي</th>
       <th>الشعار الثانوي</th>
-      <th>النص 1</th>
-      <th>النص 2</th>
+      <th>النص الأول</th>
+      <th>النص الثاني</th>
       <th>نص الفوتر</th>
       <?php if(has_permission('systems_settings.edit') || has_permission('systems_settings.delete')): ?><th>عمليات</th><?php endif; ?>
     </tr>
@@ -144,16 +144,16 @@ $rows = $stmt->fetchAll();
   <tbody>
     <?php foreach($rows as $r): ?>
       <tr>
-        <td><?= $r['id'] ?></td>
-        <td><?= $r['main_logo'] ? '<img src="'.esc($r['main_logo']).'" />' : '-' ?></td>
-        <td><?= $r['secondary_logo'] ? '<img src="'.esc($r['secondary_logo']).'" />' : '-' ?></td>
-        <td><?= esc($r['text1']) ?></td>
-        <td><?= esc($r['text2']) ?></td>
-        <td><?= esc($r['footer_text']) ?></td>
+        <td data-label="رقم الاعداد"><?= $r['id'] ?></td>
+        <td data-label="الشعار الرئيسي"><?= $r['main_logo'] ? '<img src="'.esc($r['main_logo']).'" />' : '-' ?></td>
+        <td data-label="الشعار الثانوي"><?= $r['secondary_logo'] ? '<img src="'.esc($r['secondary_logo']).'" />' : '-' ?></td>
+        <td data-label="النص  الأول"><?= esc($r['text1']) ?></td>
+        <td data-label="النص الثاني"><?= esc($r['text2']) ?></td>
+        <td data-label="نص الفوتر"><?= esc($r['footer_text']) ?></td>
         <?php if(has_permission('systems_settings.edit') || has_permission('systems_settings.delete')): ?>
           <td>
             <?php if(has_permission('systems_settings.edit')): ?>
-              <button class="btn btn-sm btn-outline-warning" data-bs-toggle="modal" data-bs-target="#edit<?= $r['id'] ?>">
+              <button class="btn btn-sm btn-outline-warning me-1" data-bs-toggle="modal" data-bs-target="#edit<?= $r['id'] ?>">
                 <i class="bi bi-pencil"></i>
               </button>
             <?php endif; ?>
