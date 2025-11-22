@@ -2747,6 +2747,10 @@ $current_page = basename($_SERVER['PHP_SELF']);
         </a>
         <?php endif ?>
         <?php endif ?>
+
+        <a class="sidebar-link d-block mb-2 <?= $current_page=='system_settings.php'?'active':'' ?>" href="<?= BASE_URL ?>/system_settings.php">
+            <i class="bi bi-gear-fill me-1"></i> إعدادات النظام
+        </a>
       </div>
     </aside>
 
