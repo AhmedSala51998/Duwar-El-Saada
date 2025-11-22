@@ -2750,9 +2750,30 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <?php endif ?>
 
         <?php if(has_permission('systems_settings.view')): ?>
-        <a class="sidebar-link d-block mb-2 <?= $current_page=='settings.php'?'active':'' ?>" href="<?= BASE_URL ?>/settings.php">
-            <i class="bi bi-gear-fill me-1"></i> إعدادات النظام
-        </a>
+          <div class="sidebar-dropdown mb-2">
+            <a class="sidebar-link d-block <?= $current_page=='settings.php'?'active':'' ?>" 
+              data-bs-toggle="collapse" href="#settingsDropdown" role="button" aria-expanded="false" aria-controls="settingsDropdown">
+                <i class="bi bi-gear-fill me-1"></i> إعدادات النظام
+                <i class="bi bi-chevron-down float-end"></i>
+            </a>
+            <div class="collapse ps-3 mt-1" id="settingsDropdown">
+                <?php if(has_permission('roles.view')): ?>
+                <a class="sidebar-link d-block mb-1 <?= $current_page=='roles.php'?'active':'' ?>" href="<?= BASE_URL ?>/roles.php">
+                    <i class="bi bi-shield-lock me-1"></i> الأدوار
+                </a>
+                <?php endif ?>
+                <?php if(has_permission('permissions.view')): ?>
+                <a class="sidebar-link d-block mb-1 <?= $current_page=='permissions.php'?'active':'' ?>" href="<?= BASE_URL ?>/permissions.php">
+                    <i class="bi bi-person-check me-1"></i> الصلاحيات
+                </a>
+                <?php endif ?>
+                <?php if(has_permission('systems_settings.edit')): ?>
+                <a class="sidebar-link d-block mb-1 <?= $current_page=='settings.php'?'active':'' ?>" href="<?= BASE_URL ?>/settings.php">
+                    <i class="bi bi-gear-fill me-1"></i> الإعدادات العامة
+                </a>
+                <?php endif ?>
+            </div>
+          </div>
         <?php endif ?>
       </div>
     </aside>
