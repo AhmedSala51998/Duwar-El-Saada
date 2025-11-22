@@ -2376,6 +2376,68 @@ $current_page = basename($_SERVER['PHP_SELF']);
       transform: rotate(180deg);
   }
 
+  /* ======== زر الدروب ======== */
+  .role-badge {
+      display: flex;
+      align-items: center;
+      padding: 6px 12px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #333;
+      background: transparent;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+  }
+
+  .role-badge:hover {
+      background: rgba(0,0,0,0.05);
+  }
+
+  /* السهم المثلث الممتلئ */
+  .role-badge .bi-caret-down-fill {
+      font-size: 0.75rem;
+      vertical-align: middle;
+  }
+
+  /* ======== قائمة الدروب ======== */
+  .role-dropdown {
+      min-width: 180px;
+      background: transparent; /* شفافة */
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 4px 0;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+
+  /* كل عنصر */
+  .role-dropdown .dropdown-item {
+      display: flex;
+      align-items: center;
+      padding: 6px 12px;
+      font-size: 14px;
+      color: #333;
+      transition: background 0.2s;
+  }
+
+  .role-dropdown .dropdown-item i {
+      font-size: 16px;
+      color: #555;
+  }
+
+  .role-dropdown .dropdown-item:hover,
+  .role-dropdown .dropdown-item.active-role {
+      background: rgba(0,0,0,0.08);
+      color: #000;
+  }
+
+  /* إزالة الخلفية الافتراضية للـ dropdown */
+  .dropdown-menu.show {
+      background: transparent;
+      border: 1px solid #ccc;
+  }
+
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
 </head>
@@ -2438,36 +2500,34 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
       <!-- الدور -->
       <li class="nav-item">
-        <?php if(current_user() === 'admin'): ?>
-          <!-- Dropdown للأدمن -->
-          <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle role-badge" type="button" id="roleDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-              <i class="bi bi-person-badge me-1"></i> <span id="currentRoleText"><?= esc(current_role()) ?></span>
-              <i class="bi bi-chevron-down ms-1" id="roleArrow"></i>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="roleDropdown">
-                <?php
-                $stmt = $pdo->query("SELECT id, name FROM roles ORDER BY id ASC");
-                $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+          <?php if(current_user() === 'admin'): ?>
+              <div class="dropdown">
+                  <button class="btn role-badge dropdown-toggle" type="button" id="roleDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                      <i class="bi bi-person-badge me-1"></i>
+                      <span id="currentRoleText"><?= esc(current_role()) ?></span>
+                      <i class="bi bi-caret-down-fill ms-1" id="roleArrow"></i>
+                  </button>
+                  <ul class="dropdown-menu role-dropdown" aria-labelledby="roleDropdown">
+                      <?php
+                      $stmt = $pdo->query("SELECT id, name FROM roles ORDER BY id ASC");
+                      $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                foreach ($roles as $role):
-                    $active = $role['name'] === current_role() ? 'active-role' : '';
-                ?>
-                    <li>
-                        <a class="dropdown-item <?= $active ?>" 
-                          href="#" 
-                          onclick="switchRole(<?= $role['id'] ?>, '<?= $role['name'] ?>'); return false;">
-                            <?= esc($role['name']) ?>
-                        </a>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
-          </div>
-        <?php else: ?>
-          <span class="badge role-badge">
-            <i class="bi bi-person-badge me-1"></i> <?= esc(current_role()) ?>
-          </span>
-        <?php endif; ?>
+                      foreach ($roles as $role):
+                          $active = $role['name'] === current_role() ? 'active-role' : '';
+                      ?>
+                      <li>
+                          <a class="dropdown-item <?= $active ?>" href="#" onclick="switchRole(<?= $role['id'] ?>, '<?= $role['name'] ?>'); return false;">
+                              <i class="bi bi-person-circle me-2"></i> <?= esc($role['name']) ?>
+                          </a>
+                      </li>
+                      <?php endforeach; ?>
+                  </ul>
+              </div>
+          <?php else: ?>
+              <span class="badge role-badge">
+                  <i class="bi bi-person-badge me-1"></i> <?= esc(current_role()) ?>
+              </span>
+          <?php endif; ?>
       </li>
 
       <!-- المستخدمون -->
@@ -2762,7 +2822,6 @@ function showToast(message, isSuccess = true) {
 }
 
 function switchRole(role_id, role_name) {
-    console.log(JSON.stringify({ role_id, role_name }));
 
     const btn = document.getElementById('roleDropdown');
     btn.classList.add("loading-btn");
