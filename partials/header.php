@@ -2746,7 +2746,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <?php if(has_permission('settings.edit')): ?>
         <hr class="my-2">
         <h6 class="text-muted small px-2">الإعدادات</h6>
-        <?php if(has_permission('roles.view')): ?>
+        <!--<?php if(has_permission('roles.view')): ?>
         <a class="sidebar-link d-block mb-2 <?= $current_page=='roles.php'?'active':'' ?>" href="<?= BASE_URL ?>/roles.php">
             <i class="bi bi-shield-lock"></i> الأدوار
         </a>
@@ -2755,7 +2755,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <a class="sidebar-link d-block mb-2 <?= $current_page=='permissions.php'?'active':'' ?>" href="<?= BASE_URL ?>/permissions.php">
             <i class="bi bi-person-check"></i> الصلاحيات
         </a>
-        <?php endif ?>
+        <?php endif ?>-->
         <?php endif ?>
 
         <?php if(has_permission('systems_settings.view')): ?>
