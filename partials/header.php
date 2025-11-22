@@ -2469,6 +2469,15 @@ $current_page = basename($_SERVER['PHP_SELF']);
       display: flex;
       align-items: center;
   }
+
+  #roleArrow11 {
+    transition: transform 0.25s ease;
+  }
+
+  /* عندما يكون الرابط expanded */
+  a[aria-expanded="true"] #roleArrow11 {
+      transform: rotate(180deg); /* السهم يتحرك لفوق */
+  }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
 </head>
