@@ -2443,12 +2443,13 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
   .sidebar-dropdown .dropdown-icon {
       display: inline-block;
+      font-size: 0.7rem; /* أصغر حجم */
       transition: transform 0.3s ease;
   }
 
-  /* تدوير المثلث عند فتح القائمة */
+  /* عندما يكون الـ collapse مفتوح */
   .sidebar-dropdown a[aria-expanded="true"] .dropdown-icon {
-      transform: rotate(90deg); /* من ▶ إلى ▼ */
+      transform: rotate(180deg); /* يتحرك لأعلى */
   }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
@@ -2757,15 +2758,20 @@ $current_page = basename($_SERVER['PHP_SELF']);
         </a>
         <?php endif ?>-->
         <?php endif ?>
-
         <?php if(has_permission('systems_settings.view')): ?>
+          <?php
+            // تحقق إذا الصفحة الحالية هي أي من روابط الإعدادات الفرعية
+            $subpages = ['roles.php','permissions.php','settings.php'];
+            $isOpen = in_array($current_page, $subpages) ? 'show' : '';
+            $ariaExpanded = in_array($current_page, $subpages) ? 'true' : 'false';
+          ?>
           <div class="sidebar-dropdown mb-2">
-            <a class="sidebar-link d-block <?= $current_page=='settings.php'?'active':'' ?>" 
-              data-bs-toggle="collapse" href="#settingsDropdown" role="button" aria-expanded="false" aria-controls="settingsDropdown">
+            <a class="sidebar-link d-block <?= in_array($current_page, $subpages)?'active':'' ?>" 
+              data-bs-toggle="collapse" href="#settingsDropdown" role="button" aria-expanded="<?= $ariaExpanded ?>" aria-controls="settingsDropdown">
                 <i class="bi bi-gear-fill me-1"></i> إعدادات النظام
                 <span class="dropdown-icon float-end">&#9654;</span>
             </a>
-            <div class="collapse ps-3 mt-1" id="settingsDropdown">
+            <div class="collapse ps-3 mt-1 <?= $isOpen ?>" id="settingsDropdown">
                 <?php if(has_permission('roles.view')): ?>
                 <a class="sidebar-link d-block mb-1 <?= $current_page=='roles.php'?'active':'' ?>" href="<?= BASE_URL ?>/roles.php">
                     <i class="bi bi-shield-lock me-1"></i> الأدوار
