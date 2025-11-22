@@ -2368,6 +2368,13 @@ $current_page = basename($_SERVER['PHP_SELF']);
       opacity: 0.6;
       pointer-events: none;
   }
+  #roleArrow {
+      transition: transform 0.25s ease;
+  }
+
+  #roleDropdown.show #roleArrow {
+      transform: rotate(180deg);
+  }
 
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
