@@ -15,7 +15,7 @@ $user_id = $_SESSION['user_id'];
 
 /* ⭐ اجلب بيانات المستخدم */
 $stmt = $pdo->prepare("
-    SELECT u.role_id, u.username, r.name AS role_name
+    SELECT u.role_id, u.username , u.user_id_seq, r.name AS role_name
     FROM users u
     JOIN roles r ON r.id = u.role_id
     WHERE u.id = ?
@@ -24,7 +24,7 @@ $stmt->execute([$user_id]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
 /* ⭐ تأكيد إنه admin */
-if ($user_id !== 1) {
+if ($user['user_id_seq'] !== 'Ad0001') {
     echo json_encode(['success' => false, 'message' => 'غير مسموح']);
     exit;
 }

@@ -32,8 +32,8 @@ if (!function_exists('current_user')) {
     function current_user(){ return $_SESSION['username'] ?? 'guest'; }
 }
 
-if (!function_exists('current_user_id')) {
-    function current_user_id(){ return $_SESSION['user_id'] ?? 1; }
+if (!function_exists('current_user_id_seq')) {
+    function current_user_id_seq(){ return $_SESSION['user_id_seq'] ?? 'Ad0001'; }
 }
 
 if (!function_exists('current_role')) {

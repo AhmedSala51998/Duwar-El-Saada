@@ -2503,7 +2503,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
       <!-- الدور -->
       <li class="nav-item">
-        <?php if(current_user_id() === 1): ?>
+        <?php if(current_user_id_seq() === 'Ad0001'): ?>
             <div class="dropdown">
                 <button class="btn role-badge_drop dropdown-toggle" type="button" id="roleDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="bi bi-person-badge me-1"></i>
@@ -2655,7 +2655,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
     </div>-->
 
     <div class="px-2 mb-3">
-      <?php if(current_user_id() === 1): ?>
+      <?php if(current_user_id_seq() === 'Ad0001'): ?>
           <div class="dropdown w-100">
               <button class="btn role-badge_drop dropdown-toggle w-100 d-flex align-items-center justify-content-center" type="button" id="mobileRoleDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                   <i class="bi bi-person-badge me-2"></i>

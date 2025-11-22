@@ -32,11 +32,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
             // إنشاء المستخدم داخل معاملة (Transaction)
             $pdo->beginTransaction();
 
-            $stmt = $pdo->prepare("INSERT INTO users (username, password_hash, role_id) VALUES (?, ?, ?)");
+            // ⭐ جلب آخر user_id_seq
+            $stmtSeq = $pdo->query("SELECT user_id_seq FROM users ORDER BY id DESC LIMIT 1");
+            $lastSeq = $stmtSeq->fetchColumn();
+
+            if ($lastSeq) {
+                // إزالة "Ad" واخذ الرقم فقط، ثم زود 1
+                $num = (int)substr($lastSeq, 2) + 1;
+            } else {
+                $num = 1; // أول مستخدم
+            }
+
+            // تحويل الرقم إلى 4 خانات مع بادئة 0
+            $newSeq = 'Ad' . str_pad($num, 4, '0', STR_PAD_LEFT);
+
+            $stmt = $pdo->prepare("INSERT INTO users (username, password_hash, role_id, user_id_seq) VALUES (?, ?, ?, ?)");
             $stmt->execute([
                 $u,
                 password_hash($p, PASSWORD_DEFAULT),
-                $role_id
+                $role_id,
+                $newSeq
             ]);
 
             $pdo->commit();
@@ -46,6 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
                 'msg'  => 'تم إنشاء المستخدم بنجاح.'
             ];
         }
+        
     } catch (PDOException $e) {
         $pdo->rollBack();
         $_SESSION['toast'] = [
