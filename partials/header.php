@@ -2408,7 +2408,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
       border: 1px solid #ccc;
       border-radius: 8px;
       padding: 4px 5px;
-      margin-bottom:3px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   }
 
@@ -2419,6 +2418,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
       padding: 6px 12px;
       font-size: 14px;
       color: #333;
+      margin-bottom: 3px;
       transition: background 0.2s;
   }
 
