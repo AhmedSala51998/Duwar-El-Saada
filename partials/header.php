@@ -2441,15 +2441,25 @@ $current_page = basename($_SERVER['PHP_SELF']);
       color: #fff; /* أبيض */
   }
 
-  .sidebar-dropdown .dropdown-icon {
-      display: inline-block;
-      font-size: 0.7rem; /* أصغر حجم */
-      transition: transform 0.3s ease;
+  .sidebar-dropdown .sidebar-link {
+      position: relative;
   }
 
-  /* عندما يكون الـ collapse مفتوح */
+  .sidebar-dropdown .dropdown-icon {
+      font-size: 0.7rem;
+      transition: transform 0.3s ease;
+      display: inline-block;
+  }
+
+  /* عندما يكون الـ collapse مفتوح، السهم يتحرك لأسفل */
   .sidebar-dropdown a[aria-expanded="true"] .dropdown-icon {
-      transform: rotate(180deg); /* يتحرك لأعلى */
+      transform: rotate(180deg); /* يتحرك من لأعلى ▲ إلى لأسفل ▼ */
+  }
+
+  /* لضمان السهم في منتصف ارتفاع الرابط */
+  .sidebar-dropdown .sidebar-link span.dropdown-icon {
+      display: flex;
+      align-items: center;
   }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
@@ -2760,16 +2770,15 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <?php endif ?>
         <?php if(has_permission('systems_settings.view')): ?>
           <?php
-            // تحقق إذا الصفحة الحالية هي أي من روابط الإعدادات الفرعية
             $subpages = ['roles.php','permissions.php','settings.php'];
             $isOpen = in_array($current_page, $subpages) ? 'show' : '';
             $ariaExpanded = in_array($current_page, $subpages) ? 'true' : 'false';
           ?>
-          <div class="sidebar-dropdown mb-2">
-            <a class="sidebar-link d-block <?= in_array($current_page, $subpages)?'active':'' ?>" 
+          <div class="sidebar-dropdown mb-2 position-relative">
+            <a class="sidebar-link d-flex align-items-center justify-content-between <?= in_array($current_page, $subpages)?'active':'' ?>" 
               data-bs-toggle="collapse" href="#settingsDropdown" role="button" aria-expanded="<?= $ariaExpanded ?>" aria-controls="settingsDropdown">
-                <i class="bi bi-gear-fill me-1"></i> إعدادات النظام
-                <span class="dropdown-icon float-end">&#9654;</span>
+                <span><i class="bi bi-gear-fill me-1"></i> إعدادات النظام</span>
+                <span class="dropdown-icon">&#9650;</span> <!-- السهم لأعلى بشكل افتراضي -->
             </a>
             <div class="collapse ps-3 mt-1 <?= $isOpen ?>" id="settingsDropdown">
                 <?php if(has_permission('roles.view')): ?>
