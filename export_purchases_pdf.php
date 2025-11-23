@@ -115,7 +115,7 @@ th, td {
     }
     ?>
   </div>
-  <img src="assets/logo.png" width="60">
+  <img src="<?= esc(getSystemSettings('secondary_logo') ?: '/assets/logo.png') ?>" width="60">
 </div>
 
 <div id="printBtnContainer" style="text-align:center;margin:20px 0; display: flex; justify-content: center; gap: 15px;">

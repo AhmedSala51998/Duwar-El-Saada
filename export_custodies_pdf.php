@@ -80,7 +80,7 @@ th, td { word-wrap: break-word; }
 </style>
 </head>
 <body>
-<img src="assets/logo.png" width="60" style="float:left">
+<img src="<?= esc(getSystemSettings('secondary_logo') ?: '/assets/logo.png') ?>" width="60" style="float:left">
 <h2>تقرير العُهد</h2>
 <?php
 if ($date_type === 'today') {

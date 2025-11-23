@@ -80,7 +80,7 @@ th, td {
 <title>تقرير المصروفات</title>
 </head>
 <body>
-<img src="assets/logo.png" width="60" style="float:left">
+<img src="<?= esc(getSystemSettings('secondary_logo') ?: '/assets/logo.png') ?>" width="60" style="float:left">
 <h2>تقرير المصروفات</h2>
 
 <?php

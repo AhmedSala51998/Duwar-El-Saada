@@ -83,7 +83,7 @@ $rows = $s->fetchAll();
 </style>
 </head>
 <body>
-<img src="assets/logo.png" width="60" style="float:left">
+<img src="<?= esc(getSystemSettings('secondary_logo') ?: '/assets/logo.png') ?>" width="60" style="float:left">
 <h2 style="text-align:center;margin:0">تقرير الأصول</h2>
 
 <?php

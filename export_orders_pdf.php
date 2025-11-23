@@ -84,7 +84,7 @@ th, td {
 </head>
 <body>
 <h2>تقرير أوامر التشغيل</h2>
-<img src="assets/logo.png" width="60" style="float:left">
+<img src="<?= esc(getSystemSettings('secondary_logo') ?: '/assets/logo.png') ?>" width="60" style="float:left">
 
 <?php
 if ($date_type === 'today') {
