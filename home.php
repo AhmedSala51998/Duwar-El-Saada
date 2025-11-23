@@ -153,6 +153,25 @@ body {
   .hero-title { font-size: 1.6rem; }
   .stat-value { font-size: 1.5rem; }
 }
+
+/* نسخة الموبايل */
+@media (max-width: 576px) {
+  .floating-logo {
+    left: 10px !important;   /* نحركه قليلًا */
+    top: 10px !important;
+    transform: scale(0.8);   /* نقلله بنسبة بسيطة بدون تغيير الشكل */
+  }
+
+  .hero-title {
+    padding-right: 20px;     /* نزق النص بعيد عن اللوجو */
+    display: block;
+  }
+
+  .hero-sub {
+    padding-right: 20px;
+    display: block;
+  }
+}
 </style>
 
 <?php
