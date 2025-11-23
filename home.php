@@ -153,34 +153,6 @@ body {
   .hero-title { font-size: 1.6rem; }
   .stat-value { font-size: 1.5rem; }
 }
-
-/* ضبط الهيرو كارد */
-.hero-card {
-  position: relative;
-  padding: 2rem 1rem;
-}
-
-/* اللوجو */
-.floating-logo img {
-  width: 80px;
-  height: auto;
-}
-
-/* في الموبايل */
-@media (max-width: 576px) {
-  .floating-logo {
-    position: static !important; /* يشيل الـ absolute */
-    display: flex;
-    justify-content: center;
-    margin-bottom: 10px;
-  }
-
-  .hero-title, 
-  .hero-sub {
-    text-align: center !important;
-  }
-}
-
 </style>
 
 <?php
