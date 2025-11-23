@@ -159,7 +159,7 @@ body {
 
   /* ندي مسافة يمين تكفي لحجم اللوجو */
   .hero-card {
-    padding-right: 100px !important;
+    padding-left: 100px !important;
   }
 
   /* في حال اللوجو كبير جدًا نقلله فقط في الموبايل */
