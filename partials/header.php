@@ -2388,7 +2388,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
       transition: transform 0.25s ease;
   }
 
-  #roleDropdown.show #roleArrow33 {
+  /* لما الزرار يبقى مفتوح */
+  button[aria-expanded="true"] #roleArrow33 {
       transform: rotate(180deg);
   }
 
