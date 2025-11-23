@@ -154,24 +154,28 @@ body {
   .stat-value { font-size: 1.5rem; }
 }
 
-/* نسخة الموبايل */
+
 @media (max-width: 576px) {
-  .floating-logo {
-    left: 10px !important;   /* نحركه قليلًا */
-    top: 10px !important;
-    transform: scale(0.8);   /* نقلله بنسبة بسيطة بدون تغيير الشكل */
+
+  /* ندي مسافة يمين تكفي لحجم اللوجو */
+  .hero-card {
+    padding-right: 100px !important;
   }
 
-  .hero-title {
-    padding-right: 20px;     /* نزق النص بعيد عن اللوجو */
-    display: block;
+  /* في حال اللوجو كبير جدًا نقلله فقط في الموبايل */
+  .floating-logo img {
+    width: 65px !important;
   }
 
+  /* نضمن أن النص لا يصل لمنطقة اللوجو */
+  .hero-title,
   .hero-sub {
-    padding-right: 20px;
+    text-align: right !important;
     display: block;
+    line-height: 1.5;
   }
 }
+
 </style>
 
 <?php
