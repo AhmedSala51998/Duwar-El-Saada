@@ -2907,10 +2907,12 @@ $current_page = basename($_SERVER['PHP_SELF']);
           $open = in_array($current_page,$sub)?'show':'';
         ?>
 
-        <a class="sidebar-link <?= in_array($current_page,$sub)?'active':'' ?>" 
+        <a class="sidebar-link justify-content-between <?= in_array($current_page,$sub)?'active':'' ?>" 
           data-bs-toggle="collapse" href="#sysDrop">
-          <span><i class="bi bi-gear-fill"></i> إعدادات النظام</span>
-          <i class="bi bi-caret-down-fill"></i>
+            
+            <span><i class="bi bi-gear-fill"></i> إعدادات النظام</span>
+
+            <i class="bi bi-caret-down-fill ms-auto"></i>
         </a>
 
         <div class="collapse submenu <?= $open ?>" id="sysDrop">
