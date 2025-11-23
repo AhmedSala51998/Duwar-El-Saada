@@ -439,7 +439,7 @@ $assetsDataBy_payer = [
     </div>
 
     <h2 class="hero-title"><?= esc(getSystemSettings('text1') ?: 'مرحبا') ?> <?= esc(current_user()) ?> 👋</h2>
-    <p class="hero-sub"><?= esc(getSystemSettings('text2') ?: '') ?> <?= esc(current_user()) ?></p>
+    <p class="hero-sub"><?= esc(getSystemSettings('text2') ?: '') ?></p>
   </div>
 
   <!-- ===== كروت الإحصائيات ===== -->
