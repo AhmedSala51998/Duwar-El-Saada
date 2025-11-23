@@ -2912,7 +2912,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
             
             <span><i class="bi bi-gear-fill"></i> إعدادات النظام</span>
 
-            <i class="bi bi-caret-down-fill ms-auto"></i>
+            <i class="bi bi-caret-down-fill ms-auto" id="roleArrow11"></i>
         </a>
 
         <div class="collapse submenu <?= $open ?>" id="sysDrop">
