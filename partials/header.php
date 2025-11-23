@@ -2702,7 +2702,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
               <button class="btn role-badge_drop dropdown-toggle w-100 d-flex align-items-center justify-content-center" type="button" id="mobileRoleDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                   <i class="bi bi-person-badge me-2"></i>
                   <span id="currentRoleText"><?= esc(current_role()) ?></span>
-                  <i class="bi bi-caret-down-fill ms-1"></i>
+                  <i class="bi bi-caret-down-fill ms-1" id="roleArrow"></i>
               </button>
               <ul class="dropdown-menu role-dropdown w-100" aria-labelledby="mobileRoleDropdown">
                   <?php
