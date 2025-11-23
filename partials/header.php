@@ -2487,6 +2487,103 @@ $current_page = basename($_SERVER['PHP_SELF']);
   a[aria-expanded="true"] #roleArrow11 {
       transform: rotate(180deg); /* السهم يتحرك لفوق */
   }
+
+
+
+
+
+
+
+
+
+
+
+  /* ---------- Sidebar Container ---------- */
+.modern-sidebar {
+  background: var(--sidebar-bg);
+  width: 240px;
+  height: 100vh;
+  border-left: 1px solid var(--border);
+  padding: 20px 15px;
+  transition: 0.3s ease-in-out;
+}
+
+/* ---------- Colors (Light / Dark Auto) ---------- */
+:root {
+  --sidebar-bg: #ffffff;
+  --text: #444;
+  --text-muted: #888;
+  --primary: #F28C28;   /* برتقالي رايق */
+  --primary-hover: #d97417;
+  --border: #e6e6e6;
+  --active-bg: rgba(242,140,40,0.12);
+}
+
+.dark-mode {
+  --sidebar-bg: #1c1c1c;
+  --text: #ddd;
+  --text-muted: #999;
+  --border: #333;
+  --active-bg: rgba(242,140,40,0.18);
+}
+
+/* ---------- Title ---------- */
+.sidebar-title {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+/* ---------- Links ---------- */
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  margin-bottom: 6px;
+  border-radius: 10px;
+  font-size: 15px;
+  color: var(--text);
+  text-decoration: none;
+  transition: 0.25s;
+}
+
+.sidebar-link i {
+  font-size: 18px;
+  color: var(--primary);
+}
+
+/* Hover */
+.sidebar-link:hover {
+  background: var(--active-bg);
+  transform: translateX(-4px);
+}
+
+/* Active Smooth */
+.sidebar-link.active {
+  background: var(--primary);
+  color: #fff !important;
+  box-shadow: 0 4px 10px rgba(242,140,40,0.35);
+}
+
+.sidebar-link.active i {
+  color: #fff !important;
+}
+
+/* ---------- Dropdown ---------- */
+.sidebar-dropdown .sidebar-link {
+  justify-content: space-between;
+}
+
+.submenu .sidebar-link {
+  padding-right: 25px;
+  font-size: 14px;
+}
+
+/* Smooth Collapse */
+.collapse {
+  transition: 0.3s ease;
+}
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
 </head>
@@ -2755,79 +2852,88 @@ $current_page = basename($_SERVER['PHP_SELF']);
 <div class="container-fluid">
   <div class="row">
     <!-- Sidebar في الديسكتوب -->
-    <aside class="col-lg-2 col-md-3 border-end min-vh-100 d-none d-md-block">
-      <div class="p-3">
-        <div class="text-muted small mb-2">القائمة</div>
-        <a class="sidebar-link d-block mb-2 <?= $current_page=='home.php'?'active':'' ?>" href="<?= BASE_URL ?>/home.php"><i class="bi bi-house"></i> الرئيسية</a>
-        <?php if(has_permission('purchases.view')): ?>
-        <a class="sidebar-link d-block mb-2 <?= $current_page=='purchases.php'?'active':'' ?>" href="<?= BASE_URL ?>/purchases.php"><i class="bi bi-bag"></i> تهيئة المشتريات</a>
-        <?php endif ?>
-        <?php if(has_permission('orders.view')): ?>
-        <a class="sidebar-link d-block mb-2 <?= $current_page=='orders.php'?'active':'' ?>" href="<?= BASE_URL ?>/orders.php"><i class="bi bi-gear"></i> أوامر التشغيل</a>
-        <?php endif ?>
-        <?php if(has_permission('custodies.view')): ?>
-        <a class="sidebar-link d-block mb-2 <?= $current_page=='custodies.php'?'active':'' ?>" href="<?= BASE_URL ?>/custodies"><i class="bi bi-wallet2"></i> العهد</a>
-        <?php endif ?>
-        <?php if(has_permission('assets.view')): ?>
-        <a class="sidebar-link d-block mb-2 <?= $current_page=='assetes.php'?'active':'' ?>" href="<?= BASE_URL ?>/assetes.php"><i class="bi bi-building"></i> الأصول</a>
-        <?php endif ?>
-        <!--<a class="sidebar-link d-block mb-2 <?= $current_page=='gov_fees.php'?'active':'' ?>" href="<?= BASE_URL ?>/gov_fees.php"><i class="bi bi-file-earmark-text"></i> الرسوم الحكومية</a>
-        <a class="sidebar-link d-block mb-2 <?= $current_page=='subscriptions.php'?'active':'' ?>" href="<?= BASE_URL ?>/subscriptions.php"><i class="bi bi-journal-bookmark"></i> الاشتراكات والخدمات</a>
-        <a class="sidebar-link d-block mb-2 <?= $current_page=='rentals.php'?'active':'' ?>" href="<?= BASE_URL ?>/rentals.php"><i class="bi bi-house-door"></i> الإيجارات</a>-->
-        <?php if(has_permission('expenses.view')): ?>
-        <a class="sidebar-link d-block <?= $current_page=='expenses.php'?'active':'' ?>" href="<?= BASE_URL ?>/expenses.php"><i class="bi bi-cash-stack"></i> المصروفات</a>
-        <?php endif ?>
-        <?php if(has_permission('reports.view')): ?>
-        <a class="sidebar-link d-block <?= $current_page=='reports.php'?'active':'' ?>" href="<?= BASE_URL ?>/reports.php"><i class="bi bi-graph-up"></i> التقارير</a>
-        <?php endif ?>
-        <?php if(has_permission('settings.edit')): ?>
-        <hr class="my-2">
-        <h6 class="text-muted small px-2">الإعدادات</h6>
-        <!--<?php if(has_permission('roles.view')): ?>
-        <a class="sidebar-link d-block mb-2 <?= $current_page=='roles.php'?'active':'' ?>" href="<?= BASE_URL ?>/roles.php">
-            <i class="bi bi-shield-lock"></i> الأدوار
-        </a>
-        <?php endif ?>
-        <?php if(has_permission('permissions.view')): ?>
-        <a class="sidebar-link d-block mb-2 <?= $current_page=='permissions.php'?'active':'' ?>" href="<?= BASE_URL ?>/permissions.php">
-            <i class="bi bi-person-check"></i> الصلاحيات
-        </a>
-        <?php endif ?>-->
-        <?php endif ?>
-        <?php if(has_permission('systems_settings.view')): ?>
-          <?php
-            $subpages = ['roles.php','permissions.php','settings.php'];
-            $isOpen = in_array($current_page, $subpages) ? 'show' : '';
-            $ariaExpanded = in_array($current_page, $subpages) ? 'true' : 'false';
-          ?>
-          <div class="sidebar-dropdown mb-2 position-relative">
-            <a class="sidebar-link d-flex align-items-center justify-content-between <?= in_array($current_page, $subpages)?'active':'' ?>" 
-              data-bs-toggle="collapse" href="#settingsDropdown" role="button" aria-expanded="<?= $ariaExpanded ?>" aria-controls="settingsDropdown">
-                <span><i class="bi bi-gear-fill me-1"></i> إعدادات النظام</span>
-                <!--<span class="dropdown-icon">&#9650;</span>-->
-                <i class="bi bi-caret-down-fill ms-1" id="roleArrow11"></i>
-            </a>
-            <div class="collapse ps-3 mt-1 <?= $isOpen ?>" id="settingsDropdown">
-                <?php if(has_permission('roles.view')): ?>
-                <a class="sidebar-link d-block mb-1 <?= $current_page=='roles.php'?'active':'' ?>" href="<?= BASE_URL ?>/roles.php">
-                    <i class="bi bi-shield-lock me-1"></i> الأدوار
-                </a>
-                <?php endif ?>
-                <?php if(has_permission('permissions.view')): ?>
-                <a class="sidebar-link d-block mb-1 <?= $current_page=='permissions.php'?'active':'' ?>" href="<?= BASE_URL ?>/permissions.php">
-                    <i class="bi bi-person-check me-1"></i> الصلاحيات
-                </a>
-                <?php endif ?>
-                <?php if(has_permission('systems_settings.edit')): ?>
-                <a class="sidebar-link d-block mb-1 <?= $current_page=='settings.php'?'active':'' ?>" href="<?= BASE_URL ?>/settings.php">
-                    <i class="bi bi-gear-fill me-1"></i> الإعدادات العامة
-                </a>
-                <?php endif ?>
-            </div>
-          </div>
-        <?php endif ?>
-      </div>
-    </aside>
+<aside class="modern-sidebar d-none d-md-block">
+  
+  <div class="sidebar-title">القائمة</div>
+
+  <a class="sidebar-link <?= $current_page=='home.php'?'active':'' ?>" href="<?= BASE_URL ?>/home.php">
+    <i class="bi bi-house"></i> الرئيسية
+  </a>
+
+  <?php if(has_permission('purchases.view')): ?>
+  <a class="sidebar-link <?= $current_page=='purchases.php'?'active':'' ?>" href="<?= BASE_URL ?>/purchases.php">
+    <i class="bi bi-bag"></i> تهيئة المشتريات
+  </a>
+  <?php endif ?>
+
+  <?php if(has_permission('orders.view')): ?>
+  <a class="sidebar-link <?= $current_page=='orders.php'?'active':'' ?>" href="<?= BASE_URL ?>/orders.php">
+    <i class="bi bi-gear"></i> أوامر التشغيل
+  </a>
+  <?php endif ?>
+
+  <?php if(has_permission('custodies.view')): ?>
+  <a class="sidebar-link <?= $current_page=='custodies.php'?'active':'' ?>" href="<?= BASE_URL ?>/custodies.php">
+    <i class="bi bi-wallet2"></i> العهد
+  </a>
+  <?php endif ?>
+
+  <?php if(has_permission('assets.view')): ?>
+  <a class="sidebar-link <?= $current_page=='assetes.php'?'active':'' ?>" href="<?= BASE_URL ?>/assetes.php">
+    <i class="bi bi-building"></i> الأصول
+  </a>
+  <?php endif ?>
+
+  <?php if(has_permission('expenses.view')): ?>
+  <a class="sidebar-link <?= $current_page=='expenses.php'?'active':'' ?>" href="<?= BASE_URL ?>/expenses.php">
+    <i class="bi bi-cash-stack"></i> المصروفات
+  </a>
+  <?php endif ?>
+
+  <?php if(has_permission('reports.view')): ?>
+  <a class="sidebar-link <?= $current_page=='reports.php'?'active':'' ?>" href="<?= BASE_URL ?>/reports.php">
+    <i class="bi bi-graph-up"></i> التقارير
+  </a>
+  <?php endif ?>
+
+  <?php if(has_permission('systems_settings.view')): ?>
+    <hr>
+
+    <?php
+      $sub = ['roles.php','permissions.php','settings.php'];
+      $open = in_array($current_page,$sub)?'show':'';
+    ?>
+
+    <a class="sidebar-link <?= in_array($current_page,$sub)?'active':'' ?>" 
+       data-bs-toggle="collapse" href="#sysDrop">
+       <span><i class="bi bi-gear-fill"></i> إعدادات النظام</span>
+       <i class="bi bi-caret-down-fill"></i>
+    </a>
+
+    <div class="collapse submenu <?= $open ?>" id="sysDrop">
+      <?php if(has_permission('roles.view')): ?>
+      <a class="sidebar-link <?= $current_page=='roles.php'?'active':'' ?>" href="<?= BASE_URL ?>/roles.php">
+        <i class="bi bi-shield-lock"></i> الأدوار
+      </a>
+      <?php endif ?>
+
+      <?php if(has_permission('permissions.view')): ?>
+      <a class="sidebar-link <?= $current_page=='permissions.php'?'active':'' ?>" href="<?= BASE_URL ?>/permissions.php">
+        <i class="bi bi-person-check"></i> الصلاحيات
+      </a>
+      <?php endif ?>
+
+      <?php if(has_permission('systems_settings.edit')): ?>
+      <a class="sidebar-link <?= $current_page=='settings.php'?'active':'' ?>" href="<?= BASE_URL ?>/settings.php">
+        <i class="bi bi-gear"></i> الإعدادات العامة
+      </a>
+      <?php endif ?>
+    </div>
+
+  <?php endif ?>
+
+</aside>
+
 
     <!-- المحتوى -->
     <main class="col-12 col-md-9 col-lg-10 p-4">
