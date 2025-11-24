@@ -2499,6 +2499,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
     border-left: 1px solid var(--border);
     padding: 20px 15px;
     transition: 0.3s ease-in-out;
+    width:250px
   }
 
   /* ---------- Colors (Light / Dark Auto) ---------- */
