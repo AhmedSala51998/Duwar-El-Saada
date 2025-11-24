@@ -2669,8 +2669,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
 
 
-
-  .mobile-sidebar {
+.mobile-sidebar {
   width: 290px !important;
   background: var(--bs-body-bg);
   border: none;
@@ -2710,6 +2709,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
   font-size: 15px;
   transition: 0.25s ease;
   color: #333;
+  text-decoration:none;
+  margin-bottom:5px
 }
 
 .mobile-item i {
@@ -2926,14 +2927,12 @@ body.dark-mode .logout-btn {
 <!-- القائمة الجانبية في الموبايل (Offcanvas) -->
 <div class="offcanvas offcanvas-start mobile-sidebar" tabindex="-1" id="sidebarMenu">
   <div class="offcanvas-header mobile-sidebar-header">
-    <button type="button" class="btn-close ms-auto" data-bs-dismiss="offcanvas"></button>
 
     <div class="brand-box d-flex align-items-center">
       <img src="<?= BASE_URL ?><?= esc(getSystemSettings('main_logo') ?: '/assets/logo_header2.png') ?>"
            class="brand-logo">
       <div class="brand-text">
-        <h6 class="m-0 fw-bold text-orange">دوار السعادة</h6>
-        <small class="text-muted">DAWAR AL SAADAH</small>
+       <button type="button" class="btn-close ms-auto" data-bs-dismiss="offcanvas"></button>
       </div>
     </div>
   </div>
