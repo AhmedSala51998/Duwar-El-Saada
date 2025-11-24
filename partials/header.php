@@ -2483,26 +2483,16 @@ $current_page = basename($_SERVER['PHP_SELF']);
     transition: transform 0.25s ease;
   }
 
-  /* عندما يكون الرابط expanded */
-  a[aria-expanded="true"] #roleArrow11 {
-      transform: rotate(180deg); /* السهم يتحرك لفوق */
+  /* لما الأكورديون يفتح */
+  a[aria-expanded="true"] > #roleArrow11,
+  button[aria-expanded="true"] > #roleArrow11 {
+    transform: rotate(180deg);
   }
-
-
-
-
-
-
-
-
-
-
 
   /* ---------- Sidebar Container ---------- */
   .modern-sidebar {
     background: var(--sidebar-bg);
     width: 240px;
-    height: 100vh;
     border-left: 1px solid var(--border);
     padding: 20px 15px;
     transition: 0.3s ease-in-out;
