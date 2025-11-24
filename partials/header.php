@@ -2496,7 +2496,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
   /* ---------- Sidebar Container ---------- */
   .modern-sidebar {
     background: var(--sidebar-bg);
-    width: 240px;
     border-left: 1px solid var(--border);
     padding: 20px 15px;
     transition: 0.3s ease-in-out;
