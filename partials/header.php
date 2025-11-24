@@ -2620,12 +2620,11 @@ $current_page = basename($_SERVER['PHP_SELF']);
   /* active */
   body.dark-mode .sidebar-link.active {
     background: var(--primary);
-    color: #000 !important;
-    box-shadow: 0 4px 15px rgba(242,140,40,0.45);
+    color: #FFF !important;
   }
 
   body.dark-mode .sidebar-link.active i {
-    color: #000 !important;
+    color: #FFF !important;
   }
 
   /* --------- Dropdown arrow ---------- */
