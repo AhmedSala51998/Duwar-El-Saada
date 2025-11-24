@@ -2621,8 +2621,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
   body.dark-mode .sidebar-link.active {
     background: var(--primary);
     color: #FFF !important;
-    box-shadow:none;
-    border:none
+    box-shadow:none !important;
+    border:none !important
   }
 
   body.dark-mode .sidebar-link.active i {
