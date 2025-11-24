@@ -2496,7 +2496,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
   /* ---------- Sidebar Container ---------- */
   .modern-sidebar {
     background: var(--sidebar-bg);
-    width: 240px;
+    width: auto;
     border-left: 1px solid var(--border);
     padding: 20px 15px;
     transition: 0.3s ease-in-out;
@@ -2793,15 +2793,6 @@ body.dark-mode .role-btn {
 body.dark-mode .logout-btn {
   background: #422212;
   color: #ff9b4a;
-}
-
-.modern-sidebar {
-  position: fixed;
-  right: 0;
-  width: 240px;
-  height: 100vh;
-  overflow-y: auto;
-  marign-left:240px
 }
 
 
