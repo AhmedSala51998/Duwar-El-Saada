@@ -3047,7 +3047,7 @@ body.dark-mode .logout-btn {
 <div class="container-fluid">
   <div class="row">
     <!-- Sidebar في الديسكتوب -->
-    <aside style="width:250px" class="modern-sidebar d-none d-md-block col-md-2 col-lg-2">
+    <aside class="modern-sidebar d-none d-md-block col-md-2 col-lg-2">
       
       <div class="sidebar-title">القائمة</div>
 
@@ -3133,7 +3133,7 @@ body.dark-mode .logout-btn {
 
 
     <!-- المحتوى -->
-    <main style="margin-right: 260px;" class="col-12 col-md-10 col-lg-10 p-4">
+    <main class="col-12 col-md-10 col-lg-10 p-4">
       <?php if($m = flash('msg')): ?>
         <div class="flash mb-3"><?= esc($m) ?></div>
       <?php endif; ?>
