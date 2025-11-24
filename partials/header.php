@@ -2705,7 +2705,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
   display: flex;
   align-items: center;
   padding: 10px 12px;
-  border-radius: 12px;
+  border-radius: 10px;
   font-size: 15px;
   transition: 0.25s ease;
   color: #333;
@@ -2928,12 +2928,11 @@ body.dark-mode .logout-btn {
 <div class="offcanvas offcanvas-start mobile-sidebar" tabindex="-1" id="sidebarMenu">
   <div class="offcanvas-header mobile-sidebar-header">
 
-    <div class="brand-box d-flex align-items-center">
+    <div class="brand-box d-flex align-items-center w-100">
       <img src="<?= BASE_URL ?><?= esc(getSystemSettings('main_logo') ?: '/assets/logo_header2.png') ?>"
-           class="brand-logo">
-      <div class="brand-text">
-       <button type="button" class="btn-close ms-auto" data-bs-dismiss="offcanvas"></button>
-      </div>
+          class="brand-logo">
+
+      <button type="button" class="btn-close ms-auto" data-bs-dismiss="offcanvas"></button>
     </div>
   </div>
 
