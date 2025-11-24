@@ -2496,7 +2496,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
   /* ---------- Sidebar Container ---------- */
   .modern-sidebar {
     background: var(--sidebar-bg);
-    width: auto;
+    width: 240px;
     border-left: 1px solid var(--border);
     padding: 20px 15px;
     transition: 0.3s ease-in-out;
@@ -3048,7 +3048,7 @@ body.dark-mode .logout-btn {
 <div class="container-fluid">
   <div class="row">
     <!-- Sidebar في الديسكتوب -->
-    <aside class="modern-sidebar d-none d-md-block">
+    <aside class="modern-sidebar d-none d-md-block col-md-3 col-lg-2">
       
       <div class="sidebar-title">القائمة</div>
 
