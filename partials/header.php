@@ -2586,6 +2586,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
   }
   .modern-sidebar {
     border-right: 1px solid var(--border) !important;
+    height:auto !important
   }
     </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
