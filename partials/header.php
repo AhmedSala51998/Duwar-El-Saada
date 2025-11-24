@@ -2644,6 +2644,28 @@ $current_page = basename($_SERVER['PHP_SELF']);
     box-shadow:none !important;
     border:none !important
   }
+
+  /* روابط submenu (الموجودة داخل collapse) */
+  .submenu .sidebar-link {
+    padding-right: 35px !important;   /* زيادة مسافة ناحية اليمين */
+    font-size: 14px;
+    opacity: 0.9;
+  }
+
+  .submenu .sidebar-link i {
+    font-size: 16px;
+  }
+  /* Active داخل submenu */
+  .submenu .sidebar-link.active {
+    background: rgba(242,140,40,0.25) !important;
+    color: var(--primary) !important;
+    box-shadow: none !important;
+    transform: none !important;
+  }
+
+  .submenu .sidebar-link.active i {
+    color: var(--primary) !important;
+  }
     </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
 </head>
