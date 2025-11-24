@@ -2499,7 +2499,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
     border-left: 1px solid var(--border);
     padding: 20px 15px;
     transition: 0.3s ease-in-out;
-    width:250px
   }
 
   /* ---------- Colors (Light / Dark Auto) ---------- */
@@ -3048,7 +3047,7 @@ body.dark-mode .logout-btn {
 <div class="container-fluid">
   <div class="row">
     <!-- Sidebar في الديسكتوب -->
-    <aside class="modern-sidebar d-none d-md-block col-md-2 col-lg-2">
+    <aside style="width:250px" class="modern-sidebar d-none d-md-block col-md-2 col-lg-2">
       
       <div class="sidebar-title">القائمة</div>
 
