@@ -2582,6 +2582,61 @@ $current_page = basename($_SERVER['PHP_SELF']);
     border-right: 1px solid var(--border) !important;
     height:auto !important
   }
+
+
+
+  /* ---------------- DARK MODE ---------------- */
+  body.dark-mode {
+    --sidebar-bg: #141414;          /* خلفية sidebar أغمق وأشيك */
+    --text: #e5e5e5;                /* النص فاتح */
+    --text-muted: #9d9d9d;          /* الرمادي */
+    --border: #222;                 /* حدود خفيفة جداً */
+    --active-bg: rgba(242,140,40,0.22); /* خلفية الـ hover / submenu */
+    --primary: #F28C28;             /* البرتقالي الرئيسي */
+    --primary-hover: #ff9f41;       /* برتقالي أفتح بالمناسبة */
+  }
+
+  /* ---------- Sidebar Container ---------- */
+  body.dark-mode .modern-sidebar {
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--border);
+  }
+
+  /* ---------- Links ---------- */
+  body.dark-mode .sidebar-link {
+    color: var(--text);
+  }
+
+  body.dark-mode .sidebar-link i {
+    color: var(--primary);
+  }
+
+  /* hover */
+  body.dark-mode .sidebar-link:hover {
+    background: var(--active-bg);
+    transform: translateX(-4px);
+  }
+
+  /* active */
+  body.dark-mode .sidebar-link.active {
+    background: var(--primary);
+    color: #000 !important;
+    box-shadow: 0 4px 15px rgba(242,140,40,0.45);
+  }
+
+  body.dark-mode .sidebar-link.active i {
+    color: #000 !important;
+  }
+
+  /* --------- Dropdown arrow ---------- */
+  body.dark-mode #roleArrow11 {
+    color: var(--primary);
+  }
+
+  /* --------- collapse background --------- */
+  body.dark-mode .submenu .sidebar-link {
+    background: transparent !important;
+  }
     </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
 </head>
