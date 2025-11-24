@@ -2483,9 +2483,13 @@ $current_page = basename($_SERVER['PHP_SELF']);
     transition: transform 0.25s ease;
   }
 
-  /* لما الأكورديون يفتح */
-  a[aria-expanded="true"] > #roleArrow11,
-  button[aria-expanded="true"] > #roleArrow11 {
+  /* لما الأكورديون مفتوح */
+  a[aria-expanded="true"] #roleArrow11 {
+    transform: rotate(180deg);
+  }
+
+  /* لما الصفحة active (في حالتك in_array(...) ) */
+  a.active #roleArrow11 {
     transform: rotate(180deg);
   }
 
