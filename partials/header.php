@@ -2797,12 +2797,11 @@ body.dark-mode .logout-btn {
 
 .modern-sidebar {
   position: fixed;
-  top: 0;
   right: 0;
   width: 240px;
   height: 100vh;
   overflow-y: auto;
-  z-index: 1050;
+  marign-left:240px
 }
 
 
