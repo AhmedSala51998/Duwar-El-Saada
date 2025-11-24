@@ -3133,7 +3133,7 @@ body.dark-mode .logout-btn {
 
 
     <!-- المحتوى -->
-    <main style="margin-right: 250px;" class="col-12 col-md-10 col-lg-10 p-4">
+    <main style="margin-right: 260px;" class="col-12 col-md-10 col-lg-10 p-4">
       <?php if($m = flash('msg')): ?>
         <div class="flash mb-3"><?= esc($m) ?></div>
       <?php endif; ?>
