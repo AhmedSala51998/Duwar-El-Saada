@@ -3047,7 +3047,7 @@ body.dark-mode .logout-btn {
 <div class="container-fluid">
   <div class="row">
     <!-- Sidebar في الديسكتوب -->
-    <aside class="modern-sidebar d-none d-md-block col-md-2 col-lg-2">
+    <aside class="modern-sidebar d-none d-md-block col-md-2 col-lg-1">
       
       <div class="sidebar-title">القائمة</div>
 
