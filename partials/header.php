@@ -2666,6 +2666,134 @@ $current_page = basename($_SERVER['PHP_SELF']);
   .submenu .sidebar-link.active i {
     color: var(--primary) !important;
   }
+
+
+
+
+  .mobile-sidebar {
+  width: 290px !important;
+  background: var(--bs-body-bg);
+  border: none;
+}
+
+.mobile-sidebar-header {
+  padding: 14px 14px;
+  border-bottom: 1px solid #eee;
+  background: var(--bs-body-bg);
+}
+
+.brand-logo {
+  height: 40px;
+  margin-left: 10px;
+}
+
+.brand-text small {
+  font-size: 11px;
+}
+
+.mobile-sidebar-body {
+  padding: 15px 10px;
+}
+
+.menu-group-title {
+  font-size: 13px;
+  margin-bottom: 5px;
+  padding-right: 5px;
+  color: #888;
+}
+
+.mobile-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-size: 15px;
+  transition: 0.25s ease;
+  color: #333;
+}
+
+.mobile-item i {
+  margin-left: 10px;
+  font-size: 18px;
+  color: #ff8c00;
+}
+
+.mobile-item:hover {
+  background: #fff4e5;
+}
+
+.mobile-item.active {
+  background: #ff8c00;
+  color: white;
+}
+
+.mobile-item.active i {
+  color: white;
+}
+
+.menu-divider {
+  border-bottom: 1px solid #eee;
+  margin: 12px 0;
+}
+
+
+/* أزرار الدور */
+.role-btn {
+  background: #f7f7f7;
+  border-radius: 10px;
+}
+
+.role-dropdown .dropdown-item.active-role {
+  background: #ff8c00;
+  color: white;
+}
+
+
+/* زر تسجيل الخروج */
+.logout-btn {
+  background: #ffefdb;
+  color: #d95329;
+  border-radius: 12px;
+  padding: 10px;
+}
+
+.logout-btn i {
+  font-size: 18px;
+}
+
+
+body.dark-mode .mobile-sidebar,
+body.dark-mode .mobile-sidebar-header {
+  background: #1f1f1f;
+  border-color: #333;
+}
+
+body.dark-mode .mobile-item {
+  color: #ddd;
+}
+
+body.dark-mode .mobile-item:hover {
+  background: rgba(255, 140, 0, 0.15);
+}
+
+body.dark-mode .menu-group-title {
+  color: #aaa;
+}
+
+body.dark-mode .menu-divider {
+  border-color: #333;
+}
+
+body.dark-mode .role-btn {
+  background: #2a2a2a;
+  color: #ddd;
+}
+
+body.dark-mode .logout-btn {
+  background: #422212;
+  color: #ff9b4a;
+}
+
     </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
 </head>
@@ -2796,139 +2924,126 @@ $current_page = basename($_SERVER['PHP_SELF']);
 </div>
 
 <!-- القائمة الجانبية في الموبايل (Offcanvas) -->
-<div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarMenu">
-  <div class="offcanvas-header border-bottom" style="padding: 6px 10px; height: 65px; min-height: unset;">
-    <a href="<?= BASE_URL ?>/home.php" 
-      class="navbar-brand d-flex align-items-center text-decoration-none">
-      <img src="<?= BASE_URL ?><?= esc(getSystemSettings('main_logo') ?: '/assets/logo_header2.png') ?>" 
-          style="height: 32px; width: auto; transform: scale(1.5); margin-right: 30px;"
-          alt="logo" 
-          class="rounded">
-    </a>
-    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" style="transform: scale(0.85);"></button>
+<div class="offcanvas offcanvas-start mobile-sidebar" tabindex="-1" id="sidebarMenu">
+  <div class="offcanvas-header mobile-sidebar-header">
+    <button type="button" class="btn-close ms-auto" data-bs-dismiss="offcanvas"></button>
+
+    <div class="brand-box d-flex align-items-center">
+      <img src="<?= BASE_URL ?><?= esc(getSystemSettings('main_logo') ?: '/assets/logo_header2.png') ?>"
+           class="brand-logo">
+      <div class="brand-text">
+        <h6 class="m-0 fw-bold text-orange">دوار السعادة</h6>
+        <small class="text-muted">DAWAR AL SAADAH</small>
+      </div>
+    </div>
   </div>
 
-  <div class="offcanvas-body">
+  <div class="offcanvas-body mobile-sidebar-body">
 
-    <!-- ✅ روابط أساسية -->
-    <a class="sidebar-link d-block mb-2 <?= $current_page=='home.php'?'active':'' ?>" href="<?= BASE_URL ?>/home.php">
+    <div class="menu-group-title">القائمة الرئيسية</div>
+
+    <a class="mobile-item <?= $current_page=='home.php'?'active':'' ?>" href="<?= BASE_URL ?>/home.php">
       <i class="bi bi-house"></i> الرئيسية
     </a>
 
     <?php if(has_permission('purchases.view')): ?>
-    <a class="sidebar-link d-block mb-2 <?= $current_page=='purchases.php'?'active':'' ?>" href="<?= BASE_URL ?>/purchases.php">
+    <a class="mobile-item <?= $current_page=='purchases.php'?'active':'' ?>" href="<?= BASE_URL ?>/purchases.php">
       <i class="bi bi-bag"></i> تهيئة المشتريات
     </a>
     <?php endif ?>
 
     <?php if(has_permission('orders.view')): ?>
-    <a class="sidebar-link d-block mb-2 <?= $current_page=='orders.php'?'active':'' ?>" href="<?= BASE_URL ?>/orders.php">
+    <a class="mobile-item <?= $current_page=='orders.php'?'active':'' ?>" href="<?= BASE_URL ?>/orders.php">
       <i class="bi bi-gear"></i> أوامر التشغيل
     </a>
     <?php endif ?>
 
     <?php if(has_permission('custodies.view')): ?>
-    <a class="sidebar-link d-block mb-2 <?= $current_page=='custodies.php'?'active':'' ?>" href="<?= BASE_URL ?>/custodies.php">
+    <a class="mobile-item <?= $current_page=='custodies.php'?'active':'' ?>" href="<?= BASE_URL ?>/custodies.php">
       <i class="bi bi-wallet2"></i> العهد
     </a>
     <?php endif ?>
 
     <?php if(has_permission('assets.view')): ?>
-    <a class="sidebar-link d-block mb-2 <?= $current_page=='assetes.php'?'active':'' ?>" href="<?= BASE_URL ?>/assetes.php">
+    <a class="mobile-item <?= $current_page=='assetes.php'?'active':'' ?>" href="<?= BASE_URL ?>/assetes.php">
       <i class="bi bi-building"></i> الأصول
     </a>
     <?php endif ?>
 
     <?php if(has_permission('expenses.view')): ?>
-    <a class="sidebar-link d-block mb-2 <?= $current_page=='expenses.php'?'active':'' ?>" href="<?= BASE_URL ?>/expenses.php">
+    <a class="mobile-item <?= $current_page=='expenses.php'?'active':'' ?>" href="<?= BASE_URL ?>/expenses.php">
       <i class="bi bi-cash-stack"></i> المصروفات
     </a>
     <?php endif ?>
 
     <?php if(has_permission('reports.view')): ?>
-    <a class="sidebar-link d-block mb-2 <?= $current_page=='reports.php'?'active':'' ?>" href="<?= BASE_URL ?>/reports.php">
+    <a class="mobile-item <?= $current_page=='reports.php'?'active':'' ?>" href="<?= BASE_URL ?>/reports.php">
       <i class="bi bi-graph-up"></i> التقارير
     </a>
     <?php endif ?>
 
-    <?php if(has_permission('settings.edit')): ?>
-    <hr class="my-3">
-    <h6 class="text-muted small px-2">الإعدادات</h6>
+
+    <!-- الإعدادات -->
+    <div class="menu-divider"></div>
+    <div class="menu-group-title mt-2">الإعدادات</div>
 
     <?php if(has_permission('roles.view')): ?>
-    <a class="sidebar-link d-block mb-2 <?= $current_page=='roles.php'?'active':'' ?>" href="<?= BASE_URL ?>/roles.php">
+    <a class="mobile-item <?= $current_page=='roles.php'?'active':'' ?>" href="<?= BASE_URL ?>/roles.php">
       <i class="bi bi-shield-lock"></i> الأدوار
     </a>
     <?php endif ?>
 
     <?php if(has_permission('permissions.view')): ?>
-    <a class="sidebar-link d-block mb-2 <?= $current_page=='permissions.php'?'active':'' ?>" href="<?= BASE_URL ?>/permissions.php">
+    <a class="mobile-item <?= $current_page=='permissions.php'?'active':'' ?>" href="<?= BASE_URL ?>/permissions.php">
       <i class="bi bi-person-check"></i> الصلاحيات
     </a>
     <?php endif ?>
-    <?php endif ?>
 
-    <?php if(has_permission('systems_settings.view')): ?>
-      <a class="sidebar-link d-block mb-2 <?= $current_page=='settings.php'?'active':'' ?>" href="<?= BASE_URL ?>/settings.php">
-          <i class="bi bi-gear-fill me-1"></i> إعدادات النظام
-      </a>
-    <?php endif ?>
-    <!-- ✅ خط فاصل قبل المستخدم -->
-    <hr class="my-3">
-
-    <!-- ✅ معلومات المستخدم -->
-    <!--<div class="px-2 mb-3">
-      <span class="badge bg-light text-dark w-100 d-flex align-items-center justify-content-center py-2">
-        <i class="bi bi-person-badge me-2 text-orange"></i>
-        <span><?= esc(current_role()) ?></span>
-      </span>
-    </div>-->
-
-    <div class="px-2 mb-3">
-      <?php if(current_user_id_seq() === 'Ad0001'): ?>
-          <div class="dropdown w-100">
-              <button class="btn role-badge_drop dropdown-toggle w-100 d-flex align-items-center justify-content-center" type="button" id="mobileRoleDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                  <i class="bi bi-person-badge me-2"></i>
-                  <span id="currentRoleText"><?= esc(current_role()) ?></span>
-                  <i class="bi bi-caret-down-fill ms-1" id="roleArrow33"></i>
-              </button>
-              <ul class="dropdown-menu role-dropdown w-100" aria-labelledby="mobileRoleDropdown">
-                  <?php
-                  $stmt = $pdo->query("SELECT id, name FROM roles ORDER BY id ASC");
-                  $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-                  foreach ($roles as $role):
-                      $active = $role['name'] === current_role() ? 'active-role' : '';
-                  ?>
-                  <li>
-                      <a class="dropdown-item <?= $active ?>" href="#" onclick="switchRole(<?= $role['id'] ?>, '<?= $role['name'] ?>'); return false;">
-                          <i class="bi bi-person-circle me-2"></i> <?= esc($role['name']) ?>
-                      </a>
-                  </li>
-                  <?php endforeach; ?>
-              </ul>
-          </div>
-      <?php else: ?>
-          <span class="badge role-badge w-100 d-flex align-items-center justify-content-center py-2">
-              <i class="bi bi-person-badge me-2 text-orange"></i>
-              <span><?= esc(current_role()) ?></span>
-          </span>
-      <?php endif; ?>
-  </div>
-
-    <?php if(has_permission('users.view')): ?>
-    <a class="sidebar-link d-block mb-2 <?= $current_page=='users.php'?'active':'' ?>" href="<?= BASE_URL ?>/users.php">
-      <i class="bi bi-people"></i> المستخدمون
+    <?php if(has_permission('systems_settings.edit')): ?>
+    <a class="mobile-item <?= $current_page=='settings.php'?'active':'' ?>" href="<?= BASE_URL ?>/settings.php">
+      <i class="bi bi-gear-fill"></i> إعدادات النظام
     </a>
     <?php endif ?>
 
-    <!-- ✅ تسجيل الخروج -->
-    <a id="logoutBtn" class="btn btn-logout w-100 mt-2 d-flex align-items-center justify-content-center gap-2" href="<?= BASE_URL ?>/logout.php">
+
+    <!-- معلومات المستخدم -->
+    <div class="menu-divider"></div>
+    <div class="menu-group-title mt-2">حساب المستخدم</div>
+
+    <div class="px-2 mt-2">
+      <?php if(current_user_id_seq() === 'Ad0001'): ?>
+      <div class="dropdown w-100">
+        <button class="btn role-btn dropdown-toggle w-100" data-bs-toggle="dropdown">
+          <i class="bi bi-person-badge me-2"></i>
+          <span id="currentRoleText"><?= esc(current_role()) ?></span>
+        </button>
+
+        <ul class="dropdown-menu role-dropdown w-100">
+          <?php foreach ($roles as $role): ?>
+          <li>
+            <a class="dropdown-item <?= $role['name'] === current_role() ? 'active-role' : '' ?>"
+              href="#" onclick="switchRole(<?= $role['id'] ?>,'<?= $role['name'] ?>'); return false;">
+              <i class="bi bi-person-circle me-2"></i> <?= esc($role['name']) ?>
+            </a>
+          </li>
+          <?php endforeach; ?>
+        </ul>
+      </div>
+      <?php else: ?>
+      <span class="badge role-badge w-100 py-2">
+        <i class="bi bi-person-badge me-2"></i> <?= esc(current_role()) ?>
+      </span>
+      <?php endif; ?>
+    </div>
+
+    <!-- تسجيل الخروج -->
+    <a class="btn logout-btn w-100 mt-3" href="<?= BASE_URL ?>/logout.php">
       <i class="bi bi-box-arrow-right"></i> خروج
     </a>
 
   </div>
 </div>
+
 
 
 <div class="container-fluid">
