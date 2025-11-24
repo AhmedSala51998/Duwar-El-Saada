@@ -2496,6 +2496,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
   /* ---------- Sidebar Container ---------- */
   .modern-sidebar {
     background: var(--sidebar-bg);
+    width: 240px;
     border-left: 1px solid var(--border);
     padding: 20px 15px;
     transition: 0.3s ease-in-out;
@@ -2793,6 +2794,17 @@ body.dark-mode .logout-btn {
   background: #422212;
   color: #ff9b4a;
 }
+
+.modern-sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 240px;
+  height: 100vh;
+  overflow-y: auto;
+  z-index: 1050;
+}
+
 
     </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
