@@ -2638,6 +2638,12 @@ $current_page = basename($_SERVER['PHP_SELF']);
   body.dark-mode .submenu .sidebar-link {
     background: transparent !important;
   }
+  body.dark-mode .submenu .sidebar-link.active {
+    background: var(--primary);
+    color: #FFF !important;
+    box-shadow:none !important;
+    border:none !important
+  }
     </style>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
 </head>
