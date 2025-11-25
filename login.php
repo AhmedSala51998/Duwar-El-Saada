@@ -538,29 +538,22 @@ body {
             <form id="loginForm" class="needs-validation" novalidate method="post">
                 <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
 
-                <!-- اسم المستخدم -->
-                <div class="mb-3 position-relative">
-                    <input type="text" name="username" id="username" class="form-control pe-5" placeholder="اسم المستخدم" required minlength="3">
-                    <div class="valid-feedback">
-                        يبدوا جيدا!
+                <div class="mb-3">
+                    <div class="input-group has-validation">
+                        <input type="text" name="username" id="username" class="form-control" placeholder="اسم المستخدم" required minlength="3">
+                        <span class="input-group-text"><i class="fa fa-user"></i></span>
+                        <div class="valid-feedback">يبدوا جيدا!</div>
+                        <div class="invalid-feedback">اسم المستخدم يجب أن يكون 3 أحرف على الأقل</div>
                     </div>
-                    <div class="invalid-feedback">
-                        اسم المستخدم يجب أن يكون 3 أحرف على الأقل
-                    </div>
-                    <!-- أيقونة داخل الانبوت على اليمين -->
-                    <i class="fa fa-user position-absolute" style="right: 12px; top: 50%; transform: translateY(-50%); color:#ff7a00;"></i>
                 </div>
 
-                <!-- كلمة المرور -->
-                <div class="mb-3 position-relative">
-                    <input type="password" name="password" id="password" class="form-control pe-5" placeholder="كلمة المرور" required minlength="3">
-                    <div class="valid-feedback">
-                        يبدوا جيدا!
+                <div class="mb-3">
+                    <div class="input-group has-validation">
+                        <input type="password" name="password" id="password" class="form-control" placeholder="كلمة المرور" required minlength="3">
+                        <span class="input-group-text"><i class="fa fa-lock"></i></span>
+                        <div class="valid-feedback">يبدوا جيدا!</div>
+                        <div class="invalid-feedback">كلمة المرور يجب أن تكون 3 أحرف على الأقل</div>
                     </div>
-                    <div class="invalid-feedback">
-                        كلمة المرور يجب أن تكون 3 أحرف على الأقل
-                    </div>
-                    <i class="fa fa-lock position-absolute" style="right: 12px; top: 50%; transform: translateY(-50%); color:#ff7a00;"></i>
                 </div>
 
                 <button type="submit" class="btn-login w-100" id="loginBtn">تسجيل الدخول</button>
