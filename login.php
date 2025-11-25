@@ -195,17 +195,6 @@ body {
     padding-left: 35px; /* مساحة للأيقونة */
 }
 
-/* أيقونة أساسية (user/lock) */
-.input-box i.fa-user,
-.input-box i.fa-lock {
-    position: absolute;
-    left: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 18px;
-    color: #ff7a00;
-}
-
 /* أيقونة الحالة (صح/تحذير) */
 .input-box i.status-icon {
     position: absolute;
@@ -238,7 +227,7 @@ body {
 .error-msg {
     font-size: 13px;
     color: #e74c3c;
-    margin-top: 4px;
+    margin-top: 1px;
     display: none;
 }
 
@@ -246,6 +235,42 @@ body {
 .btn-loading {
     pointer-events: none;
     opacity: 0.7;
+}
+
+.input-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-left: 35px; /* مساحة للأيقونة */
+    background: rgba(255,255,255,0.2); /* شفاف/فاتح يتناسب مع الخلفية */
+    border-radius: 14px;
+    transition: all 0.3s;
+}
+
+.input-box input {
+    border: none;
+    outline: none;
+    background: transparent; /* خلي الخلفية للـinput شفافة */
+    width: 100%;
+    font-size: 15px;
+    color: #333; /* نص أسود فاتح للقراءة */
+}
+
+/* Hover / Focus */
+.input-box:hover,
+.input-box:focus-within {
+    border-color: #ff8a00;
+    box-shadow: 0 3px 10px rgba(255,126,0,0.18);
+}
+
+/* حالة صح وخطأ */
+.input-box.success {
+    border: 2px solid #28a745 !important;
+}
+
+.input-box.error {
+    border: 2px solid #e74c3c !important;
 }
 
 </style>
