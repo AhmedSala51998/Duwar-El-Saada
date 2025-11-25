@@ -95,8 +95,8 @@ body {
     margin: auto;
     position: relative;
 
-    /* خلفية تدرج لوني */
-    background: radial-gradient(circle at center, rgba(255,200,100,0.8), rgba(255,140,0,0.4));
+    /* خلفية أفتح */
+    background: radial-gradient(circle at center, rgba(255,220,180,0.6), rgba(255,180,100,0.3));
 
     box-shadow: 
         0 0 10px rgba(255,140,0,0.5), 
