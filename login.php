@@ -108,7 +108,6 @@ body {
 
 .input-box {
     border: 1px solid #eee;
-    background: #fff;
     display: flex;
     align-items: center;
     padding: 10px 14px;
@@ -162,11 +161,11 @@ body {
         height: auto;
     }
     .left-side {
-        order: 1;
+        order: 2;
         padding: 30px 10px;
     }
     .right-side {
-        order: 2;
+        order: 1;
         padding: 25px;
     }
     dotlottie-wc {
@@ -181,8 +180,8 @@ body {
         border-radius: 18px;
     }
     .logo-circle {
-        width: 90px;
-        height: 90px;
+        width: 120px;
+        height: 120px;
     }
 }
 
@@ -271,6 +270,72 @@ body {
 
 .input-box.error {
     border: 2px solid #e74c3c !important;
+}
+
+
+.input-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;             /* مسافة بين الأيقونات والحقل */
+    padding-left: 35px;   /* مساحة للأيقونة */
+    border-radius: 14px;
+    background: rgba(255,255,255,0.2); /* شفافة تتناسب مع الكارد */
+    border: 1px solid #eee;
+    transition: all 0.3s;
+}
+
+.input-box input {
+    border: none;
+    outline: none;
+    background: transparent;
+    width: 100%;
+    font-size: 15px;
+    color: #333;
+}
+
+/* أيقونة الحالة (صح/تحذير) */
+.input-box i.status-icon {
+    position: absolute;
+    left: 32px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    display: none;
+}
+
+/* Hover / Focus */
+.input-box:hover,
+.input-box:focus-within {
+    border-color: #ff8a00;
+    box-shadow: 0 3px 10px rgba(255,126,0,0.18);
+}
+
+/* حالة صح */
+.input-box.success {
+    border: 2px solid #28a745 !important;
+}
+.input-box.success i.status-icon {
+    display: block;
+    color: #28a745;
+}
+
+/* حالة خطأ */
+.input-box.error {
+    border: 2px solid #e74c3c !important;
+}
+.input-box.error i.status-icon {
+    display: block;
+    color: #e74c3c;
+}
+
+/* الرسالة التحذيرية */
+.error-msg {
+    font-size: 13px;
+    color: #e74c3c;
+    margin-top: 2px; /* قريبة جدًا من البوكس */
+    line-height: 1.2;
+    display: none;
 }
 
 </style>
