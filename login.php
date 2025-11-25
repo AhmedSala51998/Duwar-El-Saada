@@ -507,11 +507,19 @@ body {
 .icon-right {
     position: absolute;
     right: 12px;
-    top: 32%;
+    top: 50%; /* الوضع الطبيعي */
     transform: translateY(-50%);
     color: #ff7a00;
     pointer-events: none;
+    transition: top 0.3s ease; /* حركة سلسة */
 }
+
+/* لو الفورم عليه class was-validated والحقل صحيح أو خطأ */
+input:valid + .icon-right,
+input:invalid + .icon-right {
+    top: 32%;
+}
+
 
 /* لمنع أي حركة بسبب الفاليديشن */
 .input-with-icon:focus,
