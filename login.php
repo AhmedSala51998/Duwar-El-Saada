@@ -97,8 +97,17 @@ body {
 <div class="page-wrapper">
 
     <!-- left animation -->
-    <div class="left-side">
-        <div id="lottieBox"></div>
+    <div class="left-side d-flex align-items-center justify-content-center">
+        
+        <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.5/dist/dotlottie-wc.js" type="module"></script>
+
+        <dotlottie-wc 
+            src="https://lottie.host/10ef2e3b-cd9e-43d0-95f5-57641ab612cf/7MHGlQgtsb.lottie" 
+            style="width: 420px;height: 420px" 
+            autoplay 
+            loop>
+        </dotlottie-wc>
+
     </div>
 
     <!-- right form -->
@@ -147,16 +156,6 @@ body {
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
 <script>
-// === جلب انيميشن Lottie ====
-lottie.loadAnimation({
-    container: document.getElementById('lottieBox'),
-    renderer: 'svg',
-    loop: true,
-    autoplay: true,
-    // تقدر تغيّر الأنيميشن بأي JSON من موقع lottiefiles
-    path: 'assets/animations/dashboard.json'
-});
-
 // === معالجة الأخطاء بالـ jQuery قبل الإرسال ====
 $("#loginForm").on("submit", function(e){
     let u = $("#username").val().trim();
