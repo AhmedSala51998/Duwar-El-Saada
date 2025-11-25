@@ -186,21 +186,52 @@ body {
     }
 }
 
-/* دائرة خطأ حول input */
-.input-error {
+/* دائرة الخطأ */
+.input-box {
     position: relative;
-    border: 2px solid #e74c3c !important;
-    border-radius: 16px !important;
 }
 
-.input-error::after {
-    content: "\26A0"; /* علامة التحذير ⚠ */
+.input-box i.status-icon {
     position: absolute;
-    top: 50%;
     right: 12px;
+    top: 50%;
     transform: translateY(-50%);
-    color: #e74c3c;
     font-size: 18px;
+    display: none;
+}
+
+.input-box.success {
+    border: 2px solid #28a745 !important;
+}
+
+.input-box.success i.status-icon {
+    display: block;
+    color: #28a745;
+    content: "\2714"; /* علامة صح */
+}
+
+.input-box.error {
+    border: 2px solid #e74c3c !important;
+}
+
+.input-box.error i.status-icon {
+    display: block;
+    color: #e74c3c;
+    content: "\26A0"; /* علامة تحذير */
+}
+
+/* الرسالة التحذيرية */
+.error-msg {
+    font-size: 13px;
+    color: #e74c3c;
+    margin-top: 4px;
+    display: none;
+}
+
+/* زر اللودينج */
+.btn-loading {
+    pointer-events: none;
+    opacity: 0.7;
 }
 </style>
 
@@ -239,23 +270,25 @@ body {
             <?php endif; ?>
 
             <form id="loginForm" method="post">
-
                 <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
 
                 <label class="input-label mb-1">اسم المستخدم</label>
                 <div class="input-box mb-3">
                     <i class="fa fa-user"></i>
                     <input name="username" id="username">
+                    <i class="status-icon fas"></i>
                 </div>
+                <div class="error-msg" id="usernameError">اسم المستخدم يجب أن يكون 3 أحرف على الأقل</div>
 
                 <label class="input-label mb-1">كلمة المرور</label>
                 <div class="input-box mb-4">
                     <i class="fa fa-lock"></i>
                     <input type="password" name="password" id="password">
+                    <i class="status-icon fas"></i>
                 </div>
+                <div class="error-msg" id="passwordError">كلمة المرور يجب أن تكون 3 أحرف على الأقل</div>
 
-                <button class="btn-login">تسجيل الدخول</button>
-
+                <button type="submit" class="btn-login" id="loginBtn">تسجيل الدخول</button>
             </form>
 
             <p class="text-center mt-3 text-muted small">
@@ -271,22 +304,48 @@ body {
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
 <script>
-$("#loginForm").on("submit", function(e){
-    let u = $("#username").val().trim();
-    let p = $("#password").val().trim();
+$(document).ready(function(){
 
-    // إزالة الأخطاء القديمة
-    $("#username, #password").removeClass("input-error");
+    function validateInput(input, minLength){
+        let val = input.val().trim();
+        let box = input.closest('.input-box');
+        let errorDiv = $('#' + input.attr('id') + 'Error');
 
-    if(u.length < 3){
-        $("#username").addClass("input-error");
-        e.preventDefault();
+        if(val.length < minLength){
+            box.removeClass('success').addClass('error');
+            box.find('.status-icon').removeClass('fa-check').addClass('fa-exclamation-triangle').show();
+            errorDiv.show();
+            return false;
+        } else {
+            box.removeClass('error').addClass('success');
+            box.find('.status-icon').removeClass('fa-exclamation-triangle').addClass('fa-check').show();
+            errorDiv.hide();
+            return true;
+        }
     }
 
-    if(p.length < 3){
-        $("#password").addClass("input-error");
+    $('#username, #password').on('input', function(){
+        let minLength = $(this).attr('id') === 'username' ? 3 : 3;
+        validateInput($(this), minLength);
+    });
+
+    $('#loginForm').on('submit', function(e){
         e.preventDefault();
-    }
+
+        let validUser = validateInput($('#username'), 3);
+        let validPass = validateInput($('#password'), 3);
+
+        if(validUser && validPass){
+            // زر اللودينج
+            let btn = $('#loginBtn');
+            btn.addClass('btn-loading');
+            btn.html('<i class="fas fa-spinner fa-spin"></i> جاري تسجيل الدخول');
+
+            // إرسال الفورم بعد 0.5 ثانية لمحاكاة الاستجابة أو لإرسالها فعليًا
+            setTimeout(() => this.submit(), 500);
+        }
+    });
+
 });
 </script>
 
