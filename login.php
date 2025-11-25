@@ -232,7 +232,7 @@ body {
 /* أيقونة الحالة (صح/تحذير) */
 .input-box i.status-icon {
     position: absolute;
-    left: 32px;
+    left: 20px;
     top: 50%;
     transform: translateY(-50%);
     font-size: 18px;
@@ -362,7 +362,7 @@ body {
 /* أيقونة الحالة (✔/⚠) */
 .input-box i.status-icon {
     position: absolute;
-    left: 35px;
+    left: 20px;
     top: 50%;
     transform: translateY(-50%);
     font-size: 16px;
