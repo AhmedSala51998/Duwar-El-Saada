@@ -563,7 +563,7 @@ body {
 
         <dotlottie-wc
           src="https://lottie.host/5d4e2813-f7d2-40fd-9136-c6b747b616d6/QtP93VYwuQ.lottie"
-          style="width: 650px;height: 650px"
+          style="width: 600px;height: 600px"
           autoplay
           loop
         ></dotlottie-wc>
