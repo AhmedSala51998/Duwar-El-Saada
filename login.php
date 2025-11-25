@@ -89,12 +89,32 @@ body {
     width: 120px;
     height: 120px;
     border-radius: 50%;
-    background: rgba(255,255,255,0.6); /* فاتحة وشفافة */
+    background: rgba(255,255,255,0.6);
     display: flex;
     align-items: center;
     justify-content: center;
     margin: auto;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    position: relative; /* مهم للـpseudo-element */
+    box-shadow: 
+        0 0 10px rgba(255,140,0,0.5), 
+        0 0 20px rgba(255,140,0,0.4), 
+        0 0 30px rgba(255,140,0,0.3); /* توهج داخلي */
+    transition: all 0.3s ease;
+}
+
+/* إضافة توهج أكبر باستخدام pseudo-element */
+.logo-circle::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 160px; /* أكبر من حجم اللوجو */
+    height: 160px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: rgba(255,140,0,0.2); /* برتقالي شفاف */
+    filter: blur(20px); /* توهج ناعم */
+    z-index: -1; /* خلف اللوجو */
 }
 
 .logo-circle img {
@@ -323,16 +343,6 @@ body {
     font-size: 15px;
     color: #222;
     padding: 0;
-}
-
-.input-box i.fa-user,
-.input-box i.fa-lock {
-    position: absolute;
-    left: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 18px;
-    color: #ff7a00;
 }
 
 /* أيقونة الحالة (✔/⚠) */
