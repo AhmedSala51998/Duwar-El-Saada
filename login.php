@@ -89,6 +89,119 @@ body {
 .btn-orange:hover {
     background: #e56e00;
 }
+/* ===== Right Section Redesigned ===== */
+
+.login-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.login-card-advanced {
+    width: 100%;
+    max-width: 440px;
+    background: rgba(255,255,255,0.65);
+    backdrop-filter: blur(12px);
+    border-radius: 25px;
+    padding: 40px 40px 35px;
+    box-shadow: 
+        0 8px 25px rgba(0,0,0,0.08),
+        0 3px 8px rgba(0,0,0,0.05);
+    animation: slideUp 0.8s ease forwards;
+    opacity: 0;
+}
+
+@keyframes slideUp {
+    0% { transform: translateY(25px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+}
+
+.logo-circle {
+    width: 105px;
+    height: 105px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #ffb974, #ff8b2b);
+    box-shadow: 0 8px 20px rgba(255,144,44,0.25);
+    margin: auto;
+    padding: 14px;
+}
+
+.title {
+    font-weight: 700;
+    color: #444;
+}
+
+.subtitle {
+    font-size: 14px;
+    color: #777;
+}
+
+/* Inputs */
+.input-group-custom label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #555;
+    font-size: 14px;
+}
+
+.input-box {
+    display: flex;
+    align-items: center;
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 10px 14px;
+    gap: 10px;
+    border: 1px solid #eee;
+    transition: 0.3s;
+}
+
+.input-box i {
+    font-size: 18px;
+    color: #ff7a00;
+}
+
+.input-box input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    outline: none;
+    font-size: 16px;
+}
+
+.input-box:hover,
+.input-box:focus-within {
+    border-color: #ff7a00;
+    box-shadow: 0 3px 10px rgba(255,126,0,0.15);
+}
+
+/* Button */
+.btn-login {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    background: linear-gradient(135deg, #ff8a00, #ff6b00);
+    color: #fff;
+    border-radius: 16px;
+    font-size: 18px;
+    font-weight: 600;
+    box-shadow: 0 6px 18px rgba(255,102,0,0.25);
+    transition: 0.25s;
+}
+
+.btn-login:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(255,102,0,0.32);
+}
+
+/* Bottom note */
+.bottom-note {
+    color: #777;
+    font-size: 13px;
+}
+
 </style>
 
 </head>
@@ -113,38 +226,50 @@ body {
     <!-- right form -->
     <div class="right-side">
 
-        <div class="login-card">
+        <div class="login-wrapper">
 
-            <div class="text-center mb-4">
-                <img src="assets/logo.png" width="90">
-                <h3 class="mt-2 fw-bold">دوار السعادة</h3>
-                <p class="text-muted">تسجيل الدخول</p>
-            </div>
+            <div class="login-card-advanced">
 
-            <?php if($error): ?>
-            <div class="alert alert-danger"><?= esc($error) ?></div>
-            <?php endif; ?>
-
-            <form id="loginForm" method="post">
-
-                <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
-
-                <div class="mb-3">
-                    <label class="form-label">اسم المستخدم</label>
-                    <input name="username" class="form-control" id="username">
+                <div class="login-header text-center mb-4">
+                    <div class="logo-circle mb-3">
+                        <img src="assets/logo.png" width="85">
+                    </div>
+                    <h3 class="title">دوار السعادة</h3>
+                    <p class="subtitle">تسجيل الدخول الى النظام</p>
                 </div>
 
-                <div class="mb-3">
-                    <label class="form-label">كلمة المرور</label>
-                    <input type="password" name="password" id="password" class="form-control">
+                <?php if($error): ?>
+                <div class="alert alert-danger"><?= esc($error) ?></div>
+                <?php endif; ?>
+
+                <form id="loginForm" method="post" class="mt-3">
+
+                    <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
+
+                    <div class="input-group-custom mb-3">
+                        <label>اسم المستخدم</label>
+                        <div class="input-box">
+                            <i class="bi bi-person"></i>
+                            <input name="username" id="username">
+                        </div>
+                    </div>
+
+                    <div class="input-group-custom mb-4">
+                        <label>كلمة المرور</label>
+                        <div class="input-box">
+                            <i class="bi bi-lock"></i>
+                            <input type="password" name="password" id="password">
+                        </div>
+                    </div>
+
+                    <button class="btn-login">تسجيل الدخول</button>
+
+                </form>
+
+                <div class="bottom-note text-center mt-3">
+                    دوار السعادة © 2025
                 </div>
 
-                <button class="btn btn-orange w-100">دخول</button>
-
-            </form>
-
-            <div class="text-center mt-3 small text-muted">
-                دوار السعادة 2025
             </div>
 
         </div>
