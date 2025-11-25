@@ -83,16 +83,17 @@ body {
 }
 
 /* Logo */
+/* Logo circle */
 .logo-circle {
     width: 110px;
     height: 110px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #ffa64d, #ff7b00);
-    box-shadow: 0 10px 20px rgba(255,128,0,0.25);
+    background: rgba(255,255,255,0.6); /* فاتحة وشفافة */
     display: flex;
     align-items: center;
     justify-content: center;
     margin: auto;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
 .logo-circle img {
@@ -184,6 +185,23 @@ body {
         height: 90px;
     }
 }
+
+/* دائرة خطأ حول input */
+.input-error {
+    position: relative;
+    border: 2px solid #e74c3c !important;
+    border-radius: 16px !important;
+}
+
+.input-error::after {
+    content: "\26A0"; /* علامة التحذير ⚠ */
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%);
+    color: #e74c3c;
+    font-size: 18px;
+}
 </style>
 
 </head>
@@ -241,7 +259,7 @@ body {
             </form>
 
             <p class="text-center mt-3 text-muted small">
-                دوار السعادة © 2025
+              © جميع الحقوق محفوظة لدى مطعم دوار السعادة 2025            
             </p>
 
         </div>
@@ -257,16 +275,17 @@ $("#loginForm").on("submit", function(e){
     let u = $("#username").val().trim();
     let p = $("#password").val().trim();
 
+    // إزالة الأخطاء القديمة
+    $("#username, #password").removeClass("input-error");
+
     if(u.length < 3){
-        $("#username").css("border","1px solid red");
+        $("#username").addClass("input-error");
         e.preventDefault();
-        return;
     }
 
     if(p.length < 3){
-        $("#password").css("border","1px solid red");
+        $("#password").addClass("input-error");
         e.preventDefault();
-        return;
     }
 });
 </script>
