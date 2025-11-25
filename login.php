@@ -521,8 +521,10 @@ body {
                 <p class="text-muted small">تسجيل الدخول للنظام</p>
             </div>
 
-            <?php if($error): ?>
-            <div class="alert alert-danger"><?= esc($error) ?></div>
+            <?php if(!empty($error)): ?>
+                <div class="alert alert-danger mt-3" role="alert">
+                    <?= esc($error) ?>
+                </div>
             <?php endif; ?>
 
             <form id="loginForm" class="needs-validation" novalidate method="post">
