@@ -430,6 +430,54 @@ body {
     pointer-events: none;
     opacity: 0.7;
 }
+
+
+.input-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px 12px 40px; /* مساحة للأيقونة */
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+    backdrop-filter: blur(8px);
+}
+
+.input-box input {
+    border: none;
+    outline: none;
+    background: transparent;
+    width: 100%;
+    font-size: 15px;
+    color: #222;
+    padding: 0;
+}
+
+/* أيقونة على اليسار */
+.input-box i.fa {
+    position: absolute;
+    left: 12px;
+    font-size: 18px;
+    color: #ff7a00;
+}
+
+/* Hover / Focus */
+.input-box:hover,
+.input-box:focus-within {
+    border-color: #ff8a00;
+    box-shadow: 0 4px 15px rgba(255, 140, 0, 0.25);
+}
+
+/* حالة صح وخطأ باستخدام Bootstrap */
+.was-validated .input-box input:valid ~ .valid-feedback {
+    display: block;
+}
+
+.was-validated .input-box input:invalid ~ .invalid-feedback {
+    display: block;
+}
 </style>
 
 </head>
@@ -470,12 +518,11 @@ body {
                 <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
 
                 <div class="mb-3">
-                    <label for="username" class="form-label input-label">اسم المستخدم</label>
-                    <div class="input-box has-validation mb-1">
+                    <div class="input-box has-validation">
                         <i class="fa fa-user"></i>
-                        <input type="text" name="username" id="username" class="form-control" required minlength="3">
+                        <input type="text" name="username" id="username" class="form-control" placeholder="اسم المستخدم" required minlength="3">
                         <div class="valid-feedback">
-                            Looks good!
+                            يبدوا جيدا!
                         </div>
                         <div class="invalid-feedback">
                             اسم المستخدم يجب أن يكون 3 أحرف على الأقل
@@ -484,12 +531,11 @@ body {
                 </div>
 
                 <div class="mb-3">
-                    <label for="password" class="form-label input-label">كلمة المرور</label>
-                    <div class="input-box has-validation mb-1">
+                    <div class="input-box has-validation">
                         <i class="fa fa-lock"></i>
-                        <input type="password" name="password" id="password" class="form-control" required minlength="3">
+                        <input type="password" name="password" id="password" class="form-control" placeholder="كلمة المرور" required minlength="3">
                         <div class="valid-feedback">
-                            Looks good!
+                            يبدوا جيدا!
                         </div>
                         <div class="invalid-feedback">
                             كلمة المرور يجب أن تكون 3 أحرف على الأقل
@@ -525,10 +571,9 @@ body {
                     event.preventDefault()
                     event.stopPropagation()
                 } else {
-                    // زر اللودينج
-                    let btn = $('#loginBtn');
-                    btn.addClass('btn-loading');
-                    btn.html('<i class="fas fa-spinner fa-spin"></i> جاري تسجيل الدخول');
+                    let btn = document.getElementById('loginBtn');
+                    btn.classList.add('btn-loading');
+                    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري تسجيل الدخول';
                 }
 
                 form.classList.add('was-validated')
