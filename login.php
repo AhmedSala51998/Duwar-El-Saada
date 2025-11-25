@@ -430,12 +430,6 @@ body {
     pointer-events: none;
     opacity: 0.7;
 }
-
-.left-side dotlottie-wc {
-    filter: hue-rotate(30deg) saturate(2) brightness(1.2);
-    mix-blend-mode: lighten;
-}
-
 </style>
 
 </head>
@@ -449,7 +443,7 @@ body {
 
         <dotlottie-wc 
             src="https://lottie.host/10ef2e3b-cd9e-43d0-95f5-57641ab612cf/7MHGlQgtsb.lottie"
-            style="width: 550px;height: 550px"
+            style="width: 650px;height: 650px"
             autoplay 
             loop>
         </dotlottie-wc>
