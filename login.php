@@ -227,7 +227,7 @@ body {
 .error-msg {
     font-size: 13px;
     color: #e74c3c;
-    margin-top: 1px;
+    margin-top: -3px;
     display: none;
 }
 
