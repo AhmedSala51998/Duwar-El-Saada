@@ -99,7 +99,7 @@ body {
 /* توهج أكبر متحرك باستخدام ::after */
 
 .logo-circle img {
-    width: 80px;
+    width: 150px;
 }
 
 /* Inputs */
