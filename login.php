@@ -499,17 +499,20 @@ body {
     border-color: #ff8a00;
     box-shadow: 0 4px 15px rgba(255,140,0,0.25);
 }
-/* نجعل الأيقونات على اليمين */
-.input-group-text {
-    order: 1; /* يضعها بعد input */
-    background: transparent;
-    border-left: none; /* لو حبيت تفصل بين الانبوت والايقونة */
-    color: orange; /* لون برتقالي */
+
+/* أيقونات على اليمين بشكل ثابت */
+.icon-right {
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #ff7a00;
+    pointer-events: none; /* حتى لا تؤثر على الكتابة داخل الانبوت */
 }
 
-/* لتأكد من أن الحافة اليمنى للانبوت مظبوطة */
-.input-group .form-control {
-    border-right: none;
+/* لمنع حركة الأيقونة عند ظهور الفاليديشن */
+.form-control:valid,
+.form-control:invalid {
+    padding-right: 2.5rem; /* تأكد أن padding-end يكفي لمكان الأيقونة */
 }
 </style>
 
@@ -550,22 +553,29 @@ body {
             <form id="loginForm" class="needs-validation" novalidate method="post">
                 <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
 
-                <div class="mb-3">
-                    <div class="input-group has-validation">
-                        <input type="text" name="username" id="username" class="form-control" placeholder="اسم المستخدم" required minlength="3">
-                        <span class="input-group-text text-orange"><i class="fa fa-user"></i></span>
-                        <div class="valid-feedback">يبدوا جيدا!</div>
-                        <div class="invalid-feedback">اسم المستخدم يجب أن يكون 3 أحرف على الأقل</div>
+                <!-- اسم المستخدم -->
+                <div class="mb-3 position-relative">
+                    <input type="text" name="username" id="username" class="form-control pe-5" placeholder="اسم المستخدم" required minlength="3">
+                    <div class="valid-feedback">
+                        يبدوا جيدا!
                     </div>
+                    <div class="invalid-feedback">
+                        اسم المستخدم يجب أن يكون 3 أحرف على الأقل
+                    </div>
+                    <!-- أيقونة ثابتة على اليمين -->
+                    <i class="fa fa-user position-absolute icon-right"></i>
                 </div>
 
-                <div class="mb-3">
-                    <div class="input-group has-validation">
-                        <input type="password" name="password" id="password" class="form-control" placeholder="كلمة المرور" required minlength="3">
-                        <span class="input-group-text text-orange"><i class="fa fa-lock"></i></span>
-                        <div class="valid-feedback">يبدوا جيدا!</div>
-                        <div class="invalid-feedback">كلمة المرور يجب أن تكون 3 أحرف على الأقل</div>
+                <!-- كلمة المرور -->
+                <div class="mb-3 position-relative">
+                    <input type="password" name="password" id="password" class="form-control pe-5" placeholder="كلمة المرور" required minlength="3">
+                    <div class="valid-feedback">
+                        يبدوا جيدا!
                     </div>
+                    <div class="invalid-feedback">
+                        كلمة المرور يجب أن تكون 3 أحرف على الأقل
+                    </div>
+                    <i class="fa fa-lock position-absolute icon-right"></i>
                 </div>
 
                 <button type="submit" class="btn-login w-100" id="loginBtn">تسجيل الدخول</button>
