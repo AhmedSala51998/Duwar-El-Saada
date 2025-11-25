@@ -489,6 +489,18 @@ body {
 .input-with-icon:invalid {
     padding-right: 2.5rem; /* نفس الـ padding ثابت دائمًا */
 }
+
+.server-error {
+    background-color: #ffe5e0; /* أحمر فاتح */
+    color: #c70000;           /* أحمر نص */
+    border: 1px solid #ff7a00; /* حدود بسيطة برتقالية */
+    border-radius: 8px;        /* حواف مدورة */
+    padding: 10px 15px;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
 </style>
 
 </head>
@@ -497,7 +509,7 @@ body {
 <div class="page-wrapper">
 
     <!-- LEFT -->
-    <div class="left-side">
+    <div class="right-side">
         <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.5/dist/dotlottie-wc.js" type="module"></script>
 
         <dotlottie-wc 
@@ -509,7 +521,7 @@ body {
     </div>
 
     <!-- RIGHT -->
-    <div class="right-side">
+    <div class="left-side">
 
         <div class="login-card-advanced">
 
@@ -522,7 +534,8 @@ body {
             </div>
 
             <?php if(!empty($error)): ?>
-                <div class="alert alert-danger mt-3" role="alert">
+                <div class="server-error mt-3" role="alert">
+                    <i class="fas fa-exclamation-circle me-2"></i>
                     <?= esc($error) ?>
                 </div>
             <?php endif; ?>
