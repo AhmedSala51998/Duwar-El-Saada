@@ -106,6 +106,35 @@ body {
     font-size: 14px;
 }
 
+.input-box {
+    border: 1px solid #eee;
+    display: flex;
+    align-items: center;
+    padding: 10px 14px;
+    border-radius: 14px;
+    transition: .3s;
+    gap: 10px;
+}
+
+.input-box i {
+    color: #ff7a00;
+    font-size: 18px;
+}
+
+.input-box input {
+    border: none;
+    outline: none;
+    background: transparent;
+    width: 100%;
+    font-size: 15px;
+}
+
+.input-box:hover,
+.input-box:focus-within {
+    border-color: #ff8a00;
+    box-shadow: 0 3px 10px rgba(255,126,0,0.18);
+}
+
 /* Button */
 .btn-login {
     width: 100%;
@@ -156,32 +185,13 @@ body {
     }
 }
 
-/* زر اللودينج */
-.btn-loading {
-    pointer-events: none;
-    opacity: 0.7;
-}
-
-
+/* تعديل وضعية input-box */
 .input-box {
     position: relative;
     display: flex;
     align-items: center;
-    gap: 8px;             /* مسافة بين الأيقونات والحقل */
-    padding-left: 35px;   /* مساحة للأيقونة */
-    border-radius: 14px;
-    background: rgba(255,255,255,0.2); /* شفافة تتناسب مع الكارد */
-    border: 1px solid #eee;
-    transition: all 0.3s;
-}
-
-.input-box input {
-    border: none;
-    outline: none;
-    background: transparent;
-    width: 100%;
-    font-size: 15px;
-    color: #333;
+    gap: 8px;
+    padding-left: 35px; /* مساحة للأيقونة */
 }
 
 /* أيقونة الحالة (صح/تحذير) */
@@ -192,13 +202,6 @@ body {
     transform: translateY(-50%);
     font-size: 18px;
     display: none;
-}
-
-/* Hover / Focus */
-.input-box:hover,
-.input-box:focus-within {
-    border-color: #ff8a00;
-    box-shadow: 0 3px 10px rgba(255,126,0,0.18);
 }
 
 /* حالة صح */
@@ -223,9 +226,50 @@ body {
 .error-msg {
     font-size: 13px;
     color: #e74c3c;
-    margin-top: 2px; /* قريبة جدًا من البوكس */
-    line-height: 1.2;
+    margin-top: -3px;
     display: none;
+}
+
+/* زر اللودينج */
+.btn-loading {
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.input-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-left: 35px; /* مساحة للأيقونة */
+    background: rgba(255,255,255,0.2); /* شفاف/فاتح يتناسب مع الخلفية */
+    border-radius: 14px;
+    transition: all 0.3s;
+}
+
+.input-box input {
+    border: none;
+    outline: none;
+    background: transparent; /* خلي الخلفية للـinput شفافة */
+    width: 100%;
+    font-size: 15px;
+    color: #333; /* نص أسود فاتح للقراءة */
+}
+
+/* Hover / Focus */
+.input-box:hover,
+.input-box:focus-within {
+    border-color: #ff8a00;
+    box-shadow: 0 3px 10px rgba(255,126,0,0.18);
+}
+
+/* حالة صح وخطأ */
+.input-box.success {
+    border: 2px solid #28a745 !important;
+}
+
+.input-box.error {
+    border: 2px solid #e74c3c !important;
 }
 
 </style>
