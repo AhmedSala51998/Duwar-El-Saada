@@ -500,19 +500,24 @@ body {
     box-shadow: 0 4px 15px rgba(255,140,0,0.25);
 }
 
-/* أيقونات على اليمين بشكل ثابت */
+.input-with-icon {
+    padding-right: 2.5rem; /* يترك مساحة كافية للأيقونة */
+}
+
 .icon-right {
+    position: absolute;
     right: 12px;
     top: 50%;
     transform: translateY(-50%);
     color: #ff7a00;
-    pointer-events: none; /* حتى لا تؤثر على الكتابة داخل الانبوت */
+    pointer-events: none;
 }
 
-/* لمنع حركة الأيقونة عند ظهور الفاليديشن */
-.form-control:valid,
-.form-control:invalid {
-    padding-right: 2.5rem; /* تأكد أن padding-end يكفي لمكان الأيقونة */
+/* لمنع أي حركة بسبب الفاليديشن */
+.input-with-icon:focus,
+.input-with-icon:valid,
+.input-with-icon:invalid {
+    padding-right: 2.5rem; /* نفس الـ padding ثابت دائمًا */
 }
 </style>
 
@@ -553,29 +558,18 @@ body {
             <form id="loginForm" class="needs-validation" novalidate method="post">
                 <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
 
-                <!-- اسم المستخدم -->
                 <div class="mb-3 position-relative">
-                    <input type="text" name="username" id="username" class="form-control pe-5" placeholder="اسم المستخدم" required minlength="3">
-                    <div class="valid-feedback">
-                        يبدوا جيدا!
-                    </div>
-                    <div class="invalid-feedback">
-                        اسم المستخدم يجب أن يكون 3 أحرف على الأقل
-                    </div>
-                    <!-- أيقونة ثابتة على اليمين -->
-                    <i class="fa fa-user position-absolute icon-right"></i>
+                    <input type="text" name="username" id="username" class="form-control input-with-icon" placeholder="اسم المستخدم" required minlength="3">
+                    <div class="valid-feedback">يبدو جيدًا!</div>
+                    <div class="invalid-feedback">اسم المستخدم يجب أن يكون 3 أحرف على الأقل</div>
+                    <i class="fa fa-user icon-right"></i>
                 </div>
 
-                <!-- كلمة المرور -->
                 <div class="mb-3 position-relative">
-                    <input type="password" name="password" id="password" class="form-control pe-5" placeholder="كلمة المرور" required minlength="3">
-                    <div class="valid-feedback">
-                        يبدوا جيدا!
-                    </div>
-                    <div class="invalid-feedback">
-                        كلمة المرور يجب أن تكون 3 أحرف على الأقل
-                    </div>
-                    <i class="fa fa-lock position-absolute icon-right"></i>
+                    <input type="password" name="password" id="password" class="form-control input-with-icon" placeholder="كلمة المرور" required minlength="3">
+                    <div class="valid-feedback">يبدو جيدًا!</div>
+                    <div class="invalid-feedback">كلمة المرور يجب أن تكون 3 أحرف على الأقل</div>
+                    <i class="fa fa-lock icon-right"></i>
                 </div>
 
                 <button type="submit" class="btn-login w-100" id="loginBtn">تسجيل الدخول</button>
