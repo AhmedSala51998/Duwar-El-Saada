@@ -466,26 +466,38 @@ body {
             <div class="alert alert-danger"><?= esc($error) ?></div>
             <?php endif; ?>
 
-            <form id="loginForm" method="post">
+            <form id="loginForm" class="needs-validation" novalidate method="post">
                 <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
 
-                <label class="input-label mb-1">اسم المستخدم</label>
-                <div class="input-box mb-2">
-                    <i class="fa fa-user"></i>
-                    <i class="status-icon fas"></i>
-                    <input name="username" id="username">
+                <div class="mb-3">
+                    <label for="username" class="form-label input-label">اسم المستخدم</label>
+                    <div class="input-box has-validation mb-1">
+                        <i class="fa fa-user"></i>
+                        <input type="text" name="username" id="username" class="form-control" required minlength="3">
+                        <div class="valid-feedback">
+                            Looks good!
+                        </div>
+                        <div class="invalid-feedback">
+                            اسم المستخدم يجب أن يكون 3 أحرف على الأقل
+                        </div>
+                    </div>
                 </div>
-                <div class="error-msg" id="usernameError">اسم المستخدم يجب أن يكون 3 أحرف على الأقل</div>
 
-                <label class="input-label mb-1">كلمة المرور</label>
-                <div class="input-box mb-2">
-                    <i class="fa fa-lock"></i>
-                    <i class="status-icon fas"></i>
-                    <input type="password" name="password" id="password">
+                <div class="mb-3">
+                    <label for="password" class="form-label input-label">كلمة المرور</label>
+                    <div class="input-box has-validation mb-1">
+                        <i class="fa fa-lock"></i>
+                        <input type="password" name="password" id="password" class="form-control" required minlength="3">
+                        <div class="valid-feedback">
+                            Looks good!
+                        </div>
+                        <div class="invalid-feedback">
+                            كلمة المرور يجب أن تكون 3 أحرف على الأقل
+                        </div>
+                    </div>
                 </div>
-                <div class="error-msg" id="passwordError">كلمة المرور يجب أن تكون 3 أحرف على الأقل</div>
 
-                <button type="submit" class="btn-login" id="loginBtn">تسجيل الدخول</button>
+                <button type="submit" class="btn-login w-100" id="loginBtn">تسجيل الدخول</button>
             </form>
 
             <p class="text-center mt-3 text-muted small">
@@ -501,49 +513,28 @@ body {
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
 <script>
-$(document).ready(function(){
+(function () {
+    'use strict'
 
-    function validateInput(input, minLength){
-        let val = input.val().trim();
-        let box = input.closest('.input-box');
-        let errorDiv = $('#' + input.attr('id') + 'Error');
+    var forms = document.querySelectorAll('.needs-validation')
 
-        if(val.length < minLength){
-            box.removeClass('success').addClass('error');
-            box.find('.status-icon').removeClass('fa-check').addClass('fa-exclamation-triangle').show();
-            errorDiv.show();
-            return false;
-        } else {
-            box.removeClass('error').addClass('success');
-            box.find('.status-icon').removeClass('fa-exclamation-triangle').addClass('fa-check').show();
-            errorDiv.hide();
-            return true;
-        }
-    }
+    Array.prototype.slice.call(forms)
+        .forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                } else {
+                    // زر اللودينج
+                    let btn = $('#loginBtn');
+                    btn.addClass('btn-loading');
+                    btn.html('<i class="fas fa-spinner fa-spin"></i> جاري تسجيل الدخول');
+                }
 
-    $('#username, #password').on('input', function(){
-        let minLength = $(this).attr('id') === 'username' ? 3 : 3;
-        validateInput($(this), minLength);
-    });
-
-    $('#loginForm').on('submit', function(e){
-        e.preventDefault();
-
-        let validUser = validateInput($('#username'), 3);
-        let validPass = validateInput($('#password'), 3);
-
-        if(validUser && validPass){
-            // زر اللودينج
-            let btn = $('#loginBtn');
-            btn.addClass('btn-loading');
-            btn.html('<i class="fas fa-spinner fa-spin"></i> جاري تسجيل الدخول');
-
-            // إرسال الفورم بعد 0.5 ثانية لمحاكاة الاستجابة أو لإرسالها فعليًا
-            setTimeout(() => this.submit(), 500);
-        }
-    });
-
-});
+                form.classList.add('was-validated')
+            }, false)
+        })
+})();
 </script>
 
 </body>
