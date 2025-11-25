@@ -452,7 +452,7 @@ body {
                 <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
 
                 <label class="input-label mb-1">اسم المستخدم</label>
-                <div class="input-box mb-3">
+                <div class="input-box mb-2">
                     <i class="fa fa-user"></i>
                     <i class="status-icon fas"></i>
                     <input name="username" id="username">
@@ -460,7 +460,7 @@ body {
                 <div class="error-msg" id="usernameError">اسم المستخدم يجب أن يكون 3 أحرف على الأقل</div>
 
                 <label class="input-label mb-1">كلمة المرور</label>
-                <div class="input-box mb-4">
+                <div class="input-box mb-2">
                     <i class="fa fa-lock"></i>
                     <i class="status-icon fas"></i>
                     <input type="password" name="password" id="password">
