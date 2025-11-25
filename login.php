@@ -507,7 +507,7 @@ body {
 .icon-right {
     position: absolute;
     right: 12px;
-    top: 30%;
+    top: 28%;
     transform: translateY(-50%);
     color: #ff7a00;
     pointer-events: none;
