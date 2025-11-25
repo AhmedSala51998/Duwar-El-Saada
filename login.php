@@ -89,16 +89,20 @@ body {
     width: 120px;
     height: 120px;
     border-radius: 50%;
-    background: rgba(255,255,255,0.6);
     display: flex;
     align-items: center;
     justify-content: center;
     margin: auto;
     position: relative;
+
+    /* خلفية تدرج لوني */
+    background: radial-gradient(circle at center, rgba(255,200,100,0.8), rgba(255,140,0,0.4));
+
     box-shadow: 
         0 0 10px rgba(255,140,0,0.5), 
         0 0 20px rgba(255,140,0,0.4), 
         0 0 30px rgba(255,140,0,0.3);
+
     transition: all 0.3s ease;
 }
 
