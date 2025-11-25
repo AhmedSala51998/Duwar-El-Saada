@@ -432,8 +432,8 @@ body {
 }
 
 .left-side dotlottie-wc {
-    filter: hue-rotate(30deg) saturate(1.5) brightness(1.1);
-    mix-blend-mode: lighten; /* يخلّي اللون يظهر بشكل شفاف */
+    filter: hue-rotate(30deg) saturate(2) brightness(1.2);
+    mix-blend-mode: lighten;
 }
 
 </style>
