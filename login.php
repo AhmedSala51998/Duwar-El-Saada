@@ -103,7 +103,7 @@ body {
 
         <dotlottie-wc 
             src="https://lottie.host/10ef2e3b-cd9e-43d0-95f5-57641ab612cf/7MHGlQgtsb.lottie" 
-            style="width: 420px;height: 420px" 
+            style="width: 620px;height: 620px" 
             autoplay 
             loop>
         </dotlottie-wc>
