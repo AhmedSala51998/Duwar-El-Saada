@@ -5,33 +5,179 @@ $error='';
 if($_SERVER['REQUEST_METHOD']==='POST'){
   if(!csrf_validate($_POST['_csrf'] ?? '')){ $error='طلب غير صالح.'; }
   else{
-    $u = trim($_POST['username']??''); $p = (string)($_POST['password']??'');
-    $s = $pdo->prepare("SELECT * FROM users WHERE username=? LIMIT 1"); $s->execute([$u]); $user=$s->fetch();
+    $u = trim($_POST['username']??''); 
+    $p = (string)($_POST['password']??'');
+    $s = $pdo->prepare("SELECT * FROM users WHERE username=? LIMIT 1"); 
+    $s->execute([$u]); 
+    $user=$s->fetch();
     if($user && password_verify($p,$user['password_hash'])){
-      $_SESSION['user_id']=$user['id']; $_SESSION['username']=$user['username']; $_SESSION['user_id_seq']=$user['user_id_seq'];
+      $_SESSION['user_id']=$user['id']; 
+      $_SESSION['username']=$user['username']; 
+      $_SESSION['user_id_seq']=$user['user_id_seq'];
       header('Location: '.BASE_URL.'/home'); exit;
-    } else $error='بيانات الدخول غير صحيحة.';
+    } 
+    else $error='بيانات الدخول غير صحيحة.';
   }
 }
-?><!doctype html><html lang="ar" dir="rtl"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+?>
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title><?= esc(APP_NAME) ?> - دخول</title>
+
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
-<link href="assets/css/theme.css" rel="stylesheet"></head>
-<body class="d-flex align-items-center justify-content-center" style="min-height:100vh;background:#fff7f0">
-<div class="card p-4 shadow" style="min-width:360px">
-  <div class="text-center mb-3">
-    <img src="assets/logo.png" width="100" class="mb-2"><h3 class="mb-0">دوار السعادة</h3><div class="text-muted small">تسجيل الدخول</div>
-  </div>
-  <?php if($error): ?><div class="alert alert-danger"><?= esc($error) ?></div><?php endif; ?>
-  <form method="post" class="vstack gap-3">
-    <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
-    <div><label class="form-label">اسم المستخدم</label><input name="username" class="form-control" required></div>
-    <div><label class="form-label">كلمة المرور</label><input type="password" name="password" class="form-control" required></div>
-    <button class="btn btn-orange w-100">دخول</button>
-  </form>
-  <div class="text-center mt-3 small text-muted">دوار السعادة 2025</div>
+
+<!-- Lottie Animation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.9.6/lottie.min.js"></script>
+
+<style>
+body {
+    font-family: 'Cairo', sans-serif;
+    background: linear-gradient(135deg, #ffe2c8, #fff7f0);
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+.page-wrapper {
+    display: flex;
+    height: 100vh;
+}
+
+.left-side {
+    flex: 1;
+    background: #fff3e6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+}
+
+#lottieBox {
+    width: 450px;
+    height: 450px;
+}
+
+.right-side {
+    flex: 1;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 420px;
+    background: #ffffff;
+    padding: 35px;
+    border-radius: 20px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+}
+
+.btn-orange {
+    background: #ff7b00;
+    color: #fff;
+    font-size: 18px;
+    padding: 10px;
+    border-radius: 12px;
+}
+
+.btn-orange:hover {
+    background: #e56e00;
+}
+</style>
+
+</head>
+<body>
+
+<div class="page-wrapper">
+
+    <!-- left animation -->
+    <div class="left-side">
+        <div id="lottieBox"></div>
+    </div>
+
+    <!-- right form -->
+    <div class="right-side">
+
+        <div class="login-card">
+
+            <div class="text-center mb-4">
+                <img src="assets/logo.png" width="90">
+                <h3 class="mt-2 fw-bold">دوار السعادة</h3>
+                <p class="text-muted">تسجيل الدخول</p>
+            </div>
+
+            <?php if($error): ?>
+            <div class="alert alert-danger"><?= esc($error) ?></div>
+            <?php endif; ?>
+
+            <form id="loginForm" method="post">
+
+                <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
+
+                <div class="mb-3">
+                    <label class="form-label">اسم المستخدم</label>
+                    <input name="username" class="form-control" id="username">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">كلمة المرور</label>
+                    <input type="password" name="password" id="password" class="form-control">
+                </div>
+
+                <button class="btn btn-orange w-100">دخول</button>
+
+            </form>
+
+            <div class="text-center mt-3 small text-muted">
+                دوار السعادة 2025
+            </div>
+
+        </div>
+
+    </div>
+
 </div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-</body></html>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<script>
+// === جلب انيميشن Lottie ====
+lottie.loadAnimation({
+    container: document.getElementById('lottieBox'),
+    renderer: 'svg',
+    loop: true,
+    autoplay: true,
+    // تقدر تغيّر الأنيميشن بأي JSON من موقع lottiefiles
+    path: 'assets/animations/dashboard.json'
+});
+
+// === معالجة الأخطاء بالـ jQuery قبل الإرسال ====
+$("#loginForm").on("submit", function(e){
+    let u = $("#username").val().trim();
+    let p = $("#password").val().trim();
+
+    $(".is-invalid").removeClass("is-invalid");
+
+    if(u.length < 3){
+        $("#username").addClass("is-invalid");
+        e.preventDefault();
+        return;
+    }
+
+    if(p.length < 3){
+        $("#password").addClass("is-invalid");
+        e.preventDefault();
+        return;
+    }
+});
+</script>
+
+
+</body>
+</html>
