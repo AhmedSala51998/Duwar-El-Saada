@@ -32,6 +32,7 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital@0;1&display=swap" rel="stylesheet">
 
 <style>
 body {
@@ -271,7 +272,24 @@ body {
 .input-box.error {
     border: 2px solid #e74c3c !important;
 }
+/* تطبيق الخط العثماني */
+.logo-circle h3, 
+.text-center p {
+    font-family: 'Amiri', serif; /* الخط العثماني */
+}
 
+/* أو لو عايز فقط العنوان */
+.text-center h3 {
+    font-family: 'Amiri', serif;
+    font-weight: 700; /* خط عريض للعنوان */
+}
+
+.text-center p {
+    font-family: 'Amiri', serif;
+    font-weight: 400; /* خط عادي للنص الصغير */
+    font-size: 14px;
+    color: #555;
+}
 </style>
 
 </head>
@@ -300,7 +318,7 @@ body {
                 <div class="logo-circle mb-3">
                     <img src="assets/logo.png">
                 </div>
-                <h3 class="fw-bold text-dark">دوار السعادة</h3>
+                <h3 class="fw-bold text-dark">مطعم دوار السعادة</h3>
                 <p class="text-muted small">تسجيل الدخول للنظام</p>
             </div>
 
