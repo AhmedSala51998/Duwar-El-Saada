@@ -478,6 +478,27 @@ body {
 .was-validated .input-box input:invalid ~ .invalid-feedback {
     display: block;
 }
+
+/* كل شيء جوه الانبوت */
+.form-control {
+    border-radius: 14px;
+    padding: 12px 14px;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    transition: all 0.3s;
+    backdrop-filter: blur(8px);
+}
+
+/* مساحة للأيقونة */
+.form-control.ps-5 {
+    padding-left: 40px;
+}
+
+/* hover / focus */
+.form-control:focus {
+    border-color: #ff8a00;
+    box-shadow: 0 4px 15px rgba(255,140,0,0.25);
+}
 </style>
 
 </head>
@@ -517,30 +538,29 @@ body {
             <form id="loginForm" class="needs-validation" novalidate method="post">
                 <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
 
-                <div class="mb-3">
-                    <div class="input-box has-validation">
-                        <i class="fa fa-user"></i>
-                        <input type="text" name="username" id="username" class="form-control" placeholder="اسم المستخدم" required minlength="3">
-                        <div class="valid-feedback">
-                            يبدوا جيدا!
-                        </div>
-                        <div class="invalid-feedback">
-                            اسم المستخدم يجب أن يكون 3 أحرف على الأقل
-                        </div>
+                <!-- اسم المستخدم -->
+                <div class="mb-3 position-relative">
+                    <input type="text" name="username" id="username" class="form-control ps-5" placeholder="اسم المستخدم" required minlength="3">
+                    <div class="valid-feedback">
+                        يبدوا جيدا!
                     </div>
+                    <div class="invalid-feedback">
+                        اسم المستخدم يجب أن يكون 3 أحرف على الأقل
+                    </div>
+                    <!-- أيقونة داخل الانبوت -->
+                    <i class="fa fa-user position-absolute" style="left: 12px; top: 50%; transform: translateY(-50%); color:#ff7a00;"></i>
                 </div>
 
-                <div class="mb-3">
-                    <div class="input-box has-validation">
-                        <i class="fa fa-lock"></i>
-                        <input type="password" name="password" id="password" class="form-control" placeholder="كلمة المرور" required minlength="3">
-                        <div class="valid-feedback">
-                            يبدوا جيدا!
-                        </div>
-                        <div class="invalid-feedback">
-                            كلمة المرور يجب أن تكون 3 أحرف على الأقل
-                        </div>
+                <!-- كلمة المرور -->
+                <div class="mb-3 position-relative">
+                    <input type="password" name="password" id="password" class="form-control ps-5" placeholder="كلمة المرور" required minlength="3">
+                    <div class="valid-feedback">
+                        يبدوا جيدا!
                     </div>
+                    <div class="invalid-feedback">
+                        كلمة المرور يجب أن تكون 3 أحرف على الأقل
+                    </div>
+                    <i class="fa fa-lock position-absolute" style="left: 12px; top: 50%; transform: translateY(-50%); color:#ff7a00;"></i>
                 </div>
 
                 <button type="submit" class="btn-login w-100" id="loginBtn">تسجيل الدخول</button>
@@ -561,7 +581,6 @@ body {
 <script>
 (function () {
     'use strict'
-
     var forms = document.querySelectorAll('.needs-validation')
 
     Array.prototype.slice.call(forms)
