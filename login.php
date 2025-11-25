@@ -86,53 +86,17 @@ body {
 /* Logo */
 /* Logo circle */
 .logo-circle {
-    width: 120px;
-    height: 120px;
+    width: 150px;
+    height: 150px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: auto;
     position: relative;
-
-    /* خلفية أفتح */
-    background: radial-gradient(circle at center, rgba(255,220,180,0.6), rgba(255,180,100,0.3));
-
-    box-shadow: 
-        0 0 10px rgba(255,140,0,0.5), 
-        0 0 20px rgba(255,140,0,0.4), 
-        0 0 30px rgba(255,140,0,0.3);
-
-    transition: all 0.3s ease;
 }
 
 /* توهج أكبر متحرك باستخدام ::after */
-.logo-circle::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 160px;
-    height: 160px;
-    transform: translate(-50%, -50%);
-    border-radius: 50%;
-    background: rgba(255,140,0,0.3);
-    filter: blur(20px);
-    z-index: -1;
-    animation: pulseGlow 2s infinite ease-in-out;
-}
-
-/* تعريف الأنيميشن */
-@keyframes pulseGlow {
-    0%, 100% {
-        transform: translate(-50%, -50%) scale(1);
-        opacity: 0.5;
-    }
-    50% {
-        transform: translate(-50%, -50%) scale(1.2); /* يكبر قليلاً */
-        opacity: 1; /* أكثر توهج */
-    }
-}
 
 .logo-circle img {
     width: 80px;
