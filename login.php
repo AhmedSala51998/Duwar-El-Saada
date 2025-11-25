@@ -86,8 +86,8 @@ body {
 /* Logo */
 /* Logo circle */
 .logo-circle {
-    width: 150px;
-    height: 150px;
+    width: 140px;
+    height: 140px;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -99,7 +99,7 @@ body {
 /* توهج أكبر متحرك باستخدام ::after */
 
 .logo-circle img {
-    width: 150px;
+    width: 140px;
 }
 
 /* Inputs */
