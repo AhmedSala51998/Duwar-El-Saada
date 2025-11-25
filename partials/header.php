@@ -2821,7 +2821,12 @@ body.dark-mode .logout-btn {
       <div class="pulse-dot"></div>
       <div class="pulse-dot"></div>
     </div>-->
-    <dotlottie-wc src="https://lottie.host/0e7469d2-315d-4405-a70f-e47552619be8/5l1Eex354m.lottie" style="width: 300px;height: 300px" autoplay loop></dotlottie-wc>
+    <dotlottie-wc
+      src="https://lottie.host/7e0c856a-cd2e-4513-a592-7bf4b8d7d682/zOtsxPKX5E.lottie"
+      style="width: 300px;height: 300px"
+      autoplay
+      loop
+    ></dotlottie-wc>
   </div>
 <div id="page-wrapper" style="opacity:0; transition:opacity .8s ease;">
 <nav class="navbar navbar-expand-lg sticky-top custom-navbar">
