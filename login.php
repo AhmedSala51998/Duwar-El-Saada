@@ -514,12 +514,10 @@ body {
     transition: top 0.3s ease; /* حركة سلسة */
 }
 
-/* لو الفورم عليه class was-validated والحقل صحيح أو خطأ */
-input:valid + .icon-right,
-input:invalid + .icon-right {
+/* لما الفورم فيه was-validated، نحرك الإيقونات */
+.was-validated .icon-right {
     top: 32%;
 }
-
 
 /* لمنع أي حركة بسبب الفاليديشن */
 .input-with-icon:focus,
