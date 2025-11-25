@@ -561,12 +561,12 @@ body {
     <div class="right-side">
         <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.5/dist/dotlottie-wc.js" type="module"></script>
 
-        <dotlottie-wc 
-            src="https://lottie.host/10ef2e3b-cd9e-43d0-95f5-57641ab612cf/7MHGlQgtsb.lottie"
-            style="width: 650px;height: 650px"
-            autoplay 
-            loop>
-        </dotlottie-wc>
+        <dotlottie-wc
+          src="https://lottie.host/5d4e2813-f7d2-40fd-9136-c6b747b616d6/QtP93VYwuQ.lottie"
+          style="width: 650px;height: 650px"
+          autoplay
+          loop
+        ></dotlottie-wc>
     </div>
 
 </div>
