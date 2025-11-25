@@ -430,6 +430,12 @@ body {
     pointer-events: none;
     opacity: 0.7;
 }
+
+.left-side dotlottie-wc {
+    filter: hue-rotate(30deg) saturate(1.5) brightness(1.1);
+    mix-blend-mode: lighten; /* يخلّي اللون يظهر بشكل شفاف */
+}
+
 </style>
 
 </head>
@@ -456,7 +462,7 @@ body {
 
             <div class="text-center mb-4">
                 <div class="logo-circle mb-3">
-                    <img src="assets/logo.png">
+                    <img src="<?= esc(getSystemSettings('secondary_logo') ?: '/assets/logo.png') ?>">
                 </div>
                 <h3 class="fw-bold text-dark">مطعم دوار السعادة</h3>
                 <p class="text-muted small">تسجيل الدخول للنظام</p>
