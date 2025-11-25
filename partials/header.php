@@ -2796,6 +2796,7 @@ body.dark-mode .logout-btn {
 
 
     </style>
+  <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.5/dist/dotlottie-wc.js" type="module"></script>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -2810,7 +2811,7 @@ body.dark-mode .logout-btn {
     </div>
   </div>
   <div class="loader">
-    <div class="circle">
+    <!--<div class="circle">
       <div class="loader-text">دوار السعادة</div>
 
       <div class="pulse-dot"></div>
@@ -2819,7 +2820,8 @@ body.dark-mode .logout-btn {
       <div class="pulse-dot"></div>
       <div class="pulse-dot"></div>
       <div class="pulse-dot"></div>
-    </div>
+    </div>-->
+    <dotlottie-wc src="https://lottie.host/0e7469d2-315d-4405-a70f-e47552619be8/5l1Eex354m.lottie" style="width: 300px;height: 300px" autoplay loop></dotlottie-wc>
   </div>
 <div id="page-wrapper" style="opacity:0; transition:opacity .8s ease;">
 <nav class="navbar navbar-expand-lg sticky-top custom-navbar">
