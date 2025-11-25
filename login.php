@@ -499,6 +499,18 @@ body {
     border-color: #ff8a00;
     box-shadow: 0 4px 15px rgba(255,140,0,0.25);
 }
+/* نجعل الأيقونات على اليمين */
+.input-group-text {
+    order: 1; /* يضعها بعد input */
+    background: transparent;
+    border-left: none; /* لو حبيت تفصل بين الانبوت والايقونة */
+    color: orange; /* لون برتقالي */
+}
+
+/* لتأكد من أن الحافة اليمنى للانبوت مظبوطة */
+.input-group .form-control {
+    border-right: none;
+}
 </style>
 
 </head>
@@ -541,7 +553,7 @@ body {
                 <div class="mb-3">
                     <div class="input-group has-validation">
                         <input type="text" name="username" id="username" class="form-control" placeholder="اسم المستخدم" required minlength="3">
-                        <span class="input-group-text"><i class="fa fa-user"></i></span>
+                        <span class="input-group-text text-orange"><i class="fa fa-user"></i></span>
                         <div class="valid-feedback">يبدوا جيدا!</div>
                         <div class="invalid-feedback">اسم المستخدم يجب أن يكون 3 أحرف على الأقل</div>
                     </div>
@@ -550,7 +562,7 @@ body {
                 <div class="mb-3">
                     <div class="input-group has-validation">
                         <input type="password" name="password" id="password" class="form-control" placeholder="كلمة المرور" required minlength="3">
-                        <span class="input-group-text"><i class="fa fa-lock"></i></span>
+                        <span class="input-group-text text-orange"><i class="fa fa-lock"></i></span>
                         <div class="valid-feedback">يبدوا جيدا!</div>
                         <div class="invalid-feedback">كلمة المرور يجب أن تكون 3 أحرف على الأقل</div>
                     </div>
