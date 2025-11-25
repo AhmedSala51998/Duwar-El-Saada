@@ -290,6 +290,118 @@ body {
     font-size: 14px;
     color: #555;
 }
+
+
+
+
+
+
+
+
+
+
+
+/* Input Box تصميم احترافي */
+.input-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 14px 12px 45px; /* مساحة للأيقونات على الشمال */
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.15); /* شفاف جزئي */
+    border: 1px solid rgba(255,255,255,0.3);
+    transition: all 0.3s ease;
+    backdrop-filter: blur(8px); /* تأثير ضبابي خفيف */
+}
+
+.input-box input {
+    border: none;
+    outline: none;
+    background: transparent;
+    width: 100%;
+    font-size: 15px;
+    color: #222;
+    padding: 0;
+}
+
+.input-box i.fa-user,
+.input-box i.fa-lock {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: #ff7a00;
+}
+
+/* أيقونة الحالة (✔/⚠) */
+.input-box i.status-icon {
+    position: absolute;
+    left: 35px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    display: none;
+}
+
+/* Hover / Focus */
+.input-box:hover,
+.input-box:focus-within {
+    border-color: #ff8a00;
+    box-shadow: 0 4px 15px rgba(255, 140, 0, 0.25);
+}
+
+/* حالة صح */
+.input-box.success {
+    border: 2px solid #28a745 !important;
+}
+.input-box.success i.status-icon {
+    display: block;
+    color: #28a745;
+}
+
+/* حالة خطأ */
+.input-box.error {
+    border: 2px solid #e74c3c !important;
+}
+.input-box.error i.status-icon {
+    display: block;
+    color: #e74c3c;
+}
+
+/* الرسالة التحذيرية */
+.error-msg {
+    font-size: 13px;
+    color: #e74c3c;
+    margin-top: 2px; /* قريبة جدًا من البوكس */
+    line-height: 1.2;
+    display: none;
+}
+
+/* زر تسجيل الدخول */
+.btn-login {
+    width: 100%;
+    border: none;
+    padding: 14px;
+    background: linear-gradient(135deg, #ff8a00, #ff6a00);
+    border-radius: 16px;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 600;
+    box-shadow: 0 5px 18px rgba(255,102,0,0.25);
+    transition: all 0.3s ease;
+}
+
+.btn-login:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(255,102,0,0.32);
+}
+
+.btn-loading {
+    pointer-events: none;
+    opacity: 0.7;
+}
 </style>
 
 </head>
