@@ -479,7 +479,7 @@ body {
     display: block;
 }
 
-/* كل شيء جوه الانبوت */
+/* الانبوتات */
 .form-control {
     border-radius: 14px;
     padding: 12px 14px;
@@ -489,9 +489,9 @@ body {
     backdrop-filter: blur(8px);
 }
 
-/* مساحة للأيقونة */
-.form-control.ps-5 {
-    padding-left: 40px;
+/* مساحة للأيقونة على اليمين */
+.form-control.pe-5 {
+    padding-right: 40px;
 }
 
 /* hover / focus */
@@ -540,27 +540,27 @@ body {
 
                 <!-- اسم المستخدم -->
                 <div class="mb-3 position-relative">
-                    <input type="text" name="username" id="username" class="form-control ps-5" placeholder="اسم المستخدم" required minlength="3">
+                    <input type="text" name="username" id="username" class="form-control pe-5" placeholder="اسم المستخدم" required minlength="3">
                     <div class="valid-feedback">
                         يبدوا جيدا!
                     </div>
                     <div class="invalid-feedback">
                         اسم المستخدم يجب أن يكون 3 أحرف على الأقل
                     </div>
-                    <!-- أيقونة داخل الانبوت -->
-                    <i class="fa fa-user position-absolute" style="left: 12px; top: 50%; transform: translateY(-50%); color:#ff7a00;"></i>
+                    <!-- أيقونة داخل الانبوت على اليمين -->
+                    <i class="fa fa-user position-absolute" style="right: 12px; top: 50%; transform: translateY(-50%); color:#ff7a00;"></i>
                 </div>
 
                 <!-- كلمة المرور -->
                 <div class="mb-3 position-relative">
-                    <input type="password" name="password" id="password" class="form-control ps-5" placeholder="كلمة المرور" required minlength="3">
+                    <input type="password" name="password" id="password" class="form-control pe-5" placeholder="كلمة المرور" required minlength="3">
                     <div class="valid-feedback">
                         يبدوا جيدا!
                     </div>
                     <div class="invalid-feedback">
                         كلمة المرور يجب أن تكون 3 أحرف على الأقل
                     </div>
-                    <i class="fa fa-lock position-absolute" style="left: 12px; top: 50%; transform: translateY(-50%); color:#ff7a00;"></i>
+                    <i class="fa fa-lock position-absolute" style="right: 12px; top: 50%; transform: translateY(-50%); color:#ff7a00;"></i>
                 </div>
 
                 <button type="submit" class="btn-login w-100" id="loginBtn">تسجيل الدخول</button>
