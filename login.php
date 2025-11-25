@@ -333,7 +333,7 @@ body {
                 <div class="input-box mb-3">
                     <i class="fa fa-user"></i>
                     <i class="status-icon fas"></i>
-                    <input name="username" id="username">
+                    <input class="form-control" name="username" id="username">
                 </div>
                 <div class="error-msg" id="usernameError">اسم المستخدم يجب أن يكون 3 أحرف على الأقل</div>
 
