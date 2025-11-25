@@ -85,8 +85,8 @@ body {
 /* Logo */
 /* Logo circle */
 .logo-circle {
-    width: 110px;
-    height: 110px;
+    width: 120px;
+    height: 120px;
     border-radius: 50%;
     background: rgba(255,255,255,0.6); /* فاتحة وشفافة */
     display: flex;
@@ -186,38 +186,52 @@ body {
     }
 }
 
-/* دائرة الخطأ */
+/* تعديل وضعية input-box */
 .input-box {
     position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-left: 35px; /* مساحة للأيقونة */
 }
 
+/* أيقونة أساسية (user/lock) */
+.input-box i.fa-user,
+.input-box i.fa-lock {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: #ff7a00;
+}
+
+/* أيقونة الحالة (صح/تحذير) */
 .input-box i.status-icon {
     position: absolute;
-    right: 12px;
+    left: 32px;
     top: 50%;
     transform: translateY(-50%);
     font-size: 18px;
     display: none;
 }
 
+/* حالة صح */
 .input-box.success {
     border: 2px solid #28a745 !important;
 }
-
 .input-box.success i.status-icon {
     display: block;
     color: #28a745;
-    content: "\2714"; /* علامة صح */
 }
 
+/* حالة خطأ */
 .input-box.error {
     border: 2px solid #e74c3c !important;
 }
-
 .input-box.error i.status-icon {
     display: block;
     color: #e74c3c;
-    content: "\26A0"; /* علامة تحذير */
 }
 
 /* الرسالة التحذيرية */
@@ -233,6 +247,7 @@ body {
     pointer-events: none;
     opacity: 0.7;
 }
+
 </style>
 
 </head>
@@ -275,16 +290,16 @@ body {
                 <label class="input-label mb-1">اسم المستخدم</label>
                 <div class="input-box mb-3">
                     <i class="fa fa-user"></i>
-                    <input name="username" id="username">
                     <i class="status-icon fas"></i>
+                    <input name="username" id="username">
                 </div>
                 <div class="error-msg" id="usernameError">اسم المستخدم يجب أن يكون 3 أحرف على الأقل</div>
 
                 <label class="input-label mb-1">كلمة المرور</label>
                 <div class="input-box mb-4">
                     <i class="fa fa-lock"></i>
-                    <input type="password" name="password" id="password">
                     <i class="status-icon fas"></i>
+                    <input type="password" name="password" id="password">
                 </div>
                 <div class="error-msg" id="passwordError">كلمة المرور يجب أن تكون 3 أحرف على الأقل</div>
 
