@@ -605,6 +605,11 @@ body {
     box-shadow: 0 15px 45px rgba(0, 0, 0, 0.6);     /* ظل داكن قوي */
     animation: fadeUp 0.8s ease forwards;
 }
+.dark-mode .left-side {
+    background: linear-gradient(135deg, #0f0f0f, #1c1c1c) !important;
+    backdrop-filter: blur(4px) saturate(140%);
+    -webkit-backdrop-filter: blur(4px) saturate(140%);
+}
 
 </style>
 
