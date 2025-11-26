@@ -2793,7 +2793,9 @@ body.dark-mode .logout-btn {
   background: #422212;
   color: #ff9b4a;
 }
-
+dotlottie-wc {
+    filter: hue-rotate(25deg) saturate(2) brightness(1.1);
+}
 
     </style>
   <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.5/dist/dotlottie-wc.js" type="module"></script>
