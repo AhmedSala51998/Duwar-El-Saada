@@ -708,7 +708,7 @@ body {
 </script>
 <script>
 // استرجاع الوضع
-if (localStorage.getItem("dark-mode") === "dark") {
+if (localStorage.getItem("theme") === "dark") {
     document.documentElement.classList.add("dark-mode");
     document.getElementById("themeToggle").innerHTML = '<i class="fas fa-sun"></i>';
 }
@@ -718,10 +718,10 @@ document.getElementById("themeToggle").addEventListener("click", function () {
     document.documentElement.classList.toggle("dark-mode");
 
     if (document.documentElement.classList.contains("dark-mode")) {
-        localStorage.setItem("dark-mode", "dark");
+        localStorage.setItem("theme", "dark");
         this.innerHTML = '<i class="fas fa-sun"></i>';
     } else {
-        localStorage.setItem("dark-mode", "light");
+        localStorage.setItem("theme", "light");
         this.innerHTML = '<i class="fas fa-moon"></i>';
     }
 });
