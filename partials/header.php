@@ -3225,7 +3225,7 @@ function updateDarkModeIcons() {
     }
 });
 
-if (localStorage.getItem("ؤ") === "on") {
+if (localStorage.getItem("dark-mode") === "on") {
     document.body.classList.add("dark-mode");
 }
 updateDarkModeIcons();
