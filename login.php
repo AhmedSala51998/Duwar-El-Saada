@@ -502,6 +502,100 @@ body {
     gap: 5px;
     margin-bottom: 10px
 }
+
+
+.theme-toggle {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: #ff8a00;
+    color: white;
+    border: none;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+    z-index: 9999;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    transition: 0.3s;
+}
+
+.theme-toggle:hover {
+    transform: scale(1.1);
+}
+
+
+/* ======================= */
+/*      DARK MODE STYLE    */
+/* ======================= */
+
+.dark-mode body {
+    background: linear-gradient(135deg, #1e1e1e, #111);
+    color: #ddd;
+}
+
+.dark-mode .login-card-advanced {
+    background: rgba(30,30,30,0.7);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.dark-mode .logo-circle {
+    background: rgba(255,255,255,0.05);
+}
+
+.dark-mode .text-center h3 {
+    color: #fff !important;
+}
+
+.dark-mode p,
+.dark-mode small {
+    color: #bbb !important;
+}
+
+/* INPUTS */
+.dark-mode .form-control {
+    background: rgba(255,255,255,0.08);
+    color: #f5f5f5;
+    border: 1px solid rgba(255,255,255,0.15);
+}
+
+.dark-mode .form-control::placeholder {
+    color: #aaa;
+}
+
+.dark-mode .input-with-icon {
+    color: #fff;
+}
+
+.dark-mode .icon-right {
+    color: #ff9c40;
+}
+
+/* INPUT STATES */
+.dark-mode .form-control:focus {
+    border-color: #ff9c40;
+    box-shadow: 0 4px 15px rgba(255, 156, 64, 0.25);
+}
+
+/* BUTTON */
+.dark-mode .btn-login {
+    background: linear-gradient(135deg, #ff7700, #ff5500);
+    box-shadow: 0 4px 15px rgba(255,100,0,0.3);
+}
+
+/* ERROR BOX */
+.dark-mode .server-error {
+    background-color: #4a1d1d;
+    color: #ffb3b3;
+    border-color: #ff5500;
+}
+
+/* DARK MODE RIGHT SIDE BG */
+.dark-mode .right-side {
+    background: transparent;
+}
+
 </style>
 
 </head>
@@ -514,6 +608,9 @@ body {
 
         <div class="login-card-advanced">
 
+            <button id="themeToggle" class="theme-toggle">
+                <i class="fas fa-moon"></i>
+            </button>
             <div class="text-center mb-4">
                 <div class="logo-circle mb-3">
                     <img src="<?= esc(getSystemSettings('secondary_logo') ?: '/assets/logo.png') ?>">
@@ -595,6 +692,27 @@ body {
         })
 })();
 </script>
+<script>
+// استرجاع الوضع من الـ localStorage
+if (localStorage.getItem("theme") === "dark") {
+    document.documentElement.classList.add("dark-mode");
+}
+
+// زر التبديل بين الثيمين
+document.getElementById("themeToggle").addEventListener("click", function () {
+    document.documentElement.classList.toggle("dark-mode");
+
+    // حفظ الوضع
+    if (document.documentElement.classList.contains("dark-mode")) {
+        localStorage.setItem("theme", "dark");
+        this.innerHTML = '<i class="fas fa-sun"></i>';
+    } else {
+        localStorage.setItem("theme", "light");
+        this.innerHTML = '<i class="fas fa-moon"></i>';
+    }
+});
+</script>
+
 
 </body>
 </html>
