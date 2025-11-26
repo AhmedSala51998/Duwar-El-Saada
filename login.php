@@ -596,6 +596,92 @@ body {
 .dark-mode .right-side {
     background: transparent;
 }
+/* =============================== */
+/*         DARK MODE REFINED       */
+/* =============================== */
+
+.dark-mode body {
+    background: linear-gradient(135deg, #0e0e0e, #1a1a1a, #111) !important;
+    color: #e6e6e6;
+}
+
+/* الخلفية وراء الفورم */
+.dark-mode .page-wrapper {
+    background: rgba(0, 0, 0, 0.25) !important;
+    backdrop-filter: blur(4px);
+}
+
+/* الكارد */
+.dark-mode .login-card-advanced {
+    background: rgba(30, 30, 30, 0.55) !important;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(16px) saturate(160%);
+    border-radius: 18px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.55);
+}
+
+/* لوجو */
+.dark-mode .logo-circle {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* عناوين */
+.dark-mode h3,
+.dark-mode p,
+.dark-mode small {
+    color: #fafafa !important;
+}
+
+/* الانبوتات */
+.dark-mode .form-control {
+    background: rgba(255, 255, 255, 0.07) !important;
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    transition: 0.3s;
+}
+
+.dark-mode .form-control::placeholder {
+    color: #9b9b9b !important;
+}
+
+.dark-mode .form-control:focus {
+    border-color: #ff8c30;
+    box-shadow: 0 0 12px rgba(255, 120, 40, 0.4);
+}
+
+/* الأيقونات */
+.dark-mode .icon-right {
+    color: #ff9c50 !important;
+}
+
+/* رسالة الخطأ */
+.dark-mode .server-error {
+    background-color: rgba(90, 20, 20, 0.6) !important;
+    border-color: #ff4d22 !important;
+    color: #ffbeb8 !important;
+    backdrop-filter: blur(6px);
+}
+
+/* زر تسجيل الدخول */
+.dark-mode .btn-login {
+    background: linear-gradient(135deg, #ff7a1a, #ff5722) !important;
+    color: white !important;
+    border: none;
+    box-shadow: 0 0 18px rgba(255, 90, 20, 0.4);
+    transition: 0.3s;
+}
+
+.dark-mode .btn-login:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 25px rgba(255, 100, 20, 0.6);
+}
+
+/* زر تبديل الستايل */
+.dark-mode .theme-toggle {
+    background: #ff5500 !important;
+    box-shadow: 0 0 16px rgba(255, 100, 20, 0.5);
+}
 
 </style>
 
