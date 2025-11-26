@@ -511,19 +511,20 @@ body {
     background: #ff8a00;
     color: white;
     border: none;
-    width: 45px;
-    height: 45px;
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
     font-size: 20px;
     cursor: pointer;
-    z-index: 9999;
+    z-index: 99999;
     box-shadow: 0 4px 12px rgba(0,0,0,0.25);
     transition: 0.3s;
 }
 
 .theme-toggle:hover {
-    transform: scale(1.1);
+    transform: scale(1.12);
 }
+
 
 
 /* ======================= */
@@ -600,7 +601,9 @@ body {
 
 </head>
 <body>
-
+<button id="themeToggle" class="theme-toggle">
+    <i class="fas fa-moon"></i>
+</button>
 <div class="page-wrapper">
 
     <!-- RIGHT -->
@@ -608,9 +611,6 @@ body {
 
         <div class="login-card-advanced">
 
-            <button id="themeToggle" class="theme-toggle">
-                <i class="fas fa-moon"></i>
-            </button>
             <div class="text-center mb-4">
                 <div class="logo-circle mb-3">
                     <img src="<?= esc(getSystemSettings('secondary_logo') ?: '/assets/logo.png') ?>">
@@ -693,16 +693,16 @@ body {
 })();
 </script>
 <script>
-// استرجاع الوضع من الـ localStorage
+// استرجاع الوضع
 if (localStorage.getItem("theme") === "dark") {
     document.documentElement.classList.add("dark-mode");
+    document.getElementById("themeToggle").innerHTML = '<i class="fas fa-sun"></i>';
 }
 
-// زر التبديل بين الثيمين
+// الزر
 document.getElementById("themeToggle").addEventListener("click", function () {
     document.documentElement.classList.toggle("dark-mode");
 
-    // حفظ الوضع
     if (document.documentElement.classList.contains("dark-mode")) {
         localStorage.setItem("theme", "dark");
         this.innerHTML = '<i class="fas fa-sun"></i>';
@@ -711,6 +711,7 @@ document.getElementById("themeToggle").addEventListener("click", function () {
         this.innerHTML = '<i class="fas fa-moon"></i>';
     }
 });
+
 </script>
 
 
