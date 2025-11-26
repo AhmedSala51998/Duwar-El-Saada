@@ -3208,7 +3208,7 @@ const toggleIconDesktop = document.getElementById('toggleIconDesktop');
 const logoutIcon = document.querySelector('#logoutBtn i');
 
 function updateDarkModeIcons() {
-    const dark = document.documentElement.classList.contains('dark-mode');
+    const dark = document.body.classList.contains('dark-mode');
     toggleIconMobile.className = dark ? 'bi bi-sun' : 'bi bi-moon';
     toggleIconDesktop.className = dark ? 'bi bi-sun' : 'bi bi-moon';
     toggleIconMobile.style.color = dark ? '#fff' : '';
@@ -3218,17 +3218,15 @@ function updateDarkModeIcons() {
 
 [toggleBtnMobile, toggleBtnDesktop].forEach(btn => {
     btn.onclick = function() {
-        document.documentElement.classList.toggle("dark-mode");
-        localStorage.setItem("theme", document.documentElement.classList.contains("dark-mode") ? "dark" : "light");
+        document.body.classList.toggle("dark-mode");
+        localStorage.setItem("dark-mode", document.body.classList.contains("dark-mode") ? "on" : "off");
         updateDarkModeIcons();
-        updateChartsColors(); // لو عندك charts
+        updateChartsColors(); // 🔥 حدث الشارتات فوراً
     }
 });
 
-// قراءة الثيم الموحد
-if (localStorage.getItem("theme") === "dark") {
-    document.documentElement.classList.add("dark-mode");
-    updateDarkModeIcons();
+if (localStorage.getItem("dark-mode") === "on") {
+    document.body.classList.add("dark-mode");
 }
 updateDarkModeIcons();
 updateChartsColors(); // 🔥 حدث الشارتات عند تحميل الصفحة

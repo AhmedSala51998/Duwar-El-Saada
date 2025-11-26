@@ -504,7 +504,7 @@ body {
 }
 
 
-.theme-toggle {
+.themeToggleLogin{
     position: fixed;
     top: 20px;
     left: 20px;
@@ -521,7 +521,7 @@ body {
     transition: 0.3s;
 }
 
-.theme-toggle:hover {
+.themeToggleLogin:hover {
     transform: scale(1.12);
 }
 
@@ -615,8 +615,8 @@ body {
 
 </head>
 <body>
-<button id="themeToggle" class="theme-toggle">
-    <i class="fas fa-moon"></i>
+<button id="themeToggleLogin" class="theme-btn">
+    <i id="themeIconLogin" class="bi bi-moon"></i>
 </button>
 <div class="page-wrapper">
 
@@ -708,23 +708,27 @@ body {
 </script>
 <script>
 // استرجاع الوضع
-if (localStorage.getItem("theme") === "dark") {
-    document.documentElement.classList.add("dark-mode");
-    document.getElementById("themeToggle").innerHTML = '<i class="fas fa-sun"></i>';
+const toggleBtnLogin = document.getElementById('themeToggleLogin');
+const toggleIconLogin = document.getElementById('themeIconLogin');
+
+function updateLoginDarkModeIcon() {
+    const dark = document.body.classList.contains('dark-mode');
+    toggleIconLogin.className = dark ? 'bi bi-sun' : 'bi bi-moon';
+    toggleIconLogin.style.color = dark ? '#fff' : '';
 }
 
-// الزر
-document.getElementById("themeToggle").addEventListener("click", function () {
-    document.documentElement.classList.toggle("dark-mode");
-
-    if (document.documentElement.classList.contains("dark-mode")) {
-        localStorage.setItem("theme", "dark");
-        this.innerHTML = '<i class="fas fa-sun"></i>';
-    } else {
-        localStorage.setItem("theme", "light");
-        this.innerHTML = '<i class="fas fa-moon"></i>';
-    }
+toggleBtnLogin.addEventListener("click", () => {
+    document.body.classList.toggle("dark-mode");
+    localStorage.setItem("dark-mode", document.body.classList.contains("dark-mode") ? "on" : "off");
+    updateLoginDarkModeIcon();
 });
+
+// استرجاع الوضع عند التحميل
+if (localStorage.getItem("dark-mode") === "on") {
+    document.body.classList.add("dark-mode");
+}
+
+updateLoginDarkModeIcon();
 
 </script>
 
