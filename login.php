@@ -596,6 +596,15 @@ body {
 .dark-mode .right-side {
     background: transparent;
 }
+.dark-mode .login-card-advanced {
+    background: rgba(20, 20, 20, 0.55) !important; /* داكن نصف شفاف */
+    border-radius: 25px;
+    border: 1px solid rgba(255, 255, 255, 0.08);   /* حدود خفيفة جدًا */
+    backdrop-filter: blur(20px) saturate(160%);    /* زجاجي فاخر */
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.6);     /* ظل داكن قوي */
+    animation: fadeUp 0.8s ease forwards;
+}
 
 </style>
 
