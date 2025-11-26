@@ -606,11 +606,11 @@ body {
     animation: fadeUp 0.8s ease forwards;
 }
 .dark-mode .left-side {
-    background: linear-gradient(135deg, #0f0f0f, #1c1c1c) !important;
-    backdrop-filter: blur(4px) saturate(140%);
-    -webkit-backdrop-filter: blur(4px) saturate(140%);
+    background: rgba(15,15,15,0.65) !important;
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border-right: 1px solid rgba(255,255,255,0.06);
 }
-
 </style>
 
 </head>
