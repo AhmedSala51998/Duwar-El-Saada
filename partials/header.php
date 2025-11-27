@@ -2797,6 +2797,41 @@ dotlottie-wc {
     filter: hue-rotate(-20deg) saturate(3) brightness(1.1);
 }
 
+/* صندوق الترحيب */
+.welcome-box {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: fadeSlide 1s ease forwards;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* نص الترحيب */
+.welcome-text {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #2a2a2a;
+    padding: 4px 14px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.2);
+    backdrop-filter: blur(5px);
+    box-shadow: 0 0 12px rgba(0,0,0,0.08);
+}
+
+/* وضع الداكن */
+.dark-mode .welcome-text {
+    color: #ff8c00;
+    background: rgba(255, 140, 0, 0.08);
+    box-shadow: 0 0 15px rgba(255,140,0,0.18);
+}
+
+/* الأنيميشن */
+@keyframes fadeSlide {
+    0% { opacity: 0; transform: translate(-50%, -5px); }
+    100% { opacity: 1; transform: translate(-50%, 0); }
+}
+
     </style>
   <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.5/dist/dotlottie-wc.js" type="module"></script>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
@@ -2833,6 +2868,12 @@ dotlottie-wc {
     <a class="navbar-brand d-flex align-items-center" href="<?= BASE_URL ?>/home.php" style="text-decoration:none;">
       <img src="<?= BASE_URL ?><?= esc(getSystemSettings('main_logo') ?: '/assets/logo_header2.png') ?>" alt="Logo" class="logo-modern">
     </a>
+
+    <div class="welcome-box d-none d-md-block mx-auto text-center">
+      <span class="welcome-text">
+        مرحبًا <strong><?= esc(current_user()) ?></strong> — نتمنى لك يومًا سعيدًا داخل نظام دوّار السعادة
+      </span>
+    </div>
 
     <!-- ✅ زر القائمة على الشمال (يظهر فقط في الموبايل) -->
     <!-- مجموعة أزرار الموبايل (القائمة + الداكن) -->
