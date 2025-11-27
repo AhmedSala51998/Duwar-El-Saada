@@ -2800,7 +2800,7 @@ dotlottie-wc {
 /* صندوق الترحيب */
 .welcome-box {
     position: absolute;
-    left: 70%;
+    left: 60%;
     transform: translateX(-50%);
     animation: fadeSlide 1s ease forwards;
     opacity: 0;
@@ -2869,7 +2869,7 @@ dotlottie-wc {
       <img src="<?= BASE_URL ?><?= esc(getSystemSettings('main_logo') ?: '/assets/logo_header2.png') ?>" alt="Logo" class="logo-modern">
     </a>
 
-    <div class="welcome-box d-none d-md-block mx-auto">
+    <div class="welcome-box d-none d-md-block mx-auto text-center">
       <span class="welcome-text">
         مرحبًا <strong><?= esc(current_user()) ?></strong> — نتمنى لك يومًا سعيدًا داخل نظام دوّار السعادة
       </span>
