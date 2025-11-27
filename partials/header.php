@@ -2809,7 +2809,7 @@ dotlottie-wc {
 
 /* نص الترحيب */
 .welcome-text {
-    font-size: 1.15rem;
+    font-size: 0.95rem;
     font-weight: 600;
     color: #2a2a2a;
     padding: 4px 14px;
