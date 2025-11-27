@@ -294,11 +294,15 @@ th, td {
     <div><strong>رقم الفاتورة:</strong> <?= esc($order['invoice_number']) ?></div>
     <div><strong>الدافع:</strong> <?= esc($purchase['payer_name']) ?></div>
     <div><strong>مصدر الدفع:</strong> <?= esc($purchase['payment_source']) ?></div>
+    <?php if(has_permission('purchases.edit_purchases_invoice_date')): ?>
     <div>
       <strong>التاريخ:</strong>
       <input type="date" id="invoiceDate" value="<?= date('Y-m-d', strtotime($order['created_at'])) ?>" data-order-id="<?= $orderId ?>" style="border:1px solid #ccc; border-radius:4px; padding:2px 6px;">
       <span id="invoiceDateText" style="display:none; font-weight:bold;"><?= date('Y-m-d', strtotime($order['created_at'])) ?></span>
     </div>
+    <?php else: ?>
+      <div><strong>التاريخ:</strong> <?= date('Y-m-d', strtotime($order['created_at'])) ?></div>
+    <?php endif; ?>
   </div>
 
   <?php if($invoiceImage): ?>
@@ -384,6 +388,7 @@ th, td {
 <div class="invoice-summary-wrapper" style="margin-top: 25px;">
 
   <div class="invoice-summary" style="text-align: right;">
+    <?php if(has_permission('purchases.edit_purchases_invoice_tax')): ?>
     <div>
       <strong>نسبة الضريبة:</strong>
       <select id="vatRate" data-order-id="<?= $orderId ?>">
@@ -392,6 +397,9 @@ th, td {
       </select>
       <span id="vatRateText"><?= $vatRate == 0 ? '0%' : '15%' ?></span>
     </div>
+    <?php else: ?>
+      <div><strong>نسبة الضريبة: </strong> <span><?= $vatRate ?></span> %</div>
+    <?php endif; ?>
 
     <div><strong>المجموع:</strong> <span id="totalNoVat"><?= number_format($subtotalAll,2) ?></span> ريال</div>
     <div id="vatRow" style="display: <?= $vatRate==0?'none':'block' ?>;"><strong>الضريبة:</strong> <span id="vatValue"><?= number_format($totalVat,2) ?></span> ريال</div>
