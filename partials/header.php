@@ -2800,7 +2800,7 @@ dotlottie-wc {
 /* صندوق الترحيب */
 .welcome-box {
     position: absolute;
-    left: 50%;
+    left: 70%;
     transform: translateX(-50%);
     animation: fadeSlide 1s ease forwards;
     opacity: 0;
