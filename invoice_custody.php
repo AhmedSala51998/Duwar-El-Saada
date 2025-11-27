@@ -179,6 +179,7 @@ function numberToArabicWords($number) {
   <div class="invoice-header">
     <div class="invoice-info" style="flex:1">
       <div><strong>اسم المستلم:</strong> <?= esc($custody['person_name']) ?></div>
+      <?php if(has_permission('custodies.edit_custodies_invoice_date')): ?>
       <div>
         <strong>تاريخ الاستلام:</strong>
         <input 
@@ -192,6 +193,9 @@ function numberToArabicWords($number) {
           <?= esc($custody['taken_at']) ?>
         </span>
       </div>
+      <?php else: ?>
+          <div><strong>التاريخ:</strong> <?= esc($custody['taken_at']) ?></div>
+      <?php endif; ?>
     </div>
   </div>
 

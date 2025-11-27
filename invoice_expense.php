@@ -210,11 +210,15 @@ select#vatRate {
       <div><strong>رقم الفاتورة:</strong> <?= esc($asset['bill_number']) ?></div>
       <div><strong>الدافع:</strong> <?= esc($expense['payer_name']) ?></div>
       <div><strong>مصدر الدفع:</strong> <?= esc($expense['payment_source']) ?></div>
+      <?php if(has_permission('expenses.edit_expenses_invoice_date')): ?>
       <div>
         <strong>التاريخ:</strong>
         <input type="date" id="invoiceDate" value="<?= date('Y-m-d', strtotime($expense['created_at'])) ?>" data-expense-id="<?= $expenseId ?>" style="border:1px solid #ccc; border-radius:4px; padding:2px 6px;">
         <span id="invoiceDateText" style="display:none; font-weight:bold;"><?= date('Y-m-d', strtotime($expense['created_at'])) ?></span>
       </div>
+      <?php else: ?>
+        <div><strong>التاريخ:</strong> <?= date('Y-m-d', strtotime($expense['created_at'])) ?></div>
+      <?php endif; ?>
     </div>
 
     <?php if($invoiceImage): ?>
@@ -279,6 +283,7 @@ select#vatRate {
   <!-- ✅ العمود الشمال: تفاصيل الفاتورة -->
   <div class="invoice-summary-wrapper" style="margin-top: 25px;">
     <div class="invoice-summary" style="text-align: right;">
+      <?php if(has_permission('expenses.edit_expenses_invoice_tax')): ?>
       <div>
         <strong>نسبة الضريبة:</strong>
         <select id="vatRate" data-expense-id="<?= $expenseId ?>">
@@ -287,6 +292,12 @@ select#vatRate {
         </select>
         <span id="vatRateText"><?= $vatRate == 0 ? '0%' : '15%' ?></span>
       </div>
+      <?php else: ?>
+        <div>
+          <strong>نسبة الضريبة:</strong>
+          <span><?= $vatRate ?></span> %
+        </div>
+      <?php endif; ?>
 
       <div>
         <strong>المجموع:</strong>
