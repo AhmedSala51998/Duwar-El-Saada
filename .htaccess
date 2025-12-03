@@ -4,6 +4,7 @@ RewriteEngine On
 
 # جعل الصفحة الرئيسية بدون /home
 RewriteRule ^home/?$ / [L,R=301]
+RewriteRule ^login/?$ / [L,R=301]
 
 # استثناء switch_role.php
 RewriteCond %{REQUEST_URI} !^/switch_role\.php$
