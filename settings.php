@@ -253,6 +253,21 @@ body.dark-mode .btn-orange:hover {
 body.dark-mode .page-title {
   color: #fff !important;
 }
+/* ===== Focus Inputs & Textareas ===== */
+input.form-control:focus,
+textarea.form-control:focus {
+  outline: none;
+  border-color: #ff6a00 !important; /* برتقالي */
+  box-shadow: 0 0 8px rgba(255,106,0,0.4);
+  transition: border-color 0.25s, box-shadow 0.25s;
+}
+
+/* Dark Mode Inputs */
+body.dark-mode input.form-control:focus,
+body.dark-mode textarea.form-control:focus {
+  border-color: #ff6a00 !important;
+  box-shadow: 0 0 8px rgba(255,106,0,0.5);
+}
 </style>
 
 <h3 class="mb-4 page-title d-flex align-items-center gap-2">
