@@ -2943,7 +2943,7 @@ dotlottie-wc {
       <?php if(has_permission('settings.light_and_dark_mode')): ?>
       <li>
         <button id="toggleDarkDesktop" class="btn btn-orange position-relative overflow-hidden" 
-                style="width:50px; height:50px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.2rem;">
+                style="width:50px !important; height:50px !important; border-radius:50% !important; display:flex; align-items:center; justify-content:center; font-size:1.2rem;">
           <i class="bi bi-moon" id="toggleIconDesktop"></i>
           <span class="bubble bubble1"></span>
           <span class="bubble bubble2"></span>
