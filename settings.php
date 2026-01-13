@@ -21,7 +21,6 @@ $setting = $stmt->fetch();
 
 /* BODY */
 body {
-  background: var(--bg);
   color: var(--text);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
