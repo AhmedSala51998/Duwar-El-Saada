@@ -176,6 +176,15 @@ $setting = $stmt->fetch();
   align-items: center;
   gap: 10px;
 }
+#toggleDarkDesktop {
+  border-radius:50% !important; /* دائري بالكامل */
+  width:50px !important;
+  height:50px !important;
+  padding:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
 </style>
 
 <h3 class="mb-4 page-title d-flex align-items-center gap-2">
