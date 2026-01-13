@@ -1,308 +1,196 @@
-<?php 
-require __DIR__.'/partials/header.php'; 
-require_permission('systems_settings.view'); // صلاحية عرض الإعدادات
+<?php
+require __DIR__.'/partials/header.php';
+require_permission('systems_settings.view');
 
-// Toast للرسائل
-if(!empty($_SESSION['toast'])): 
-    $toast=$_SESSION['toast']; 
-    unset($_SESSION['toast']); 
+/* Toast */
+if(!empty($_SESSION['toast'])):
+$toast=$_SESSION['toast']; unset($_SESSION['toast']);
 ?>
 <div class="position-fixed top-0 end-0 p-3" style="z-index:2000">
-  <div id="liveToast" class="toast align-items-center text-bg-<?= $toast['type'] ?> border-0 show fade">
+  <div class="toast align-items-center text-bg-<?= $toast['type'] ?> border-0 show">
     <div class="d-flex">
       <div class="toast-body"><?= esc($toast['msg']) ?></div>
       <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
     </div>
   </div>
 </div>
-<script>
-document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById("liveToast");if(el){new bootstrap.Toast(el,{delay:2500}).show();}});
-</script>
 <?php endif; ?>
-
-<style>
-/* --- إعادة استخدام تصميم جدول المستخدمين --- */
-.custom-table {
-  border-collapse: separate;
-  border-spacing: 0;
-  font-size: 0.9rem;
-}
-.custom-table thead th {
-  background: #f8f9fa;
-  color: #495057;
-  font-weight: 600 !important;
-  border-bottom: 2px solid #dee2e6;
-  vertical-align: middle;
-  font-size: 0.85rem;
-  white-space: nowrap;
-}
-.custom-table tbody tr:hover {
-  background-color: #f1f5ff;
-  box-shadow: inset 0 0 0 9999px rgba(0,0,0,0.02);
-}
-.custom-table td, .custom-table th { padding: 0.6rem 0.75rem; vertical-align: middle; }
-.custom-table td img { max-width: 80px; border-radius:5px; }
-.btn-orange { background-color: #ff6a00; color: #fff; border:none; transition: all 0.3s ease;}
-.btn-orange:hover { background-color: #e85d00; }
-.custom-file-upload {
-    border: 2px dashed #ccc;
-    border-radius: 12px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    padding: 20px;
-    text-align: center;
-    transition: all 0.3s ease-in-out;
-    background: #f9f9f9;
-}
-.custom-file-upload:hover {
-    border-color: #0d6efd;
-    background: #eef5ff;
-}
-.custom-file-upload i {
-    font-size: 40px;
-    color: #0d6efd;
-    margin-bottom: 10px;
-}
-.custom-file-upload span {
-    font-size: 14px;
-    color: #666;
-}
-.custom-file-upload img {
-    max-height: 120px;
-    margin-top: 10px;
-    border-radius: 8px;
-}
-input[type="file"] {
-    display: none;
-}
-</style>
 
 <?php
-// Pagination & البحث
-$kw = trim($_GET['kw'] ?? '');
-$page = max(1, intval($_GET['page'] ?? 1));
-$per_page = 10;
-$offset = ($page - 1) * $per_page;
-
-// إجمالي عدد الصفوف
-$count_stmt = $pdo->prepare("SELECT COUNT(*) FROM system_settings WHERE main_logo LIKE ? OR secondary_logo LIKE ? OR text1 LIKE ? OR text2 LIKE ? OR footer_text LIKE ?");
-$count_stmt->execute(["%$kw%","%$kw%","%$kw%","%$kw%","%$kw%"]);
-$total_rows = $count_stmt->fetchColumn();
-$total_pages = ceil($total_rows / $per_page);
-
-// البيانات
-$sql = "SELECT * FROM system_settings 
-        WHERE main_logo LIKE ? OR secondary_logo LIKE ? OR text1 LIKE ? OR text2 LIKE ? OR footer_text LIKE ?
-        ORDER BY id DESC
-        LIMIT $per_page OFFSET $offset";
-$stmt = $pdo->prepare($sql);
-$stmt->execute(["%$kw%","%$kw%","%$kw%","%$kw%","%$kw%"]);
-$rows = $stmt->fetchAll();
+/* إعداد واحد فقط */
+$stmt = $pdo->query("SELECT * FROM system_settings ORDER BY id DESC LIMIT 1");
+$setting = $stmt->fetch();
 ?>
 
-<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-  <h3 class="page-title mb-0 d-flex align-items-center gap-2">
-    <span class="stat-icon"><i class="bi bi-gear-fill"></i></span> إعدادات النظام
-  </h3>
+<style>
+.settings-wrapper{
+  display:flex;
+  gap:25px;
+  align-items:flex-start;
+}
 
-  <div class="d-flex align-items-center gap-2 flex-wrap">
-    <!-- بحث -->
-    <form method="get" class="d-flex align-items-center gap-2 search-form">
-      <div class="input-group" style="max-width:250px;">
-        <span class="input-group-text bg-white border-orange text-orange"><i class="bi bi-search"></i></span>
-        <input type="text" name="kw" class="form-control border-orange" placeholder="بحث..." value="<?= esc($kw) ?>">
-      </div>
-      <button type="submit" class="btn btn-orange"><i class="bi bi-search"></i></button>
-      <?php if($kw!==''): ?><a href="settings.php" class="btn btn-outline-secondary"><i class="bi bi-x-lg"></i></a><?php endif; ?>
-    </form>
+/* Tabs */
+.settings-tabs{
+  width:230px;
+  background:#fff;
+  border-radius:18px;
+  padding:10px;
+  box-shadow:0 10px 25px rgba(0,0,0,.08);
+}
+.tab-btn{
+  width:100%;
+  border:0;
+  background:transparent;
+  padding:14px 16px;
+  border-radius:14px;
+  text-align:right;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-weight:500;
+  color:#555;
+  transition:.3s;
+}
+.tab-btn i{font-size:18px;}
+.tab-btn:hover,
+.tab-btn.active{
+  background:#fff1e6;
+  color:#ff6a00;
+}
 
-    <!-- زر إضافة -->
-    <?php if(has_permission('systems_settings.add')): ?>
-      <button class="btn btn-orange" data-bs-toggle="modal" data-bs-target="#addSetting">
-        <i class="bi bi-plus-lg"></i> إضافة
-      </button>
-    <?php endif; ?>
+/* Content */
+.settings-content{
+  flex:1;
+  background:#fff;
+  border-radius:22px;
+  padding:25px;
+  box-shadow:0 10px 25px rgba(0,0,0,.08);
+}
+.tab-content{display:none;}
+.tab-content.active{display:block;}
+
+/* Upload */
+.custom-file-upload{
+  border:2px dashed #ddd;
+  border-radius:14px;
+  padding:20px;
+  text-align:center;
+  cursor:pointer;
+  transition:.3s;
+}
+.custom-file-upload:hover{
+  border-color:#ff6a00;
+  background:#fff7f0;
+}
+.custom-file-upload i{
+  font-size:36px;
+  color:#ff6a00;
+}
+.custom-file-upload img{
+  max-height:110px;
+  margin-top:10px;
+  border-radius:10px;
+}
+.custom-file-upload input{display:none;}
+
+.btn-orange{
+  background:#ff6a00;
+  color:#fff;
+  border:0;
+}
+.btn-orange:hover{background:#e85d00}
+</style>
+
+<h3 class="mb-4 d-flex align-items-center gap-2">
+  <i class="bi bi-gear-fill text-warning"></i> إعدادات النظام
+</h3>
+
+<div class="settings-wrapper">
+
+  <!-- Tabs -->
+  <div class="settings-tabs">
+    <button class="tab-btn active" data-tab="logos">
+      <i class="bi bi-image"></i> الشعارات
+    </button>
+    <button class="tab-btn" data-tab="texts">
+      <i class="bi bi-fonts"></i> النصوص
+    </button>
+    <button class="tab-btn" data-tab="footer">
+      <i class="bi bi-layout-text-window"></i> الفوتر
+    </button>
   </div>
-</div>
 
-<div class="table-responsive shadow-sm rounded-3 border bg-white p-2">
-<table class="table table-hover align-middle mb-0 custom-table text-center">
-  <thead class="table-light border-bottom small-header text-secondary">
-    <tr>
-      <th>#</th>
-      <th>الشعار الرئيسي</th>
-      <th>الشعار الثانوي</th>
-      <th>النص الأول</th>
-      <th>النص الثاني</th>
-      <th>نص الفوتر</th>
-      <?php if(has_permission('systems_settings.edit') || has_permission('systems_settings.delete')): ?><th>عمليات</th><?php endif; ?>
-    </tr>
-  </thead>
-  <tbody>
-    <?php foreach($rows as $r): ?>
-      <tr>
-        <td data-label="رقم الاعداد"><?= $r['id'] ?></td>
-        <td data-label="الشعار الرئيسي"><?= $r['main_logo'] ? '<img src="'.esc($r['main_logo']).'" />' : '-' ?></td>
-        <td data-label="الشعار الثانوي"><?= $r['secondary_logo'] ? '<img src="'.esc($r['secondary_logo']).'" />' : '-' ?></td>
-        <td data-label="النص  الأول"><?= esc($r['text1']) ?></td>
-        <td data-label="النص الثاني"><?= esc($r['text2']) ?></td>
-        <td data-label="نص الفوتر"><?= esc($r['footer_text']) ?></td>
-        <?php if(has_permission('systems_settings.edit') || has_permission('systems_settings.delete')): ?>
-          <td>
-            <?php if(has_permission('systems_settings.edit')): ?>
-              <button class="btn btn-sm btn-outline-warning me-1" data-bs-toggle="modal" data-bs-target="#edit<?= $r['id'] ?>">
-                <i class="bi bi-pencil"></i>
-              </button>
-            <?php endif; ?>
-            <?php if(has_permission('systems_settings.delete')): ?>
-              <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete<?= $r['id'] ?>">
-                <i class="bi bi-trash"></i>
-              </button>
-            <?php endif; ?>
-          </td>
-        <?php endif; ?>
-      </tr>
+  <!-- Content -->
+  <div class="settings-content">
 
-      <!-- مودال تعديل -->
-      <div class="modal fade" id="edit<?= $r['id'] ?>">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <form method="post" action="setting_edit" enctype="multipart/form-data">
-              <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
-              <input type="hidden" name="id" value="<?= $r['id'] ?>">
-              <div class="modal-header">
-                <h5 class="modal-title">تعديل الإعداد</h5>
-                <button class="btn-close" data-bs-dismiss="modal"></button>
-              </div>
-              <div class="modal-body vstack gap-3">
-
-                <!-- الشعار الرئيسي -->
-                <div>
-                  <label class="form-label">الشعار الرئيسي</label>
-                  <label class="custom-file-upload w-100">
-                    <i class="bi bi-image"></i>
-                    <span id="file-text-main<?= $r['id'] ?>"><?= $r['main_logo'] ? basename($r['main_logo']) : 'اختر صورة' ?></span>
-                    <input type="file" name="main_logo" accept="image/*" 
-                          onchange="previewFileCustom(this,'file-text-main<?= $r['id'] ?>','preview-main<?= $r['id'] ?>')">
-                    <img id="preview-main<?= $r['id'] ?>" src="<?= esc($r['main_logo']) ?>" style="display:<?= $r['main_logo'] ? 'block' : 'none' ?>;max-width:100px;margin-top:8px;">
-                  </label>
-                </div>
-
-                <!-- الشعار الثانوي -->
-                <div>
-                  <label class="form-label">الشعار الثانوي</label>
-                  <label class="custom-file-upload w-100">
-                    <i class="bi bi-image"></i>
-                    <span id="file-text-secondary<?= $r['id'] ?>"><?= $r['secondary_logo'] ? basename($r['secondary_logo']) : 'اختر صورة' ?></span>
-                    <input type="file" name="secondary_logo" accept="image/*" 
-                          onchange="previewFileCustom(this,'file-text-secondary<?= $r['id'] ?>','preview-secondary<?= $r['id'] ?>')">
-                    <img id="preview-secondary<?= $r['id'] ?>" src="<?= esc($r['secondary_logo']) ?>" style="display:<?= $r['secondary_logo'] ? 'block' : 'none' ?>;max-width:100px;margin-top:8px;">
-                  </label>
-                </div>
-
-                <div><label>النص 1</label><input name="text1" class="form-control" value="<?= esc($r['text1']) ?>"></div>
-                <div><label>النص 2</label><textarea name="text2" class="form-control"><?= esc($r['text2']) ?></textarea></div>
-                <div><label>نص الفوتر</label><textarea name="footer_text" class="form-control"><?= esc($r['footer_text']) ?></textarea></div>
-
-              </div>
-              <div class="modal-footer"><button class="btn btn-orange">حفظ</button></div>
-            </form>
-          </div>
-        </div>
-      </div>
-
-      <!-- مودال حذف -->
-      <div class="modal fade" id="delete<?= $r['id'] ?>">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <form method="post" action="setting_delete">
-              <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
-              <input type="hidden" name="id" value="<?= $r['id'] ?>">
-              <div class="modal-header">
-                <h5 class="modal-title">تأكيد الحذف</h5>
-                <button class="btn-close" data-bs-dismiss="modal"></button>
-              </div>
-              <div class="modal-body">
-                هل أنت متأكد من حذف هذا الإعداد؟
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
-                <button type="submit" class="btn btn-danger">حذف</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-
-    <?php endforeach; ?>
-  </tbody>
-</table>
-</div>
-
-<!-- مودال إضافة -->
-<?php if(has_permission('systems_settings.add')): ?>
-<div class="modal fade" id="addSetting">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <form method="post" action="setting_add" enctype="multipart/form-data">
+    <!-- LOGOS -->
+    <div class="tab-content active" id="logos">
+      <h5 class="mb-3">الشعارات</h5>
+      <form method="post" action="setting_edit" enctype="multipart/form-data" class="vstack gap-3">
         <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
-        <div class="modal-header">
-          <h5 class="modal-title">إضافة إعداد جديد</h5>
-          <button class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body vstack gap-3">
+        <input type="hidden" name="id" value="<?= $setting['id'] ?>">
 
-          <!-- الشعار الرئيسي -->
-          <div>
-            <label class="form-label">الشعار الرئيسي</label>
-            <label class="custom-file-upload w-100">
-              <i class="bi bi-image"></i>
-              <span id="file-text-mainAdd">اختر صورة</span>
-              <input type="file" name="main_logo" accept="image/*" 
-                     onchange="previewFileCustom(this,'file-text-mainAdd','preview-mainAdd')">
-              <img id="preview-mainAdd" style="display:none;max-width:100px;margin-top:8px;">
-            </label>
-          </div>
+        <label class="custom-file-upload">
+          <i class="bi bi-image"></i>
+          <p class="mb-1">الشعار الرئيسي</p>
+          <input type="file" name="main_logo" accept="image/*">
+          <?php if($setting['main_logo']): ?>
+            <img src="<?= esc($setting['main_logo']) ?>">
+          <?php endif; ?>
+        </label>
 
-          <!-- الشعار الثانوي -->
-          <div>
-            <label class="form-label">الشعار الثانوي</label>
-            <label class="custom-file-upload w-100">
-              <i class="bi bi-image"></i>
-              <span id="file-text-secondaryAdd">اختر صورة</span>
-              <input type="file" name="secondary_logo" accept="image/*" 
-                     onchange="previewFileCustom(this,'file-text-secondaryAdd','preview-secondaryAdd')">
-              <img id="preview-secondaryAdd" style="display:none;max-width:100px;margin-top:8px;">
-            </label>
-          </div>
+        <label class="custom-file-upload">
+          <i class="bi bi-image"></i>
+          <p class="mb-1">الشعار الثانوي</p>
+          <input type="file" name="secondary_logo" accept="image/*">
+          <?php if($setting['secondary_logo']): ?>
+            <img src="<?= esc($setting['secondary_logo']) ?>">
+          <?php endif; ?>
+        </label>
 
-          <div><label>النص 1</label><input name="text1" class="form-control"></div>
-          <div><label>النص 2</label><textarea name="text2" class="form-control"></textarea></div>
-          <div><label>نص الفوتر</label><textarea name="footer_text" class="form-control"></textarea></div>
-
-        </div>
-        <div class="modal-footer"><button class="btn btn-orange">حفظ</button></div>
+        <button class="btn btn-orange align-self-start">حفظ</button>
       </form>
     </div>
+
+    <!-- TEXTS -->
+    <div class="tab-content" id="texts">
+      <h5 class="mb-3">النصوص</h5>
+      <form method="post" action="setting_edit" class="vstack gap-3">
+        <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
+        <input type="hidden" name="id" value="<?= $setting['id'] ?>">
+
+        <input class="form-control" name="text1" value="<?= esc($setting['text1']) ?>" placeholder="النص الأول">
+        <textarea class="form-control" name="text2" rows="3" placeholder="النص الثاني"><?= esc($setting['text2']) ?></textarea>
+
+        <button class="btn btn-orange align-self-start">حفظ</button>
+      </form>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="tab-content" id="footer">
+      <h5 class="mb-3">نص الفوتر</h5>
+      <form method="post" action="setting_edit" class="vstack gap-3">
+        <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
+        <input type="hidden" name="id" value="<?= $setting['id'] ?>">
+
+        <textarea class="form-control" name="footer_text" rows="4"><?= esc($setting['footer_text']) ?></textarea>
+
+        <button class="btn btn-orange align-self-start">حفظ</button>
+      </form>
+    </div>
+
   </div>
 </div>
-<?php endif; ?>
-
-<?php require __DIR__.'/partials/footer.php'; ?>
 
 <script>
-// معاينة الصور مع تغيير النص
-function previewFileCustom(input, textId, previewId){
-  const file = input.files[0];
-  const preview = document.getElementById(previewId);
-  const textEl = document.getElementById(textId);
-  if(file){
-    textEl.textContent = file.name;
-    preview.style.display = 'block';
-    preview.src = URL.createObjectURL(file);
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.onclick=()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
   }
-}
+});
 </script>
+
+<?php require __DIR__.'/partials/footer.php'; ?>
