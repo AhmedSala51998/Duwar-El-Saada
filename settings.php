@@ -178,7 +178,7 @@ $setting = $stmt->fetch();
 }
 </style>
 
-<h3 class="page-title mb-0 d-flex align-items-center">
+<h3 class="mb-4 page-title d-flex align-items-center gap-2">
   <span class="stat-icon me-2">
     <i class="bi bi-gear-fill"></i>
   </span>
