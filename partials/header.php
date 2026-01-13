@@ -1579,7 +1579,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
     }
     #toggleDarkDesktop .bubble {
       position: absolute;
-      border-radius: 50% !important;
+      border-radius: 50%;
       background-color: rgba(255,255,255,0.5);
       pointer-events: none;
       animation: rise 2s infinite;
@@ -1625,7 +1625,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
     }
     #toggleDarkDesktop .bubble {
       position: absolute;
-      border-radius: 50% !important;
+      border-radius: 50%;
       background-color: rgba(255,255,255,0.5);
       pointer-events: none;
       animation: rise 2s infinite;
