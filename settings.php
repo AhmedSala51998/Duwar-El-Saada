@@ -17,10 +17,6 @@ $setting = $stmt->fetch();
 }
 
 /* Layout */
-body{
-  background:var(--bg);
-  color:var(--text);
-}
 
 .settings-wrapper{
   display:grid;
