@@ -185,6 +185,74 @@ $setting = $stmt->fetch();
   align-items:center;
   justify-content:center;
 }
+
+
+/* ============================
+   🌙 DARK MODE GLOBAL THEME
+============================ */
+body.dark-mode {
+  background-color: #121212 !important;
+  color: #eaeaea !important;
+  transition: background 0.3s, color 0.3s;
+}
+
+body.dark-mode a {
+  color: #ff944d !important;
+}
+
+body.dark-mode .custom-navbar {
+  background: rgba(18,18,18,0.9) !important;
+  border-bottom: 1px solid #333 !important;
+}
+
+body.dark-mode i {
+  color: #ff944d !important;
+}
+
+/* Cards */
+body.dark-mode .tab-card,
+body.dark-mode .settings-content,
+body.dark-mode .custom-file-upload {
+  background-color: #1e1e1e !important;
+  border-color: #333 !important;
+  box-shadow: 0 10px 25px rgba(0,0,0,.5) !important;
+}
+
+body.dark-mode .tab-card.active {
+  background: linear-gradient(135deg, #2a2a2a, #1f1f1f) !important;
+  border-color: #ff944d !important;
+}
+
+/* Upload Hover */
+body.dark-mode .custom-file-upload:hover {
+  background: rgba(255,148,77,0.05) !important;
+  border-color: #ff944d !important;
+}
+
+/* Inputs / Textarea */
+body.dark-mode input.form-control,
+body.dark-mode textarea.form-control {
+  background: #2a2a2a !important;
+  color: #eaeaea !important;
+  border: 1px solid #444 !important;
+}
+
+/* Buttons */
+body.dark-mode .btn-orange {
+  background: #ff944d !important;
+  color: #121212 !important;
+  box-shadow: 0 6px 18px rgba(255,148,77,.5) !important;
+}
+
+body.dark-mode .btn-orange:hover {
+  opacity: .95;
+  transform: translateY(-2px);
+}
+
+/* Page Title */
+body.dark-mode .page-title {
+  color: #fff !important;
+}
 </style>
 
 <h3 class="mb-4 page-title d-flex align-items-center gap-2">
