@@ -2,41 +2,53 @@
 require __DIR__.'/partials/header.php';
 require_permission('systems_settings.view');
 
-/* Toast */
-if(!empty($_SESSION['toast'])):
-$toast=$_SESSION['toast']; unset($_SESSION['toast']);
-?>
-<div class="position-fixed top-0 end-0 p-3" style="z-index:2000">
-  <div class="toast align-items-center text-bg-<?= $toast['type'] ?> border-0 show">
-    <div class="d-flex">
-      <div class="toast-body"><?= esc($toast['msg']) ?></div>
-      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-    </div>
-  </div>
-</div>
-<?php endif; ?>
-
-<?php
-/* إعداد واحد فقط */
 $stmt = $pdo->query("SELECT * FROM system_settings ORDER BY id DESC LIMIT 1");
 $setting = $stmt->fetch();
 ?>
 
 <style>
+:root{
+  --bg:#ffffff;
+  --card:#ffffff;
+  --text:#212529;
+  --muted:#6c757d;
+  --border:#e5e5e5;
+  --orange:#ff6a00;
+  --soft-orange:#fff1e6;
+  --shadow:0 10px 25px rgba(0,0,0,.08);
+}
+
+/* 🌙 Dark mode */
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0f1115;
+    --card:#1a1d23;
+    --text:#f1f1f1;
+    --muted:#9aa0a6;
+    --border:#2a2e35;
+    --soft-orange:#2a1a10;
+    --shadow:0 10px 25px rgba(0,0,0,.4);
+  }
+}
+
+body{background:var(--bg); color:var(--text);}
+
 .settings-wrapper{
   display:flex;
-  gap:25px;
+  gap:24px;
   align-items:flex-start;
 }
 
 /* Tabs */
 .settings-tabs{
   width:230px;
-  background:#fff;
+  background:var(--card);
   border-radius:18px;
   padding:10px;
-  box-shadow:0 10px 25px rgba(0,0,0,.08);
+  box-shadow:var(--shadow);
+  border:1px solid var(--border);
 }
+
 .tab-btn{
   width:100%;
   border:0;
@@ -48,57 +60,85 @@ $setting = $stmt->fetch();
   align-items:center;
   gap:10px;
   font-weight:500;
-  color:#555;
+  color:var(--text);
   transition:.3s;
 }
-.tab-btn i{font-size:18px;}
+.tab-btn i{font-size:18px}
 .tab-btn:hover,
 .tab-btn.active{
-  background:#fff1e6;
-  color:#ff6a00;
+  background:var(--soft-orange);
+  color:var(--orange);
 }
 
 /* Content */
 .settings-content{
   flex:1;
-  background:#fff;
+  background:var(--card);
   border-radius:22px;
-  padding:25px;
-  box-shadow:0 10px 25px rgba(0,0,0,.08);
+  padding:24px;
+  box-shadow:var(--shadow);
+  border:1px solid var(--border);
 }
+
 .tab-content{display:none;}
 .tab-content.active{display:block;}
 
-/* Upload */
 .custom-file-upload{
-  border:2px dashed #ddd;
+  border:2px dashed var(--border);
   border-radius:14px;
-  padding:20px;
+  padding:18px;
   text-align:center;
   cursor:pointer;
   transition:.3s;
+  background:transparent;
 }
 .custom-file-upload:hover{
-  border-color:#ff6a00;
-  background:#fff7f0;
+  border-color:var(--orange);
+  background:var(--soft-orange);
 }
 .custom-file-upload i{
   font-size:36px;
-  color:#ff6a00;
+  color:var(--orange);
 }
 .custom-file-upload img{
   max-height:110px;
   margin-top:10px;
   border-radius:10px;
 }
-.custom-file-upload input{display:none;}
+.custom-file-upload input{display:none}
 
 .btn-orange{
-  background:#ff6a00;
+  background:var(--orange);
   color:#fff;
   border:0;
 }
 .btn-orange:hover{background:#e85d00}
+
+/* 📱 Mobile Responsive */
+@media(max-width: 768px){
+  .settings-wrapper{
+    flex-direction:column;
+  }
+
+  .settings-tabs{
+    width:100%;
+    display:flex;
+    gap:10px;
+    overflow-x:auto;
+  }
+
+  .tab-btn{
+    white-space:nowrap;
+    justify-content:center;
+    text-align:center;
+    min-width:140px;
+    flex-shrink:0;
+  }
+
+  .settings-content{
+    padding:18px;
+  }
+}
 </style>
 
 <h3 class="mb-4 d-flex align-items-center gap-2">
@@ -123,7 +163,6 @@ $setting = $stmt->fetch();
   <!-- Content -->
   <div class="settings-content">
 
-    <!-- LOGOS -->
     <div class="tab-content active" id="logos">
       <h5 class="mb-3">الشعارات</h5>
       <form method="post" action="setting_edit" enctype="multipart/form-data" class="vstack gap-3">
@@ -132,8 +171,8 @@ $setting = $stmt->fetch();
 
         <label class="custom-file-upload">
           <i class="bi bi-image"></i>
-          <p class="mb-1">الشعار الرئيسي</p>
-          <input type="file" name="main_logo" accept="image/*">
+          <p>الشعار الرئيسي</p>
+          <input type="file" name="main_logo">
           <?php if($setting['main_logo']): ?>
             <img src="<?= esc($setting['main_logo']) ?>">
           <?php endif; ?>
@@ -141,8 +180,8 @@ $setting = $stmt->fetch();
 
         <label class="custom-file-upload">
           <i class="bi bi-image"></i>
-          <p class="mb-1">الشعار الثانوي</p>
-          <input type="file" name="secondary_logo" accept="image/*">
+          <p>الشعار الثانوي</p>
+          <input type="file" name="secondary_logo">
           <?php if($setting['secondary_logo']): ?>
             <img src="<?= esc($setting['secondary_logo']) ?>">
           <?php endif; ?>
@@ -152,7 +191,6 @@ $setting = $stmt->fetch();
       </form>
     </div>
 
-    <!-- TEXTS -->
     <div class="tab-content" id="texts">
       <h5 class="mb-3">النصوص</h5>
       <form method="post" action="setting_edit" class="vstack gap-3">
@@ -160,13 +198,12 @@ $setting = $stmt->fetch();
         <input type="hidden" name="id" value="<?= $setting['id'] ?>">
 
         <input class="form-control" name="text1" value="<?= esc($setting['text1']) ?>" placeholder="النص الأول">
-        <textarea class="form-control" name="text2" rows="3" placeholder="النص الثاني"><?= esc($setting['text2']) ?></textarea>
+        <textarea class="form-control" name="text2" rows="3"><?= esc($setting['text2']) ?></textarea>
 
         <button class="btn btn-orange align-self-start">حفظ</button>
       </form>
     </div>
 
-    <!-- FOOTER -->
     <div class="tab-content" id="footer">
       <h5 class="mb-3">نص الفوتر</h5>
       <form method="post" action="setting_edit" class="vstack gap-3">
