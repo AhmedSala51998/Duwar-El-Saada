@@ -14,6 +14,7 @@ $setting = $stmt->fetch();
   --text:#111;
   --muted:#666;
   --border:#e5e5e5;
+  --radius:10px;
 }
 
 /* Layout */
@@ -152,6 +153,21 @@ $setting = $stmt->fetch();
   .custom-file-upload{
     padding:25px;
   }
+}
+.tab-card{
+  border-radius:var(--radius);
+}
+.settings-content{
+  border-radius:var(--radius);
+}
+.custom-file-upload{
+  border-radius:var(--radius);
+}
+.custom-file-upload img{
+  border-radius:var(--radius);
+}
+.btn-orange{
+  border-radius:var(--radius);
 }
 .page-title {
   font-weight: 700;
