@@ -169,10 +169,20 @@ $setting = $stmt->fetch();
 .btn-orange{
   border-radius:var(--radius);
 }
+.page-title {
+  font-weight: 700;
+  color: #2c3e50;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 </style>
 
-<h3 class="mb-4 d-flex align-items-center gap-2">
-  <i class="bi bi-gear-fill text-warning"></i> إعدادات النظام
+<h3 class="page-title mb-0 d-flex align-items-center">
+  <span class="stat-icon me-2">
+    <i class="bi bi-gear-fill"></i>
+  </span>
+  إعدادات النظام
 </h3>
 
 <div class="settings-wrapper">
