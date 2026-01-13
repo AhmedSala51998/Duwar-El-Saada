@@ -11,71 +11,69 @@ $setting = $stmt->fetch();
   --main:#ff6a00;
   --bg:#f6f7fb;
   --card:#ffffff;
-  --text:#222;
-  --muted:#777;
-  --border:#eee;
+  --text:#111;
+  --muted:#666;
+  --border:#e5e5e5;
 }
 
 /* Layout */
 
 .settings-wrapper{
   display:grid;
-  grid-template-columns:280px 1fr;
-  gap:30px;
+  grid-template-columns:300px 1fr;
+  gap:40px;
 }
 
 /* Tabs */
 .settings-tabs{
   display:flex;
   flex-direction:column;
-  gap:18px;
+  gap:20px;
 }
 
 .tab-card{
   background:var(--card);
-  border-radius:22px;
-  padding:22px 20px;
+  padding:26px 24px;
   cursor:pointer;
   display:flex;
   align-items:center;
-  gap:15px;
-  box-shadow:0 15px 40px rgba(0,0,0,.08);
-  border:2px solid transparent;
-  transition:.35s;
+  gap:18px;
+  border:2px solid var(--border);
+  transition:.25s;
 }
 
 .tab-card i{
-  font-size:26px;
+  font-size:30px;
   color:var(--main);
 }
 
 .tab-card h6{
   margin:0;
-  font-weight:600;
-  color:var(--text);
+  font-weight:700;
+  font-size:16px;
 }
 
 .tab-card p{
-  margin:0;
+  margin:2px 0 0;
   font-size:13px;
   color:var(--muted);
 }
 
 .tab-card:hover{
-  transform:translateY(-3px);
+  border-color:var(--main);
+  background:#fff7f0;
 }
 
 .tab-card.active{
   border-color:var(--main);
-  background:linear-gradient(135deg,#fff7f0,#ffffff);
+  background:#fff1e6;
 }
 
 /* Content */
 .settings-content{
   background:var(--card);
-  border-radius:26px;
-  padding:35px;
-  box-shadow:0 20px 50px rgba(0,0,0,.1);
+  padding:40px;
+  border:2px solid var(--border);
 }
 
 .tab-content{display:none;}
@@ -84,8 +82,7 @@ $setting = $stmt->fetch();
 /* Upload */
 .custom-file-upload{
   border:2px dashed var(--border);
-  border-radius:18px;
-  padding:28px;
+  padding:35px;
   text-align:center;
   transition:.3s;
   cursor:pointer;
@@ -93,18 +90,17 @@ $setting = $stmt->fetch();
 
 .custom-file-upload:hover{
   border-color:var(--main);
-  background:rgba(255,106,0,.05);
+  background:#fff7f0;
 }
 
 .custom-file-upload i{
-  font-size:42px;
+  font-size:46px;
   color:var(--main);
 }
 
 .custom-file-upload img{
-  max-height:130px;
-  margin-top:15px;
-  border-radius:14px;
+  max-height:140px;
+  margin-top:18px;
 }
 
 .custom-file-upload input{display:none;}
@@ -114,30 +110,47 @@ $setting = $stmt->fetch();
   background:var(--main);
   color:#fff;
   border:0;
-  padding:10px 26px;
-  border-radius:14px;
+  padding:12px 32px;
+  font-weight:600;
 }
 
 .btn-orange:hover{
   opacity:.9;
 }
 
-/* Mobile */
+/* ========== MOBILE UX PRO ========== */
 @media(max-width:991px){
+
   .settings-wrapper{
     grid-template-columns:1fr;
+    gap:25px;
   }
 
+  /* Tabs become BIG blocks */
   .settings-tabs{
-    flex-direction:row;
-    gap:15px;
-    overflow-x:auto;
-    padding-bottom:10px;
+    gap:14px;
   }
 
   .tab-card{
-    min-width:240px;
-    flex-shrink:0;
+    width:100%;
+    padding:22px;
+    gap:15px;
+  }
+
+  .tab-card i{
+    font-size:34px;
+  }
+
+  .tab-card h6{
+    font-size:15px;
+  }
+
+  .settings-content{
+    padding:25px;
+  }
+
+  .custom-file-upload{
+    padding:25px;
   }
 }
 </style>
