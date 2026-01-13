@@ -8,135 +8,140 @@ $setting = $stmt->fetch();
 
 <style>
 :root{
-  --bg:#ffffff;
+  --main:#ff6a00;
+  --bg:#f6f7fb;
   --card:#ffffff;
-  --text:#212529;
-  --muted:#6c757d;
-  --border:#e5e5e5;
-  --orange:#ff6a00;
-  --soft-orange:#fff1e6;
-  --shadow:0 10px 25px rgba(0,0,0,.08);
+  --text:#222;
+  --muted:#777;
+  --border:#eee;
 }
 
-/* 🌙 Dark mode */
-@media (prefers-color-scheme: dark){
-  :root{
-    --bg:#0f1115;
-    --card:#1a1d23;
-    --text:#f1f1f1;
-    --muted:#9aa0a6;
-    --border:#2a2e35;
-    --soft-orange:#2a1a10;
-    --shadow:0 10px 25px rgba(0,0,0,.4);
-  }
+/* Layout */
+body{
+  background:var(--bg);
+  color:var(--text);
 }
-
-body{background:var(--bg); color:var(--text);}
 
 .settings-wrapper{
-  display:flex;
-  gap:24px;
-  align-items:flex-start;
+  display:grid;
+  grid-template-columns:280px 1fr;
+  gap:30px;
 }
 
 /* Tabs */
 .settings-tabs{
-  width:230px;
-  background:var(--card);
-  border-radius:18px;
-  padding:10px;
-  box-shadow:var(--shadow);
-  border:1px solid var(--border);
+  display:flex;
+  flex-direction:column;
+  gap:18px;
 }
 
-.tab-btn{
-  width:100%;
-  border:0;
-  background:transparent;
-  padding:14px 16px;
-  border-radius:14px;
-  text-align:right;
+.tab-card{
+  background:var(--card);
+  border-radius:22px;
+  padding:22px 20px;
+  cursor:pointer;
   display:flex;
   align-items:center;
-  gap:10px;
-  font-weight:500;
-  color:var(--text);
-  transition:.3s;
+  gap:15px;
+  box-shadow:0 15px 40px rgba(0,0,0,.08);
+  border:2px solid transparent;
+  transition:.35s;
 }
-.tab-btn i{font-size:18px}
-.tab-btn:hover,
-.tab-btn.active{
-  background:var(--soft-orange);
-  color:var(--orange);
+
+.tab-card i{
+  font-size:26px;
+  color:var(--main);
+}
+
+.tab-card h6{
+  margin:0;
+  font-weight:600;
+  color:var(--text);
+}
+
+.tab-card p{
+  margin:0;
+  font-size:13px;
+  color:var(--muted);
+}
+
+.tab-card:hover{
+  transform:translateY(-3px);
+}
+
+.tab-card.active{
+  border-color:var(--main);
+  background:linear-gradient(135deg,#fff7f0,#ffffff);
 }
 
 /* Content */
 .settings-content{
-  flex:1;
   background:var(--card);
-  border-radius:22px;
-  padding:24px;
-  box-shadow:var(--shadow);
-  border:1px solid var(--border);
+  border-radius:26px;
+  padding:35px;
+  box-shadow:0 20px 50px rgba(0,0,0,.1);
 }
 
 .tab-content{display:none;}
 .tab-content.active{display:block;}
 
+/* Upload */
 .custom-file-upload{
   border:2px dashed var(--border);
-  border-radius:14px;
-  padding:18px;
+  border-radius:18px;
+  padding:28px;
   text-align:center;
-  cursor:pointer;
   transition:.3s;
-  background:transparent;
+  cursor:pointer;
 }
-.custom-file-upload:hover{
-  border-color:var(--orange);
-  background:var(--soft-orange);
-}
-.custom-file-upload i{
-  font-size:36px;
-  color:var(--orange);
-}
-.custom-file-upload img{
-  max-height:110px;
-  margin-top:10px;
-  border-radius:10px;
-}
-.custom-file-upload input{display:none}
 
+.custom-file-upload:hover{
+  border-color:var(--main);
+  background:rgba(255,106,0,.05);
+}
+
+.custom-file-upload i{
+  font-size:42px;
+  color:var(--main);
+}
+
+.custom-file-upload img{
+  max-height:130px;
+  margin-top:15px;
+  border-radius:14px;
+}
+
+.custom-file-upload input{display:none;}
+
+/* Buttons */
 .btn-orange{
-  background:var(--orange);
+  background:var(--main);
   color:#fff;
   border:0;
+  padding:10px 26px;
+  border-radius:14px;
 }
-.btn-orange:hover{background:#e85d00}
 
-/* 📱 Mobile Responsive */
-@media(max-width: 768px){
+.btn-orange:hover{
+  opacity:.9;
+}
+
+/* Mobile */
+@media(max-width:991px){
   .settings-wrapper{
-    flex-direction:column;
+    grid-template-columns:1fr;
   }
 
   .settings-tabs{
-    width:100%;
-    display:flex;
-    gap:10px;
+    flex-direction:row;
+    gap:15px;
     overflow-x:auto;
+    padding-bottom:10px;
   }
 
-  .tab-btn{
-    white-space:nowrap;
-    justify-content:center;
-    text-align:center;
-    min-width:140px;
+  .tab-card{
+    min-width:240px;
     flex-shrink:0;
-  }
-
-  .settings-content{
-    padding:18px;
   }
 }
 </style>
@@ -149,23 +154,38 @@ body{background:var(--bg); color:var(--text);}
 
   <!-- Tabs -->
   <div class="settings-tabs">
-    <button class="tab-btn active" data-tab="logos">
-      <i class="bi bi-image"></i> الشعارات
-    </button>
-    <button class="tab-btn" data-tab="texts">
-      <i class="bi bi-fonts"></i> النصوص
-    </button>
-    <button class="tab-btn" data-tab="footer">
-      <i class="bi bi-layout-text-window"></i> الفوتر
-    </button>
+    <div class="tab-card active" data-tab="logos">
+      <i class="bi bi-image"></i>
+      <div>
+        <h6>الشعارات</h6>
+        <p>إدارة صور النظام</p>
+      </div>
+    </div>
+
+    <div class="tab-card" data-tab="texts">
+      <i class="bi bi-fonts"></i>
+      <div>
+        <h6>النصوص</h6>
+        <p>العناوين والمحتوى</p>
+      </div>
+    </div>
+
+    <div class="tab-card" data-tab="footer">
+      <i class="bi bi-layout-text-window"></i>
+      <div>
+        <h6>الفوتر</h6>
+        <p>نص أسفل الموقع</p>
+      </div>
+    </div>
   </div>
 
   <!-- Content -->
   <div class="settings-content">
 
+    <!-- Logos -->
     <div class="tab-content active" id="logos">
-      <h5 class="mb-3">الشعارات</h5>
-      <form method="post" action="setting_edit" enctype="multipart/form-data" class="vstack gap-3">
+      <h4 class="mb-4">الشعارات</h4>
+      <form method="post" action="setting_edit" enctype="multipart/form-data" class="vstack gap-4">
         <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
         <input type="hidden" name="id" value="<?= $setting['id'] ?>">
 
@@ -187,32 +207,33 @@ body{background:var(--bg); color:var(--text);}
           <?php endif; ?>
         </label>
 
-        <button class="btn btn-orange align-self-start">حفظ</button>
+        <button class="btn-orange align-self-start">حفظ التغييرات</button>
       </form>
     </div>
 
+    <!-- Texts -->
     <div class="tab-content" id="texts">
-      <h5 class="mb-3">النصوص</h5>
+      <h4 class="mb-4">النصوص</h4>
       <form method="post" action="setting_edit" class="vstack gap-3">
         <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
         <input type="hidden" name="id" value="<?= $setting['id'] ?>">
 
         <input class="form-control" name="text1" value="<?= esc($setting['text1']) ?>" placeholder="النص الأول">
-        <textarea class="form-control" name="text2" rows="3"><?= esc($setting['text2']) ?></textarea>
+        <textarea class="form-control" name="text2" rows="4"><?= esc($setting['text2']) ?></textarea>
 
-        <button class="btn btn-orange align-self-start">حفظ</button>
+        <button class="btn-orange align-self-start">حفظ</button>
       </form>
     </div>
 
+    <!-- Footer -->
     <div class="tab-content" id="footer">
-      <h5 class="mb-3">نص الفوتر</h5>
+      <h4 class="mb-4">الفوتر</h4>
       <form method="post" action="setting_edit" class="vstack gap-3">
         <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
         <input type="hidden" name="id" value="<?= $setting['id'] ?>">
 
-        <textarea class="form-control" name="footer_text" rows="4"><?= esc($setting['footer_text']) ?></textarea>
-
-        <button class="btn btn-orange align-self-start">حفظ</button>
+        <textarea class="form-control" name="footer_text" rows="5"><?= esc($setting['footer_text']) ?></textarea>
+        <button class="btn-orange align-self-start">حفظ</button>
       </form>
     </div>
 
@@ -220,12 +241,12 @@ body{background:var(--bg); color:var(--text);}
 </div>
 
 <script>
-document.querySelectorAll('.tab-btn').forEach(btn=>{
-  btn.onclick=()=>{
-    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+document.querySelectorAll('.tab-card').forEach(tab=>{
+  tab.onclick=()=>{
+    document.querySelectorAll('.tab-card').forEach(t=>t.classList.remove('active'));
     document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById(btn.dataset.tab).classList.add('active');
+    tab.classList.add('active');
+    document.getElementById(tab.dataset.tab).classList.add('active');
   }
 });
 </script>
