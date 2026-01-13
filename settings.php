@@ -15,7 +15,7 @@ $setting = $stmt->fetch();
   --text: #111;
   --muted: #666;
   --border: #e5e5e5;
-  --radius: 5px;
+  --radius: 10px;
   --shadow: 0 10px 30px rgba(0,0,0,.08);
 }
 
