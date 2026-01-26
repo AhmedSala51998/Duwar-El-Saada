@@ -100,7 +100,7 @@ $purchases = $stmt->fetchAll(PDO::FETCH_ASSOC);
     FROM expenses
     WHERE 1=1 $expensesFilter
 ");*/
-$stmt = $pdo->prepare("
+/*$stmt = $pdo->prepare("
     SELECT 
         CASE 
             WHEN e.sub_expense = 'أخرى' OR e.sub_expense IS NULL OR e.sub_expense = '' 
@@ -127,6 +127,25 @@ $stmt = $pdo->prepare("
 
     FROM expenses e
     WHERE 1=1 $expensesFilter
+");*/
+$stmt = $pdo->prepare("
+    SELECT 
+        CASE 
+            WHEN e.sub_expense = 'أخرى' OR e.sub_expense IS NULL OR e.sub_expense = '' 
+            THEN CONCAT(e.main_expense, ' - ', e.expense_desc)
+            ELSE CONCAT(e.main_expense, ' - ', e.sub_expense)
+        END AS name,
+
+        e.expense_amount AS `before`,
+
+        COALESCE(e.vat_value, 0) AS `vat`,
+
+        e.expense_amount + COALESCE(e.vat_value, 0) AS `after`,
+
+        e.created_at
+
+    FROM expenses e
+    WHERE 1=1 $dateFilterExpenses
 ");
 $stmt->execute($params);
 $expenses = $stmt->fetchAll(PDO::FETCH_ASSOC);
