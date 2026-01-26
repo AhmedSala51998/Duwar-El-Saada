@@ -145,7 +145,7 @@ $stmt = $pdo->prepare("
         e.created_at
 
     FROM expenses e
-    WHERE 1=1 $dateFilterExpenses
+    WHERE 1=1 $expensesFilter
 ");
 $stmt->execute($params);
 $expenses = $stmt->fetchAll(PDO::FETCH_ASSOC);
