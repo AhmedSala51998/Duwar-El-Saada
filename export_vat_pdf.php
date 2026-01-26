@@ -183,24 +183,21 @@ $stmt = $pdo->prepare("
     SELECT 
         CASE 
             WHEN e.sub_expense = 'أخرى' OR e.sub_expense IS NULL OR e.sub_expense = '' 
-            THEN CONCAT(e.main_expense, ' - ', e.expense_desc)
+                THEN CONCAT(e.main_expense, ' - ', e.expense_desc)
             ELSE CONCAT(e.main_expense, ' - ', e.sub_expense)
         END AS name,
 
         CASE 
-            WHEN e.has_vat = 1 THEN e.expense_amount 
-            ELSE e.total_amount 
+            WHEN e.has_vat = 1 THEN e.expense_amount
+            ELSE e.total_amount
         END AS `before`,
 
         CASE 
-            WHEN e.has_vat = 1 THEN e.vat_value 
-            ELSE 0 
+            WHEN e.has_vat = 1 THEN COALESCE(e.vat_value, 0)
+            ELSE 0
         END AS `vat`,
 
-        CASE 
-            WHEN e.has_vat = 1 THEN e.total_amount 
-            ELSE e.total_amount 
-        END AS `after`,
+        e.total_amount AS `after`,
 
         e.created_at
 
