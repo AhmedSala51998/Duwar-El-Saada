@@ -451,7 +451,7 @@ document.addEventListener("DOMContentLoaded", function() {
           <div id="branchesContainer">
             <!-- الصف الأول -->
             <div class="branch-row row g-2 mb-2 align-items-end">
-              <div class="col-md-5">
+              <div class="col-md-4">
                 <label class="form-label">اسم الفرع</label>
                 <input name="branch_name[]" class="form-control" placeholder="اسم الفرع" required>
               </div>
@@ -459,7 +459,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 <label class="form-label">العنوان</label>
                 <input name="address[]" class="form-control" placeholder="العنوان بالتفصيل" required>
               </div>
-              <div class="col-md-2">
+              <div class="col-md-4">
                 <label class="form-label">رقم الجوال</label>
                 <input name="phone[]" class="form-control" placeholder="05xxxxxxxx" required>
               </div>
@@ -484,13 +484,13 @@ document.getElementById('addBranchRow').addEventListener('click', function(){
     let row = document.createElement('div');
     row.classList.add('branch-row','row','g-2','mb-2','align-items-end');
     row.innerHTML = `
-      <div class="col-md-5">
+      <div class="col-md-4">
         <input name="branch_name[]" class="form-control" placeholder="اسم الفرع" required>
       </div>
       <div class="col-md-5">
         <input name="address[]" class="form-control" placeholder="العنوان بالتفصيل" required>
       </div>
-      <div class="col-md-2 d-flex align-items-center gap-1">
+      <div class="col-md-3 d-flex align-items-center gap-1">
         <input name="phone[]" class="form-control" placeholder="05xxxxxxxx" required>
         <button type="button" class="btn btn-danger btn-sm removeBranchRow"><i class="bi bi-trash"></i></button>
       </div>
