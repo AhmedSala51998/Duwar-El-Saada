@@ -31,7 +31,8 @@ try {
         'expenses',
         'purchases',
         'assets',
-        'custodies'
+        'custodies',
+        'orders_purchases'
     ];
 
     foreach ($relations as $table) {
