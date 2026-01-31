@@ -4,11 +4,6 @@ require_permission('branches.add_group'); // صلاحية الإضافة
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? '')) {
 
-    if (!isset($_POST['save'])) {
-        header('Location: ' . BASE_URL . '/branches.php');
-        exit;
-    }
-
     // التأكد من وجود بيانات فروع
     if (empty($_POST['branch_name']) || !is_array($_POST['branch_name'])) {
         $_SESSION['toast'] = ['type'=>'warning','msg'=>'لم يتم إدخال أي فرع'];
@@ -36,22 +31,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
             $check = $pdo->prepare("SELECT id FROM branches WHERE branch_name = ? LIMIT 1");
             $check->execute([$name]);
             if ($check->fetch()) {
+                $pdo->rollBack();
                 $_SESSION['toast'] = [
                     'type' => 'danger',
                     'msg'  => "اسم الفرع \"$name\" موجود بالفعل"
                 ];
-                $pdo->rollBack();
                 header('Location: ' . BASE_URL . '/branches.php');
                 exit;
             }
 
             // تحقق من رقم الجوال السعودي
             if (!preg_match('/^05\d{8}$/', $phone)) {
+                $pdo->rollBack();
                 $_SESSION['toast'] = [
                     'type' => 'danger',
                     'msg'  => "رقم الجوال \"$phone\" للفرع \"$name\" غير صالح"
                 ];
-                $pdo->rollBack();
                 header('Location: ' . BASE_URL . '/branches.php');
                 exit;
             }
@@ -71,4 +66,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
 
 header('Location: ' . BASE_URL . '/branches.php');
 exit;
-?>
