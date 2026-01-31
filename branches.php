@@ -150,7 +150,7 @@ require_permission('branches.view');
 
 $kw = trim($_GET['kw'] ?? '');
 $page = max(1, (int)($_GET['page'] ?? 1));
-$per_page = 2;
+$per_page = 10;
 $offset = ($page - 1) * $per_page;
 
 /* count */
