@@ -69,40 +69,60 @@ document.addEventListener("DOMContentLoaded", function() {
     <?php endif; ?>
   </div>
 </div>
-<div class="table-responsive bg-white rounded shadow-sm">
-<table class="table custom-table align-middle text-center">
-<thead>
-<tr>
-  <th>#</th>
-  <th>اسم الفرع</th>
-  <th>العنوان</th>
-  <th>رقم الجوال</th>
-  <th>تاريخ الإنشاء</th>
-  <th>عمليات</th>
-</tr>
-</thead>
-<tbody>
-<?php foreach($rows as $r): ?>
-<tr>
-  <td><?= $r['id'] ?></td>
-  <td><?= esc($r['branch_name']) ?></td>
-  <td><?= esc($r['address']) ?></td>
-  <td><?= esc($r['phone']) ?></td>
-  <td class="small text-muted"><?= $r['created_at'] ?></td>
-  <td>
-    <button class="btn btn-sm btn-outline-warning"
-            data-bs-toggle="modal"
-            data-bs-target="#edit<?= $r['id'] ?>">
-      <i class="bi bi-pencil"></i>
-    </button>
+<div class="table-responsive shadow-sm rounded-3 border bg-white p-2">
+  <table class="table table-hover align-middle mb-0 custom-table text-center">
+    <thead class="table-light border-bottom border-2 small-header text-secondary fw-semibold">
+      <tr>
+        <th>#</th>
+        <th>اسم الفرع</th>
+        <th>العنوان</th>
+        <th>رقم الجوال</th>
+        <th>تاريخ الإنشاء</th>
+        <?php if(has_permission('branches.processes')): ?><th>عمليات</th><?php endif; ?>
+      </tr>
+    </thead>
+    <tbody>
+    <?php foreach($rows as $r): ?>
+    <tr class="text-center">
+    <td class="fw-bold text-muted"><?= $r['id'] ?></td>
+    <td><?= esc($r['branch_name']) ?></td>
+    <td><?= esc($r['address']) ?></td>
+    <td><?= esc($r['phone']) ?></td>
+    <td><?= esc($r['created_at'] ? date('Y-m-d', strtotime($r['created_at'])) : '') ?></td>
+    <?php if(has_permission('branches.processes')): ?>
+    <td class="text-center">
+        <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#actionsBranch<?= $r['id'] ?>">
+        <i class="bi bi-gear-fill"></i>
+        </button>
 
-    <button class="btn btn-sm btn-outline-danger"
-            data-bs-toggle="modal"
-            data-bs-target="#del<?= $r['id'] ?>">
-      <i class="bi bi-trash"></i>
-    </button>
-  </td>
-</tr>
+        <div class="modal fade" id="actionsBranch<?= $r['id'] ?>" tabindex="-1" aria-labelledby="actionsBranchLabel<?= $r['id'] ?>" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-light">
+                <h5 class="modal-title" id="actionsBranchLabel<?= $r['id'] ?>">
+                <i class="bi bi-gear-fill me-1"></i> العمليات
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="إغلاق"></button>
+            </div>
+            <div class="modal-body text-center">
+                <?php if(has_permission('branches.edit')): ?>
+                <button class="btn btn-outline-warning w-100 mb-2" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#edit<?= $r['id'] ?>">
+                <i class="bi bi-pencil me-2"></i> تعديل
+                </button>
+                <?php endif; ?>
+                <?php if(has_permission('branches.delete')): ?>
+                <button class="btn btn-outline-danger w-100" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#del<?= $r['id'] ?>">
+                <i class="bi bi-trash me-2"></i> حذف
+                </button>
+                <?php endif; ?>
+            </div>
+            </div>
+        </div>
+        </div>
+
+    </td>
+    <?php endif; ?>
+    </tr>
 <!-- مودال تعديل فرع -->
 <div class="modal fade" id="edit<?= $r['id'] ?>" tabindex="-1">
   <div class="modal-dialog">
