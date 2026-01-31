@@ -213,7 +213,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     <!-- زر إضافة فرع -->
     <?php if(has_permission('branches.add')): ?>
-      <button class="btn btn-orange d-flex align-items-center" style="height:40px;">
+      <button class="btn btn-orange d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#addBranch" style="height:40px;">
         <i class="bi bi-plus-lg me-1"></i> فرع
       </button>
     <?php endif; ?>
