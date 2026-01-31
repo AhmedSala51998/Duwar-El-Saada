@@ -4,7 +4,7 @@ require_permission('branches.view');
 
 $kw = trim($_GET['kw'] ?? '');
 $page = max(1, (int)($_GET['page'] ?? 1));
-$per_page = 10;
+$per_page = 2;
 $offset = ($page - 1) * $per_page;
 
 /* count */
@@ -26,6 +26,28 @@ $stmt = $pdo->prepare("
 $stmt->execute(["%$kw%", "%$kw%"]);
 $rows = $stmt->fetchAll();
 ?>
+<?php if(!empty($_SESSION['toast'])): 
+$toast = $_SESSION['toast'];
+unset($_SESSION['toast']); 
+?>
+<div class="position-fixed top-0 end-0 p-3" style="z-index: 2000">
+  <div id="liveToast" class="toast align-items-center text-bg-<?= $toast['type'] ?> border-0 show fade" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="d-flex">
+      <div class="toast-body"><?= esc($toast['msg']) ?></div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+    </div>
+  </div>
+</div>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    let el = document.getElementById("liveToast");
+    if(el){
+      let toast = new bootstrap.Toast(el, { delay: 2500 });
+      toast.show();
+    }
+});
+</script>
+<?php endif; ?>
 <div class="d-flex justify-content-between align-items-center mb-3">
   <h3 class="page-title">
     <span class="stat-icon"><i class="bi bi-diagram-3"></i></span>
@@ -35,7 +57,7 @@ $rows = $stmt->fetchAll();
   <div class="d-flex gap-2">
     <form method="get" class="d-flex gap-2">
       <input type="text" name="kw" class="form-control"
-             placeholder="بحث عن فرع أو رقم..."
+             placeholder="بحث عن فرع بالاسم..."
              value="<?= esc($kw) ?>">
       <button class="btn btn-orange"><i class="bi bi-search"></i></button>
     </form>
@@ -216,6 +238,7 @@ $rows = $stmt->fetchAll();
 
 <div class="modal-header">
   <h5>إضافة فرع</h5>
+  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
 
 <div class="modal-body vstack gap-3">
