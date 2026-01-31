@@ -194,25 +194,30 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 </script>
 <?php endif; ?>
-<div class="d-flex justify-content-between align-items-center mb-3">
-  <h3 class="page-title">
-    <span class="stat-icon"><i class="bi bi-diagram-3"></i></span>
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3">
+  
+  <!-- العنوان -->
+  <h3 class="page-title mb-2 mb-md-0 d-flex align-items-center">
+    <span class="stat-icon me-2"><i class="bi bi-diagram-3"></i></span>
     الفروع
   </h3>
 
-  <div class="d-flex gap-2">
-    <form method="get" class="d-flex gap-2">
-      <input type="text" name="kw" class="form-control"
-             placeholder="بحث عن فرع بالاسم..."
-             value="<?= esc($kw) ?>">
+  <!-- البحث + زر الإضافة -->
+  <div class="d-flex flex-column flex-sm-row gap-2 w-100 w-md-auto">
+    
+    <!-- فورم البحث -->
+    <form method="get" class="d-flex gap-2 flex-grow-1">
+      <input type="text" name="kw" class="form-control" placeholder="بحث عن فرع بالاسم..." value="<?= esc($kw) ?>">
       <button class="btn btn-orange"><i class="bi bi-search"></i></button>
     </form>
 
+    <!-- زر الإضافة -->
     <?php if(has_permission('branches.add')): ?>
-      <button class="btn btn-orange" data-bs-toggle="modal" data-bs-target="#addBranch">
+      <button class="btn btn-orange flex-shrink-0" data-bs-toggle="modal" data-bs-target="#addBranch">
         <i class="bi bi-plus-lg"></i> فرع
       </button>
     <?php endif; ?>
+
   </div>
 </div>
 <div class="table-responsive shadow-sm rounded-3 border bg-white p-2">
@@ -230,11 +235,11 @@ document.addEventListener("DOMContentLoaded", function() {
     <tbody>
     <?php foreach($rows as $r): ?>
     <tr class="text-center">
-    <td class="fw-bold text-muted"><?= $r['id'] ?></td>
-    <td><?= esc($r['branch_name']) ?></td>
-    <td><?= esc($r['address']) ?></td>
-    <td><?= esc($r['phone']) ?></td>
-    <td><?= esc($r['created_at'] ? date('Y-m-d', strtotime($r['created_at'])) : '') ?></td>
+    <td data-label="رقم الفرع" class="fw-bold text-muted"><?= $r['id'] ?></td>
+    <td data-label="اسم الفرع"><?= esc($r['branch_name']) ?></td>
+    <td data-label="عنوان الفرع"><?= esc($r['address']) ?></td>
+    <td data-label="رقم الجوال"><?= esc($r['phone']) ?></td>
+    <td data-label="تاريخ الاضافة"><?= esc($r['created_at'] ? date('Y-m-d', strtotime($r['created_at'])) : '') ?></td>
     <?php if(has_permission('branches.processes')): ?>
     <td class="text-center">
         <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#actionsBranch<?= $r['id'] ?>">
