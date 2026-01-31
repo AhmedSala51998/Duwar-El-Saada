@@ -216,6 +216,11 @@ document.addEventListener("DOMContentLoaded", function() {
       <button class="btn btn-orange d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#addBranch" style="height:40px;">
         <i class="bi bi-plus-lg me-1"></i> فرع
       </button>
+
+      <!-- زر إضافة مجموعة فروع -->
+      <button class="btn btn-orange d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#addBranchesMulti" style="height:40px;">
+        <i class="bi bi-plus-lg me-1"></i> اضافة مجموعة من الفروع 
+      </button>
     <?php endif; ?>
 
   </div>
@@ -425,4 +430,77 @@ document.addEventListener("DOMContentLoaded", function() {
 </div>
 </div>
 </div>
+<!-- زر إضافة فروع متعددة -->
+<?php if(has_permission('branches.add_group')): ?>
+<button class="btn btn-warning d-flex align-items-center text-dark" data-bs-toggle="modal" data-bs-target="#addBranchesMulti">
+  <i class="bi bi-layers me-1"></i> إضافة عدة فروع
+</button>
+<?php endif; ?>
+
+<!-- مودال إضافة فروع متعددة -->
+<div class="modal fade" id="addBranchesMulti">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form method="post" action="branches_add_multi">
+        <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
+        <div class="modal-header">
+          <h5 class="modal-title">إضافة فروع متعددة</h5>
+          <button class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div id="branchesContainer">
+            <!-- الصف الأول -->
+            <div class="branch-row row g-2 mb-2 align-items-end">
+              <div class="col-md-5">
+                <label class="form-label">اسم الفرع</label>
+                <input name="branch_name[]" class="form-control" placeholder="اسم الفرع" required>
+              </div>
+              <div class="col-md-5">
+                <label class="form-label">العنوان</label>
+                <input name="address[]" class="form-control" placeholder="العنوان بالتفصيل" required>
+              </div>
+              <div class="col-md-2">
+                <label class="form-label">رقم الجوال</label>
+                <input name="phone[]" class="form-control" placeholder="05xxxxxxxx" required>
+              </div>
+            </div>
+          </div>
+          <button type="button" class="btn btn-outline-secondary btn-sm" id="addBranchRow">
+            <i class="bi bi-plus-lg me-1"></i> إضافة صف آخر
+          </button>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-orange">حفظ الفروع</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+// إضافة صف جديد ديناميكي
+document.getElementById('addBranchRow').addEventListener('click', function(){
+    let container = document.getElementById('branchesContainer');
+    let row = document.createElement('div');
+    row.classList.add('branch-row','row','g-2','mb-2','align-items-end');
+    row.innerHTML = `
+      <div class="col-md-5">
+        <input name="branch_name[]" class="form-control" placeholder="اسم الفرع" required>
+      </div>
+      <div class="col-md-5">
+        <input name="address[]" class="form-control" placeholder="العنوان بالتفصيل" required>
+      </div>
+      <div class="col-md-2 d-flex align-items-center gap-1">
+        <input name="phone[]" class="form-control" placeholder="05xxxxxxxx" required>
+        <button type="button" class="btn btn-danger btn-sm removeBranchRow"><i class="bi bi-trash"></i></button>
+      </div>
+    `;
+    container.appendChild(row);
+
+    // حذف صف عند الضغط على زر الحذف
+    row.querySelector('.removeBranchRow').addEventListener('click', function(){
+        row.remove();
+    });
+});
+</script>
 <?php require __DIR__.'/partials/footer.php'; ?>
