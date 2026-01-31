@@ -2869,11 +2869,11 @@ dotlottie-wc {
       <img src="<?= BASE_URL ?><?= esc(getSystemSettings('main_logo') ?: '/assets/logo_header2.png') ?>" alt="Logo" class="logo-modern">
     </a>
 
-    <div class="welcome-box d-none d-md-block mx-auto text-center">
+    <!--<div class="welcome-box d-none d-md-block mx-auto text-center">
       <span class="welcome-text">
         مرحبًا <strong><?= esc(current_user()) ?></strong> — نتمنى لك يومًا سعيدًا داخل نظام دوّار السعادة
       </span>
-    </div>
+    </div>-->
 
     <!-- ✅ زر القائمة على الشمال (يظهر فقط في الموبايل) -->
     <!-- مجموعة أزرار الموبايل (القائمة + الداكن) -->
