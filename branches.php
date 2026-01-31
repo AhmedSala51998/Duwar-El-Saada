@@ -195,29 +195,23 @@ document.addEventListener("DOMContentLoaded", function() {
 </script>
 <?php endif; ?>
 <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3">
-
-  <!-- العنوان -->
+  
   <h3 class="page-title d-flex align-items-center mb-2 mb-md-0">
     <span class="stat-icon me-2"><i class="bi bi-diagram-3"></i></span>
     الفروع
   </h3>
 
-  <!-- البحث + زر الإضافة -->
-  <div class="d-flex flex-column flex-sm-row gap-2 w-100 w-md-auto">
-
-    <!-- فورم البحث -->
+  <div class="d-flex flex-column flex-sm-row gap-2 w-100 w-md-auto align-items-stretch">
     <form method="get" class="d-flex gap-2 flex-grow-1">
       <input type="text" name="kw" class="form-control" placeholder="بحث عن فرع بالاسم..." value="<?= esc($kw) ?>">
       <button class="btn btn-orange flex-shrink-0"><i class="bi bi-search"></i></button>
     </form>
 
-    <!-- زر الإضافة -->
     <?php if(has_permission('branches.add')): ?>
       <button class="btn btn-orange flex-shrink-0">
         <i class="bi bi-plus-lg me-1"></i> فرع
       </button>
     <?php endif; ?>
-
   </div>
 </div>
 <div class="table-responsive shadow-sm rounded-3 border bg-white p-2">
