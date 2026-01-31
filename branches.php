@@ -3,80 +3,19 @@ require __DIR__ . '/partials/header.php';
 require_permission('branches.view');
 
 /* ===============================
-   Pagination Setup
+   جلب الفروع
 ================================ */
-$per_page = 10;
-$page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
-$offset = ($page - 1) * $per_page;
-
-/* ===============================
-   Total Rows
-================================ */
-$total_stmt = $pdo->query("SELECT COUNT(*) FROM branches");
-$total_rows = $total_stmt->fetchColumn();
-$total_pages = ceil($total_rows / $per_page);
-
-/* ===============================
-   Fetch Branches
-================================ */
-$stmt = $pdo->prepare("
+$stmt = $pdo->query("
     SELECT id, name, address, phone, created_at
     FROM branches
     ORDER BY id DESC
-    LIMIT :limit OFFSET :offset
 ");
-$stmt->bindValue(':limit', $per_page, PDO::PARAM_INT);
-$stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
-$stmt->execute();
-
 $branches = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
-<!-- ===== CSS خاص بالجدول والPagination ===== -->
-<style>
-.table-responsive {
-    border-radius: 0.75rem;
-    background: #fff;
-    padding: 10px;
-    box-shadow: 0 0 8px rgba(0,0,0,0.05);
-}
-.custom-table {
-    border-collapse: separate;
-    border-spacing: 0;
-    font-size: 0.9rem;
-}
-.custom-table thead th {
-    background: #f8f9fa;
-    font-weight: 600;
-    border-bottom: 2px solid #dee2e6;
-    text-align: center;
-}
-.custom-table tbody tr:hover {
-    background-color: #f1f5ff;
-}
-.custom-table td, .custom-table th {
-    padding: 0.6rem 0.75rem;
-    vertical-align: middle;
-    text-align: center;
-}
-.pagination .page-link {
-    color: #0d6efd;
-    border-color: #0d6efd;
-}
-.pagination .page-item.active .page-link {
-    background-color: #0d6efd;
-    color: #fff;
-    border-color: #0d6efd;
-}
-.pagination .page-link:hover {
-    background-color: #0d6efd;
-    color: #fff;
-}
-</style>
-
 <div class="page-content">
 
-  <!-- ===== Page Header ===== -->
+  <!-- ===== Header ===== -->
   <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
     <h3 class="page-title mb-0">
       <span class="stat-icon">
@@ -143,27 +82,6 @@ $branches = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </table>
   </div>
 
-  <!-- ===== Pagination ===== -->
-  <?php if($total_pages > 1): ?>
-  <nav class="mt-3">
-    <ul class="pagination justify-content-center mb-0">
-      <li class="page-item <?= $page <= 1 ? 'disabled' : '' ?>">
-        <a class="page-link" href="?page=<?= $page-1 ?>">السابق</a>
-      </li>
-
-      <?php for($i = 1; $i <= $total_pages; $i++): ?>
-        <li class="page-item <?= $i == $page ? 'active' : '' ?>">
-          <a class="page-link" href="?page=<?= $i ?>"><?= $i ?></a>
-        </li>
-      <?php endfor; ?>
-
-      <li class="page-item <?= $page >= $total_pages ? 'disabled' : '' ?>">
-        <a class="page-link" href="?page=<?= $page+1 ?>">التالي</a>
-      </li>
-    </ul>
-  </nav>
-  <?php endif; ?>
-
 </div>
 
 <!-- ===============================
@@ -204,7 +122,7 @@ $branches = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </div>
 <?php endif; ?>
 
-<!-- Edit & Delete Modals -->
+<!-- Edit & Delete -->
 <?php foreach($branches as $branch): ?>
 
 <?php if(has_permission('branches.edit')): ?>
@@ -254,8 +172,8 @@ $branches = $stmt->fetchAll(PDO::FETCH_ASSOC);
       </div>
 
       <div class="modal-body">
-        هل أنت متأكد من حذف فرع
-        <strong><?= htmlspecialchars($branch['name']) ?></strong>؟
+        هل أنت متأكد من حذف فرع  
+        <strong><?= htmlspecialchars($branch['name']) ?></strong> ؟
       </div>
 
       <div class="modal-footer">
