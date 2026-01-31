@@ -430,12 +430,6 @@ document.addEventListener("DOMContentLoaded", function() {
 </div>
 </div>
 </div>
-<!-- زر إضافة فروع متعددة -->
-<?php if(has_permission('branches.add_group')): ?>
-<button class="btn btn-warning d-flex align-items-center text-dark" data-bs-toggle="modal" data-bs-target="#addBranchesMulti">
-  <i class="bi bi-layers me-1"></i> إضافة عدة فروع
-</button>
-<?php endif; ?>
 
 <!-- مودال إضافة فروع متعددة -->
 <div class="modal fade" id="addBranchesMulti">
