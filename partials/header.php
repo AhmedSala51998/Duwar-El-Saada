@@ -3019,6 +3019,12 @@ dotlottie-wc {
     </a>
     <?php endif ?>
 
+    <?php if(has_permission('branches.view')): ?>
+    <a class="mobile-item <?= $current_page=='branches.php'?'active':'' ?>" href="<?= BASE_URL ?>/branches.php">
+      <i class="bi bi-diagram-3"></i> الفروع
+    </a>
+    <?php endif ?>
+
     <?php if(has_permission('reports.view')): ?>
     <a class="mobile-item <?= $current_page=='reports.php'?'active':'' ?>" href="<?= BASE_URL ?>/reports.php">
       <i class="bi bi-graph-up"></i> التقارير
@@ -3127,6 +3133,12 @@ dotlottie-wc {
       <?php if(has_permission('expenses.view')): ?>
       <a class="sidebar-link <?= $current_page=='expenses.php'?'active':'' ?>" href="<?= BASE_URL ?>/expenses.php">
         <i class="bi bi-cash-stack"></i> المصروفات
+      </a>
+      <?php endif ?>
+
+      <?php if(has_permission('branches.view')): ?>
+      <a class="sidebar-link <?= $current_page=='branches.php'?'active':'' ?>" href="<?= BASE_URL ?>/branches.php">
+        <i class="bi bi-diagram-3"></i> الفروع
       </a>
       <?php endif ?>
 
