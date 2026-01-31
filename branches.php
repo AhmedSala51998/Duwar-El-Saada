@@ -459,7 +459,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 <label class="form-label">العنوان</label>
                 <input name="address[]" class="form-control" placeholder="العنوان بالتفصيل" required>
               </div>
-              <div class="col-md-4">
+              <div class="col-md-3">
                 <label class="form-label">رقم الجوال</label>
                 <input name="phone[]" class="form-control" placeholder="05xxxxxxxx" required>
               </div>
