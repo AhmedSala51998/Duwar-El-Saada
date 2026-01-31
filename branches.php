@@ -1,3 +1,149 @@
+<style>
+.custom-file-upload {
+    border: 2px dashed #ccc;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 20px;
+    text-align: center;
+    transition: all 0.3s ease-in-out;
+    background: #f9f9f9;
+}
+.custom-file-upload:hover {
+    border-color: #0d6efd;
+    background: #eef5ff;
+}
+.custom-file-upload i {
+    font-size: 40px;
+    color: #0d6efd;
+    margin-bottom: 10px;
+}
+.custom-file-upload span {
+    font-size: 14px;
+    color: #666;
+}
+.custom-file-upload img {
+    max-height: 120px;
+    margin-top: 10px;
+    border-radius: 8px;
+}
+input[type="file"] {
+    display: none;
+}
+
+/* Pagination Styling */
+.pagination .page-link {
+    color: #ff6a00;
+    border-color: #ff6a00;
+    transition: all 0.2s ease-in-out;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #ff6a00;
+    border-color: #ff6a00;
+    color: #fff;
+}
+
+.pagination .page-link:hover {
+    background-color: #ff6a00;
+    color: #fff;
+    border-color: #ff6a00;
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #aaa;
+    border-color: #ccc;
+}
+
+/* --- تحسين مظهر الجدول --- */
+.custom-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.9rem; /* تصغير النص قليلاً للراحة البصرية */
+}
+
+.custom-table thead th {
+  background: #f8f9fa;
+  color: #495057;
+  font-weight: 600;
+  border-bottom: 2px solid #dee2e6;
+  vertical-align: middle;
+  font-size: 0.85rem; /* تصغير الخط في العناوين */
+  white-space: nowrap; /* منع كسر السطر في العناوين */
+}
+
+.custom-table tbody tr {
+  transition: all 0.2s ease-in-out;
+}
+
+.custom-table tbody tr:hover {
+  background-color: #f1f5ff;
+  box-shadow: inset 0 0 0 9999px rgba(0,0,0,0.02);
+}
+
+
+.custom-table td,
+.custom-table th {
+  padding: 0.6rem 0.75rem;
+  vertical-align: middle;
+}
+
+.custom-table .badge {
+  font-size: 0.8rem;
+  border-radius: 0.5rem;
+  background: #f0f2f5;
+}
+
+.custom-table td {
+  white-space: normal !important; /* السماح بالنزول للسطر */
+  word-break: break-word; /* كسر الكلمات الطويلة */
+  vertical-align: top; /* خليه يبدأ من فوق */
+  line-height: 1.4;
+}
+
+.small-header th {
+  padding: 0.5rem 0.6rem;
+}
+
+/* جعل الجدول أنحف وأنيق */
+.table-responsive {
+  border-radius: 0.75rem;
+}
+
+.custom-table th:first-child {
+    width: 60px; /* عرض ثابت */
+    font-size: 0.75rem; /* تصغير الخط */
+    text-align: center;
+}
+.custom-table td:first-child {
+    text-align: center;
+    font-size: 0.75rem;
+}
+
+.custom-table th:nth-child(9),
+.custom-table td:nth-child(9) {
+    width: 60px; /* عرض ثابت */
+    font-size: 0.75rem; /* تصغير الخط */
+    text-align: center;
+}
+
+.custom-table th:nth-child(9),
+.custom-table td:nth-child(9) {
+    text-align: center;
+    font-size: 0.75rem;
+}
+
+.custom-table th:nth-child(6),
+.custom-table td:nth-child(6) {
+  width: 95px; /* عرض أكبر للسعر */
+  white-space: nowrap;
+  text-align: center;
+}
+
+</style>
 <?php
 require __DIR__.'/partials/header.php';
 require_permission('branches.view');
