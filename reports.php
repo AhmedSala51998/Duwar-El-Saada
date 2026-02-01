@@ -216,7 +216,7 @@ error_reporting(E_ALL);
 <?php if(has_permission('reports.filter')): ?> 
 <?php
 // جلب قائمة الفروع من قاعدة البيانات
-$branches = $db->query("SELECT id, branch_name FROM branches ORDER BY branch_name ASC")->fetchAll(PDO::FETCH_ASSOC);
+$branches = $pdo->query("SELECT id, branch_name FROM branches ORDER BY branch_name ASC")->fetchAll(PDO::FETCH_ASSOC);
 $current_branch = $_GET['branch_id'] ?? '';
 ?>
 <div class="row g-4 mb-4">
