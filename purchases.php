@@ -216,7 +216,7 @@
 $kw = trim($_GET['kw'] ?? '');
 
 // الاستعلام الأساسي مع الانضمام لجدول الفروع
-$q = "SELECT p.*, o.invoice_serial, b.name AS branch_name
+$q = "SELECT p.*, o.invoice_serial, b.branch_name AS branch_name
       FROM purchases p
       LEFT JOIN orders_purchases o ON p.order_id = o.id
       LEFT JOIN branches b ON p.branch_id = b.id
