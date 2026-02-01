@@ -10,17 +10,19 @@ $kw        = trim($_GET['kw'] ?? '');
 $branch_id = $_GET['branch_id'] ?? '';
 
 $params = [];
+$dateFilter = '';
 
-// today / yesterday
 if ($date_type === 'today') {
-    $from_date = $to_date = date('Y-m-d');
+    $today = date('Y-m-d');
+    $from_date = $to_date = $today;
 } elseif ($date_type === 'yesterday') {
-    $from_date = $to_date = date('Y-m-d', strtotime('-1 day'));
+    $yesterday = date('Y-m-d', strtotime('-1 day'));
+    $from_date = $to_date = $yesterday;
 }
 
-/* ======================
+/* =====================
    الاستعلام
-====================== */
+===================== */
 $q = "
 SELECT e.*, b.branch_name
 FROM expenses e
@@ -28,7 +30,7 @@ LEFT JOIN branches b ON b.id = e.branch_id
 WHERE 1
 ";
 
-/* كلمة مفتاحية */
+/* فلترة بالكلمة المفتاحية */
 if ($kw !== '') {
     $q .= " AND e.main_expense LIKE ?";
     $params[] = "%$kw%";
@@ -40,7 +42,7 @@ if (!empty($branch_id) && $branch_id != 0) {
     $params[] = $branch_id;
 }
 
-/* فلترة التاريخ */
+/* فلترة بالتاريخ */
 if ($from_date) {
     $q .= " AND DATE(e.created_at) >= ?";
     $params[] = $from_date;
@@ -54,13 +56,12 @@ $q .= " ORDER BY e.id DESC";
 
 $s = $pdo->prepare($q); 
 $s->execute($params); 
-$rows = $s->fetchAll(PDO::FETCH_ASSOC);
+$rows = $s->fetchAll();
 ?>
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<title>تقرير المصروفات</title>
 <style>
 body{font-family:Cairo,Arial}
 table{width:100%;border-collapse:collapse;margin-top:15px}
@@ -73,46 +74,47 @@ tfoot td{font-weight:bold;background:#f1f1f1}
   table { page-break-inside: auto; }
   tr    { page-break-inside: avoid; page-break-after: auto; }
   th, td { padding: 3px; }
-    #printBtnContainer,
-    #printBtnContainer * {
-      display: none !important; /* إخفاء الزر وكل محتوياته أثناء الطباعة */
-    }
+  #printBtnContainer,
+  #printBtnContainer * {
+    display: none !important;
+  }
 }
 table {
   width: 100%;
   border-collapse: collapse;
-  table-layout: fixed; /* مهم */
+  table-layout: fixed;
 }
-
 th, td {
   border: 1px solid #ddd;
   padding: 4px;
   text-align: center;
-  word-wrap: break-word; /* لتقسيم النصوص الطويلة */
+  word-wrap: break-word;
 }
-
 </style>
+<title>تقرير المصروفات</title>
 </head>
 <body>
 
 <img src="<?= esc(getSystemSettings('secondary_logo') ?: '/assets/logo.png') ?>" width="60" style="float:left">
-<h2 style="text-align:center">تقرير المصروفات</h2>
+<h2>تقرير المصروفات</h2>
 
 <?php
 if ($date_type === 'today') {
-    echo "<p style='text-align:center;font-weight:bold'>تقرير اليوم ($from_date)</p>";
+    echo "<p style='text-align:center;font-weight:bold'>تقرير اليوم (" . date('Y-m-d') . ")</p>";
 } elseif ($date_type === 'yesterday') {
-    echo "<p style='text-align:center;font-weight:bold'>تقرير أمس ($from_date)</p>";
+    echo "<p style='text-align:center;font-weight:bold'>تقرير أمس (" . date('Y-m-d', strtotime('-1 day')) . ")</p>";
 } elseif ($from_date || $to_date) {
-    echo "<p style='text-align:center;font-weight:bold'>الفترة من ".($from_date ?: 'بداية')." إلى ".($to_date ?: 'اليوم')."</p>";
+    $fromText = $from_date ?: 'بداية';
+    $toText   = $to_date   ?: 'اليوم';
+    echo "<p style='text-align:center;font-weight:bold'>الفترة من $fromText إلى $toText</p>";
 } else {
     echo "<p style='text-align:center;font-weight:bold'>كل التقرير</p>";
 }
 ?>
 
-<div id="printBtnContainer" style="text-align:center;margin:15px">
-<button onclick="window.print()">طباعة التقرير</button>
-<button onclick="history.back()">رجوع</button>
+<div id="printBtnContainer" style="text-align:center;margin:20px 0; display:flex; gap:15px; justify-content:center">
+<button onclick="printAndGoBack()">طباعة التقرير</button>
+<button onclick="goBack()">العودة</button>
 </div>
 
 <table>
@@ -123,9 +125,10 @@ if ($date_type === 'today') {
 <th>المصروفات</th>
 <th>نوع المصروف</th>
 <th>بيان المصروف</th>
-<th>الإجمالي قبل الضريبة</th>
+<th>الإجمالي الطبيعي</th>
 <th>الضريبة (15%)</th>
 <th>الإجمالي بعد الضريبة</th>
+<th>المرفق</th>
 <th>الدافع</th>
 <th>مصدر الدفع</th>
 <th>التاريخ</th>
@@ -133,19 +136,19 @@ if ($date_type === 'today') {
 </thead>
 <tbody>
 
-<?php
+<?php 
 $totalBefore = $totalVat = $totalAfter = 0;
 
-foreach ($rows as $r):
-    /* ==== نفس حساباتك حرفيًا ==== */
+foreach($rows as $r): 
+    /* نفس حساباتك تمامًا */
     $before = (float)$r['expense_amount'];
-    $vat    = (!empty($r['has_vat']) && $r['has_vat'] == 1) ? (float)$r['vat_value'] : 0;
-    $after  = (float)$r['total_amount'];
+    $vat = (!empty($r['has_vat']) && $r['has_vat'] == 1) ? (float)$r['vat_value'] : 0;
+    $after = (float)$r['total_amount'];
     $before = (!empty($r['has_vat']) && $r['has_vat'] == 1) ? $before : $after;
 
     $totalBefore += $before;
-    $totalVat    += $vat;
-    $totalAfter  += $after;
+    $totalVat += $vat;
+    $totalAfter += $after;
 ?>
 <tr>
 <td><?= $r['id'] ?></td>
@@ -153,26 +156,49 @@ foreach ($rows as $r):
 <td><?= esc($r['main_expense']) ?></td>
 <td><?= esc($r['sub_expense']) ?></td>
 <td><?= esc($r['expense_desc']) ?></td>
-<td><?= number_format($before, 4) ?></td>
-<td><?= number_format($vat, 4) ?></td>
-<td><?= number_format($after, 4) ?></td>
+<td><?= $before ?></td>
+<td><?= $vat ?></td>
+<td><?= $after ?></td>
+<td><?= $r['expense_file'] ? esc($r['expense_file']) : '-' ?></td>
 <td><?= esc($r['payer_name'] ?? '-') ?></td>
 <td><?= esc($r['payment_source'] ?? '-') ?></td>
-<td><?= esc($r['created_at']) ?></td>
+<td><?= esc($r['created_at'] ?? '') ?></td>
 </tr>
 <?php endforeach; ?>
 
 </tbody>
 <tfoot>
+<?php if(!empty($r['has_vat']) && $r['has_vat'] == 1){ ?>    
 <tr>
-<td colspan="5">الإجماليات</td>
+<td colspan="5">الإجماليات الكلية</td>
 <td><?= number_format($totalBefore, 4) ?></td>
 <td><?= number_format($totalVat, 4) ?></td>
 <td><?= number_format($totalAfter, 4) ?></td>
-<td colspan="3"></td>
+<td colspan="4"></td>
 </tr>
+<?php }else{ ?>   
+<tr>
+<td colspan="5">الإجماليات الكلية</td>
+<td><?= number_format($totalBefore, 4) ?></td>
+<td>------</td>
+<td><?= number_format($totalAfter, 4) ?></td>
+<td colspan="4"></td>
+</tr>
+<?php } ?>   
 </tfoot>
 </table>
+
+<script>
+function printAndGoBack() {
+  window.print();
+  window.onafterprint = function () {
+    window.history.back();
+  };
+}
+function goBack() {
+  window.history.back();
+}
+</script>
 
 </body>
 </html>
