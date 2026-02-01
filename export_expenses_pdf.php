@@ -6,6 +6,7 @@ require_permission('reports.report_expenses_pdf');
 $date_type = $_GET['date_type'] ?? '';
 $from_date = $_GET['from_date'] ?? '';
 $to_date   = $_GET['to_date'] ?? '';
+$branch_id = $_GET['branch_id'] ?? '';
 $kw        = trim($_GET['kw'] ?? '');
 
 $params = [];
@@ -35,6 +36,12 @@ if ($to_date) {
     $q .= " AND DATE(created_at) <= ?";
     $params[] = $to_date;
 }
+
+if ($branch_id !== '') {
+    $q .= " AND branch_id = ?";
+    $params[] = $branch_id;
+}
+
 
 $q .= " ORDER BY id DESC";
 
@@ -152,11 +159,18 @@ if ($date_type === 'today') {
 <th>المرفق</th>
 <th>الدافع</th>
 <th>مصدر الدفع</th>
+<th>الفرع</th>
 <th>التاريخ</th>
 </tr>
 </thead>
 <tbody>
 <?php 
+$branch_name = '-';
+if (!empty($r['branch_id'])) {
+    $b = $pdo->prepare("SELECT branch_name FROM branches WHERE id=?");
+    $b->execute([$r['branch_id']]);
+    $branch_name = $b->fetchColumn() ?: '-';
+}
 $totalBefore = $totalVat = $totalAfter = 0;
 foreach($rows as $r): 
     $before = (float)$r['expense_amount'];
@@ -179,6 +193,7 @@ foreach($rows as $r):
 <td><?= $r['expense_file'] ? esc($r['expense_file']) : '-' ?></td>
 <td><?= esc($r['payer_name'] ?? '-') ?></td>
 <td><?= esc($r['payment_source'] ?? '-') ?></td>
+<td><?= esc($branch_name) ?></td>
 <td><?= esc($r['created_at'] ?? '') ?></td>
 </tr>
 <?php endforeach; ?>
