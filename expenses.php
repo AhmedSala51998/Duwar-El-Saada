@@ -13,7 +13,7 @@ $perPage = 10; // عدد الصفوف لكل صفحة
 $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
 
 $q = "
-    SELECT e.*, b.name AS branch_name
+    SELECT e.*, b.branch_name AS branch_name
     FROM expenses e
     LEFT JOIN branches b ON b.id = e.branch_id
     WHERE 1
