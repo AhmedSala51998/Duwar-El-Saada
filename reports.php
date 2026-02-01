@@ -220,12 +220,12 @@ $current_branch = $_GET['branch_id'] ?? '';
     <form method="GET" class="row g-3 align-items-end filter-form mx-md-0 px-md-3">
       <div class="col-md-3">
         <label class="form-label">من تاريخ</label>
-        <input type="date" name="from_date" required class="form-control" value="<?= $_GET['from_date'] ?? '' ?>">
+        <input type="date" name="from_date" class="form-control" value="<?= $_GET['from_date'] ?? '' ?>">
       </div>
 
       <div class="col-md-3">
         <label class="form-label">إلى تاريخ</label>
-        <input type="date" name="to_date" required class="form-control" value="<?= $_GET['to_date'] ?? '' ?>">
+        <input type="date" name="to_date" class="form-control" value="<?= $_GET['to_date'] ?? '' ?>">
       </div>
 
       <div class="col-md-3">
@@ -255,7 +255,7 @@ $filterParams = '';
 if (!empty($_GET['from_date'])) $filterParams .= '&from_date=' . $_GET['from_date'];
 if (!empty($_GET['to_date'])) $filterParams .= '&to_date=' . $_GET['to_date'];
 if (!empty($_GET['date_type'])) $filterParams .= '&date_type=' . $_GET['date_type'];
-if (!empty($_GET['branch_id'])) $filterParams .= '&branch_id=' . $_GET['branch_id']; // 👈 إضافة الفرع
+if (!empty($_GET['branch_id'])) $filterParams .= '&branch_id=' . $_GET['branch_id']; 
 ?>
 
 <!-- 📦 بطاقات التصدير -->
