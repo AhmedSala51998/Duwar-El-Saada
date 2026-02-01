@@ -207,9 +207,11 @@
 <?php
 $kw = trim($_GET['kw'] ?? '');
 
-$q = "SELECT p.*, o.invoice_serial 
-      FROM purchases p 
+// الاستعلام الأساسي مع الانضمام لجدول الفروع
+$q = "SELECT p.*, o.invoice_serial, b.name AS branch_name
+      FROM purchases p
       LEFT JOIN orders_purchases o ON p.order_id = o.id
+      LEFT JOIN branches b ON p.branch_id = b.id
       WHERE 1";
 
 $params = [];
@@ -226,8 +228,8 @@ $perPage = 10;
 // الصفحة الحالية
 $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
 
-// جلب العدد الكلي للصفوف
-$stmtTotal = $pdo->prepare(str_replace("SELECT p.*, o.invoice_serial","SELECT COUNT(*) as total",$q));
+// جلب العدد الكلي للصفوف (مع تجاهل LIMIT)
+$stmtTotal = $pdo->prepare(str_replace("SELECT p.*, o.invoice_serial, b.name AS branch_name","SELECT COUNT(*) as total",$q));
 $stmtTotal->execute($params);
 $total_rows = $stmtTotal->fetch()['total'];
 $total_pages = ceil($total_rows / $perPage);
@@ -239,10 +241,10 @@ $offset = ($page - 1) * $perPage;
 $q .= " LIMIT $perPage OFFSET $offset";
 $stmt = $pdo->prepare($q); 
 $stmt->execute($params); 
-$rows = $stmt->fetchAll();
-$branches = $pdo->query("SELECT id, name FROM branches ORDER BY name ASC")->fetchAll(PDO::FETCH_ASSOC);
-//$can_edit = in_array(current_role(), ['admin','manager']);
+$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+// جلب قائمة الفروع (مثلاً لقائمة dropdown)
+$branches = $pdo->query("SELECT id, name FROM branches ORDER BY name ASC")->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!--<div class="d-flex flex-wrap gap-2 justify-content-between align-items-center mb-3">
