@@ -4,10 +4,11 @@ require_auth();
 require_once __DIR__.'/libs/SimpleXLSXGen.php';
 require_permission('custodies.print_excel');
 
-$kw        = trim($_GET['kw'] ?? '');
-$date_type = $_GET['date_type'] ?? '';
-$from_date = $_GET['from_date'] ?? '';
-$to_date   = $_GET['to_date'] ?? '';
+$kw         = trim($_GET['kw'] ?? '');
+$date_type  = $_GET['date_type'] ?? '';
+$from_date  = $_GET['from_date'] ?? '';
+$to_date    = $_GET['to_date'] ?? '';
+$branch_id  = $_GET['branch_id'] ?? ''; // إضافة فلتر الفرع
 
 $params = [];
 
@@ -21,12 +22,16 @@ if ($date_type === 'today') {
 }
 
 // استعلام العهد
-$q = "SELECT id, person_name, main_amount,sub_amount, amount, taken_at, notes, created_at FROM custodies WHERE 1";
+$q = "SELECT id, branch_id, person_name, main_amount, sub_amount, amount, taken_at, notes, created_at 
+      FROM custodies WHERE 1";
 
+// فلترة بالكلمة المفتاحية
 if ($kw !== '') {
     $q .= " AND person_name LIKE ?";
     $params[] = "%$kw%";
 }
+
+// فلترة بالتواريخ
 if ($from_date) {
     $q .= " AND DATE(created_at) >= ?";
     $params[] = $from_date;
@@ -36,8 +41,15 @@ if ($to_date) {
     $params[] = $to_date;
 }
 
+// فلترة حسب الفرع إذا تم اختياره
+if ($branch_id !== '') {
+    $q .= " AND branch_id = ?";
+    $params[] = $branch_id;
+}
+
 $q .= " ORDER BY taken_at ASC";
 
+// تنفيذ الاستعلام
 $s = $pdo->prepare($q);
 $s->execute($params);
 $rows = $s->fetchAll(PDO::FETCH_ASSOC);
@@ -46,7 +58,7 @@ $rows = $s->fetchAll(PDO::FETCH_ASSOC);
 $transactions_stmt = $pdo->prepare("SELECT * FROM custody_transactions WHERE custody_id=? ORDER BY created_at ASC");
 
 $data = [];
-$data[] = ["ID", "البيان", "الوارد", "الصادر", "الرصيد", "تاريخ الاستلام", "ملاحظات", "تاريخ الإضافة"];
+$data[] = ["ID", "الفرع", "البيان", "الوارد", "الصادر", "الرصيد", "تاريخ الاستلام", "ملاحظات", "تاريخ الإضافة"];
 
 $last_balance = 0;
 $total_in = 0;
@@ -70,8 +82,17 @@ foreach ($rows as $r) {
 
     $last_balance = $current_balance;
 
+    // اسم الفرع
+    $branch_name = '';
+    if ($r['branch_id']) {
+        $stmtBranch = $pdo->prepare("SELECT branch_name FROM branches WHERE id=?");
+        $stmtBranch->execute([$r['branch_id']]);
+        $branch_name = $stmtBranch->fetchColumn();
+    }
+
     $data[] = [
         $r['id'],
+        $branch_name,
         $r['person_name'],
         number_format($in, 2),
         number_format($out, 2),
@@ -100,6 +121,7 @@ foreach ($rows as $r) {
 
         $data[] = [
             '',
+            $branch_name,
             "-- {$r['person_name']} -- $type_ar",
             '',
             number_format($trans_amount, 2),
@@ -115,6 +137,7 @@ foreach ($rows as $r) {
 
 // صف الإجماليات
 $data[] = [
+    '',
     '',
     'الإجماليات',
     number_format($total_in, 2),
