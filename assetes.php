@@ -179,50 +179,52 @@ document.addEventListener("DOMContentLoaded", function() {
 <?php
 $kw = trim($_GET['kw'] ?? '');
 
-$perPage = 10; // عدد النتائج في الصفحة
+$perPage = 10;
 $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
 
-// حساب إجمالي الصفوف
+// ===== COUNT =====
 $count_q = "
-  SELECT COUNT(DISTINCT a.id) AS total
+  SELECT COUNT(DISTINCT a.id)
   FROM assets a
   LEFT JOIN branches b ON b.id = a.branch_id
   WHERE 1
 ";
 $count_params = [];
-if($kw !== ''){
-  $count_q .= " AND (a.name LIKE ? OR b.name LIKE ?)";
+
+if ($kw !== '') {
+  $count_q .= " AND (a.name LIKE ? OR b.branch_name LIKE ?)";
   $count_params[] = "%$kw%";
   $count_params[] = "%$kw%";
 }
 
 $stmtCount = $pdo->prepare($count_q);
 $stmtCount->execute($count_params);
-$total_rows = $stmtCount->fetch()['total'];
+$total_rows  = (int)$stmtCount->fetchColumn();
 $total_pages = ceil($total_rows / $perPage);
-$offset = ($page - 1) * $perPage;
+$offset      = ($page - 1) * $perPage;
 
-// جلب الصفوف الفعلية
+// ===== DATA =====
 $q = "
   SELECT 
     a.*,
-    b.name AS branch_name
+    b.branch_name
   FROM assets a
   LEFT JOIN branches b ON b.id = a.branch_id
   WHERE 1
 ";
 $ps = [];
-if($kw !== ''){
-  $q .= " AND (a.name LIKE ? OR b.name LIKE ?)";
+
+if ($kw !== '') {
+  $q .= " AND (a.name LIKE ? OR b.branch_name LIKE ?)";
   $ps[] = "%$kw%";
   $ps[] = "%$kw%";
 }
-$q.=" ORDER BY a.id DESC LIMIT $perPage OFFSET $offset";
 
-$s=$pdo->prepare($q);
+$q .= " ORDER BY a.id DESC LIMIT $perPage OFFSET $offset";
+
+$s = $pdo->prepare($q);
 $s->execute($ps);
-$rows=$s->fetchAll();
-//$can_edit = in_array(current_role(), ['admin','manager']);
+$rows = $s->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!--<div class="d-flex flex-wrap gap-2 justify-content-between align-items-center mb-3">
