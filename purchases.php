@@ -161,17 +161,16 @@
   white-space: nowrap;
 }
 
+.custom-table th:nth-child(3),
+.custom-table td:nth-child(3) {
+  width: 60px; /* زِد العرض كما يناسبك */
+  white-space: nowrap;
+}
+
 /* العمود السادس (السعر) */
 .custom-table th:nth-child(6),
 .custom-table td:nth-child(6) {
   width: 95px; /* عرض أكبر للسعر */
-  white-space: nowrap;
-  text-align: center;
-}
-
-.custom-table th:nth-child(3),
-.custom-table td:nth-child(3) {
-  width: 60px; /* عرض أكبر للسعر */
   white-space: nowrap;
   text-align: center;
 }
@@ -214,6 +213,7 @@
 <?php
 $kw = trim($_GET['kw'] ?? '');
 
+// استعلام الأصناف مع الفرع
 $q = "SELECT p.*, o.invoice_serial, b.branch_name
       FROM purchases p
       LEFT JOIN orders_purchases o ON p.order_id = o.id
@@ -229,11 +229,11 @@ if($kw !== '') {
 
 $q .= " ORDER BY p.id DESC";
 
-// الباجينشن
+// عدد الصفوف لكل صفحة
 $perPage = 10; 
 $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
 
-// استعلام العد الكلي
+// استعلام العد الكلي للباجينشن
 $countQuery = "SELECT COUNT(DISTINCT p.id) as total
                FROM purchases p
                LEFT JOIN orders_purchases o ON p.order_id = o.id
@@ -242,22 +242,24 @@ $countQuery = "SELECT COUNT(DISTINCT p.id) as total
 if($kw !== '') {
     $countQuery .= " AND (p.name LIKE ? OR b.branch_name LIKE ?)";
 }
+
 $stmtTotal = $pdo->prepare($countQuery);
 $stmtTotal->execute($params);
 $total_rows = $stmtTotal->fetchColumn();
 $total_pages = ceil($total_rows / $perPage);
 
-// OFFSET
+// حساب offset
 $offset = ($page - 1) * $perPage;
 $q .= " LIMIT ? OFFSET ?";
 $params[] = $perPage;
 $params[] = $offset;
 
+// تنفيذ الاستعلام النهائي
 $stmt = $pdo->prepare($q); 
 $stmt->execute($params); 
-$rows = $stmt->fetchAll();
+$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// جلب الفروع
+// جلب جميع الفروع للاختيار
 $branches = $pdo->query("SELECT id, branch_name FROM branches ORDER BY branch_name ASC")->fetchAll(PDO::FETCH_ASSOC);
 //$can_edit = in_array(current_role(), ['admin','manager']);
 
