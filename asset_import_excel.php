@@ -28,6 +28,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
         exit;
     }
 
+    $branch_id = (int)($_POST['branch_id'] ?? 0);
+
+    if($branch_id <= 0){
+        $_SESSION['toast'] = ['type'=>'danger','msg'=>'❌ يجب اختيار الفرع'];
+        header('Location: ' . BASE_URL . '/assetes.php');
+        exit;
+    }
+
     $invoiceImage = upload_image('invoice_image');
 
     if ($xlsx = \Shuchkin\SimpleXLSX::parse($filePath)) {
@@ -58,8 +66,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
             $pdo->beginTransaction();
 
             $stmt = $pdo->prepare("
-                INSERT INTO assets (bill_number, invoice_serial, name, type, quantity, price, has_vat, vat_value, total_amount, payer_name, payment_source, image, created_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO assets (branch_id, bill_number, invoice_serial, name, type, quantity, price, has_vat, vat_value, total_amount, payer_name, payment_source, image, created_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ");
 
             foreach ($rows as $r) {
@@ -79,6 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
                 $total_amount = $total + $vat_value;
 
                 $stmt->execute([
+                    $branch_id,
                     $bill_number,
                     $serial_invoice,
                     $name,
@@ -99,8 +108,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
                 // التعامل مع العهدة إن وجدت
                 if ($payment_source === 'عهدة') {
                     $amountToDeduct = $total_amount;
-                    $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? AND amount > 0 ORDER BY taken_at ASC");
-                    $stmtC->execute([$payer_name]);
+                    $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? AND branch_id=? AND amount > 0 ORDER BY taken_at ASC");
+                    $stmtC->execute([$payer_name , $branch_id]);
                     $custodies = $stmtC->fetchAll(PDO::FETCH_ASSOC);
 
                     $totalAvailable = array_sum(array_column($custodies, 'amount'));
