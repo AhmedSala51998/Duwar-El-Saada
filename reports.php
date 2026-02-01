@@ -1,4 +1,8 @@
-<?php require __DIR__.'/partials/header.php'; require_permission('reports.view'); ?>
+<?php
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
+ require __DIR__.'/partials/header.php'; require_permission('reports.view'); ?>
 
 <style>
 /* 🎨 تنسيق عام */
