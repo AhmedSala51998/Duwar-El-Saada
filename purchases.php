@@ -454,7 +454,7 @@ $branches = $pdo->query("SELECT id, branch_name FROM branches ORDER BY branch_na
                     <select name="branch_id" class="form-select" required>
                       <option hidden>اختر الفرع</option>
                       <?php foreach($branches as $b): ?>
-                        <option value="<?= $b['id'] ?>" <?= $r['branch_id']==$b['id']?'selected':'' ?>><?= esc($b['name']) ?></option>
+                        <option value="<?= $b['id'] ?>" <?= $r['branch_id']==$b['id']?'selected':'' ?>><?= esc($b['branch_name']) ?></option>
                       <?php endforeach; ?>
                     </select>
                   </div>
@@ -661,7 +661,7 @@ $branches = $pdo->query("SELECT id, branch_name FROM branches ORDER BY branch_na
               <select name="branch_id" class="form-select" required>
                 <option hidden>اختر الفرع</option>
                 <?php foreach($branches as $b): ?>
-                  <option value="<?= $b['id'] ?>"><?= esc($b['name']) ?></option>
+                  <option value="<?= $b['id'] ?>"><?= esc($b['branch_name']) ?></option>
                 <?php endforeach; ?>
               </select>
             </div>
@@ -805,7 +805,7 @@ $branches = $pdo->query("SELECT id, branch_name FROM branches ORDER BY branch_na
                 <select name="branch_id" class="form-select" required>
                   <option hidden>اختر الفرع</option>
                   <?php foreach($branches as $b): ?>
-                    <option value="<?= $b['id'] ?>"><?= esc($b['name']) ?></option>
+                    <option value="<?= $b['id'] ?>"><?= esc($b['branch_name']) ?></option>
                   <?php endforeach; ?>
                 </select>
               </div>
