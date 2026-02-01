@@ -210,20 +210,37 @@
 <!-- 🗓️ نموذج الفلترة بنفس عرض الكروت -->
 <!-- 🗓️ نموذج الفلترة بنفس محاذاة الكروت -->
 <?php if(has_permission('reports.filter')): ?> 
+<?php
+// جلب قائمة الفروع من قاعدة البيانات
+$branches = $db->query("SELECT id, branch_name FROM branches ORDER BY name ASC")->fetchAll(PDO::FETCH_ASSOC);
+$current_branch = $_GET['branch_id'] ?? '';
+?>
 <div class="row g-4 mb-4">
   <div class="col-md-12">
     <form method="GET" class="row g-3 align-items-end filter-form mx-md-0 px-md-3">
-      <div class="col-md-4">
+      <div class="col-md-3">
         <label class="form-label">من تاريخ</label>
         <input type="date" name="from_date" required class="form-control" value="<?= $_GET['from_date'] ?? '' ?>">
       </div>
 
-      <div class="col-md-4">
+      <div class="col-md-3">
         <label class="form-label">إلى تاريخ</label>
         <input type="date" name="to_date" required class="form-control" value="<?= $_GET['to_date'] ?? '' ?>">
       </div>
 
-      <div class="col-md-4 d-flex align-items-end">
+      <div class="col-md-3">
+        <label class="form-label">الفرع</label>
+        <select name="branch_id" class="form-select">
+          <option value="">كل الفروع</option>
+          <?php foreach($branches as $b): ?>
+            <option value="<?= $b['id'] ?>" <?= $current_branch == $b['id'] ? 'selected' : '' ?>>
+              <?= $b['name'] ?>
+            </option>
+          <?php endforeach; ?>
+        </select>
+      </div>
+
+      <div class="col-md-3 d-flex align-items-end">
         <button type="submit" class="btn btn-warning w-100 filter_button" style="border: none; color:#FFF">
           <i class="bi bi-funnel"></i> تطبيق الفلتر
         </button>
@@ -238,6 +255,7 @@ $filterParams = '';
 if (!empty($_GET['from_date'])) $filterParams .= '&from_date=' . $_GET['from_date'];
 if (!empty($_GET['to_date'])) $filterParams .= '&to_date=' . $_GET['to_date'];
 if (!empty($_GET['date_type'])) $filterParams .= '&date_type=' . $_GET['date_type'];
+if (!empty($_GET['branch_id'])) $filterParams .= '&branch_id=' . $_GET['branch_id']; // 👈 إضافة الفرع
 ?>
 
 <!-- 📦 بطاقات التصدير -->
