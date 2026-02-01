@@ -397,7 +397,7 @@ $branches = $pdo->query("SELECT * FROM branches ORDER BY branch_name ASC")->fetc
         <td data-label="التاريخ"><?= esc($t['created_at']) ?></td>
         <td data-label="ملاحظات"><?= esc($t['notes'] ?? '') ?></td>
         <td><?= $type_ar ?></td>
-        <?php if($can_edit): ?><td></td><?php endif; ?>
+        <?php if(has_permission('custodies.processes')): ?><td></td><?php endif; ?>
       </tr>
       <?php endforeach; ?>
 
