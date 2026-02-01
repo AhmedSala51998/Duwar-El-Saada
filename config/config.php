@@ -1,4 +1,5 @@
 <?php
+ob_start();
 if(!defined('APP_NAME')) define('APP_NAME','دوار السعادة');
 if(!defined('BASE_URL')) define('BASE_URL','');
 date_default_timezone_set('Asia/Riyadh');
@@ -211,3 +212,5 @@ if($c===0){
   $pdo->prepare("INSERT INTO users(username,password_hash,role) VALUES(?,?, 'admin')")
       ->execute(['admin', password_hash('123456', PASSWORD_DEFAULT)]);
 }
+
+ob_end_flush();
