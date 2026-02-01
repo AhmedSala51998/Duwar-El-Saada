@@ -1,4 +1,9 @@
 <!-- CSS للستايل -->
+ <?php
+ ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
+ ?>
 <style>
   .custom-file-upload {
     border: 2px dashed #ccc;
