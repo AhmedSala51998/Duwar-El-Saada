@@ -234,7 +234,7 @@ $current_branch = $_GET['branch_id'] ?? '';
           <option value="">كل الفروع</option>
           <?php foreach($branches as $b): ?>
             <option value="<?= $b['id'] ?>" <?= $current_branch == $b['id'] ? 'selected' : '' ?>>
-              <?= $b['name'] ?>
+              <?= $b['branch_name'] ?>
             </option>
           <?php endforeach; ?>
         </select>
