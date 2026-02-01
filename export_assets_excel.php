@@ -8,6 +8,7 @@ $date_type = $_GET['date_type'] ?? '';
 $from_date = $_GET['from_date'] ?? '';
 $to_date   = $_GET['to_date'] ?? '';
 $kw        = trim($_GET['kw'] ?? '');
+$branch_id = $_GET['branch_id'] ?? '';
 
 // ضبط التواريخ بناءً على نوع التاريخ
 if ($date_type === 'today') {
@@ -18,27 +19,36 @@ if ($date_type === 'today') {
     $from_date = $to_date = $yesterday;
 }
 
-// استعلام الأصول
-$q = "SELECT id, name, type, quantity, price, has_vat,vat_value, payer_name, payment_source,total_amount, created_at FROM assets WHERE 1";
+// استعلام الأصول مع اسم الفرع
+$q = "SELECT a.*, b.branch_name 
+      FROM assets a
+      LEFT JOIN branches b ON a.branch_id = b.id
+      WHERE 1";
 $params = [];
 
 // فلترة بالكلمة المفتاحية
 if ($kw !== '') {
-    $q .= " AND name LIKE ?";
+    $q .= " AND a.name LIKE ?";
     $params[] = "%$kw%";
 }
 
 // فلترة بالتواريخ
 if ($from_date !== '') {
-    $q .= " AND DATE(created_at) >= ?";
+    $q .= " AND DATE(a.created_at) >= ?";
     $params[] = $from_date;
 }
 if ($to_date !== '') {
-    $q .= " AND DATE(created_at) <= ?";
+    $q .= " AND DATE(a.created_at) <= ?";
     $params[] = $to_date;
 }
 
-$q .= " ORDER BY id DESC";
+// فلترة بالفرع إذا تم تحديده
+if ($branch_id !== '') {
+    $q .= " AND a.branch_id = ?";
+    $params[] = $branch_id;
+}
+
+$q .= " ORDER BY a.id DESC";
 
 // تنفيذ الاستعلام
 $s = $pdo->prepare($q);
@@ -47,7 +57,7 @@ $rows = $s->fetchAll(PDO::FETCH_ASSOC);
 
 // تجهيز البيانات للتصدير
 $data = [];
-$data[] = ["ID", "الاسم", "النوع", "العدد", "السعر", "الإجمالي الطبيعي", "الضريبة (15%)", "الإجمالي بعد الضريبة", "الدافع", "مصدر الدفع", "التاريخ"];
+$data[] = ["ID", "الاسم", "النوع", "العدد", "السعر", "الإجمالي الطبيعي", "الضريبة (15%)", "الإجمالي بعد الضريبة", "الدافع", "مصدر الدفع", "الفرع", "التاريخ"];
 
 foreach ($rows as $r) {
     $quantity = (float)$r['quantity'];
@@ -77,6 +87,7 @@ foreach ($rows as $r) {
         $total_with_vat,
         $r['payer_name'],
         $r['payment_source'] ?? '-',
+        $r['branch_name'] ?? '-',
         $r['created_at']
     ];
 }
