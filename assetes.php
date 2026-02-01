@@ -191,7 +191,7 @@ $count_q = "
 ";
 $count_params = [];
 if($kw !== ''){
-  $count_q .= " AND (a.name LIKE ? OR b.name LIKE ?)";
+  $count_q .= " AND (a.name LIKE ? OR b.branch_name LIKE ?)";
   $count_params[] = "%$kw%";
   $count_params[] = "%$kw%";
 }
