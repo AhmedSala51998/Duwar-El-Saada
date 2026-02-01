@@ -20,6 +20,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
         exit;
     }
 
+    $branch_id = (int)($_POST['branch_id'] ?? 0);
+
+    if ($branch_id <= 0) {
+        $_SESSION['toast'] = ['type'=>'danger','msg'=>'❌ يرجى اختيار الفرع.'];
+        header('Location: ' . BASE_URL . '/purchases.php');
+        exit;
+    }
+
     $newData = [
         'name'           => trim($_POST['name']),
         'quantity'       => (float)($_POST['quantity'] ?? 0),
@@ -106,8 +114,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
 
             if ($newData['payment_source'] === 'عهدة') {
                 $amountNeeded = ($newData['price'] * $newData['quantity']) + $unit_vat;
-                $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? AND amount > 0 ORDER BY taken_at ASC");
-                $stmtC->execute([$newData['payer_name']]);
+                $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? AND branch_id=? AND amount > 0 ORDER BY taken_at ASC");
+                $stmtC->execute([$newData['payer_name'] , $branch_id]);
                 $custodies = $stmtC->fetchAll(PDO::FETCH_ASSOC);
                 $notes = "شراء " . $_POST['name'];
 
@@ -140,10 +148,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
                 }
             }
 
-            $pdo->prepare("UPDATE purchases SET 
+            $pdo->prepare("UPDATE purchases SET branch_id =?,
                 name=?, quantity=?, prinitng_quantity=?, single_package=?, total_packages=?, unit=?, package=?, price=?, total_price=?, product_image=?, invoice_image=?, payer_name=?, payment_source=?, unit_total=?, unit_vat=?, unit_all_total=?
                 WHERE id=?")
             ->execute([
+                $branch_id,
                 $newData['name'],
                 $unit_quantity,
                 $oldPrintingQty,
@@ -180,8 +189,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
             $vat = $total * 0.15;
             $allTotal = $total + $vat;
 
-            $pdo->prepare("UPDATE orders_purchases SET total=?, vat=?, all_total=? WHERE id=?")
-                ->execute([$total, $vat, $allTotal, $orderId]);
+            $pdo->prepare("UPDATE orders_purchases SET branch_id =?, total=?, vat=?, all_total=? WHERE id=?")
+                ->execute([$branch_id, $total, $vat, $allTotal, $orderId]);
         }
 
         $pdo->commit();

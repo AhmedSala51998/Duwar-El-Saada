@@ -21,9 +21,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
     $invoice_date = trim($_POST['invoice_date'] ?? date('Y-m-d'));
     $payer_name = trim($_POST['payer_name'] ?? '');
     $payment_source = trim($_POST['payment_source'] ?? '');
+    $branch_id = (int)($_POST['branch_id'] ?? 0);
 
     if (!preg_match('/^\d{15}$/', $tax_number)) {
         $_SESSION['toast'] = ['type'=>'danger','msg'=>'❌ الرقم الضريبي يجب أن يكون 15 رقم بالضبط.'];
+        header('Location: ' . BASE_URL . '/purchases.php');
+        exit;
+    }
+
+    if ($branch_id <= 0) {
+        $_SESSION['toast'] = ['type'=>'danger','msg'=>'❌ يرجى اختيار الفرع.'];
         header('Location: ' . BASE_URL . '/purchases.php');
         exit;
     }
@@ -86,15 +93,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
 
             // إنشاء الفاتورة الرئيسية
             $stmtOrder = $pdo->prepare("
-                INSERT INTO orders_purchases (bill_number, tax_number, invoice_number, invoice_serial, supplier_name, total, vat, all_total, created_at, invoice_image)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO orders_purchases (branch_id, bill_number, tax_number, invoice_number, invoice_serial, supplier_name, total, vat, all_total, created_at, invoice_image)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)
             ");
-            $stmtOrder->execute([$bill_number, $tax_number, $invoice_number, $serial_invoice, $supplier_name, $total, $vat, $all_total, $created_at, $invoiceImage]);
+            $stmtOrder->execute([$branch_id, $bill_number, $tax_number, $invoice_number, $serial_invoice, $supplier_name, $total, $vat, $all_total, $created_at, $invoiceImage]);
             $order_id = $pdo->lastInsertId();
 
             $stmt = $pdo->prepare("
-                INSERT INTO purchases (name, quantity, prinitng_quantity , single_package , total_packages, unit, package, price , total_price, payer_name, payment_source ,unit_total ,unit_vat ,unit_all_total, order_id)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?,?,?,?, ? ,? ,?, ?)
+                INSERT INTO purchases (branch_id, name, quantity, prinitng_quantity , single_package , total_packages, unit, package, price , total_price, payer_name, payment_source ,unit_total ,unit_vat ,unit_all_total, order_id)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?,?,?,?, ? ,? ,?, ?,?)
             ");
 
             foreach($items as $data) {
@@ -117,13 +124,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
                 $vat_unit = $subtotal_unit * $vatRate;
                 $alltotal_unit = $subtotal_unit + $vat_unit;
 
-                $stmt->execute([$name, $single_quantity, $single_quantity ,$unit_quantity , $quantity , $unit, $package, $unit_price , $price, $payer, $source, $subtotal_unit , $vat_unit , $alltotal_unit, $order_id]);
+                $stmt->execute([$branch_id, $name, $single_quantity, $single_quantity ,$unit_quantity , $quantity , $unit, $package, $unit_price , $price, $payer, $source, $subtotal_unit , $vat_unit , $alltotal_unit, $order_id]);
                 $purchase_id = $pdo->lastInsertId();
 
                 if ($source === 'عهدة') {
                     $amountNeeded = ($price * $quantity) + $vat_unit;
-                    $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? AND amount > 0 ORDER BY taken_at ASC");
-                    $stmtC->execute([$payer]);
+                    $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? AND branch_id=? AND amount > 0 ORDER BY taken_at ASC");
+                    $stmtC->execute([$payer , $branch_id]);
                     $custodies = $stmtC->fetchAll(PDO::FETCH_ASSOC);
 
                     foreach ($custodies as $custody) {

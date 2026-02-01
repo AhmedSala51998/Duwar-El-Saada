@@ -207,14 +207,17 @@
 <?php
 $kw = trim($_GET['kw'] ?? '');
 
-$q = "SELECT p.*, o.invoice_serial 
+$q = "SELECT p.*, o.invoice_serial, b.branch_name AS branch_name
       FROM purchases p 
       LEFT JOIN orders_purchases o ON p.order_id = o.id
+      LEFT JOIN branches b ON p.branch_id = b.id
       WHERE 1";
+
 
 $params = [];
 if($kw !== '') { 
-    $q .= " AND p.name LIKE ?"; 
+    $q .= " AND (p.name LIKE ? OR b.branch_name LIKE ?)"; 
+    $params[] = "%$kw%"; 
     $params[] = "%$kw%"; 
 }
 
@@ -240,7 +243,7 @@ $q .= " LIMIT $perPage OFFSET $offset";
 $stmt = $pdo->prepare($q); 
 $stmt->execute($params); 
 $rows = $stmt->fetchAll();
-
+$branches = $pdo->query("SELECT id, name FROM branches ORDER BY name ASC")->fetchAll(PDO::FETCH_ASSOC);
 //$can_edit = in_array(current_role(), ['admin','manager']);
 
 ?>
@@ -314,6 +317,7 @@ $rows = $stmt->fetchAll();
       <tr>
         <th>#</th>
         <th>رقم تسلسلي</th>
+        <th>الفرع</th>
         <th>البيان</th>
         <th>نوع الوحدة</th>
         <th>الكمية</th>
@@ -332,6 +336,7 @@ $rows = $stmt->fetchAll();
       <tr class="text-center">
         <td class="fw-bold text-muted" data-label="#"> <?= $r['id'] ?> </td>
         <td data-label="رقم تسلسلي"> <?= esc($r['invoice_serial'] ?? '-') ?> </td>
+        <td data-label="الفرع"> <?= esc($r['branch_name'] ?? '-') ?> </td>
         <td data-label="البيان"> <?= esc($r['name']) ?> </td>
         <td data-label="نوع الوحدة"> <?= esc($r['unit']) ?> </td>
         <td data-label="الكمية">
@@ -434,6 +439,17 @@ $rows = $stmt->fetchAll();
                   <div class="col-md-4">
                     <label class="form-label">الكمية بالوحدات</label>
                     <input type="number" step="0.001" min="0" name="single_quantity" class="form-control" required value="<?= esc($r['single_package']) ?>">
+                  </div>
+
+
+                  <div class="col-md-6">
+                    <label class="form-label">الفرع</label>
+                    <select name="branch_id" class="form-select" required>
+                      <option hidden>اختر الفرع</option>
+                      <?php foreach($branches as $b): ?>
+                        <option value="<?= $b['id'] ?>" <?= $r['branch_id']==$b['id']?'selected':'' ?>><?= esc($b['name']) ?></option>
+                      <?php endforeach; ?>
+                    </select>
                   </div>
 
                   <!-- صورة المنتج -->
@@ -633,6 +649,15 @@ $rows = $stmt->fetchAll();
                   <option>بنك</option>
                 </select>
             </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">الفرع</label>
+              <select name="branch_id" class="form-select" required>
+                <option hidden>اختر الفرع</option>
+                <?php foreach($branches as $b): ?>
+                  <option value="<?= $b['id'] ?>"><?= esc($b['name']) ?></option>
+                <?php endforeach; ?>
+              </select>
+            </div>
           </div>
           <div class="table-responsive">
             <table class="odoo-table" id="itemsTable">
@@ -767,6 +792,15 @@ $rows = $stmt->fetchAll();
                     <option>كاش</option>
                     <option>بنك</option>
                   </select>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">الفرع</label>
+                <select name="branch_id" class="form-select" required>
+                  <option hidden>اختر الفرع</option>
+                  <?php foreach($branches as $b): ?>
+                    <option value="<?= $b['id'] ?>"><?= esc($b['name']) ?></option>
+                  <?php endforeach; ?>
+                </select>
               </div>
             </div>
 
