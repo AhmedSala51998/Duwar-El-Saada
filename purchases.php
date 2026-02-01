@@ -213,7 +213,6 @@ $q = "SELECT p.*, o.invoice_serial, b.name AS branch_name
       LEFT JOIN branches b ON p.branch_id = b.id
       WHERE 1";
 
-
 $params = [];
 if($kw !== '') { 
     $q .= " AND (p.name LIKE ? OR b.name LIKE ?)"; 
@@ -225,24 +224,30 @@ $q .= " ORDER BY p.id DESC";
 
 // عدد الصفوف لكل صفحة
 $perPage = 10; 
-
-// الصفحة الحالية
 $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
 
-// جلب العدد الكلي للصفوف
-$stmtTotal = $pdo->prepare(str_replace("SELECT p.*, o.invoice_serial","SELECT COUNT(*) as total",$q));
+// استعلام العد الكلي
+$countQuery = "SELECT COUNT(*) as total
+               FROM purchases p
+               LEFT JOIN orders_purchases o ON p.order_id = o.id
+               LEFT JOIN branches b ON p.branch_id = b.id
+               WHERE 1";
+if($kw !== '') {
+    $countQuery .= " AND (p.name LIKE ? OR b.name LIKE ?)";
+}
+$stmtTotal = $pdo->prepare($countQuery);
 $stmtTotal->execute($params);
-$total_rows = $stmtTotal->fetch()['total'];
+$total_rows = $stmtTotal->fetchColumn();
 $total_pages = ceil($total_rows / $perPage);
 
-// حساب offset
+// الباجينشن
 $offset = ($page - 1) * $perPage;
-
-// تعديل الاستعلام الأصلي ليشمل LIMIT
 $q .= " LIMIT $perPage OFFSET $offset";
 $stmt = $pdo->prepare($q); 
 $stmt->execute($params); 
 $rows = $stmt->fetchAll();
+
+// جلب الفروع (للاختيار مثلاً)
 $branches = $pdo->query("SELECT id, name FROM branches ORDER BY name ASC")->fetchAll(PDO::FETCH_ASSOC);
 //$can_edit = in_array(current_role(), ['admin','manager']);
 
