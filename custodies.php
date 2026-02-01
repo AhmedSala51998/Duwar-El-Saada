@@ -370,7 +370,38 @@ $branches = $pdo->query("SELECT * FROM branches ORDER BY branch_name ASC")->fetc
         <td data-label="ملاحظات"><?= esc($r['notes']) ?></td>
         <?php if(has_permission('custodies.processes')): ?>
         <td class="text-center">
-          <!-- عمليات مثل الطباعة والتعديل والحذف -->
+          <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#actions<?= $r['id'] ?>">
+            <i class="bi bi-gear"></i>
+          </button>
+          <div class="modal fade" id="actions<?= $r['id'] ?>" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-light">
+                  <h5 class="modal-title">العمليات على العهدة رقم <?= $r['id'] ?></h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center">
+                  <div class="d-grid gap-2">
+                    <?php if(has_permission('custodies.print')): ?>
+                    <a href="invoice_custody?id=<?= $r['id'] ?>" class="btn btn-outline-primary">
+                      <i class="bi bi-printer me-1"></i> طباعة
+                    </a>
+                    <?php endif ?>
+                    <?php if(has_permission('custodies.edit')): ?>
+                    <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#e<?= $r['id'] ?>" data-bs-dismiss="modal">
+                      <i class="bi bi-pencil me-1"></i> تعديل
+                    </button>
+                    <?php endif ?>
+                    <?php if(has_permission('custodies.delete')): ?>
+                    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#del<?= $r['id'] ?>" data-bs-dismiss="modal">
+                      <i class="bi bi-trash me-1"></i> حذف
+                    </button>
+                    <?php endif ?>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </td>
         <?php endif ?>
       </tr>
