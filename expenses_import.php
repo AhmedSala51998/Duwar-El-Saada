@@ -19,6 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
     $payer_name      = trim($_POST['payer_name'] ?? '');
     $payment_source  = trim($_POST['payment_source'] ?? 'كاش');
     $invoiceImage    = upload_image('invoice_image');
+    $branch_id      = (int)($_POST['branch_id'] ?? 0);
 
     if ($xlsx = \Shuchkin\SimpleXLSX::parse($filePath)) {
         $rows = $xlsx->rows();
@@ -48,8 +49,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
             $pdo->beginTransaction();
 
             $stmt = $pdo->prepare("
-                INSERT INTO expenses (invoice_serial, bill_number, main_expense, sub_expense, expense_desc, expense_amount, vat_value, total_amount, has_vat, payer_name, payment_source, expense_file, created_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO expenses (branch_id, invoice_serial, bill_number, main_expense, sub_expense, expense_desc, expense_amount, vat_value, total_amount, has_vat, payer_name, payment_source, expense_file, created_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)
             ");
 
             foreach ($rows as $r) {
@@ -84,6 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
                 $total_amount = $expense_amount + $vat_value;
 
                 $stmt->execute([
+                    $branch_id,
                     $serial_invoice,
                     $invoice_serial,
                     $main_expense,
@@ -104,8 +106,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
                 // التعامل مع العهدة
                 if ($payment_source === 'عهدة') {
                     $amountToDeduct = $total_amount;
-                    $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? AND amount > 0 ORDER BY taken_at ASC");
-                    $stmtC->execute([$payer_name]);
+                    $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? AND branch_id=? AND amount > 0 ORDER BY taken_at ASC");
+                    $stmtC->execute([$payer_name , $branch_id]);
                     $custodies = $stmtC->fetchAll(PDO::FETCH_ASSOC);
 
                     $totalAvailable = array_sum(array_column($custodies, 'amount'));

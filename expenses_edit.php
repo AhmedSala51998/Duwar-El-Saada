@@ -36,7 +36,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
             'total_amount'   => $total_amount,
             'expense_file'   => upload_image('expense_file') ?: ($oldData['expense_file'] ?? null),
             'payment_source' => $_POST['payment_source'] ?? 'كاش',
-            'payer_name'     => trim($_POST['payer_name'] ?? '')
+            'payer_name'     => trim($_POST['payer_name'] ?? ''),
+            'branch_id'      => $branch_id
         ];
 
         $changed = false;
@@ -71,8 +72,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
             // خصم العهدة الجديدة إذا مصدر الدفع "عهدة"
             if ($newData['payment_source'] === 'عهدة') {
                 $amountNeeded = $newData['expense_amount'] + $vat_value;
-                $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? AND amount > 0 ORDER BY taken_at ASC");
-                $stmtC->execute([$newData['payer_name']]);
+                $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? AND branch_id=? AND amount > 0 ORDER BY taken_at ASC");
+                $stmtC->execute([$newData['payer_name'] , $newData['branch_id']]);
                 $custodies = $stmtC->fetchAll(PDO::FETCH_ASSOC);
                 $notes = "مصروفات " . $_POST['main_expense'] . "-" . $_POST['sub_expense'] . "-" . $_POST['expense_desc'];
                 foreach ($custodies as $custody) {
@@ -113,8 +114,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
                 }
             }
 
-            $pdo->prepare("UPDATE expenses SET main_expense=?, sub_expense=?, expense_desc=?, expense_amount=?, has_vat=?, vat_value=?, total_amount=?, expense_file=?, payment_source=?, payer_name=? WHERE id=?")
+            $pdo->prepare("UPDATE expenses SET branch_id=?, main_expense=?, sub_expense=?, expense_desc=?, expense_amount=?, has_vat=?, vat_value=?, total_amount=?, expense_file=?, payment_source=?, payer_name=? WHERE id=?")
                 ->execute([
+                    $newData['branch_id'],
                     $newData['main_expense'],
                     $newData['sub_expense'],
                     $newData['expense_desc'],

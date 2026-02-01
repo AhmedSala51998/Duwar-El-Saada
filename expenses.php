@@ -12,15 +12,27 @@ $kw = trim($_GET['kw'] ?? '');
 $perPage = 10; // عدد الصفوف لكل صفحة
 $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
 
-$q = "SELECT * FROM expenses WHERE 1";
+$q = "
+    SELECT e.*, b.name AS branch_name
+    FROM expenses e
+    LEFT JOIN branches b ON b.id = e.branch_id
+    WHERE 1
+";
 $params = [];
+
 if($kw!==''){ 
-    $q .= " AND main_expense LIKE ?"; 
+    $q .= " AND e.main_expense LIKE ?"; 
     $params[] = "%$kw%"; 
 }
 
 // جلب العدد الكلي للصفوف
-$stmtTotal = $pdo->prepare(str_replace("SELECT *","SELECT COUNT(*) as total",$q));
+$stmtTotal = $pdo->prepare("
+    SELECT COUNT(*) as total
+    FROM expenses e
+    LEFT JOIN branches b ON b.id = e.branch_id
+    WHERE 1
+    " . ($kw!=='' ? " AND e.main_expense LIKE ?" : "")
+);
 $stmtTotal->execute($params);
 $total_rows = $stmtTotal->fetch()['total'];
 $total_pages = ceil($total_rows / $perPage);
@@ -29,10 +41,11 @@ $total_pages = ceil($total_rows / $perPage);
 $offset = ($page - 1) * $perPage;
 
 // تعديل الاستعلام الأصلي ليشمل LIMIT
-$q .= " ORDER BY id DESC LIMIT $perPage OFFSET $offset";
+$q .= " ORDER BY e.id DESC LIMIT $perPage OFFSET $offset";
 $stmt = $pdo->prepare($q); 
 $stmt->execute($params); 
 $rows = $stmt->fetchAll();
+
 
 //$can_edit = in_array(current_role(), ['admin','manager']);
 
@@ -47,6 +60,7 @@ foreach($rows as $r){
     'payer_name'=>$r['payer_name'] ?? ''
   ];
 }
+$branches = $pdo->query("SELECT * FROM branches ORDER BY branch_name ASC")->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <style>
@@ -146,6 +160,13 @@ input[type="file"]{display:none}
 .custom-table th:nth-child(9),
 .custom-table td:nth-child(9) {
     width: 80px; /* عرض ثابت */
+    font-size: 0.75rem; /* تصغير الخط */
+    text-align: center;
+}
+
+.custom-table th:nth-child(3),
+.custom-table td:nth-child(3) {
+    width: 50px; /* عرض ثابت */
     font-size: 0.75rem; /* تصغير الخط */
     text-align: center;
 }
@@ -314,6 +335,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
       <tr class="text-center text-secondary fw-semibold">
         <th>#</th>
         <th>الرقم التسلسلي</th>
+        <th>الفرع</th>
         <th>المصروفات</th>
         <th>نوع المصروف</th>
         <th>بيان المصروف</th>
@@ -332,6 +354,7 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
       <tr class="text-center">
         <td data-label="#" class="fw-bold text-muted"><?= $r['id'] ?></td>
         <td data-label="رقم تسلسلي"><?= esc($r['invoice_serial']) ?></td>
+        <td data-label="الفرع"><?= esc($r['branch_name'] ?? '-') ?></td>
         <td data-label="المصروفات"><span class="badge bg-light text-dark px-3 py-2"><?= esc($r['main_expense']) ?></span></td>
         <td data-label="نوع المصروف" class="text-truncate" title="<?= esc($r['sub_expense']) ?>">
           <?= esc($r['sub_expense']) ?>
@@ -408,6 +431,14 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
         </div>
 
         <div class="modal-body vstack gap-3">
+          <!-- حقل اختيار الفرع -->
+          <label>الفرع</label>
+          <select name="branch_id" class="form-select" required>
+            <option value="">اختر الفرع</option>
+            <?php foreach($branches as $b): ?>
+              <option value="<?= $b['id'] ?>" <?= ($r['branch_id']==$b['id'])?'selected':'' ?>><?= esc($b['branch_name']) ?></option>
+            <?php endforeach; ?>
+          </select>
           <label>المصروفات</label>
           <select id="main_expense_edit<?= $r['id'] ?>" name="main_expense" class="form-select" required>
             <option value="">اختر</option>
@@ -576,6 +607,14 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
         <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
         <div class="modal-header"><h5 class="modal-title">إضافة مصروف</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
         <div class="modal-body vstack gap-3">
+          <!-- حقل اختيار الفرع -->
+          <label>الفرع</label>
+          <select name="branch_id" class="form-select" required>
+            <option value="">اختر الفرع</option>
+            <?php foreach($branches as $b): ?>
+              <option value="<?= $b['id'] ?>"><?= esc($b['branch_name']) ?></option>
+            <?php endforeach; ?>
+          </select>
           <label>رقم فاتورة المورد</label>
           <input type="number" name="bill_number" required class="form-control" placeholder="رقم فاتورة المورد">
           <label>المصروفات</label>
@@ -681,6 +720,16 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
                 <option>مالك</option>
                 <option>كاش</option>
                 <option>بنك</option>
+              </select>
+            </div>
+            <div class="col-md-6 mb-3">
+              <!-- حقل اختيار الفرع -->
+              <label>الفرع</label>
+              <select name="branch_id" class="form-select" required>
+                <option value="">اختر الفرع</option>
+                <?php foreach($branches as $b): ?>
+                  <option value="<?= $b['id'] ?>"><?= esc($b['branch_name']) ?></option>
+                <?php endforeach; ?>
               </select>
             </div>
           </div>
@@ -791,6 +840,16 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
                 <option value="مالك">مالك</option>
                 <option value="بنك">بنك</option>
                 <option value="كاش">كاش</option>
+              </select>
+            </div>
+            <div class="col-md-6 mb-3">
+              <!-- حقل اختيار الفرع -->
+              <label>الفرع</label>
+              <select name="branch_id" class="form-select" required>
+                <option value="">اختر الفرع</option>
+                <?php foreach($branches as $b): ?>
+                  <option value="<?= $b['id'] ?>"><?= esc($b['branch_name']) ?></option>
+                <?php endforeach; ?>
               </select>
             </div>
           </div>

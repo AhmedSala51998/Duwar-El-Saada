@@ -9,6 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
 
         $payer_name = trim($_POST['payer_name'] ?? '');
         $payment_source = trim($_POST['payment_source'] ?? '');
+        $branch_id = (int)($_POST['branch_id'] ?? 0);
 
         $invoice_serials = $_POST['invoice_serial'] ?? [];
         $invoice_dates   = $_POST['invoice_date'] ?? [];
@@ -64,10 +65,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
             }
 
             $stmt = $pdo->prepare("
-                INSERT INTO expenses(invoice_serial, bill_number, main_expense, sub_expense, expense_desc, expense_amount, vat_value, total_amount, has_vat, expense_file, payer_name, payment_source, created_at)
-                VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)
+                INSERT INTO expenses(branch_id, invoice_serial, bill_number, main_expense, sub_expense, expense_desc, expense_amount, vat_value, total_amount, has_vat, expense_file, payer_name, payment_source, created_at)
+                VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)
             ");
             $stmt->execute([
+                $branch_id,
                 $serial_invoice,
                 $invoice_serial,
                 $main_expense,
@@ -87,8 +89,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
 
             // خصم من العهدة لو المصدر عهدة
             if ($payment_source === 'عهدة') {
-                $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? AND amount > 0 ORDER BY taken_at ASC");
-                $stmtC->execute([$payer_name]);
+                $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? AND branch_id=? AND amount > 0 ORDER BY taken_at ASC");
+                $stmtC->execute([$payer_name , $branch_id]);
                 $custodies = $stmtC->fetchAll(PDO::FETCH_ASSOC);
                 $notes = "مصروفات $main_expense - $sub_expense - $expense_desc";
 
