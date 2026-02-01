@@ -19,6 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
 
     // جلب بيانات الإدخال الجديدة
     $person_name = trim($_POST['person_name'] ?? '');
+    $branch_id   = (int)($_POST['branch_id'] ?? 0);
     $amount      = (float)($_POST['amount'] ?? 0);
     $taken_at    = trim($_POST['taken_at'] ?? '');
     $notes       = trim($_POST['notes'] ?? '');
@@ -41,6 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
     // تحديد هل هناك تغييرات فعلًا
     $newData = [
         'person_name' => $person_name,
+        'branch_id'   => $branch_id,
         'amount'      => $amount,
         'taken_at'    => $taken_at,
         'notes'       => $notes
@@ -55,8 +57,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
     }
 
     if ($changed) {
-        $stmt = $pdo->prepare("UPDATE custodies SET person_name=?, amount=?, main_amount=?, sub_amount=?, taken_at=?, notes=? WHERE id=?");
-        $stmt->execute([$person_name, $amount, $amount, $amount, $taken_at, $notes, $id]);
+        $stmt = $pdo->prepare("UPDATE custodies SET branch_id=?, person_name=?, amount=?, main_amount=?, sub_amount=?, taken_at=?, notes=? WHERE id=?");
+        $stmt->execute([$branch_id, $person_name, $amount, $amount, $amount, $taken_at, $notes, $id]);
         $_SESSION['toast'] = ['type' => 'success', 'msg' => 'تم تعديل العهدة بنجاح'];
     } else {
         $_SESSION['toast'] = ['type' => 'info', 'msg' => 'لا تغييرات للحفظ'];

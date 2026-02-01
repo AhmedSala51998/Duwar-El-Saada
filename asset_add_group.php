@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
         $stmt = $pdo->prepare("
             INSERT INTO assets 
             (branch_id, bill_number, invoice_serial, name, type, quantity, price, has_vat, vat_value, total_amount, payer_name, payment_source, image, created_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)
         ");
 
         foreach ($_POST['name'] as $i => $name) {

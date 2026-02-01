@@ -70,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
         $pdo->beginTransaction();
 
         // إدخال الأصل
-        $pdo->prepare("INSERT INTO assets (branch_id, bill_number , invoice_serial, name, type, quantity, price, has_vat, vat_value, total_amount, payer_name, payment_source, image) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+        $pdo->prepare("INSERT INTO assets (branch_id, bill_number , invoice_serial, name, type, quantity, price, has_vat, vat_value, total_amount, payer_name, payment_source, image) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)")
             ->execute([
                 $branch_id,
                 $bill_number,

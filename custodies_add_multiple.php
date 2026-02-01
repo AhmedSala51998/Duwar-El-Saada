@@ -12,18 +12,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
         $nextNumber = (int)$m[1] + 1;
     }
 
-    $stmt = $pdo->prepare("INSERT INTO custodies (invoice_serial, person_name, amount, main_amount, sub_amount, taken_at, notes)
-                           VALUES (?, ?, ?, ?, ?, ?, ?)");
+    $stmt = $pdo->prepare("INSERT INTO custodies (branch_id, invoice_serial, person_name, amount, main_amount, sub_amount, taken_at, notes)
+                           VALUES (?, ?, ?, ?, ?, ?, ?,?)");
 
     foreach ($custodies as $c) {
         $person = trim($c['person_name'] ?? '');
+        $branch   = (int)($c['branch_id'] ?? 0);
         $amount = (float)($c['amount'] ?? 0);
         $taken  = trim($c['taken_at'] ?? '');
         $notes  = trim($c['notes'] ?? '');
 
         if ($person && $amount > 0 && $taken) {
             $serial_invoice = "DAELC" . str_pad($nextNumber, 5, "0", STR_PAD_LEFT);
-            $stmt->execute([$serial_invoice, $person, $amount, $amount, $amount, $taken, $notes]);
+            $stmt->execute([$branch, $serial_invoice, $person, $amount, $amount, $amount, $taken, $notes]);
             $nextNumber++;
         }
     }
