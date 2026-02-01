@@ -23,6 +23,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
         }
     }
 
+    $branch_id = (int)($_POST['branch_id'] ?? 0);
+
+    if ($branch_id <= 0) {
+        $_SESSION['toast'] = [
+            'type' => 'danger',
+            'msg'  => '❌ يجب اختيار الفرع'
+        ];
+        header('Location: ' . BASE_URL . '/assetes.php');
+        exit;
+    }
+
     // رفع صورة الفاتورة
     $invoice_image = upload_image('invoice_image');
 
@@ -46,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
 
         $stmt = $pdo->prepare("
             INSERT INTO assets 
-            (bill_number, invoice_serial, name, type, quantity, price, has_vat, vat_value, total_amount, payer_name, payment_source, image, created_at)
+            (branch_id, bill_number, invoice_serial, name, type, quantity, price, has_vat, vat_value, total_amount, payer_name, payment_source, image, created_at)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ");
 
@@ -66,6 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
             $total_amount = $total + $vat_value;
 
             $stmt->execute([
+                $branch_id,
                 $invoice_serial,   // bill_number (نفس الرقم للفاتورة كلها)
                 $serial_invoice,   // الرقم التسلسلي العام
                 $name,
@@ -86,8 +98,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
             // التعامل مع العهدة
             if ($payment_source === 'عهدة') {
                 $amountToDeduct = $total_amount;
-                $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? AND amount > 0 ORDER BY taken_at ASC");
-                $stmtC->execute([$payer_name]);
+                $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? AND branch_id=? AND amount > 0 ORDER BY taken_at ASC");
+                $stmtC->execute([$payer_name , $branch_id]);
                 $custodies = $stmtC->fetchAll(PDO::FETCH_ASSOC);
 
                 $totalAvailable = array_sum(array_column($custodies, 'amount'));

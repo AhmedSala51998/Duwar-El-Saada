@@ -20,6 +20,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
         }
     }
 
+    $branch_id = (int)($_POST['branch_id'] ?? 0);
+
+    if ($branch_id <= 0) {
+        $_SESSION['toast'] = [
+            'type' => 'danger',
+            'msg'  => '❌ يجب اختيار الفرع'
+        ];
+        header('Location: ' . BASE_URL . '/assetes.php');
+        exit;
+    }
+
     $name = trim($_POST['name']);
     $type = $_POST['type'] ?? '';
     $payer = trim($_POST['payer_name'] ?? '');
@@ -59,8 +70,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
         $pdo->beginTransaction();
 
         // إدخال الأصل
-        $pdo->prepare("INSERT INTO assets (bill_number , invoice_serial, name, type, quantity, price, has_vat, vat_value, total_amount, payer_name, payment_source, image) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+        $pdo->prepare("INSERT INTO assets (branch_id, bill_number , invoice_serial, name, type, quantity, price, has_vat, vat_value, total_amount, payer_name, payment_source, image) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
             ->execute([
+                $branch_id,
                 $bill_number,
                 $serial_invoice,
                 $name,
@@ -82,8 +94,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
             $amountToDeduct = ($price * $quantity) + $vat_value;
 
             // جلب كل العهد للشخص، الأقدم أولاً
-            $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? AND amount > 0 ORDER BY taken_at ASC");
-            $stmtC->execute([$payer]);
+            $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? AND branch_id=? AND amount > 0 ORDER BY taken_at ASC");
+            $stmtC->execute([$payer , $branch_id]);
             $custodies = $stmtC->fetchAll(PDO::FETCH_ASSOC);
 
             $totalAvailable = array_sum(array_column($custodies, 'amount'));

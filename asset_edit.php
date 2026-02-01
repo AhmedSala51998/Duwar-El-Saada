@@ -9,6 +9,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
     }
     $id = (int)$_POST['id'];
 
+    $branch_id = (int)($_POST['branch_id'] ?? 0);
+
+    if ($branch_id <= 0) {
+        $_SESSION['toast'] = [
+            'type' => 'danger',
+            'msg'  => 'يجب اختيار الفرع'
+        ];
+        header('Location: ' . BASE_URL . '/assetes.php');
+        exit;
+    }
+
     // جلب البيانات القديمة
     $old = $pdo->prepare("SELECT * FROM assets WHERE id=?");
     $old->execute([$id]);
@@ -32,7 +43,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
         'total_amount' => $total_amount,
         'image' => upload_image('image') ?: ($oldData['image'] ?? null),
         'payer_name' => trim($_POST['payer_name'] ?? ''),
-        'payment_source' => $_POST['payment_source'] ?? 'كاش'
+        'payment_source' => $_POST['payment_source'] ?? 'كاش',
+        'branch_id' => $branch_id
     ];
 
     try {
@@ -106,8 +118,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
             if ($newData['payment_source'] === 'عهدة') {
                 $amountNeeded = ($price * $quantity) + $vat_value;
 
-                $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? AND amount > 0 ORDER BY taken_at ASC");
-                $stmtC->execute([$newData['payer_name']]);
+                $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? AND branch_id=? AND amount > 0 ORDER BY taken_at ASC");
+                $stmtC->execute([$newData['payer_name'] , $branch_id]);
                 $custodies = $stmtC->fetchAll(PDO::FETCH_ASSOC);
                 $notes = "شراء " . $_POST['name'];
 
@@ -129,11 +141,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
                 }
 
                 if ($amountNeeded > 0) {
-                    //throw new Exception('رصيد العهدة غير كافي');
                     $pdo->rollBack();
                     $_SESSION['toast'] = [
-                    'type' => 'danger',
-                    'msg'  => 'رصيد العهدة غير كافٍ للشخص: ' . htmlspecialchars($newData['payer_name'])
+                        'type' => 'danger',
+                        'msg'  => 'رصيد العهدة غير كافٍ للشخص ' .
+                                htmlspecialchars($newData['payer_name']) .
+                                ' في هذا الفرع'
                     ];
                     header('Location: ' . BASE_URL . '/assetes.php');
                     exit;
@@ -141,8 +154,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
             }
 
             // تحديث الأصل
-            $pdo->prepare("UPDATE assets SET name=?, type=?, quantity=?, price=?, has_vat=?, vat_value=?, total_amount=?, payer_name=?, payment_source=?, image=? WHERE id=?")
-                ->execute([$newData['name'],$newData['type'],$newData['quantity'],$price,$has_vat,$vat_value,$total_amount,$newData['payer_name'],$newData['payment_source'],$newData['image'],$id]);
+            $pdo->prepare("UPDATE assets SET name=?, type=?, quantity=?, price=?, has_vat=?, vat_value=?, total_amount=?, payer_name=?, payment_source=?, image=?, branch_id=? WHERE id=?")
+                ->execute([$newData['name'],$newData['type'],$newData['quantity'],$price,$has_vat,$vat_value,$total_amount,$newData['payer_name'],$newData['payment_source'],$newData['image'],$branch_id,$id]);
 
             $pdo->commit();
             $_SESSION['toast'] = ['type'=>'success','msg'=>'تم تعديل الأصل بنجاح'];

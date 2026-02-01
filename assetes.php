@@ -148,6 +148,11 @@ input[type="file"] {
 
 <?php require __DIR__.'/partials/header.php'; require_permission('assets.view'); ?>
 
+<?php
+$branchesStmt = $pdo->query("SELECT id, branch_name FROM branches ORDER BY branch_name ASC");
+$branches = $branchesStmt->fetchAll(PDO::FETCH_ASSOC);
+?>
+
 <?php if(!empty($_SESSION['toast'])): 
 $toast = $_SESSION['toast'];
 unset($_SESSION['toast']); 
@@ -178,10 +183,16 @@ $perPage = 10; // عدد النتائج في الصفحة
 $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
 
 // حساب إجمالي الصفوف
-$count_q = "SELECT COUNT(*) AS total FROM assets WHERE 1";
+$count_q = "
+  SELECT COUNT(*) AS total
+  FROM assets a
+  LEFT JOIN branches b ON b.id = a.branch_id
+  WHERE 1
+";
 $count_params = [];
-if($kw!==''){
-  $count_q .= " AND name LIKE ?";
+if($kw !== ''){
+  $count_q .= " AND (a.name LIKE ? OR b.branch_name LIKE ?)";
+  $count_params[] = "%$kw%";
   $count_params[] = "%$kw%";
 }
 
@@ -192,12 +203,20 @@ $total_pages = ceil($total_rows / $perPage);
 $offset = ($page - 1) * $perPage;
 
 // جلب الصفوف الفعلية
-$q = "SELECT * FROM assets WHERE 1";
+$q = "
+  SELECT 
+    a.*,
+    b.name AS branch_name
+  FROM assets a
+  LEFT JOIN branches b ON b.id = a.branch_id
+  WHERE 1
+";
 $ps = [];
-if($kw!==''){ 
-  $q.=" AND name LIKE ?"; 
-  $ps[]="%$kw%"; 
-} 
+if($kw !== ''){
+  $q .= " AND (a.name LIKE ? OR b.branch_name LIKE ?)";
+  $ps[] = "%$kw%";
+  $ps[] = "%$kw%";
+}
 $q.=" ORDER BY id DESC LIMIT $perPage OFFSET $offset";
 
 $s=$pdo->prepare($q);
@@ -317,6 +336,7 @@ $rows=$s->fetchAll();
         <th>#</th>
         <th>الرقم التسلسلي</th>
         <th>الاسم</th>
+        <th>الفرع</th>
         <th>النوع</th>
         <th>العدد</th>
         <th>السعر</th>
@@ -339,6 +359,9 @@ $rows=$s->fetchAll();
           <?php endif; ?>
         </td>-->
         <td data-label="الاسم"><?= esc($r['name']) ?></td>
+        <td data-label="الفرع">
+          <?= esc($r['branch_name'] ?? '-') ?>
+        </td>
         <td data-label="النوع"><?= esc($r['type']) ?></td>
         <td data-label="العدد"><?= (int)$r['quantity'] ?></td>
         <td data-label="السعر"><?= number_format((float)$r['price'],2) ?></td>
@@ -463,6 +486,16 @@ $rows=$s->fetchAll();
                 }
                 ?>
 
+              </select>
+
+              <label>الفرع</label>
+              <select name="branch_id" class="form-select" required>
+                <option value="" hidden>اختر الفرع</option>
+                <?php foreach($branches as $b): ?>
+                  <option value="<?= $b['id'] ?>" <?= $r['branch_id']==$b['id']?'selected':'' ?>>
+                    <?= esc($b['branch_name']) ?>
+                  </option>
+                <?php endforeach; ?>
               </select>
 
               <label>صورة</label>
@@ -616,6 +649,16 @@ $rows=$s->fetchAll();
             </select>
           </div>
 
+          <div>
+            <label class="form-label">الفرع</label>
+            <select name="branch_id" class="form-select" required>
+              <option hidden>اختر الفرع</option>
+              <?php foreach($branches as $b): ?>
+                <option value="<?= $b['id'] ?>"><?= esc($b['branch_name']) ?></option>
+              <?php endforeach; ?>
+            </select>
+          </div>
+
           <div><label class="form-label">صورة</label>
             <label class="custom-file-upload w-100">
               <i class="bi bi-image"></i>
@@ -669,6 +712,15 @@ $rows=$s->fetchAll();
                 <option>بنك</option>
               </select>
             </div>
+            <div class="col-md-6 mb-3">
+              <label>الفرع</label>
+              <select name="branch_id" class="form-select" required>
+                <option hidden>اختر الفرع</option>
+                <?php foreach($branches as $b): ?>
+                  <option value="<?= $b['id'] ?>"><?= esc($b['branch_name']) ?></option>
+                <?php endforeach; ?>
+              </select>
+           </div>
           </div>
 
           <div class="table-responsive">
@@ -776,6 +828,15 @@ $rows=$s->fetchAll();
                 <option>مالك</option>
                 <option>كاش</option>
                 <option>بنك</option>
+              </select>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label>الفرع</label>
+              <select name="branch_id" class="form-select" required>
+                <option hidden>اختر الفرع</option>
+                <?php foreach($branches as $b): ?>
+                  <option value="<?= $b['id'] ?>"><?= esc($b['branch_name']) ?></option>
+                <?php endforeach; ?>
               </select>
             </div>
           </div>
