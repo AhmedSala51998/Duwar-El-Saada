@@ -161,12 +161,6 @@
   white-space: nowrap;
 }
 
-.custom-table th:nth-child(3),
-.custom-table td:nth-child(3) {
-  width: 60px; /* زِد العرض كما يناسبك */
-  white-space: nowrap;
-}
-
 /* العمود السادس (السعر) */
 .custom-table th:nth-child(6),
 .custom-table td:nth-child(6) {
@@ -213,17 +207,14 @@
 <?php
 $kw = trim($_GET['kw'] ?? '');
 
-// استعلام الأصناف مع الفرع
-$q = "SELECT p.*, o.invoice_serial, b.branch_name
-      FROM purchases p
+$q = "SELECT p.*, o.invoice_serial 
+      FROM purchases p 
       LEFT JOIN orders_purchases o ON p.order_id = o.id
-      LEFT JOIN branches b ON p.branch_id = b.id
       WHERE 1";
 
 $params = [];
 if($kw !== '') { 
-    $q .= " AND (p.name LIKE ? OR b.branch_name LIKE ?)"; 
-    $params[] = "%$kw%"; 
+    $q .= " AND p.name LIKE ?"; 
     $params[] = "%$kw%"; 
 }
 
@@ -231,36 +222,25 @@ $q .= " ORDER BY p.id DESC";
 
 // عدد الصفوف لكل صفحة
 $perPage = 10; 
+
+// الصفحة الحالية
 $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
 
-// استعلام العد الكلي للباجينشن
-$countQuery = "SELECT COUNT(DISTINCT p.id) as total
-               FROM purchases p
-               LEFT JOIN orders_purchases o ON p.order_id = o.id
-               LEFT JOIN branches b ON p.branch_id = b.id
-               WHERE 1";
-if($kw !== '') {
-    $countQuery .= " AND (p.name LIKE ? OR b.branch_name LIKE ?)";
-}
-
-$stmtTotal = $pdo->prepare($countQuery);
+// جلب العدد الكلي للصفوف
+$stmtTotal = $pdo->prepare(str_replace("SELECT p.*, o.invoice_serial","SELECT COUNT(*) as total",$q));
 $stmtTotal->execute($params);
-$total_rows = $stmtTotal->fetchColumn();
+$total_rows = $stmtTotal->fetch()['total'];
 $total_pages = ceil($total_rows / $perPage);
 
 // حساب offset
 $offset = ($page - 1) * $perPage;
-$q .= " LIMIT ? OFFSET ?";
-$params[] = $perPage;
-$params[] = $offset;
 
-// تنفيذ الاستعلام النهائي
+// تعديل الاستعلام الأصلي ليشمل LIMIT
+$q .= " LIMIT $perPage OFFSET $offset";
 $stmt = $pdo->prepare($q); 
 $stmt->execute($params); 
-$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-// جلب جميع الفروع للاختيار
-$branches = $pdo->query("SELECT id, branch_name FROM branches ORDER BY branch_name ASC")->fetchAll(PDO::FETCH_ASSOC);
+$rows = $stmt->fetchAll();
+$branches = $pdo->query("SELECT id, name FROM branches ORDER BY name ASC")->fetchAll(PDO::FETCH_ASSOC);
 //$can_edit = in_array(current_role(), ['admin','manager']);
 
 ?>
@@ -334,7 +314,6 @@ $branches = $pdo->query("SELECT id, branch_name FROM branches ORDER BY branch_na
       <tr>
         <th>#</th>
         <th>رقم تسلسلي</th>
-        <th>الفرع</th>
         <th>البيان</th>
         <th>نوع الوحدة</th>
         <th>الكمية</th>
@@ -353,7 +332,6 @@ $branches = $pdo->query("SELECT id, branch_name FROM branches ORDER BY branch_na
       <tr class="text-center">
         <td class="fw-bold text-muted" data-label="#"> <?= $r['id'] ?> </td>
         <td data-label="رقم تسلسلي"> <?= esc($r['invoice_serial'] ?? '-') ?> </td>
-        <td data-label="الفرع"> <?= esc($r['branch_name'] ?? '-') ?> </td>
         <td data-label="البيان"> <?= esc($r['name']) ?> </td>
         <td data-label="نوع الوحدة"> <?= esc($r['unit']) ?> </td>
         <td data-label="الكمية">
