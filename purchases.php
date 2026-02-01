@@ -161,6 +161,11 @@
   white-space: nowrap;
 }
 
+.custom-table th:nth-child(3),
+.custom-table td:nth-child(3) {
+  width: 60px; /* زِد العرض كما يناسبك */
+  white-space: nowrap;
+}
 /* العمود السادس (السعر) */
 .custom-table th:nth-child(6),
 .custom-table td:nth-child(6) {
@@ -316,6 +321,7 @@ $branches = $pdo->query("SELECT id, name FROM branches ORDER BY name ASC")->fetc
       <tr>
         <th>#</th>
         <th>رقم تسلسلي</th>
+        <th>الفرع</th>
         <th>البيان</th>
         <th>نوع الوحدة</th>
         <th>الكمية</th>
@@ -334,6 +340,7 @@ $branches = $pdo->query("SELECT id, name FROM branches ORDER BY name ASC")->fetc
       <tr class="text-center">
         <td class="fw-bold text-muted" data-label="#"> <?= $r['id'] ?> </td>
         <td data-label="رقم تسلسلي"> <?= esc($r['invoice_serial'] ?? '-') ?> </td>
+        <td data-label="الفرع"> <?= esc($r['branch_name'] ?? '-') ?> </td>
         <td data-label="البيان"> <?= esc($r['name']) ?> </td>
         <td data-label="نوع الوحدة"> <?= esc($r['unit']) ?> </td>
         <td data-label="الكمية">
