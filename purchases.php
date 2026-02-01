@@ -169,6 +169,13 @@
   text-align: center;
 }
 
+.custom-table th:nth-child(3),
+.custom-table td:nth-child(3) {
+  width: 60px; /* عرض أكبر للسعر */
+  white-space: nowrap;
+  text-align: center;
+}
+
 .custom-table th:nth-child(11),
 .custom-table td:nth-child(11) {
   width: 80px; /* عرض أكبر للسعر */
@@ -207,7 +214,7 @@
 <?php
 $kw = trim($_GET['kw'] ?? '');
 
-$q = "SELECT p.*, o.invoice_serial, b.name AS branch_name
+$q = "SELECT p.*, o.invoice_serial, b.branch_name
       FROM purchases p 
       LEFT JOIN orders_purchases o ON p.order_id = o.id
       LEFT JOIN branches b ON p.branch_id = b.id
@@ -215,7 +222,7 @@ $q = "SELECT p.*, o.invoice_serial, b.name AS branch_name
 
 $params = [];
 if($kw !== '') { 
-    $q .= " AND (p.name LIKE ? OR b.name LIKE ?)"; 
+    $q .= " AND (p.name LIKE ? OR b.branch_name LIKE ?)"; 
     $params[] = "%$kw%"; 
     $params[] = "%$kw%"; 
 }
@@ -233,7 +240,7 @@ $countQuery = "SELECT COUNT(*) as total
                LEFT JOIN branches b ON p.branch_id = b.id
                WHERE 1";
 if($kw !== '') {
-    $countQuery .= " AND (p.name LIKE ? OR b.name LIKE ?)";
+    $countQuery .= " AND (p.name LIKE ? OR b.branch_name LIKE ?)";
 }
 $stmtTotal = $pdo->prepare($countQuery);
 $stmtTotal->execute($params);
@@ -248,7 +255,7 @@ $stmt->execute($params);
 $rows = $stmt->fetchAll();
 
 // جلب الفروع (للاختيار مثلاً)
-$branches = $pdo->query("SELECT id, name FROM branches ORDER BY name ASC")->fetchAll(PDO::FETCH_ASSOC);
+$branches = $pdo->query("SELECT id, branch_name FROM branches ORDER BY branch_name ASC")->fetchAll(PDO::FETCH_ASSOC);
 //$can_edit = in_array(current_role(), ['admin','manager']);
 
 ?>
