@@ -166,7 +166,14 @@ input[type="file"]{display:none}
 
 .custom-table th:nth-child(3),
 .custom-table td:nth-child(3) {
-    width: 50px; /* عرض ثابت */
+    width: 60px; /* عرض ثابت */
+    font-size: 0.75rem; /* تصغير الخط */
+    text-align: center;
+}
+
+.custom-table th:nth-child(10),
+.custom-table td:nth-child(10) {
+    width: 60px; /* عرض ثابت */
     font-size: 0.75rem; /* تصغير الخط */
     text-align: center;
 }
