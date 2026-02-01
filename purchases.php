@@ -252,7 +252,7 @@ $stmt->execute($params);
 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // جلب قائمة الفروع (مثلاً لقائمة dropdown)
-$branches = $pdo->query("SELECT id, name FROM branches ORDER BY name ASC")->fetchAll(PDO::FETCH_ASSOC);
+$branches = $pdo->query("SELECT id, branch_name FROM branches ORDER BY name ASC")->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!--<div class="d-flex flex-wrap gap-2 justify-content-between align-items-center mb-3">
