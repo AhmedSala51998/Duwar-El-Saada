@@ -234,7 +234,7 @@ $perPage = 10;
 $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
 
 // جلب العدد الكلي للصفوف (مع تجاهل LIMIT)
-$stmtTotal = $pdo->prepare(str_replace("SELECT p.*, o.invoice_serial, b.name AS branch_name","SELECT COUNT(*) as total",$q));
+$stmtTotal = $pdo->prepare("SELECT COUNT(*) as total FROM purchases p LEFT JOIN orders_purchases o ON p.order_id = o.id LEFT JOIN branches b ON p.branch_id = b.id WHERE 1" . ($kw !== '' ? " AND p.name LIKE ?" : ""));
 $stmtTotal->execute($params);
 $total_rows = $stmtTotal->fetch()['total'];
 $total_pages = ceil($total_rows / $perPage);
