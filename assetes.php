@@ -191,7 +191,7 @@ $count_q = "
 ";
 $count_params = [];
 if($kw !== ''){
-  $count_q .= " AND (a.name LIKE ? OR b.branch_name LIKE ?)";
+  $count_q .= " AND (a.name LIKE ? OR b.name LIKE ?)";
   $count_params[] = "%$kw%";
   $count_params[] = "%$kw%";
 }
@@ -217,7 +217,7 @@ if($kw !== ''){
   $ps[] = "%$kw%";
   $ps[] = "%$kw%";
 }
-$q.=" ORDER BY id DESC LIMIT $perPage OFFSET $offset";
+$q.=" ORDER BY a.id DESC LIMIT $perPage OFFSET $offset";
 
 $s=$pdo->prepare($q);
 $s->execute($ps);
