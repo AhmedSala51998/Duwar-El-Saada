@@ -8,8 +8,9 @@ $kw        = trim($_GET['kw'] ?? '');
 $date_type = $_GET['date_type'] ?? '';
 $from_date = $_GET['from_date'] ?? '';
 $to_date   = $_GET['to_date'] ?? '';
+$branch_id = $_GET['branch_id'] ?? '';
 
-// منطق اليوم / أمس / من تاريخ لتاريخ
+/* منطق اليوم / أمس */
 if ($date_type === 'today') {
     $today = date('Y-m-d');
     $from_date = $to_date = $today;
@@ -18,30 +19,43 @@ if ($date_type === 'today') {
     $from_date = $to_date = $yesterday;
 }
 
-$q = "SELECT 
-        p.*, 
-        o.invoice_serial, 
-        o.supplier_name,
-        o.created_at AS order_dating,
-        o.vat AS order_vat
-      FROM purchases p
-      LEFT JOIN orders_purchases o ON p.order_id = o.id
-      WHERE 1";
+/* =====================
+   الاستعلام
+===================== */
+$q = "
+SELECT 
+    p.*, 
+    o.invoice_serial, 
+    o.supplier_name,
+    o.created_at AS order_dating,
+    o.vat AS order_vat,
+    b.branch_name
+FROM purchases p
+LEFT JOIN orders_purchases o ON p.order_id = o.id
+LEFT JOIN branches b ON b.id = o.branch_id
+WHERE 1
+";
 
 $params = [];
 
-// فلترة بالكلمة المفتاحية
-if($kw !== '') { 
+/* فلترة بالكلمة المفتاحية */
+if ($kw !== '') { 
     $q .= " AND p.name LIKE ?"; 
     $params[] = "%$kw%"; 
 }
 
-// فلترة بالتواريخ
-if($from_date !== '') {
+/* فلترة بالفرع */
+if (!empty($branch_id) && $branch_id != 0) {
+    $q .= " AND o.branch_id = ?";
+    $params[] = $branch_id;
+}
+
+/* فلترة بالتواريخ */
+if ($from_date !== '') {
     $q .= " AND DATE(o.created_at) >= ?";
     $params[] = $from_date;
 }
-if($to_date !== '') {
+if ($to_date !== '') {
     $q .= " AND DATE(o.created_at) <= ?";
     $params[] = $to_date;
 }
@@ -52,14 +66,17 @@ $s = $pdo->prepare($q);
 $s->execute($params);
 $rows = $s->fetchAll(PDO::FETCH_ASSOC);
 
-// تجهيز البيانات للتصدير
+/* =====================
+   تجهيز بيانات الإكسيل
+===================== */
 $data = [];
 $data[] = [
     "ID",
+    "الفرع",
     "رقم تسلسلي",
     "البيان",
     "المورد",
-    "الوحدة \ العبوة",
+    "الوحدة \\ العبوة",
     "الكمية",
     "نوع الوحدة",
     "السعر",
@@ -72,12 +89,13 @@ $data[] = [
 ];
 
 foreach ($rows as $r) {
+
+    /* نفس حساباتك تمامًا */
     $quantity = (float)$r['total_packages'];
     $price = (float)$r['total_price'];
     $total = $r['unit_total'];
     $price1 = $r['price'];
 
-    // تحديد هل الفاتورة فيها ضريبة أم لا
     if (!empty($r['order_vat']) && $r['order_vat'] > 0) {
         $vat = $r['unit_vat'];
         $total_with_vat = $r['unit_all_total'];
@@ -91,6 +109,7 @@ foreach ($rows as $r) {
 
     $data[] = [
         $r['id'],
+        $r['branch_name'] ?? '-',
         $r['invoice_serial'] ?? '-',
         $r['name'],
         $r['supplier_name'],
@@ -107,7 +126,9 @@ foreach ($rows as $r) {
     ];
 }
 
-// إضافة صف في أول الملف لتوضيح نوع التقرير (اليوم / أمس / فترة محددة)
+/* =====================
+   سطر توضيح نوع التقرير
+===================== */
 $header_note = '';
 if ($date_type === 'today') {
     $header_note = "تقرير اليوم (" . date('Y-m-d') . ")";
@@ -119,10 +140,10 @@ if ($date_type === 'today') {
     $header_note = "كل التقارير";
 }
 
-// نضيفه كصف أول في الإكسيل
+/* إضافته كأول صف */
 array_unshift($data, [$header_note]);
 
-// إنشاء ملف Excel وتنزيله
+/* إنشاء وتنزيل الملف */
 $xlsx = Shuchkin\SimpleXLSXGen::fromArray($data);
 $xlsx->downloadAs('purchases.xlsx');
 ?>

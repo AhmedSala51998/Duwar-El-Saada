@@ -6,13 +6,14 @@ require_permission('purchases.print_pdf');
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-// === جلب المتغيرات ===
+/* === المتغيرات === */
 $date_type = $_GET['date_type'] ?? '';
 $from_date = $_GET['from_date'] ?? '';
 $to_date   = $_GET['to_date'] ?? '';
 $kw        = trim($_GET['kw'] ?? '');
+$branch_id = $_GET['branch_id'] ?? '';
 
-// === تحديد نوع التقرير (اليوم / أمس / من إلى) ===
+/* === اليوم / أمس === */
 if ($date_type === 'today') {
     $today = date('Y-m-d');
     $from_date = $to_date = $today;
@@ -21,26 +22,36 @@ if ($date_type === 'today') {
     $from_date = $to_date = $yesterday;
 }
 
-// === بناء الاستعلام ===
-$q = "SELECT 
-        p.*, 
-        o.invoice_serial, 
-        o.supplier_name,
-        o.created_at AS order_dating,
-        o.vat AS order_vat
-      FROM purchases p
-      LEFT JOIN orders_purchases o ON p.order_id = o.id
-      WHERE 1=1";
+/* === الاستعلام === */
+$q = "
+SELECT 
+    p.*, 
+    o.invoice_serial, 
+    o.supplier_name,
+    o.created_at AS order_dating,
+    o.vat AS order_vat,
+    b.branch_name
+FROM purchases p
+LEFT JOIN orders_purchases o ON p.order_id = o.id
+LEFT JOIN branches b ON b.id = o.branch_id
+WHERE 1=1
+";
 
 $params = [];
 
-// فلترة بالكلمة المفتاحية
-if($kw !== '') { 
+/* كلمة مفتاحية */
+if ($kw !== '') { 
     $q .= " AND p.name LIKE ?"; 
     $params[] = "%$kw%"; 
 }
 
-// فلترة حسب التاريخ
+/* فلترة بالفرع */
+if (!empty($branch_id) && $branch_id != 0) {
+    $q .= " AND o.branch_id = ?";
+    $params[] = $branch_id;
+}
+
+/* فلترة تاريخ */
 if ($from_date) { 
     $q .= " AND DATE(o.created_at) >= ?"; 
     $params[] = $from_date; 
@@ -165,6 +176,7 @@ th, td {
 <tr>
 <th>#</th>
 <th>رقم تسلسلي</th>
+<th>الفرع</th>
 <th>البيان</th>
 <th>المورد</th>
 <th>الوحدة \ العبوة</th>
@@ -207,6 +219,7 @@ foreach($rows as $r):
 <tr>
   <td><?= $r['id'] ?></td>
   <td><?= esc($r['invoice_serial'] ?? '-') ?></td>
+  <td><?= esc($r['branch_name'] ?? '-') ?></td>
   <td><?= esc($r['name']) ?></td>
   <td><?= esc($r['supplier_name']) ?></td>
   <td><?= esc($r['package']) ?></td>
