@@ -6,7 +6,6 @@ error_reporting(E_ALL);
 if(!defined('APP_NAME')) define('APP_NAME','دوار السعادة');
 if(!defined('BASE_URL')) define('BASE_URL','');
 date_default_timezone_set('Asia/Riyadh');
-if(session_status() === PHP_SESSION_NONE)
 
 // DB
 $DB_HOST = getenv('DB_HOST') ?: 'localhost';
