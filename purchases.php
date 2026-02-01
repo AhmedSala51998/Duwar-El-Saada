@@ -207,7 +207,7 @@
 <?php
 $kw = trim($_GET['kw'] ?? '');
 
-$q = "SELECT p.*, o.invoice_serial, b.branch_name AS branch_name
+$q = "SELECT p.*, o.invoice_serial, b.name AS branch_name
       FROM purchases p 
       LEFT JOIN orders_purchases o ON p.order_id = o.id
       LEFT JOIN branches b ON p.branch_id = b.id
@@ -216,7 +216,7 @@ $q = "SELECT p.*, o.invoice_serial, b.branch_name AS branch_name
 
 $params = [];
 if($kw !== '') { 
-    $q .= " AND (p.name LIKE ? OR b.branch_name LIKE ?)"; 
+    $q .= " AND (p.name LIKE ? OR b.name LIKE ?)"; 
     $params[] = "%$kw%"; 
     $params[] = "%$kw%"; 
 }
