@@ -184,7 +184,7 @@ $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
 
 // حساب إجمالي الصفوف
 $count_q = "
-  SELECT COUNT(*) AS total
+  SELECT COUNT(DISTINCT a.id) AS total
   FROM assets a
   LEFT JOIN branches b ON b.id = a.branch_id
   WHERE 1
