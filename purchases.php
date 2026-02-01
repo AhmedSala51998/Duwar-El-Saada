@@ -1,3 +1,4 @@
+<?php require __DIR__.'/partials/header.php'; require_permission('purchases.view'); ?>
 <!-- CSS للستايل -->
  <?php
  ini_set('display_errors', 1);
@@ -185,8 +186,6 @@
   text-align: center;
 }
 </style>
-
-<?php require __DIR__.'/partials/header.php'; require_permission('purchases.view'); ?>
 
 <?php if(!empty($_SESSION['toast'])): 
   $toast = $_SESSION['toast'];
