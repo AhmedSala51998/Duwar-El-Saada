@@ -7,6 +7,7 @@ $kw         = trim($_GET['kw'] ?? '');
 $date_type  = $_GET['date_type'] ?? '';
 $from_date  = $_GET['from_date'] ?? '';
 $to_date    = $_GET['to_date'] ?? '';
+$branch_id  = $_GET['branch_id'] ?? '';
 
 $params = [];
 $dateFilter = '';
@@ -20,25 +21,38 @@ if ($date_type === 'today') {
     $from_date = $to_date = $yesterday;
 }
 
-// فلترة بالبحث بالكلمة
-$q = "SELECT id,name,type,quantity,price,has_vat,vat_value,payer_name,payment_source,total_amount,created_at FROM assets WHERE 1";
+// جلب قائمة الفروع
+$branches = $pdo->query("SELECT id, branch_name FROM branches ORDER BY branch_name ASC")->fetchAll(PDO::FETCH_ASSOC);
 
+// استعلام الأصول
+$q = "SELECT a.*, b.branch_name 
+      FROM assets a
+      LEFT JOIN branches b ON a.branch_id = b.id
+      WHERE 1";
+
+// فلترة بالكلمة
 if ($kw !== '') { 
-  $q .= " AND name LIKE ?"; 
+  $q .= " AND a.name LIKE ?"; 
   $params[] = "%$kw%"; 
 }
 
 // فلترة بالتواريخ
 if ($from_date) { 
-  $q .= " AND DATE(created_at) >= ?"; 
+  $q .= " AND DATE(a.created_at) >= ?"; 
   $params[] = $from_date; 
 }
 if ($to_date) { 
-  $q .= " AND DATE(created_at) <= ?"; 
+  $q .= " AND DATE(a.created_at) <= ?"; 
   $params[] = $to_date; 
 }
 
-$q .= " ORDER BY id DESC";
+// فلترة بالفرع إذا تم تحديده
+if ($branch_id !== '') {
+    $q .= " AND a.branch_id = ?";
+    $params[] = $branch_id;
+}
+
+$q .= " ORDER BY a.id DESC";
 
 $s = $pdo->prepare($q); 
 $s->execute($params); 
@@ -61,19 +75,19 @@ $rows = $s->fetchAll();
     th, td { padding: 3px; }
     #printBtnContainer,
     #printBtnContainer * {
-      display: none !important; /* إخفاء الزر وكل محتوياته أثناء الطباعة */
+      display: none !important; 
     }
   }
   table {
     width: 100%;
     border-collapse: collapse;
-    table-layout: fixed; /* مهم */
+    table-layout: fixed;
   }
   th, td {
     border: 1px solid #ddd;
     padding: 4px;
     text-align: center;
-    word-wrap: break-word; /* لتقسيم النصوص الطويلة */
+    word-wrap: break-word;
   }
   button {
     padding: 8px 15px;
@@ -100,47 +114,9 @@ if ($date_type === 'today') {
 }
 ?>
 
-<!-- زر الطباعة -->
 <div id="printBtnContainer" style="text-align:center;margin:20px 0; display: flex; justify-content: center; gap: 15px;">
-  <!-- زر الطباعة -->
-  <button 
-    onclick="printAndGoBack()" 
-    style="
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      font-size: 16px;
-      font-weight: bold;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.3s;
-    "
-    onmouseover="this.style.backgroundColor='#45a049';"
-    onmouseout="this.style.backgroundColor='#4CAF50';"
-  >
-    طباعة التقرير
-  </button>
-
-  <!-- زر الرجوع -->
-  <button 
-    onclick="goBack()" 
-    style="
-      background-color: #f44336;  /* أحمر */
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      font-size: 16px;
-      font-weight: bold;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.3s;
-    "
-    onmouseover="this.style.backgroundColor='#d32f2f';"
-    onmouseout="this.style.backgroundColor='#f44336';"
-  >
-    العودة للصفحة السابقة
-  </button>
+  <button onclick="printAndGoBack()" style="background-color: #4CAF50; color: white; border: none; padding: 10px 20px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer;">طباعة التقرير</button>
+  <button onclick="goBack()" style="background-color: #f44336; color: white; border: none; padding: 10px 20px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer;">العودة للصفحة السابقة</button>
 </div>
 
 <table>
@@ -156,6 +132,7 @@ if ($date_type === 'today') {
   <th>الإجمالي بعد الضريبة</th>
   <th>الدافع</th>
   <th>مصدر الدفع</th>
+  <th>الفرع</th>
   <th>التاريخ</th>
 </tr>
 </thead>
@@ -194,29 +171,20 @@ foreach($rows as $r):
   <td><?= number_format($total_with_vat, 7) ?></td>
   <td><?= htmlspecialchars($r['payer_name']) ?></td>
   <td><?= htmlspecialchars($r['payment_source'] ?? '-') ?></td>
+  <td><?= htmlspecialchars($r['branch_name'] ?? '-') ?></td>
   <td><?= htmlspecialchars($r['created_at']) ?></td>
 </tr>
 <?php endforeach; ?>
 </tbody>
 
 <tfoot>
-<?php if(!empty($r['has_vat']) && $r['has_vat'] == 1){ ?>   
 <tr style="font-weight:bold;background:#f1f1f1">
   <td colspan="5">الإجماليات الكلية</td>
   <td><?= number_format($totalBefore, 4) ?></td>
   <td><?= number_format($totalVat, 4) ?></td>
   <td><?= number_format($totalAfter, 4) ?></td>
-  <td colspan="3"></td>
+  <td colspan="4"></td>
 </tr>
-<?php }else{ ?>
-<tr style="font-weight:bold;background:#f1f1f1">
-  <td colspan="5">الإجماليات الكلية</td>
-  <td><?= number_format($totalBefore, 4) ?></td>
-  <td>----</td>
-  <td><?= number_format($totalAfter, 4) ?></td>
-  <td colspan="3"></td>
-</tr>
-<?php } ?>   
 </tfoot>
 </table>
 
