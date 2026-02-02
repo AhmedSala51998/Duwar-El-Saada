@@ -195,7 +195,7 @@ th, td {
 <?php 
 $totalBefore = $totalVat = $totalAfter = 0;
 $price = 0;
-
+$branchTotals = [];
 foreach($rows as $r): 
   $before = $r['unit_total'];
 
@@ -211,6 +211,20 @@ foreach($rows as $r):
       $after =  $r['unit_all_total'];
       $price = $r['price'] + ($r['price'] * 0.15);
   }
+
+  $branchKey = $r['branch_name'] ?? 'بدون فرع';
+
+  if (!isset($branchTotals[$branchKey])) {
+      $branchTotals[$branchKey] = [
+          'before' => 0,
+          'vat'    => 0,
+          'after'  => 0
+      ];
+  }
+
+  $branchTotals[$branchKey]['before'] += $before;
+  $branchTotals[$branchKey]['vat']    += $vat;
+  $branchTotals[$branchKey]['after']  += $after;
 
   $totalBefore += $before;
   $totalVat += $vat;
@@ -236,23 +250,40 @@ foreach($rows as $r):
 <?php endforeach; ?>
 </tbody>
 <tfoot>
-<?php if($totalVat != 0){ ?>
-<tr>
-  <td colspan="8">الإجماليات الكلية</td>
-  <td><?= number_format($totalBefore, 4) ?></td>
-  <td><?= number_format($totalVat, 4) ?></td>
-  <td><?= number_format($totalAfter, 4) ?></td>
-  <td colspan="3"></td>
-</tr>
-<?php }else{ ?>
+
+<?php if(!empty($branch_id) && $branch_id != 0): ?>
+  <!-- إجمالي فرع واحد -->
   <tr>
-    <td colspan="8">الإجماليات الكلية</td>
-    <td><?= number_format($totalBefore, 4) ?></td>
-    <td>-----</td>
-    <td><?= number_format($totalAfter, 4) ?></td>
-  <td colspan="3"></td>
-</tr>
-<?php } ?>
+    <td colspan="8">إجمالي الفرع</td>
+    <td><?= number_format($totalBefore,4) ?></td>
+    <td><?= $totalVat > 0 ? number_format($totalVat,4) : '-----' ?></td>
+    <td><?= number_format($totalAfter,4) ?></td>
+    <td colspan="3"></td>
+  </tr>
+
+<?php else: ?>
+  <!-- إجماليات كل الفروع -->
+  <?php foreach($branchTotals as $branch => $t): ?>
+  <tr>
+    <td colspan="8">إجمالي فرع: <?= esc($branch) ?></td>
+    <td><?= number_format($t['before'],4) ?></td>
+    <td><?= $t['vat'] > 0 ? number_format($t['vat'],4) : '-----' ?></td>
+    <td><?= number_format($t['after'],4) ?></td>
+    <td colspan="3"></td>
+  </tr>
+  <?php endforeach; ?>
+
+  <!-- الإجمالي العام -->
+  <tr style="background:#ddd;font-weight:bold">
+    <td colspan="8">الإجمالي الكلي لكل الفروع</td>
+    <td><?= number_format($totalBefore,4) ?></td>
+    <td><?= $totalVat > 0 ? number_format($totalVat,4) : '-----' ?></td>
+    <td><?= number_format($totalAfter,4) ?></td>
+    <td colspan="3"></td>
+  </tr>
+
+<?php endif; ?>
+
 </tfoot>
 </table>
 
