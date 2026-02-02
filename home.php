@@ -185,14 +185,19 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 
+
 // ===============================
 // 🟢 Branch Filter (عام لكل الصفحة)
 // ===============================
 $branch_id = $_GET['branch_id'] ?? '';
 
 $branchWhere = '';
+$branchParams = [];
+
 if ($branch_id !== '' && $branch_id !== 'all') {
-    $branchWhere = " AND op.branch_id = $branch_id ";
+    // المشتريات مربوطة بأوامر التشغيل
+    $branchWhere = " AND op.branch_id = ? ";
+    $branchParams[] = $branch_id;
 }
 
 $pc = (int)$pdo->query("SELECT COUNT(*) c FROM purchases")->fetch()['c'];
@@ -260,7 +265,6 @@ $expensesCountByMonth = $pdo->query("
 // 🟢 PHP: تجهيز البيانات لكل فلتر
 // ===================================
 
-
 // ===================================
 // 🟢 PHP: تجهيز البيانات لكل فلتر
 // ===================================
@@ -315,42 +319,51 @@ $purchasesAmountByYear = $pdo->query("
     GROUP BY y ORDER BY y DESC
 ")->fetchAll(PDO::FETCH_KEY_PAIR);
 
-// باقي البيانات (Orders, Expenses, Custodies, Assets) تبقى زي الأصل تمامًا بدون أي تعديل
 // Orders
 $ordersByWeek = $pdo->query("
-    SELECT DATE_FORMAT(created_at, '%x-%v') AS w, COUNT(*) AS c
-    FROM orders
+    SELECT DATE_FORMAT(o.created_at, '%x-%v') AS w, COUNT(DISTINCT o.id) AS c
+    FROM orders o
+    INNER JOIN purchases p ON o.id = p.order_id
+    WHERE 1 $branchWhere
     GROUP BY w ORDER BY w DESC
 ")->fetchAll(PDO::FETCH_KEY_PAIR);
 
 $ordersByMonth = $pdo->query("
-    SELECT DATE_FORMAT(created_at, '%Y-%m') AS m, COUNT(*) AS c
-    FROM orders
+    SELECT DATE_FORMAT(o.created_at, '%Y-%m') AS m, COUNT(DISTINCT o.id) AS c
+    FROM orders o
+    INNER JOIN purchases p ON o.id = p.order_id
+    WHERE 1 $branchWhere
     GROUP BY m ORDER BY m DESC
 ")->fetchAll(PDO::FETCH_KEY_PAIR);
 
 $ordersByYear = $pdo->query("
-    SELECT DATE_FORMAT(created_at, '%Y') AS y, COUNT(*) AS c
-    FROM orders
+    SELECT DATE_FORMAT(o.created_at, '%Y') AS y, COUNT(DISTINCT o.id) AS c
+    FROM orders o
+    INNER JOIN purchases p ON o.id = p.order_id
+    WHERE 1 $branchWhere
     GROUP BY y ORDER BY y DESC
 ")->fetchAll(PDO::FETCH_KEY_PAIR);
+
 
 // Expenses (عدد)
 $expensesCountByWeek = $pdo->query("
     SELECT DATE_FORMAT(created_at, '%x-%v') AS w, COUNT(*) AS c
     FROM expenses
+    WHERE 1 $branchWhere
     GROUP BY w ORDER BY w DESC
 ")->fetchAll(PDO::FETCH_KEY_PAIR);
 
 $expensesCountByMonth = $pdo->query("
     SELECT DATE_FORMAT(created_at, '%Y-%m') AS m, COUNT(*) AS c
     FROM expenses
+    WHERE 1 $branchWhere
     GROUP BY m ORDER BY m DESC
 ")->fetchAll(PDO::FETCH_KEY_PAIR);
 
 $expensesCountByYear = $pdo->query("
     SELECT DATE_FORMAT(created_at, '%Y') AS y, COUNT(*) AS c
     FROM expenses
+    WHERE 1 $branchWhere
     GROUP BY y ORDER BY y DESC
 ")->fetchAll(PDO::FETCH_KEY_PAIR);
 
@@ -358,57 +371,89 @@ $expensesCountByYear = $pdo->query("
 $expensesValueByWeek = $pdo->query("
     SELECT DATE_FORMAT(created_at, '%x-%v') AS w, SUM(total_amount) AS total
     FROM expenses
+    WHERE 1 $branchWhere
     GROUP BY w ORDER BY w DESC
 ")->fetchAll(PDO::FETCH_KEY_PAIR);
 
 $expensesValueByMonth = $pdo->query("
     SELECT DATE_FORMAT(created_at, '%Y-%m') AS m, SUM(total_amount) AS total
     FROM expenses
+    WHERE 1 $branchWhere
     GROUP BY m ORDER BY m DESC
 ")->fetchAll(PDO::FETCH_KEY_PAIR);
 
 $expensesValueByYear = $pdo->query("
     SELECT DATE_FORMAT(created_at, '%Y') AS y, SUM(total_amount) AS total
     FROM expenses
+    WHERE 1 $branchWhere
     GROUP BY y ORDER BY y DESC
 ")->fetchAll(PDO::FETCH_KEY_PAIR);
 
 // Custodies (عدد)
 $custodiesByWeek = $pdo->query("
     SELECT DATE_FORMAT(taken_at,'%x-%v') AS w, COUNT(*) AS c
-    FROM custodies GROUP BY w ORDER BY w DESC
+    FROM custodies
+    WHERE 1 $branchWhere
+    GROUP BY w ORDER BY w DESC
 ")->fetchAll(PDO::FETCH_KEY_PAIR);
 
 $custodiesByMonth = $pdo->query("
     SELECT DATE_FORMAT(taken_at,'%Y-%m') AS m, COUNT(*) AS c
-    FROM custodies GROUP BY m ORDER BY m DESC
+    FROM custodies
+    WHERE 1 $branchWhere
+    GROUP BY m ORDER BY m DESC
 ")->fetchAll(PDO::FETCH_KEY_PAIR);
 
 $custodiesByYear = $pdo->query("
     SELECT DATE_FORMAT(taken_at,'%Y') AS y, COUNT(*) AS c
-    FROM custodies GROUP BY y ORDER BY y DESC
+    FROM custodies
+    WHERE 1 $branchWhere
+    GROUP BY y ORDER BY y DESC
 ")->fetchAll(PDO::FETCH_KEY_PAIR);
 
 // Custodies (قيمة)
 $custodiesValueByWeek = $pdo->query("
     SELECT DATE_FORMAT(taken_at,'%x-%v') AS w, SUM(main_amount) AS total
-    FROM custodies GROUP BY w ORDER BY w DESC
+    FROM custodies
+    WHERE 1 $branchWhere
+    GROUP BY w ORDER BY w DESC
 ")->fetchAll(PDO::FETCH_KEY_PAIR);
 
 $custodiesValueByMonth = $pdo->query("
     SELECT DATE_FORMAT(taken_at,'%Y-%m') AS m, SUM(main_amount) AS total
-    FROM custodies GROUP BY m ORDER BY m DESC
+    FROM custodies
+    WHERE 1 $branchWhere
+    GROUP BY m ORDER BY m DESC
 ")->fetchAll(PDO::FETCH_KEY_PAIR);
 
 $custodiesValueByYear = $pdo->query("
     SELECT DATE_FORMAT(taken_at,'%Y') AS y, SUM(main_amount) AS total
-    FROM custodies GROUP BY y ORDER BY y DESC
+    FROM custodies
+    WHERE 1 $branchWhere
+    GROUP BY y ORDER BY y DESC
 ")->fetchAll(PDO::FETCH_KEY_PAIR);
 
-// Assets (عدد وقيمة) وكل شيء زي الأصل
-$assetsByWeek = $pdo->query("SELECT DATE_FORMAT(created_at,'%x-%v') AS w, COUNT(*) AS c FROM assets GROUP BY w ORDER BY w DESC")->fetchAll(PDO::FETCH_KEY_PAIR);
-$assetsByMonth = $pdo->query("SELECT DATE_FORMAT(created_at,'%Y-%m') AS m, COUNT(*) AS c FROM assets GROUP BY m ORDER BY m DESC")->fetchAll(PDO::FETCH_KEY_PAIR);
-$assetsByYear = $pdo->query("SELECT DATE_FORMAT(created_at,'%Y') AS y, COUNT(*) AS c FROM assets GROUP BY y ORDER BY y DESC")->fetchAll(PDO::FETCH_KEY_PAIR);
+// Assets (عدد وقيمة)
+$assetsByWeek = $pdo->query("
+    SELECT DATE_FORMAT(created_at,'%x-%v') AS w, COUNT(*) AS c
+    FROM assets
+    WHERE 1 $branchWhere
+    GROUP BY w ORDER BY w DESC
+")->fetchAll(PDO::FETCH_KEY_PAIR);
+
+$assetsByMonth = $pdo->query("
+    SELECT DATE_FORMAT(created_at,'%Y-%m') AS m, COUNT(*) AS c
+    FROM assets
+    WHERE 1 $branchWhere
+    GROUP BY m ORDER BY m DESC
+")->fetchAll(PDO::FETCH_KEY_PAIR);
+
+$assetsByYear = $pdo->query("
+    SELECT DATE_FORMAT(created_at,'%Y') AS y, COUNT(*) AS c
+    FROM assets
+    WHERE 1 $branchWhere
+    GROUP BY y ORDER BY y DESC
+")->fetchAll(PDO::FETCH_KEY_PAIR);
 
 $assetsMonthByWeek = $assetsByWeek;
 $assetsMonthByMonth = $assetsByMonth;
@@ -418,16 +463,33 @@ $assetsBarByWeek = $assetsByWeek;
 $assetsBarByMonth = $assetsByMonth;
 $assetsBarByYear = $assetsByYear;
 
-$assetsValueByWeek = $pdo->query("SELECT DATE_FORMAT(created_at,'%x-%v') AS w, SUM(total_amount) AS total FROM assets GROUP BY w ORDER BY w DESC")->fetchAll(PDO::FETCH_KEY_PAIR);
-$assetsValueByMonth = $pdo->query("SELECT DATE_FORMAT(created_at,'%Y-%m') AS m, SUM(total_amount) AS total FROM assets GROUP BY m ORDER BY m DESC")->fetchAll(PDO::FETCH_KEY_PAIR);
-$assetsValueByYear = $pdo->query("SELECT DATE_FORMAT(created_at,'%Y') AS y, SUM(total_amount) AS total FROM assets GROUP BY y ORDER BY y DESC")->fetchAll(PDO::FETCH_KEY_PAIR);
+$assetsValueByWeek = $pdo->query("
+    SELECT DATE_FORMAT(created_at,'%x-%v') AS w, SUM(total_amount) AS total
+    FROM assets
+    WHERE 1 $branchWhere
+    GROUP BY w ORDER BY w DESC
+")->fetchAll(PDO::FETCH_KEY_PAIR);
+
+$assetsValueByMonth = $pdo->query("
+    SELECT DATE_FORMAT(created_at,'%Y-%m') AS m, SUM(total_amount) AS total
+    FROM assets
+    WHERE 1 $branchWhere
+    GROUP BY m ORDER BY m DESC
+")->fetchAll(PDO::FETCH_KEY_PAIR);
+
+$assetsValueByYear = $pdo->query("
+    SELECT DATE_FORMAT(created_at,'%Y') AS y, SUM(total_amount) AS total
+    FROM assets
+    WHERE 1 $branchWhere
+    GROUP BY y ORDER BY y DESC
+")->fetchAll(PDO::FETCH_KEY_PAIR);
 
 // ===========================
 // عدد الأصول حسب الدافع (Payer)
-// ===========================
 $assetsByWeek_payer_raw = $pdo->query("
     SELECT DATE_FORMAT(created_at,'%x-%v') AS period, payer_name AS label, COUNT(*) AS c
     FROM assets
+    WHERE 1 $branchWhere
     GROUP BY period, payer_name
     ORDER BY period ASC
 ")->fetchAll(PDO::FETCH_ASSOC);
@@ -435,6 +497,7 @@ $assetsByWeek_payer_raw = $pdo->query("
 $assetsByMonth_payer_raw = $pdo->query("
     SELECT DATE_FORMAT(created_at,'%Y-%m') AS period, payer_name AS label, COUNT(*) AS c
     FROM assets
+    WHERE 1 $branchWhere
     GROUP BY period, payer_name
     ORDER BY period ASC
 ")->fetchAll(PDO::FETCH_ASSOC);
@@ -442,6 +505,7 @@ $assetsByMonth_payer_raw = $pdo->query("
 $assetsByYear_payer_raw = $pdo->query("
     SELECT DATE_FORMAT(created_at,'%Y') AS period, payer_name AS label, COUNT(*) AS c
     FROM assets
+    WHERE 1 $branchWhere
     GROUP BY period, payer_name
     ORDER BY period ASC
 ")->fetchAll(PDO::FETCH_ASSOC);
