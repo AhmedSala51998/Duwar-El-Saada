@@ -749,13 +749,22 @@ $assetsDataBy_payer = [
     <h2 class="hero-title"><?= esc(getSystemSettings('text1') ?: 'مرحبا') ?> <?= esc(current_user()) ?> 👋</h2>
     <p class="hero-sub"><?= esc(getSystemSettings('text2') ?: '') ?></p>
   </div>
-  <div class="mb-4 text-end">
+  <div class="mb-4 d-flex justify-content-end">
     <form method="get" class="d-inline-flex gap-2 align-items-center">
-      <label class="fw-bold">الفرع:</label>
-      <select name="branch_id" class="form-select" style="width:220px" onchange="this.form.submit()">
+      <label class="fw-bold mb-0">الفرع:</label>
+
+      <select name="branch_id"
+              class="form-select"
+              style="width:220px"
+              onchange="this.form.submit()">
         <option value="all">كل الفروع</option>
         <?php
-        $branches = $pdo->query("SELECT id, branch_name FROM branches ORDER BY branch_name")->fetchAll();
+        $branches = $pdo->query("
+            SELECT id, branch_name 
+            FROM branches 
+            ORDER BY branch_name
+        ")->fetchAll();
+
         foreach ($branches as $b):
         ?>
           <option value="<?= $b['id'] ?>" <?= ($branch_id == $b['id'] ? 'selected' : '') ?>>
@@ -770,7 +779,8 @@ $assetsDataBy_payer = [
     $branchName->execute([$branch_id]);
     $branchName = $branchName->fetchColumn();
   ?>
-  <div class="alert alert-info text-end fw-bold">
+  <div class="alert text-end fw-bold"
+      style="background: rgba(255, 165, 0, 0.15); color:#b45309; border:1px solid rgba(255,165,0,.3);text-align:right">
     📊 الإحصائيات الخاصة بفرع: <?= esc($branchName) ?>
   </div>
   <?php endif ?>
