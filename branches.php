@@ -240,7 +240,7 @@ document.addEventListener("DOMContentLoaded", function() {
     <tbody>
     <?php foreach($rows as $r): ?>
     <tr class="text-center">
-    <td data-label="رقم الفرع" class="fw-bold text-muted"><?= $r['id'] ?></td>
+    <td data-label="رقم الفرع" class="fw-bold text-muted"><?= $r['branch_code'] ?></td>
     <td data-label="اسم الفرع"><?= esc($r['branch_name']) ?></td>
     <td data-label="عنوان الفرع"><?= esc($r['address']) ?></td>
     <td data-label="رقم الجوال"><?= esc($r['phone']) ?></td>
