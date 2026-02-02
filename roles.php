@@ -585,6 +585,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     <input type="text" name="roles[0][description]" class="form-control" placeholder="مثال: لديه كل الصلاحيات">
                   </td>
                   <td class="text-start">
+                    <div class="mb-2">
+                      <input type="text"
+                            class="form-control form-control-sm permission-search"
+                            placeholder="🔍 ابحث عن صلاحية..."
+                            autocomplete="off">
+                    </div>
                     <div class="d-flex justify-content-between mb-2">
                       <button type="button" class="btn btn-sm btn-success select-all">اختيار الكل</button>
                       <button type="button" class="btn btn-sm btn-secondary deselect-all">مسح الكل</button>
@@ -597,15 +603,20 @@ document.addEventListener('DOMContentLoaded', function() {
                           $groups[$perm['category']][] = $perm;
                         }
                         foreach ($groups as $groupName => $perms): ?>
-                          <div class="mb-2 border rounded p-2 bg-light">
-                            <strong class="text-primary d-block mb-1"><?= esc($groupName) ?></strong>
+                          <div class="mb-2 border rounded p-2 bg-light permission-group">
+                            <strong class="text-primary d-block mb-1 permission-group-title">
+                              <?= esc($groupName) ?>
+                            </strong>
+
                             <div class="row g-2">
                               <?php foreach ($perms as $p): ?>
-                                <div class="col-6"> <!-- عمودين -->
+                                <div class="col-6 permission-item">
                                   <label class="form-check-label d-flex align-items-center gap-1" style="white-space: nowrap;">
-                                    <input type="checkbox" class="form-check-input me-1"
-                                      name="roles[0][permissions][]" value="<?= $p['id'] ?>">
-                                    <span><?= esc($p['label']) ?></span>
+                                    <input type="checkbox"
+                                          class="form-check-input me-1"
+                                          name="roles[0][permissions][]"
+                                          value="<?= $p['id'] ?>">
+                                    <span class="permission-label"><?= esc($p['label']) ?></span>
                                   </label>
                                 </div>
                               <?php endforeach; ?>
@@ -767,6 +778,37 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // تأكد من اختيار صلاحية واحدة على الأقل لكل صف قبل الإرسال
 
+});
+</script>
+<script>
+document.addEventListener('input', function (e) {
+  if (!e.target.classList.contains('permission-search')) return;
+
+  const keyword = e.target.value.toLowerCase().trim();
+  const box = e.target.closest('td').querySelector('.permissions-box');
+
+  box.querySelectorAll('.permission-group').forEach(group => {
+    let groupHasVisible = false;
+
+    const groupTitle = group
+      .querySelector('.permission-group-title')
+      .textContent.toLowerCase();
+
+    group.querySelectorAll('.permission-item').forEach(item => {
+      const label = item
+        .querySelector('.permission-label')
+        .textContent.toLowerCase();
+
+      const match =
+        label.includes(keyword) || groupTitle.includes(keyword);
+
+      item.style.display = match ? '' : 'none';
+      if (match) groupHasVisible = true;
+    });
+
+    // إخفاء المجموعة بالكامل لو مفيش نتائج
+    group.style.display = groupHasVisible ? '' : 'none';
+  });
 });
 </script>
 <?php require __DIR__.'/partials/footer.php'; ?>
