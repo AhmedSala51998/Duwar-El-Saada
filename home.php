@@ -175,6 +175,12 @@ body {
     line-height: 1.5;
   }
 }
+.branch-alert {
+  background: rgba(255, 165, 0, 0.12);
+  border: 1px solid rgba(255,165,0,.35);
+  color: #c2410c;
+  box-shadow: 0 4px 10px rgba(255,165,0,.15);
+}
 
 </style>
 
@@ -749,8 +755,8 @@ $assetsDataBy_payer = [
     <h2 class="hero-title"><?= esc(getSystemSettings('text1') ?: 'مرحبا') ?> <?= esc(current_user()) ?> 👋</h2>
     <p class="hero-sub"><?= esc(getSystemSettings('text2') ?: '') ?></p>
   </div>
-  <div class="mb-4 d-flex justify-content-end">
-    <form method="get" class="d-inline-flex gap-2 align-items-center">
+  <div class="mb-4 d-flex">
+    <form method="get" class="d-inline-flex gap-2 align-items-center ms-auto">
       <label class="fw-bold mb-0">الفرع:</label>
 
       <select name="branch_id"
@@ -774,13 +780,17 @@ $assetsDataBy_payer = [
       </select>
     </form>
   </div>
-    <?php if($branch_id && $branch_id !== 'all'): 
-    $branchName = $pdo->prepare("SELECT branch_name FROM branches WHERE id=?");
-    $branchName->execute([$branch_id]);
-    $branchName = $branchName->fetchColumn();
+  <?php if($branch_id && $branch_id !== 'all'): 
+    $stmt = $pdo->prepare("SELECT branch_name FROM branches WHERE id=?");
+    $stmt->execute([$branch_id]);
+    $branchName = $stmt->fetchColumn();
   ?>
-  <div class="alert text-end fw-bold"
-      style="background: rgba(255, 165, 0, 0.15); color:#b45309; border:1px solid rgba(255,165,0,.3);text-align:right">
+  <div class="branch-alert mb-4 px-4 py-3 rounded text-end fw-bold"
+      style="
+        background: rgba(255, 165, 0, 0.12);
+        color: #c2410c;
+        border: 1px solid rgba(255,165,0,.35);
+      ">
     📊 الإحصائيات الخاصة بفرع: <?= esc($branchName) ?>
   </div>
   <?php endif ?>
