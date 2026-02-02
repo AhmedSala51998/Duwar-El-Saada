@@ -133,7 +133,7 @@ foreach ($permissions as $p) {
     border-color: #ccc;
 }
 .permission-search {
-  border-radius: 4px !important; /* أو 0 لو عايزه مستقيم تمامًا */
+  border-radius: 2px !important; /* أو 0 لو عايزه مستقيم تمامًا */
 }
 </style>
 <script>
