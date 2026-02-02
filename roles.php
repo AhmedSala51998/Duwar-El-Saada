@@ -585,18 +585,18 @@ document.addEventListener('DOMContentLoaded', function() {
                     <input type="text" name="roles[0][description]" class="form-control" placeholder="مثال: لديه كل الصلاحيات">
                   </td>
                   <td class="text-start">
-                    <div class="mb-2">
-                      <input type="text"
-                            class="form-control form-control-sm permission-search"
-                            placeholder="🔍 ابحث عن صلاحية..."
-                            autocomplete="off">
-                    </div>
                     <div class="d-flex justify-content-between mb-2">
                       <button type="button" class="btn btn-sm btn-success select-all">اختيار الكل</button>
                       <button type="button" class="btn btn-sm btn-secondary deselect-all">مسح الكل</button>
                     </div>
 
                     <div class="permissions-box border rounded p-2" style="max-height:400px; overflow-y:auto; font-size:13px;">
+                      <div class="mb-2">
+                        <input type="text"
+                              class="form-control form-control-sm permission-search"
+                              placeholder="🔍 ابحث عن صلاحية..."
+                              autocomplete="off">
+                      </div>
                       <?php 
                         $groups = [];
                         foreach ($permissions as $perm) {
