@@ -238,7 +238,7 @@ foreach($rows as $r):
 <tfoot>
 <?php if($totalVat != 0){ ?>
 <tr>
-  <td colspan="8">الإجماليات الكلية</td>
+  <td colspan="9">الإجماليات الكلية</td>
   <td><?= number_format($totalBefore, 4) ?></td>
   <td><?= number_format($totalVat, 4) ?></td>
   <td><?= number_format($totalAfter, 4) ?></td>
@@ -246,7 +246,7 @@ foreach($rows as $r):
 </tr>
 <?php }else{ ?>
   <tr>
-    <td colspan="8">الإجماليات الكلية</td>
+    <td colspan="9">الإجماليات الكلية</td>
     <td><?= number_format($totalBefore, 4) ?></td>
     <td>-----</td>
     <td><?= number_format($totalAfter, 4) ?></td>
