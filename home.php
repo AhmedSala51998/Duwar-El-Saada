@@ -196,7 +196,7 @@ $branchParams = [];
 
 if ($branch_id !== '' && $branch_id !== 'all') {
     // المشتريات مربوطة بأوامر التشغيل
-    $branchWhere = " AND op.branch_id = ? ";
+    $branchWhere = " AND p.branch_id = ? "; // بدل op.branch_id استخدم p.branch_id
     $branchParams[] = $branch_id;
 }
 
