@@ -485,18 +485,18 @@ $assetsDataBy_payer = [
       <select name="branch_id" class="form-select" style="width:220px" onchange="this.form.submit()">
         <option value="all">كل الفروع</option>
         <?php
-        $branches = $pdo->query("SELECT id, name FROM branches ORDER BY name")->fetchAll();
+        $branches = $pdo->query("SELECT id, branch_name FROM branches ORDER BY branch_name")->fetchAll();
         foreach ($branches as $b):
         ?>
           <option value="<?= $b['id'] ?>" <?= ($branch_id == $b['id'] ? 'selected' : '') ?>>
-            <?= esc($b['name']) ?>
+            <?= esc($b['branch_name']) ?>
           </option>
         <?php endforeach ?>
       </select>
     </form>
   </div>
     <?php if($branch_id && $branch_id !== 'all'): 
-    $branchName = $pdo->prepare("SELECT name FROM branches WHERE id=?");
+    $branchName = $pdo->prepare("SELECT branch_name FROM branches WHERE id=?");
     $branchName->execute([$branch_id]);
     $branchName = $branchName->fetchColumn();
   ?>
