@@ -596,7 +596,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="permissions-box border rounded p-2" style="max-height:400px; overflow-y:auto; font-size:13px;">
                       <div class="mb-2">
                         <input type="text"
-                              class="form-control form-control-sm permission-search"
+                              class="form-control permission-search"
                               placeholder="🔍 ابحث عن صلاحية..."
                               autocomplete="off">
                       </div>
