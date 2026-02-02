@@ -178,7 +178,7 @@ body {
 .branch-alert {
   background: rgba(255, 165, 0, 0.12);
   border: 1px solid rgba(255,165,0,.35);
-  color: #c2410c;
+  color: #FFF !important;
   box-shadow: 0 4px 10px rgba(255,165,0,.15);
 }
 
@@ -788,8 +788,10 @@ $assetsDataBy_payer = [
   <div class="branch-alert mb-4 px-4 py-3 rounded text-end fw-bold"
       style="
         background: rgba(255, 165, 0, 0.12);
-        color: #c2410c;
+        color: #FFF;
         border: 1px solid rgba(255,165,0,.35);
+        text-align:right !important;
+        border-radius:5px
       ">
     📊 الإحصائيات الخاصة بفرع: <?= esc($branchName) ?>
   </div>
