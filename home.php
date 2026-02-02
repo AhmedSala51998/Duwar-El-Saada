@@ -200,11 +200,68 @@ if ($branch_id !== '' && $branch_id !== 'all') {
     $branchParams[] = $branch_id;
 }
 
-$pc = (int)$pdo->query("SELECT COUNT(*) c FROM purchases")->fetch()['c'];
-$oc = (int)$pdo->query("SELECT COUNT(*) c FROM orders")->fetch()['c'];
-$ac = (int)$pdo->query("SELECT COUNT(*) c FROM assets")->fetch()['c'];
-$cc = (int)$pdo->query("SELECT COUNT(*) c FROM custodies")->fetch()['c'];
-$expenses_count = (int)$pdo->query("SELECT COUNT(*) c FROM expenses")->fetch()['c'];
+if ($branch_id !== '' && $branch_id !== 'all') {
+    $pc = (int)$pdo->query("
+        SELECT COUNT(*) c 
+        FROM purchases 
+        WHERE branch_id = {$pdo->quote($branch_id)}
+    ")->fetch()['c'];
+} else {
+    $pc = (int)$pdo->query("
+        SELECT COUNT(*) c 
+        FROM purchases
+    ")->fetch()['c'];
+}
+
+if ($branch_id !== '' && $branch_id !== 'all') {
+    $oc = (int)$pdo->query("
+        SELECT COUNT(DISTINCT o.id) c
+        FROM orders o
+        INNER JOIN purchases p ON p.order_id = o.id
+        WHERE p.branch_id = {$pdo->quote($branch_id)}
+    ")->fetch()['c'];
+} else {
+    $oc = (int)$pdo->query("
+        SELECT COUNT(*) c 
+        FROM orders
+    ")->fetch()['c'];
+}
+if ($branch_id !== '' && $branch_id !== 'all') {
+    $ac = (int)$pdo->query("
+        SELECT COUNT(*) c 
+        FROM assets 
+        WHERE branch_id = {$pdo->quote($branch_id)}
+    ")->fetch()['c'];
+} else {
+    $ac = (int)$pdo->query("
+        SELECT COUNT(*) c 
+        FROM assets
+    ")->fetch()['c'];
+}
+if ($branch_id !== '' && $branch_id !== 'all') {
+    $cc = (int)$pdo->query("
+        SELECT COUNT(*) c 
+        FROM custodies 
+        WHERE branch_id = {$pdo->quote($branch_id)}
+    ")->fetch()['c'];
+} else {
+    $cc = (int)$pdo->query("
+        SELECT COUNT(*) c 
+        FROM custodies
+    ")->fetch()['c'];
+}
+if ($branch_id !== '' && $branch_id !== 'all') {
+    $expenses_count = (int)$pdo->query("
+        SELECT COUNT(*) c 
+        FROM expenses 
+        WHERE branch_id = {$pdo->quote($branch_id)}
+    ")->fetch()['c'];
+} else {
+    $expenses_count = (int)$pdo->query("
+        SELECT COUNT(*) c 
+        FROM expenses
+    ")->fetch()['c'];
+}
 
 /*$purchasesByMonth = $pdo->query("SELECT DATE_FORMAT(op.created_at, '%Y-%m') AS m, COUNT(DISTINCT op.id) AS c
   FROM orders_purchases op
@@ -718,7 +775,6 @@ $assetsDataBy_payer = [
   </div>
   <?php endif ?>
 
-  <!-- ===== كروت الإحصائيات ===== -->
   <!-- ===== كروت الإحصائيات ===== -->
   <div class="row g-4 mb-4">
     <?php
