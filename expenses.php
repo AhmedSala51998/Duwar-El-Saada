@@ -30,16 +30,29 @@ if ($kw !== '') {
 }
 
 // جلب العدد الكلي للصفوف
+// بناء شروط WHERE زي الفلتر الرئيسي
+$whereClauses = " WHERE 1 ";
+
+if ($kw !== '') {
+    $whereClauses .= " AND (
+        e.main_expense LIKE ?
+        OR b.branch_name LIKE ?
+    )";
+    // نفس الـ $params اللي موجود
+}
+
+// استعلام TOTAL مع الفلتر الصحيح
 $stmtTotal = $pdo->prepare("
     SELECT COUNT(*) as total
     FROM expenses e
     LEFT JOIN branches b ON b.id = e.branch_id
-    WHERE 1
-    " . ($kw!=='' ? " AND e.main_expense LIKE ?" : "")
-);
+    $whereClauses
+");
+
 $stmtTotal->execute($params);
 $total_rows = $stmtTotal->fetch()['total'];
 $total_pages = ceil($total_rows / $perPage);
+
 
 // حساب offset
 $offset = ($page - 1) * $perPage;
