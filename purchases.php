@@ -223,9 +223,14 @@ $q = "SELECT p.*, o.invoice_serial, b.branch_name AS branch_name
       WHERE 1";
 
 $params = [];
-if($kw !== '') { 
-    $q .= " AND p.name LIKE ?"; 
-    $params[] = "%$kw%"; 
+
+if ($kw !== '') {
+    $q .= " AND (
+                p.name LIKE ?
+                OR b.branch_name LIKE ?
+            )";
+    $params[] = "%$kw%";
+    $params[] = "%$kw%";
 }
 
 $q .= " ORDER BY p.id DESC";

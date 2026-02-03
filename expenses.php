@@ -20,9 +20,13 @@ $q = "
 ";
 $params = [];
 
-if($kw!==''){ 
-    $q .= " AND e.main_expense LIKE ?"; 
-    $params[] = "%$kw%"; 
+if ($kw !== '') {
+    $q .= " AND (
+                e.main_expense LIKE ?
+                OR b.branch_name LIKE ?
+            )";
+    $params[] = "%$kw%";
+    $params[] = "%$kw%";
 }
 
 // جلب العدد الكلي للصفوف

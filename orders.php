@@ -25,20 +25,6 @@
 <?php endif; ?>
 <?php
 $items = $pdo->query("SELECT * FROM purchases ORDER BY name")->fetchAll();
-/*$kw = trim($_GET['kw'] ?? '');
-$q = "SELECT o.*, p.name pname, p.unit punit 
-      FROM orders o 
-      JOIN purchases p ON p.id=o.purchase_id 
-      WHERE 1";
-$params=[];
-if($kw!==''){ 
-    $q.=" AND p.name LIKE ?"; 
-    $params[]="%$kw%"; 
-}
-$q.=" ORDER BY o.id DESC";
-$s=$pdo->prepare($q); 
-$s->execute($params);
-$orders=$s->fetchAll();*/
 
 $kw = trim($_GET['kw'] ?? '');
 $page = max(1, intval($_GET['page'] ?? 1));
@@ -47,14 +33,19 @@ $offset = ($page - 1) * $per_page;
 
 $count_query = "
     SELECT COUNT(*) 
-    FROM orders o 
-    JOIN purchases p ON p.id = o.purchase_id 
+    FROM orders o
+    JOIN purchases p ON p.id = o.purchase_id
+    LEFT JOIN branches b ON b.id = p.branch_id
     WHERE 1
 ";
 $params = [];
 
 if ($kw !== '') {
-    $count_query .= " AND p.name LIKE ?";
+    $count_query .= " AND (
+        p.name LIKE ?
+        OR b.branch_name LIKE ?
+    )";
+    $params[] = "%$kw%";
     $params[] = "%$kw%";
 }
 
@@ -64,42 +55,30 @@ $total_rows = $count_stmt->fetchColumn();
 $total_pages = ceil($total_rows / $per_page);
 
 $q = "
-    SELECT o.*, p.name pname, p.unit punit 
-    FROM orders o 
-    JOIN purchases p ON p.id = o.purchase_id 
+    SELECT 
+        o.*, 
+        p.name AS pname, 
+        p.unit AS punit,
+        b.branch_name
+    FROM orders o
+    JOIN purchases p ON p.id = o.purchase_id
+    LEFT JOIN branches b ON b.id = p.branch_id
     WHERE 1
 ";
+
 if ($kw !== '') {
-    $q .= " AND p.name LIKE ?";
+    $q .= " AND (
+        p.name LIKE ?
+        OR b.branch_name LIKE ?
+    )";
 }
+
 $q .= " ORDER BY o.id DESC LIMIT $per_page OFFSET $offset";
 
 $stmt = $pdo->prepare($q);
 $stmt->execute($params);
 $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-//$can_edit = in_array(current_role(), ['admin','manager']);
-
-/*$stocks = $pdo->query("
-    SELECT 
-        name,
-        unit,
-        SUM(quantity) AS total_qty
-    FROM purchases
-    GROUP BY name, unit
-    ORDER BY name
-")->fetchAll(PDO::FETCH_ASSOC);*/
-/*$stocks = $pdo->query("
-    SELECT 
-        id,
-        name,
-        unit,
-        SUM(quantity) AS total_qty,
-        MAX(created_at) AS last_added
-    FROM purchases
-    GROUP BY name, unit
-    ORDER BY name
-")->fetchAll(PDO::FETCH_ASSOC);*/
 $stocks = $pdo->query("
     SELECT 
         MIN(id) AS id,
@@ -436,6 +415,7 @@ $stocks = $pdo->query("
     <thead class="table-light border-bottom border-2 small-header text-center text-secondary fw-semibold">
       <tr>
         <th>#</th>
+        <th>الفرع</th>
         <th>المنتج</th>
         <th>الكمية</th>
         <th>الوحدة</th>
@@ -448,6 +428,9 @@ $stocks = $pdo->query("
       <?php foreach($orders as $o): ?>
       <tr class="text-center">
         <td data-label="#" class="fw-bold text-muted"><?= $o['id'] ?></td>
+        <td data-label="الفرع">
+          <?= esc($o['branch_name'] ?? '—') ?>
+        </td>
         <td data-label="المنتج"><?= esc($o['pname']) ?></td>
         <td data-label="الكمية"><?= $o['qty'] ?></td>
         <td data-label="الوحدة"><?= esc($o['unit']) ?></td>
