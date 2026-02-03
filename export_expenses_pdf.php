@@ -113,8 +113,44 @@ if ($date_type === 'today') {
 ?>
 
 <div id="printBtnContainer" style="text-align:center;margin:20px 0; display:flex; gap:15px; justify-content:center">
-<button onclick="printAndGoBack()">طباعة التقرير</button>
-<button onclick="goBack()">العودة</button>
+  <button 
+    onclick="printAndGoBack()" 
+    style="
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    "
+    onmouseover="this.style.backgroundColor='#45a049';"
+    onmouseout="this.style.backgroundColor='#4CAF50';"
+  >
+    طباعة التقرير
+  </button>
+
+  <!-- زر الرجوع -->
+  <button 
+    onclick="goBack()" 
+    style="
+      background-color: #f44336;  /* أحمر */
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    "
+    onmouseover="this.style.backgroundColor='#d32f2f';"
+    onmouseout="this.style.backgroundColor='#f44336';"
+  >
+    العودة للصفحة السابقة
+  </button>
 </div>
 
 <table>
