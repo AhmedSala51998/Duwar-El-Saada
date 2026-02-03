@@ -242,10 +242,37 @@ $perPage = 10;
 $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
 
 // جلب العدد الكلي للصفوف (مع تجاهل LIMIT)
-$stmtTotal = $pdo->prepare("SELECT COUNT(*) as total FROM purchases p LEFT JOIN orders_purchases o ON p.order_id = o.id LEFT JOIN branches b ON p.branch_id = b.id WHERE 1" . ($kw !== '' ? " AND p.name LIKE ?" : ""));
+// بناء شروط WHERE زي الفلتر الرئيسي
+$whereClauses = " WHERE 1 ";
+
+if ($kw !== '') {
+    $whereClauses .= " AND (
+        p.name LIKE ?
+        OR b.branch_name LIKE ?
+    )";
+    // نفس الـ $params اللي عندك جاهز
+}
+
+// فلترة بالفرع إذا موجود
+if (!empty($branch_id) && $branch_id != 0) {
+    $whereClauses .= " AND o.branch_id = ?";
+    // نضيفه في نفس الـ $params
+    $params[] = $branch_id;
+}
+
+// استعلام TOTAL مع الربط الصحيح للفرع
+$stmtTotal = $pdo->prepare("
+    SELECT COUNT(*) as total
+    FROM purchases p
+    LEFT JOIN orders_purchases o ON p.order_id = o.id
+    LEFT JOIN branches b ON b.id = o.branch_id
+    $whereClauses
+");
+
 $stmtTotal->execute($params);
 $total_rows = $stmtTotal->fetch()['total'];
 $total_pages = ceil($total_rows / $perPage);
+
 
 // حساب offset
 $offset = ($page - 1) * $perPage;
