@@ -232,14 +232,9 @@ $q = "SELECT c.*, b.branch_name
       LEFT JOIN branches b ON b.id = c.branch_id
       WHERE 1";
 $ps = [];
-
-if ($kw !== '') {
-    $q .= " AND (
-                c.person_name LIKE ?
-                OR b.branch_name LIKE ?
-            )";
-    $ps[] = "%$kw%";
-    $ps[] = "%$kw%";
+if($kw !== ''){ 
+  $q .= " AND c.person_name LIKE ?"; 
+  $ps[] = "%$kw%"; 
 }
 $q .= " ORDER BY c.taken_at ASC LIMIT $perPage OFFSET $offset";
 
