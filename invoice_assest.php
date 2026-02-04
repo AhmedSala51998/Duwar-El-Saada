@@ -3,9 +3,15 @@ require __DIR__.'/partials/header.php';
 require_permission('assets.print');
 
 $assetId = (int)($_GET['id'] ?? 0);
-$assetStmt = $pdo->prepare("SELECT * FROM assets WHERE id=?");
+$assetStmt = $pdo->prepare("
+    SELECT a.*, b.branch_name AS branch_name
+    FROM assets a
+    LEFT JOIN branches b ON b.id = a.branch_id
+    WHERE a.id = ?
+");
 $assetStmt->execute([$assetId]);
 $asset = $assetStmt->fetch();
+
 
 if (!$asset) { 
     echo "<div class='alert alert-warning'>الأصل غير موجود</div>"; 
@@ -200,10 +206,32 @@ select#vatRate {
 
 <div class="print-area">
   <!-- شعار + عنوان + رقم تسلسلي -->
-  <div class="d-flex flex-column align-items-center mb-3">
-    <img src="<?= esc(getSystemSettings('secondary_logo') ?: '/assets/logo.png') ?>" class="logo mb-1" alt="Logo" style="width:150px; height:auto;">
+  <div class="d-flex flex-column align-items-center mb-3 position-relative">
+
+    <!-- الفرع (يمين أعلى) -->
+    <?php if(!empty($asset['branch_name'])): ?>
+      <div style="
+          position:absolute;
+          top:0;
+          right:0;
+          font-weight:bold;
+          font-size:14px;
+          color:#444;
+      ">
+        الفرع: <?= esc($asset['branch_name']) ?>
+      </div>
+    <?php endif; ?>
+
+    <img src="<?= esc(getSystemSettings('secondary_logo') ?: '/assets/logo.png') ?>"
+        class="logo mb-1"
+        alt="Logo"
+        style="width:150px; height:auto;">
+
     <h2 style="font-weight:bold; color:#000; margin:0;">فاتورة أصل ثابت</h2>
-    <div class="invoice-serial">الرقم التسلسلي: <?= esc($asset['invoice_serial']) ?></div>
+
+    <div class="invoice-serial">
+      الرقم التسلسلي: <?= esc($asset['invoice_serial']) ?>
+    </div>
   </div>
 
   <div class="invoice-header">
