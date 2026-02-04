@@ -212,52 +212,34 @@ select#vatRate {
     <div class="invoice-serial">الرقم التسلسلي: <?= esc($asset['invoice_serial']) ?></div>
   </div>
 
-  <div class="invoice-header d-flex align-items-start gap-3">
-
-    <!-- ✅ العمود اليمين: الفرع -->
-    <div class="invoice-branch text-end" style="min-width:220px; font-weight:bold;">
+  <div class="invoice-header">
+    <div class="text-end invoice-info" style="flex:1">
       <?php if(!empty($asset['branch_name'])): ?>
         <div>
           <strong>الفرع:</strong><br>
           <?= esc($asset['branch_name']) ?>
-        </div>
+      </div>
       <?php endif; ?>
-    </div>
-
-    <!-- ✅ العمود الأوسط: بيانات الفاتورة -->
-    <div class="text-end invoice-info" style="flex:1">
       <div><strong>رقم الفاتورة:</strong> <?= esc($asset['bill_number']) ?></div>
       <div><strong>الدافع:</strong> <?= esc($asset['payer_name']) ?></div>
       <div><strong>مصدر الدفع:</strong> <?= esc($asset['payment_source']) ?></div>
-
       <?php if(has_permission('assets.edit_assets_invoice_date')): ?>
-        <div>
-          <strong>التاريخ:</strong>
-          <input type="date"
-                id="invoiceDate"
-                value="<?= date('Y-m-d', strtotime($asset['created_at'])) ?>"
-                data-asset-id="<?= $assetId ?>"
-                style="border:1px solid #ccc; border-radius:4px; padding:2px 6px;">
-          <span id="invoiceDateText" style="display:none;font-weight:bold;">
-            <?= date('Y-m-d', strtotime($asset['created_at'])) ?>
-          </span>
-        </div>
-      <?php else: ?>
-        <div><strong>التاريخ:</strong> <?= date('Y-m-d', strtotime($asset['created_at'])) ?></div>
-      <?php endif; ?>
+      <div>
+        <strong>التاريخ:</strong>
+        <input type="date" id="invoiceDate" value="<?= date('Y-m-d', strtotime($asset['created_at'])) ?>" data-asset-id="<?= $assetId ?>" style="border:1px solid #ccc; border-radius:4px; padding:2px 6px;">
+        <span id="invoiceDateText" style="display:none; font-weight:bold;"><?= date('Y-m-d', strtotime($asset['created_at'])) ?></span>
+      </div>
+      <?php else:  ?>
+          <div><strong>التاريخ:</strong> <?= date('Y-m-d', strtotime($asset['created_at'])) ?></div>
+      <?php endif;  ?>
     </div>
 
-    <!-- ✅ العمود الشمال: صورة الفاتورة -->
     <?php if($invoiceImage): ?>
-      <div class="invoice-image-wrapper">
-        <a href="uploads/<?= esc($invoiceImage) ?>" target="_blank">
-          <img src="uploads/<?= esc($invoiceImage) ?>" class="invoice-image" alt="Asset File">
-        </a>
-      </div>
+      <a href="uploads/<?= esc($invoiceImage) ?>" target="_blank">
+        <img src="uploads/<?= esc($invoiceImage) ?>" alt="Asset File" class="invoice-image">
+      </a>
     <?php endif; ?>
-
   </div>
-
 
   <!-- جدول الأصل -->
   <div class="table-responsive">
