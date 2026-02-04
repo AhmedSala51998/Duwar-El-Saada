@@ -216,7 +216,7 @@ select#vatRate {
     <div class="text-end invoice-info" style="flex:1">
       <?php if(!empty($asset['branch_name'])): ?>
         <div>
-          <strong>الفرع:</strong><br>
+          <strong>الفرع:</strong>
           <?= esc($asset['branch_name']) ?>
       </div>
       <?php endif; ?>
