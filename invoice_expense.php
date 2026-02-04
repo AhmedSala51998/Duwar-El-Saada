@@ -3,7 +3,12 @@ require __DIR__.'/partials/header.php';
 require_permission('expenses.print');
 
 $expenseId = (int)($_GET['id'] ?? 0);
-$expenseStmt = $pdo->prepare("SELECT * FROM expenses WHERE id=?");
+$expenseStmt = $pdo->prepare("
+    SELECT e.*, b.branch_name AS branch_name
+    FROM expenses e
+    LEFT JOIN branches b ON b.id = e.branch_id
+    WHERE e.id = ?
+");
 $expenseStmt->execute([$expenseId]);
 $expense = $expenseStmt->fetch();
 
@@ -207,6 +212,12 @@ select#vatRate {
 
   <div class="invoice-header">
     <div class="text-end invoice-info" style="flex:1">
+      <?php if(!empty($expense['branch_name'])): ?>
+        <div>
+          <strong>الفرع:</strong>
+          <?= esc($expense['branch_name']) ?>
+        </div>
+      <?php endif; ?>
       <div><strong>رقم الفاتورة:</strong> <?= esc($asset['bill_number']) ?></div>
       <div><strong>الدافع:</strong> <?= esc($expense['payer_name']) ?></div>
       <div><strong>مصدر الدفع:</strong> <?= esc($expense['payment_source']) ?></div>

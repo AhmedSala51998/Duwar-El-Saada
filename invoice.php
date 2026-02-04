@@ -3,7 +3,12 @@ require __DIR__.'/partials/header.php';
 require_permission('purchases.print');
 
 $purchaseId = (int)($_GET['id'] ?? 0);
-$purchaseStmt = $pdo->prepare("SELECT * FROM purchases WHERE id=?");
+$purchaseStmt = $pdo->prepare("
+    SELECT p.*, b.branch_name AS branch_name
+    FROM purchases p
+    LEFT JOIN branches b ON b.id = p.branch_id
+    WHERE p.id = ?
+");
 $purchaseStmt->execute([$purchaseId]);
 $purchase = $purchaseStmt->fetch();
 
@@ -288,6 +293,12 @@ th, td {
 
 <div class="invoice-header">
   <div class="text-end invoice-info" style="flex:1">
+    <?php if(!empty($purchase['branch_name'])): ?>
+      <div>
+        <strong>الفرع:</strong>
+        <?= esc($purchase['branch_name']) ?>
+      </div>
+    <?php endif; ?>
     <div><strong>رقم فاتورة المورد:</strong> <?= esc($order['bill_number']) ?></div>
     <div><strong>الرقم الضريبي للمورد:</strong> <?= esc($order['tax_number']) ?></div>
     <div><strong>المورد:</strong> <?= esc($order['supplier_name']) ?></div>

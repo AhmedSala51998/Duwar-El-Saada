@@ -3,7 +3,12 @@ require __DIR__.'/partials/header.php';
 require_permission('custodies.print');
 
 $custodyId = (int)($_GET['id'] ?? 0);
-$custodyStmt = $pdo->prepare("SELECT * FROM custodies WHERE id = ?");
+$custodyStmt = $pdo->prepare("
+    SELECT c.*, b.branch_name AS branch_name
+    FROM custodies c
+    LEFT JOIN branches b ON b.id = c.branch_id
+    WHERE c.id = ?
+");
 $custodyStmt->execute([$custodyId]);
 $custody = $custodyStmt->fetch();
 
@@ -178,6 +183,12 @@ function numberToArabicWords($number) {
 
   <div class="invoice-header">
     <div class="invoice-info" style="flex:1">
+      <?php if(!empty($custody['branch_name'])): ?>
+        <div>
+          <strong>الفرع:</strong>
+          <?= esc($custody['branch_name']) ?>
+        </div>
+      <?php endif; ?>
       <div><strong>اسم المستلم:</strong> <?= esc($custody['person_name']) ?></div>
       <?php if(has_permission('custodies.edit_custodies_invoice_date')): ?>
       <div>
