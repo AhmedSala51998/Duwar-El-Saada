@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
             'expense_file'   => upload_image('expense_file') ?: ($oldData['expense_file'] ?? null),
             'payment_source' => $_POST['payment_source'] ?? 'كاش',
             'payer_name'     => trim($_POST['payer_name'] ?? ''),
-            'branch_id'      => $branch_id
+            'branch_id'      => $_POST['branch_id']
         ];
 
         $changed = false;
