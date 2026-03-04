@@ -323,7 +323,7 @@ select#vatRate {
 </div>-->
 <div class="invoice-container" style="display: flex; justify-content: space-between; align-items: flex-start; gap: 30px; direction: rtl;">
 
-  <!-- ✅ العمود اليمين: المبلغ بالعربي (مجمّع) -->
+  <!-- ✅ العمود اليمين: المبلغ بالعربي -->
   <div class="total-words" style="font-weight: bold; color: #444; font-size: 15px; text-align: right; margin-top: 35px;">
     (<?= numberToArabicWords($totalGrand) ?> فقط)
   </div>
@@ -331,24 +331,19 @@ select#vatRate {
   <!-- ✅ العمود الشمال: تفاصيل الفاتورة -->
   <div class="invoice-summary-wrapper" style="margin-top: 25px;">
     <div class="invoice-summary" style="text-align: right;">
-
-      <?php 
-      $vatRateGlobal = $totalVat > 0 ? 0.15 : 0;
-      ?>
-
       <?php if(has_permission('assets.edit_assets_invoice_tax')): ?>
       <div>
         <strong>نسبة الضريبة:</strong>
-        <select id="vatRate">
-          <option value="0" <?= $vatRateGlobal == 0 ? 'selected' : '' ?>>0%</option>
-          <option value="0.15" <?= $vatRateGlobal == 0.15 ? 'selected' : '' ?>>15%</option>
+        <select id="vatRate" data-asset-id="<?= $assetId ?>">
+          <option value="0" <?= $vatRate == 0 ? 'selected' : '' ?>>0%</option>
+          <option value="0.15" <?= $vatRate == 0.15 ? 'selected' : '' ?>>15%</option>
         </select>
-        <span id="vatRateText"><?= $vatRateGlobal == 0 ? '0%' : '15%' ?></span>
+        <span id="vatRateText"><?= $vatRate == 0 ? '0%' : '15%' ?></span>
       </div>
       <?php else: ?>
         <div>
           <strong>نسبة الضريبة :</strong>
-          <span><?= $vatRateGlobal == 0 ? 0 : 15 ?></span> %
+          <span><?= $vatRate ?></span> %
         </div>
       <?php endif; ?>
 
@@ -357,21 +352,19 @@ select#vatRate {
         <span id="totalNoVat"><?= number_format($totalSubtotal,2) ?></span> ريال
       </div>
 
-      <div id="vatRow" <?= $vatRateGlobal == 0 ? 'style="display:none;"' : '' ?>>
+      <div id="vatRow" <?= $vatRate == 0 ? 'style="display:none;"' : '' ?>>
         <strong>الضريبة:</strong>
         <span id="vatValue"><?= number_format($totalVat,2) ?></span> ريال
       </div>
 
-      <div id="grandRow" <?= $vatRateGlobal == 0 ? 'style="display:none;"' : '' ?>>
+      <div id="grandRow" <?= $vatRate == 0 ? 'style="display:none;"' : '' ?>>
         <strong>الإجمالي بعد الضريبة:</strong>
         <span id="grandTotal"><?= number_format($totalGrand,2) ?></span> ريال
       </div>
-
     </div>
   </div>
 
 </div>
-
 
 
 <script>
