@@ -7,7 +7,6 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit('Invalid request method.');
 }
 
-$id = (int)($_POST['id'] ?? 0);
 $bill_number = $_POST['bill_number'] ?? '';
 $vat_value = (float)($_POST['vat_value'] ?? 0);
 $total_amount = (float)($_POST['total_amount'] ?? 0);
