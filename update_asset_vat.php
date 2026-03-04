@@ -1,7 +1,6 @@
 <?php
-require __DIR__ . '/config/config.php'; // تأكد أن هذا الملف يحتوي على الاتصال بقاعدة البيانات $pdo
+require __DIR__ . '/config/config.php';
 
-// تأكيد أن الطلب من نوع POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     exit('Invalid request method.');
@@ -12,19 +11,30 @@ $vat_value = (float)($_POST['vat_value'] ?? 0);
 $total_amount = (float)($_POST['total_amount'] ?? 0);
 $has_vat = (int)($_POST['has_vat'] ?? 0);
 
-if ($id <= 0) {
+if (empty($bill_number)) {
     http_response_code(400);
-    exit('Missing or invalid ID.');
+    exit('Missing bill number.');
 }
 
 try {
 
-    $stmt = $pdo->prepare("UPDATE assets 
-        SET vat_value = ?, has_vat = ?, total_amount = ?
-        WHERE bill_number = ?");
-    $stmt->execute([$vat_value, $has_vat, $total_amount, $bill_number]);
+    $stmt = $pdo->prepare("
+        UPDATE assets 
+        SET vat_value = ?, 
+            has_vat = ?, 
+            total_amount = ?
+        WHERE bill_number = ?
+    ");
 
-    echo "تم تحديث بيانات الضريبة بنجاح ✅";
+    $stmt->execute([
+        $vat_value,
+        $has_vat,
+        $total_amount,
+        $bill_number
+    ]);
+
+    echo "تم تحديث بيانات الضريبة لكل عناصر الفاتورة ✅";
+
 } catch (Exception $e) {
     http_response_code(500);
     echo "حدث خطأ أثناء التحديث: " . $e->getMessage();
