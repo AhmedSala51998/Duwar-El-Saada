@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
     }
 
     $bill_number = trim($_POST['invoice_serial'] ?? '');
-    $invoice_date = trim($_POST['invoice_date'] ?? date('Y-m-d'));
+    $invoice_date   = trim($_POST['invoice_date'] ?? date('Y-m-d'));
     $payer_name     = trim($_POST['payer_name'] ?? '');
     $payment_source = trim($_POST['payment_source'] ?? 'كاش');
 
