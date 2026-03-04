@@ -262,7 +262,16 @@ select#vatRate {
       </a>
     <?php endif; ?>
   </div>
+  <?php
+  $invoiceSubtotal = 0;
 
+  foreach ($assets as $item) {
+      $invoiceSubtotal += $item['price'] * $item['quantity'];
+  }
+
+  $invoiceVat = $invoiceSubtotal * $vatRate;
+  $invoiceTotal = $invoiceSubtotal + $invoiceVat;
+  ?>
   <!-- جدول الأصل -->
   <div class="table-responsive">
   <table id="invoiceTable">
@@ -317,7 +326,7 @@ select#vatRate {
 
   <!-- ✅ العمود اليمين: المبلغ بالعربي -->
   <div class="total-words" style="font-weight: bold; color: #444; font-size: 15px; text-align: right; margin-top: 35px;">
-    (<?= numberToArabicWords($asset['total_amount']) ?> فقط)
+    (<?= numberToArabicWords($invoiceTotal) ?> فقط)
   </div>
 
   <!-- ✅ العمود الشمال: تفاصيل الفاتورة -->
