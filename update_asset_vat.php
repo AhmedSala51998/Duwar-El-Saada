@@ -8,6 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 $id = (int)($_POST['id'] ?? 0);
+$bill_number = $_POST['bill_number'] ?? '';
 $vat_value = (float)($_POST['vat_value'] ?? 0);
 $total_amount = (float)($_POST['total_amount'] ?? 0);
 $has_vat = (int)($_POST['has_vat'] ?? 0);
@@ -18,10 +19,11 @@ if ($id <= 0) {
 }
 
 try {
+
     $stmt = $pdo->prepare("UPDATE assets 
-        SET vat_value = ?, has_vat = ? 
-        WHERE id = ?");
-    $stmt->execute([$vat_value, $has_vat, $id]);
+        SET vat_value = ?, has_vat = ?, total_amount = ?
+        WHERE bill_number = ?");
+    $stmt->execute([$vat_value, $has_vat, $total_amount, $bill_number]);
 
     echo "تم تحديث بيانات الضريبة بنجاح ✅";
 } catch (Exception $e) {

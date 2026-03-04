@@ -3,14 +3,36 @@ require __DIR__.'/partials/header.php';
 require_permission('assets.print');
 
 $assetId = (int)($_GET['id'] ?? 0);
+
+// نجيب رقم الفاتورة الأول
+$billStmt = $pdo->prepare("SELECT bill_number FROM assets WHERE id = ?");
+$billStmt->execute([$assetId]);
+$billNumber = $billStmt->fetchColumn();
+
+if (!$billNumber) {
+    echo "<div class='alert alert-warning'>الفاتورة غير موجودة</div>";
+    require __DIR__.'/partials/footer.php';
+    exit;
+}
+
+// نجيب كل الأصول اللي بنفس رقم الفاتورة
 $assetStmt = $pdo->prepare("
     SELECT a.*, b.branch_name AS branch_name
     FROM assets a
     LEFT JOIN branches b ON b.id = a.branch_id
-    WHERE a.id = ?
+    WHERE a.bill_number = ?
 ");
-$assetStmt->execute([$assetId]);
-$asset = $assetStmt->fetch();
+$assetStmt->execute([$billNumber]);
+$assets = $assetStmt->fetchAll();
+
+if (!$assets) {
+    echo "<div class='alert alert-warning'>لا يوجد عناصر لهذه الفاتورة</div>";
+    require __DIR__.'/partials/footer.php';
+    exit;
+}
+
+// نخلي أول عنصر هو المرجع الأساسي للبيانات العامة
+$asset = $assets[0];
 
 
 if (!$asset) { 
@@ -257,27 +279,22 @@ select#vatRate {
     </thead>
     <tbody>
       <?php 
-        $subtotal = $asset['price'] * $asset['quantity'];
-        $vat = $subtotal * $vatRate;
-        $total = $subtotal + $vat;
+      $subtotal = 0;
+
+      foreach ($assets as $item):
+          $lineTotal = $item['price'] * $item['quantity'];
+          $subtotal += $lineTotal;
       ?>
-      <tr data-amount="<?= $subtotal ?>" data-price="<?= $asset['price'] ?>" data-total="<?= $asset['total_amount'] ?>">
-        <td><?= esc($asset['name']) ?></td>
-        <td><?= esc($asset['type']) ?></td>
-        <td><?= esc($asset['quantity']) ?></td>
-        <?php if($item['vat_value'] == 0){
-
-            $pricewithvat = $asset['price'] + ($asset['price'] * 0.15);
-
-        ?>
-         <td><?= number_format($pricewithvat,7) ?> ريال</td>
-        <?php  }else{ ?>
-            <td><?= number_format($asset['price'],7) ?> ريال</td>
-        <?php } ?>
-        <td><?= number_format($subtotal,7) ?> ريال</td>
-        <td class="vat"><?= number_format($vat,7) ?> ريال</td>
-        <td class="total"><?= number_format($total,7) ?> ريال</td>
+      <tr data-amount="<?= $lineTotal ?>">
+          <td><?= esc($item['name']) ?></td>
+          <td><?= esc($item['type']) ?></td>
+          <td><?= esc($item['quantity']) ?></td>
+          <td><?= number_format($item['price'], 2) ?> ريال</td>
+          <td><?= number_format($lineTotal, 2) ?> ريال</td>
+          <td class="vat-line"></td>
+          <td class="total-line"></td>
       </tr>
+      <?php endforeach; ?>
     </tbody>
   </table></div>
 
@@ -344,62 +361,51 @@ select#vatRate {
 
 <script>
 function recalcTotals(saveToDB = false) {
+
   const vatRateEl = document.getElementById('vatRate');
-  const vatTextEl = document.getElementById('vatRateText');
   const vatRate = parseFloat(vatRateEl.value);
   const assetId = vatRateEl.dataset.assetId;
 
-  vatTextEl.textContent = vatRate === 0 ? '0%' : '15%';
+  const rows = document.querySelectorAll('#invoiceTable tbody tr');
 
-  const tr = document.querySelector('#invoiceTable tbody tr');
-  const subtotal = parseFloat(tr.dataset.amount) || 0;
-  const totalFromDB = parseFloat(tr.dataset.total) || subtotal; // اجمالي من قاعدة البيانات
+  let subtotal = 0;
 
-  const price = parseFloat(tr.dataset.price) || 0;
+  rows.forEach(row => {
+    subtotal += parseFloat(row.dataset.amount) || 0;
+  });
 
-  if (vatRate === 0) {
-    // الصفر: استخدم total_amount من قاعدة البيانات لكل القيم
-    tr.querySelector('td:nth-child(5)').textContent = totalFromDB.toFixed(2) + ' ريال'; // الإجمالي قبل الضريبة
-    tr.querySelector('.vat').textContent = '0.00 ريال';                                 // الضريبة
-    tr.querySelector('.total').textContent = totalFromDB.toFixed(2) + ' ريال';        // الإجمالي بعد الضريبة
+  const vat = subtotal * vatRate;
+  const grandTotal = subtotal + vat;
 
-    const priceWithvatValue = price + (price * 0.15);
-    tr.querySelector('td:nth-child(4)').textContent = priceWithvatValue.toFixed(7) + ' ريال';
+  rows.forEach(row => {
+    const lineSubtotal = parseFloat(row.dataset.amount) || 0;
+    const lineVat = lineSubtotal * vatRate;
+    const lineTotal = lineSubtotal + lineVat;
 
-    // الملخص
-    document.getElementById('totalNoVat').textContent = totalFromDB.toFixed(2);
-    document.getElementById('totalNoVat').parentElement.style.display = 'block'; // يمكن اخفاؤه حسب التصميم
-    document.getElementById('vatRow').style.display = 'none';
-    document.getElementById('grandRow').style.display = 'none';
-  } else {
-    // 15%: حساب القيم الطبيعية
-    const vat = subtotal * vatRate;
-    const total = subtotal + vat;
+    row.querySelector('.vat-line').textContent =
+        vatRate > 0 ? lineVat.toFixed(2) + ' ريال' : '0.00 ريال';
 
-    tr.querySelector('td:nth-child(5)').textContent = subtotal.toFixed(2) + ' ريال';
-    tr.querySelector('.vat').textContent = vat.toFixed(2) + ' ريال';
-    tr.querySelector('.total').textContent = total.toFixed(2) + ' ريال';
-    tr.querySelector('td:nth-child(4)').textContent = price.toFixed(7) + ' ريال';
+    row.querySelector('.total-line').textContent =
+        vatRate > 0 ? lineTotal.toFixed(2) + ' ريال'
+                    : lineSubtotal.toFixed(2) + ' ريال';
+  });
 
-    // الملخص
-    document.getElementById('totalNoVat').textContent = subtotal.toFixed(2);
-    document.getElementById('vatValue').textContent = vat.toFixed(2);
-    document.getElementById('grandTotal').textContent = total.toFixed(2);
+  document.getElementById('totalNoVat').textContent = subtotal.toFixed(2);
+  document.getElementById('vatValue').textContent = vat.toFixed(2);
+  document.getElementById('grandTotal').textContent = grandTotal.toFixed(2);
 
-    document.getElementById('totalNoVat').parentElement.style.display = 'block';
-    document.getElementById('vatRow').style.display = 'block';
-    document.getElementById('grandRow').style.display = 'block';
-  }
+  document.getElementById('vatRow').style.display =
+      vatRate > 0 ? 'block' : 'none';
+
+  document.getElementById('grandRow').style.display =
+      vatRate > 0 ? 'block' : 'none';
 
   if (saveToDB) {
     fetch('update_asset_vat', {
       method: 'POST',
       headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-      body: `id=${assetId}&vat_value=${vatRate > 0 ? (subtotal*vatRate) : 0}&total_amount=${vatRate > 0 ? (subtotal*(1+vatRate)) : totalFromDB}&has_vat=${vatRate > 0 ? 1 : 0}`
-    })
-    .then(res => res.text())
-    .then(console.log)
-    .catch(console.error);
+      body: `bill_number=<?= $billNumber ?>&vat_value=${vat}&total_amount=${grandTotal}&has_vat=${vatRate > 0 ? 1 : 0}`
+    });
   }
 }
 
