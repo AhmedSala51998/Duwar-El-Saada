@@ -708,6 +708,17 @@ $rows = $s->fetchAll(PDO::FETCH_ASSOC);
         <div class="modal-body">
 
           <div class="row">
+
+            <div class="col-md-6 mb-3">
+              <label>رقم الفاتورة</label>
+              <input type="number" name="invoice_serial" class="form-control" required>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label>تاريخ الفاتورة</label>
+              <input type="date" name="invoice_date" class="form-control" required>
+            </div>
+
             <div class="col-md-6 mb-3">
               <label>اسم الدافع</label>
               <select name="payer_name" class="form-select payer-select">
@@ -728,6 +739,7 @@ $rows = $s->fetchAll(PDO::FETCH_ASSOC);
                 <option>بنك</option>
               </select>
             </div>
+
             <div class="col-md-6 mb-3">
               <label>الفرع</label>
               <select name="branch_id" class="form-select" required>
@@ -736,15 +748,14 @@ $rows = $s->fetchAll(PDO::FETCH_ASSOC);
                   <option value="<?= $b['id'] ?>"><?= esc($b['branch_name']) ?></option>
                 <?php endforeach; ?>
               </select>
-           </div>
+            </div>
+
           </div>
 
           <div class="table-responsive">
             <table class="odoo-table" id="assetsTable">
               <thead>
                 <tr>
-                  <th>رقم الفاتورة</th>
-                  <th>تاريخ الفاتورة</th>
                   <th>اسم الأصل</th>
                   <th>النوع</th>
                   <th>الكمية</th>
@@ -756,8 +767,6 @@ $rows = $s->fetchAll(PDO::FETCH_ASSOC);
               </thead>
               <tbody>
                 <tr>
-                  <td><input type="number" name="invoice_serial[]" class="form-control" required></td>
-                  <td><input type="date" name="invoice_date[]" class="form-control" required></td>
                   <td><input name="name[]" class="form-control" required></td>
                   <td><input name="type[]" class="form-control" required></td>
                   <td><input type="number" step="0.001" name="quantity[]" class="form-control" required></td>
