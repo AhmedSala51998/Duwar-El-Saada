@@ -3,8 +3,6 @@ require __DIR__.'/partials/header.php';
 require_permission('assets.print');
 
 $assetId = (int)($_GET['id'] ?? 0);
-
-/* ✅ 1- هات الأصل الأساسي */
 $assetStmt = $pdo->prepare("
     SELECT a.*, b.branch_name AS branch_name
     FROM assets a
@@ -14,38 +12,18 @@ $assetStmt = $pdo->prepare("
 $assetStmt->execute([$assetId]);
 $asset = $assetStmt->fetch();
 
+
 if (!$asset) { 
     echo "<div class='alert alert-warning'>الأصل غير موجود</div>"; 
     require __DIR__.'/partials/footer.php'; 
     exit; 
 }
 
-/* ✅ 2- هات كل الأصناف اللي لها نفس رقم الفاتورة */
-$itemsStmt = $pdo->prepare("
-    SELECT *
-    FROM assets
-    WHERE bill_number = ?
-    ORDER BY id ASC
-");
-$itemsStmt->execute([$asset['bill_number']]);
-$items = $itemsStmt->fetchAll(PDO::FETCH_ASSOC);
+// نسبة الضريبة
+$vatRate = ($asset['has_vat'] == 1) ? 0.15 : 0.00;
 
+// صورة الفاتورة (إن وجدت)
 $invoiceImage = $asset['image'] ?? null;
-
-/* ✅ 3- حساب الإجماليات */
-$totalSubtotal = 0;
-$totalVat = 0;
-$totalGrand = 0;
-
-foreach($items as $it){
-    $sub = $it['price'] * $it['quantity'];
-    $vat = ($it['has_vat'] == 1) ? $sub * 0.15 : 0;
-    $grand = $sub + $vat;
-
-    $totalSubtotal += $sub;
-    $totalVat += $vat;
-    $totalGrand += $grand;
-}
 
 function numberToArabicWords($number) {
     $fmt = new NumberFormatter("ar", NumberFormatter::SPELLOUT);
@@ -266,45 +244,42 @@ select#vatRate {
   <!-- جدول الأصل -->
   <div class="table-responsive">
   <table id="invoiceTable">
-  <thead>
-  <tr>
-    <th>#</th>
-    <th>اسم الأصل</th>
-    <th>النوع</th>
-    <th>الكمية</th>
-    <th>السعر</th>
-    <th>الإجمالي</th>
-    <th>الضريبة</th>
-    <th>الإجمالي بعد الضريبة</th>
-  </tr>
-  </thead>
-  <tbody>
+    <thead>
+      <tr>
+        <th>اسم الأصل</th>
+        <th>النوع</th>
+        <th>الكمية</th>
+        <th>السعر</th>
+        <th>الاجمالي</th>
+        <th>الضريبة</th>
+        <th>الإجمالي بعد الضريبة</th>
+      </tr>
+    </thead>
+    <tbody>
+      <?php 
+        $subtotal = $asset['price'] * $asset['quantity'];
+        $vat = $subtotal * $vatRate;
+        $total = $subtotal + $vat;
+      ?>
+      <tr data-amount="<?= $subtotal ?>" data-price="<?= $asset['price'] ?>" data-total="<?= $asset['total_amount'] ?>">
+        <td><?= esc($asset['name']) ?></td>
+        <td><?= esc($asset['type']) ?></td>
+        <td><?= esc($asset['quantity']) ?></td>
+        <?php if($item['vat_value'] == 0){
 
-  <?php foreach($items as $index => $item):
+            $pricewithvat = $asset['price'] + ($asset['price'] * 0.15);
 
-      $subtotal = $item['price'] * $item['quantity'];
-      $vat = ($item['has_vat'] == 1) ? $subtotal * 0.15 : 0;
-      $total = $subtotal + $vat;
-  ?>
-
-  <tr data-id="<?= $item['id'] ?>"
-      data-sub="<?= $subtotal ?>"
-      data-price="<?= $item['price'] ?>">
-    <td><?= $index+1 ?></td>
-    <td><?= esc($item['name']) ?></td>
-    <td><?= esc($item['type']) ?></td>
-    <td><?= esc($item['quantity']) ?></td>
-    <td class="price"><?= number_format($item['price'],7) ?> ريال</td>
-    <td class="sub"><?= number_format($subtotal,2) ?> ريال</td>
-    <td class="vat"><?= number_format($vat,2) ?> ريال</td>
-    <td class="grand"><?= number_format($total,2) ?> ريال</td>
-  </tr>
-
-  <?php endforeach; ?>
-
-  </tbody>
-  </table>
-  </div>
+        ?>
+         <td><?= number_format($pricewithvat,7) ?> ريال</td>
+        <?php  }else{ ?>
+            <td><?= number_format($asset['price'],7) ?> ريال</td>
+        <?php } ?>
+        <td><?= number_format($subtotal,7) ?> ريال</td>
+        <td class="vat"><?= number_format($vat,7) ?> ريال</td>
+        <td class="total"><?= number_format($total,7) ?> ريال</td>
+      </tr>
+    </tbody>
+  </table></div>
 
   <!-- الملخص -->
   <!--<div class="invoice-summary">
@@ -325,7 +300,7 @@ select#vatRate {
 
   <!-- ✅ العمود اليمين: المبلغ بالعربي -->
   <div class="total-words" style="font-weight: bold; color: #444; font-size: 15px; text-align: right; margin-top: 35px;">
-    (<?= numberToArabicWords($totalGrand) ?> فقط)
+    (<?= numberToArabicWords($asset['total_amount']) ?> فقط)
   </div>
 
   <!-- ✅ العمود الشمال: تفاصيل الفاتورة -->
@@ -349,17 +324,17 @@ select#vatRate {
 
       <div>
         <strong>المجموع:</strong>
-        <span id="totalNoVat"><?= number_format($totalSubtotal,2) ?></span> ريال
+        <span id="totalNoVat"><?= number_format($subtotal,2) ?></span> ريال
       </div>
 
       <div id="vatRow" <?= $vatRate == 0 ? 'style="display:none;"' : '' ?>>
         <strong>الضريبة:</strong>
-        <span id="vatValue"><?= number_format($totalVat,2) ?></span> ريال
+        <span id="vatValue"><?= number_format($asset['vat_value'],2) ?></span> ريال
       </div>
 
       <div id="grandRow" <?= $vatRate == 0 ? 'style="display:none;"' : '' ?>>
         <strong>الإجمالي بعد الضريبة:</strong>
-        <span id="grandTotal"><?= number_format($totalGrand,2) ?></span> ريال
+        <span id="grandTotal"><?= number_format($asset['total_amount'],2) ?></span> ريال
       </div>
     </div>
   </div>
