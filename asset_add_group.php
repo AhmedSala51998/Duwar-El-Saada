@@ -9,8 +9,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
         exit;
     }
 
-    $bill_number = trim($_POST['invoice_serial'][0] ?? '');
-    $invoice_date = trim($_POST['invoice_date'][0] ?? date('Y-m-d'));
+    $bill_number = trim($_POST['invoice_serial'] ?? '');
+    $invoice_date = trim($_POST['invoice_date'] ?? date('Y-m-d'));
     $payer_name     = trim($_POST['payer_name'] ?? '');
     $payment_source = trim($_POST['payment_source'] ?? 'كاش');
 
@@ -78,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
 
             $stmt->execute([
                 $branch_id,
-                $invoice_serial,   // bill_number (نفس الرقم للفاتورة كلها)
+                $bill_number,   // bill_number (نفس الرقم للفاتورة كلها)
                 $serial_invoice,   // الرقم التسلسلي العام
                 $name,
                 $type,
