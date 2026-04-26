@@ -259,7 +259,7 @@ $stmt = $pdo->prepare("
         END AS `vat`,
 
         CASE 
-            WHEN a.has_vat = 1 THEN a.total_amount
+            WHEN a.has_vat = 1 THEN (a.price * a.quantity) + a.vat_value
             ELSE a.total_amount
         END AS `after`
 
