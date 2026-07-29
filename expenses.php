@@ -422,13 +422,13 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
                   <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body text-center">
-                  <?php if(has_permission('custodies.print')): ?>
+                  <?php if(has_permission('expenses.print')): ?>
                   <a class="btn btn-outline-primary w-100 mb-2" href="invoice_expense?id=<?= $r['id'] ?>"><i class="bi bi-printer me-2"></i> طباعة</a>
                   <?php endif ?>
-                  <?php if(has_permission('custodies.edit')): ?>
+                  <?php if(has_permission('expenses.edit')): ?>
                   <button class="btn btn-outline-warning w-100 mb-2" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#edit<?= $r['id'] ?>"><i class="bi bi-pencil me-2"></i> تعديل</button>
                   <?php endif ?>
-                  <?php if(has_permission('custodies.delete')): ?>
+                  <?php if(has_permission('expenses.delete')): ?>
                   <button class="btn btn-outline-danger w-100" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="<?= $r['id'] ?>" data-name="<?= esc($r['main_expense']) ?>"><i class="bi bi-trash me-2"></i> حذف</button>
                   <?php endif ?>
                 </div>
