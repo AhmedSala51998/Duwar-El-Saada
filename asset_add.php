@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
         $total_amount += $vat_value;
     }
 
-    $image = upload_image('image');
+    $image = upload_image('invoice_image');
 
     // تحقق من التكرار
     $check = $pdo->prepare("SELECT COUNT(*) FROM assets WHERE name=? AND type=? AND payer_name=?");
@@ -139,6 +139,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
         $_SESSION['toast'] = ['type'=>'danger','msg'=>'فشل العملية: ' . $e->getMessage()];
     }
 }
-
+function upload_image($field) {
+    if (!empty($_FILES[$field]['name']) && $_FILES[$field]['error'] === UPLOAD_ERR_OK) {
+        $fileTmp = $_FILES[$field]['tmp_name'];
+        $fileName = time() . "_" . basename($_FILES[$field]['name']);
+        $target = __DIR__ . "/uploads/" . $fileName;
+        move_uploaded_file($fileTmp, $target);
+        return $fileName;
+    }
+    return null;
+}
 header('Location: ' . BASE_URL . '/assetes.php');
 exit;

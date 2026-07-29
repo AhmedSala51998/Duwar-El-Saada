@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
         'has_vat' => $has_vat,
         'vat_value' => $vat_value,
         'total_amount' => $total_amount,
-        'image' => upload_image('image') ?: ($oldData['image'] ?? null),
+        'image' => upload_image('invoice_image') ?: ($oldData['invoice_image'] ?? null),
         'payer_name' => trim($_POST['payer_name'] ?? ''),
         'payment_source' => $_POST['payment_source'] ?? 'كاش',
         'branch_id' => $branch_id
@@ -169,6 +169,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
         $_SESSION['toast'] = ['type'=>'danger','msg'=>'فشل العملية: ' . $e->getMessage()];
     }
 }
-
+function upload_image($field) {
+    if (!empty($_FILES[$field]['name']) && $_FILES[$field]['error'] === UPLOAD_ERR_OK) {
+        $fileTmp = $_FILES[$field]['tmp_name'];
+        $fileName = time() . "_" . basename($_FILES[$field]['name']);
+        $target = __DIR__ . "/uploads/" . $fileName;
+        move_uploaded_file($fileTmp, $target);
+        return $fileName;
+    }
+    return null;
+}
 header('Location: ' . BASE_URL . '/assetes.php');
 exit;

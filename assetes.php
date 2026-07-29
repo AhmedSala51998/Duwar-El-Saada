@@ -518,7 +518,7 @@ $rows = $s->fetchAll(PDO::FETCH_ASSOC);
               <label class="custom-file-upload w-100">
                 <i class="bi bi-image"></i>
                 <span id="file-text-edit-<?= $r['id'] ?>">اختر صورة</span>
-                <input type="file" name="image" id="asset_image_edit_<?= $r['id'] ?>" accept="image/*"
+                <input type="file" name="invoice_image" id="asset_image_edit_<?= $r['id'] ?>" accept="image/*"
                       onchange="previewFile(this,'file-text-edit-<?= $r['id'] ?>','preview-edit-<?= $r['id'] ?>')">
                 <?php if(!empty($r['image'])): ?>
                   <img id="preview-edit-<?= $r['id'] ?>" src="<?= 'uploads/'.esc($r['image']) ?>" style="max-width:100px;margin-top:8px;"/>
@@ -679,7 +679,7 @@ $rows = $s->fetchAll(PDO::FETCH_ASSOC);
             <label class="custom-file-upload w-100">
               <i class="bi bi-image"></i>
               <span id="file-text-asset">اختر صورة</span>
-              <input type="file" name="image" id="asset_image" accept="image/*"
+              <input type="file" name="image" id="invoice_image" accept="image/*"
                      onchange="previewFile(this,'file-text-asset','preview-asset')">
               <img id="preview-asset" style="display:none;max-width:100px;margin-top:8px;"/>
             </label>

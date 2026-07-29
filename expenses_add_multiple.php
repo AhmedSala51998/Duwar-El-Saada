@@ -135,7 +135,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
         $_SESSION['toast'] = ['type'=>'danger','msg'=>$e->getMessage()];
     }
 }
-
+function upload_image($field) {
+    if (!empty($_FILES[$field]['name']) && $_FILES[$field]['error'] === UPLOAD_ERR_OK) {
+        $fileTmp = $_FILES[$field]['tmp_name'];
+        $fileName = time() . "_" . basename($_FILES[$field]['name']);
+        $target = __DIR__ . "/uploads/" . $fileName;
+        move_uploaded_file($fileTmp, $target);
+        return $fileName;
+    }
+    return null;
+}
 header('Location: ' . BASE_URL . '/expenses.php');
 exit;
 ?>
