@@ -28,6 +28,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
         exit;
     }
 
+    $orderInvoiceImage = null;
+
+    if (!empty($oldData['order_id'])) {
+        $stmtOrder = $pdo->prepare("SELECT invoice_image FROM orders_purchases WHERE id=?");
+        $stmtOrder->execute([$oldData['order_id']]);
+        $orderInvoiceImage = $stmtOrder->fetchColumn();
+    }
+
     $newData = [
         'name'           => trim($_POST['name']),
         'quantity'       => (float)($_POST['quantity'] ?? 0),
@@ -35,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
         'unit'           => $_POST['unit'] ?? '',
         'price'          => (float)($_POST['price'] ?? 0),
         'product_image'  => upload_image('product_image') ?: ($oldData['product_image'] ?? null),
-        'invoice_image'  => upload_image('invoice_image') ?: ($oldData['invoice_image'] ?? null),
+        'invoice_image'  => upload_image('invoice_image') ?: $orderInvoiceImage,
         'payer_name'     => trim($_POST['payer_name'] ?? ''),
         'payment_source' => $_POST['payment_source'] ?? 'كاش',
         'package'        => trim($_POST['package'] ?? '')
@@ -149,7 +157,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
             }
 
             $pdo->prepare("UPDATE purchases SET branch_id =?,
-                name=?, quantity=?, prinitng_quantity=?, single_package=?, total_packages=?, unit=?, package=?, price=?, total_price=?, product_image=?, invoice_image=?, payer_name=?, payment_source=?, unit_total=?, unit_vat=?, unit_all_total=?
+                name=?, quantity=?, prinitng_quantity=?, single_package=?, total_packages=?, unit=?, package=?, price=?, total_price=?, product_image=?, payer_name=?, payment_source=?, unit_total=?, unit_vat=?, unit_all_total=?
                 WHERE id=?")
             ->execute([
                 $branch_id,
@@ -163,7 +171,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
                 $unit_price,
                 $newData['price'],
                 $newData['product_image'],
-                $newData['invoice_image'],
                 $newData['payer_name'],
                 $newData['payment_source'],
                 $unit_total,
@@ -189,8 +196,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
             $vat = $total * 0.15;
             $allTotal = $total + $vat;
 
-            $pdo->prepare("UPDATE orders_purchases SET branch_id =?, total=?, vat=?, all_total=? WHERE id=?")
-                ->execute([$branch_id, $total, $vat, $allTotal, $orderId]);
+                $pdo->prepare("
+                    UPDATE orders_purchases
+                    SET branch_id=?,
+                        total=?,
+                        vat=?,
+                        all_total=?,
+                        invoice_image=?
+                    WHERE id=?
+                ")->execute([
+                    $branch_id,
+                    $total,
+                    $vat,
+                    $allTotal,
+                    $newData['invoice_image'],
+                    $orderId
+                ]);
         }
 
         $pdo->commit();
