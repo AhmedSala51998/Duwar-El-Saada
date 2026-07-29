@@ -875,8 +875,9 @@ $branches = $pdo->query("SELECT id, branch_name FROM branches ORDER BY branch_na
               <i class="bi bi-receipt"></i>
               <span id="file-text-inv-main"></span>
               <input type="file" name="invoice_image" accept="image/*"
-                     onchange="previewFile(this,'file-text-inv-main','preview-inv-main')">
-              <img id="preview-inv-main" style="display:none; max-width:150px; margin-top:10px"/>
+                     onchange="previewFile(this,'file-text-inv-main','preview-inv-main1')">
+              <img id="preview-inv-main1" style="display:none; max-width:150px; margin-top:10px"/>
+
             </label>
           </div>
 
