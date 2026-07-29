@@ -82,11 +82,16 @@ function numberToArabicWords($number) {
 .logo { width: 80px; }
 
 .invoice-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-direction: row-reverse;
-  margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 25px;
+    flex-direction: row-reverse;
+    margin-bottom: 20px;
+}
+
+.invoice-info{
+    flex: 1;
 }
 
 .invoice-info {
@@ -108,11 +113,20 @@ function numberToArabicWords($number) {
 }
 
 .invoice-image {
-  max-width: 100%;
-  margin: 15px 0;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-shadow: 1px 1px 5px rgba(0,0,0,0.1);
+    width: 220px;
+    max-width: 220px;
+    height: 220px;
+    object-fit: contain;
+    background: #fff;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    transition: .3s;
+}
+
+.invoice-image:hover{
+    transform: scale(1.03);
 }
 
 select#vatRate {
@@ -194,7 +208,25 @@ select#vatRate {
   }
 }
 /* ======== عرض الموبايل فقط ======== */
+@media (max-width:768px){
 
+    .invoice-header{
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .invoice-info{
+        width: 100%;
+        text-align: right;
+    }
+
+    .invoice-image{
+        width: 180px;
+        height: 180px;
+        margin-top: 10px;
+    }
+}
 
 </style>
 
