@@ -472,7 +472,7 @@ $branches = $pdo->query("SELECT id, branch_name FROM branches ORDER BY branch_na
               <input type="hidden" name="old_price" value="<?= esc($r['price']) ?>">
               <div class="modal-header">
                 <h5 class="modal-title">تعديل: <?= esc($r['name']) ?></h5>
-                <button class="btn-close" data-bs-dismiss="modal"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
               </div>
               <div class="modal-body">
                 <div class="row g-3">

@@ -474,7 +474,7 @@ $rows = $s->fetchAll(PDO::FETCH_ASSOC);
 
             <div class="modal-header">
               <h5 class="modal-title">تعديل أصل</h5>
-              <button class="btn-close" data-bs-dismiss="modal"></button>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
             <div class="modal-body vstack gap-3">
