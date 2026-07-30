@@ -354,16 +354,16 @@ $rows = $s->fetchAll(PDO::FETCH_ASSOC);
         <i class="bi bi-download me-1"></i> تحميل نموذج Excel
       </a>
     <?php endif; ?> 
+    <?php if(has_permission('assets.delete')): ?>
+      <button type="button"
+              class="btn btn-danger d-flex align-items-center"
+              id="bulkDeleteBtn">
+          <i class="bi bi-trash me-1"></i>
+          حذف المحدد
+      </button>
+    <?php endif; ?>
   </div>
 </div>
-<?php if(has_permission('assets.delete')): ?>
-<button type="button"
-        class="btn btn-danger d-flex align-items-center"
-        id="bulkDeleteBtn">
-    <i class="bi bi-trash me-1"></i>
-    حذف المحدد
-</button>
-<?php endif; ?>
 <form method="post" action="asset_delete_bulk" id="bulkDeleteForm">
 <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
 <div class="table-responsive shadow-sm rounded-3 border bg-white p-2">

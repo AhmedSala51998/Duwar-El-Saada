@@ -349,15 +349,26 @@ $branches = $pdo->query("SELECT id, branch_name FROM branches ORDER BY branch_na
       <i class="bi bi-file-text me-1"></i> إضافة أصناف عبر Excel
     </button>
     <?php endif ?>
+    <button
+        type="button"
+        id="bulkDeleteBtn"
+        class="btn btn-danger">
+
+        <i class="fas fa-trash"></i>
+        حذف المحدد
+
+    </button>
   </div>
 </div>
 
-
-
+<form method="post" action="purchase_delete_bulk" id="bulkDeleteForm">
 <div class="table-responsive shadow-sm rounded-3 border bg-white p-2">
   <table class="table table-hover align-middle mb-0 custom-table">
     <thead class="table-light border-bottom border-2 small-header text-center text-secondary fw-semibold">
       <tr>
+        <th width="40">
+            <input type="checkbox" id="checkAll">
+        </th>
         <th>#</th>
         <th>رقم تسلسلي</th>
         <th>الفرع</th>
@@ -377,6 +388,14 @@ $branches = $pdo->query("SELECT id, branch_name FROM branches ORDER BY branch_na
     <tbody>
       <?php foreach($rows as $r): ?>
       <tr class="text-center">
+        <td>
+            <input
+                type="checkbox"
+                class="row-check"
+                name="ids[]"
+                value="<?= $r['id'] ?>"
+            >
+        </td>
         <td class="fw-bold text-muted" data-label="#"> <?= $r['id'] ?> </td>
         <td data-label="رقم تسلسلي"> <?= esc($r['invoice_serial'] ?? '-') ?> </td>
         <td data-label="الفرع"> <?= esc($r['branch_name'] ?? '-') ?> </td>
@@ -588,6 +607,7 @@ $branches = $pdo->query("SELECT id, branch_name FROM branches ORDER BY branch_na
   </tbody>
 </table>
 </div>
+</form>
 <?php if ($total_pages > 1): ?>
 <nav aria-label="صفحات النتائج" class="mt-3">
   <ul class="pagination justify-content-center flex-wrap overflow-auto" style="gap:4px;">
@@ -1064,4 +1084,61 @@ document.querySelector('form[action="purchase_add"]').addEventListener('submit',
       alert('حدث خطأ أثناء التحقق من رقم الفاتورة.');
     });
 });
+</script>
+
+
+<script>
+
+document.getElementById('checkAll')?.addEventListener('change', function(){
+
+    document.querySelectorAll('.row-check').forEach(cb => {
+
+        cb.checked = this.checked;
+
+    });
+
+});
+
+document.getElementById('bulkDeleteBtn')?.addEventListener('click', function(){
+
+    let checked =
+        document.querySelectorAll('.row-check:checked');
+
+    if(checked.length == 0){
+
+        Swal.fire({
+            icon:'warning',
+            title:'تنبيه',
+            text:'اختر عنصر واحد على الأقل'
+        });
+
+        return;
+    }
+
+    Swal.fire({
+
+        title:'تأكيد الحذف',
+        text:'سيتم حذف العناصر المحددة',
+        icon:'warning',
+
+        showCancelButton:true,
+
+        confirmButtonText:'نعم احذف',
+
+        cancelButtonText:'إلغاء'
+
+    }).then((result)=>{
+
+        if(result.isConfirmed){
+
+            document
+                .getElementById('bulkDeleteForm')
+                .submit();
+
+        }
+
+    });
+
+});
+
 </script>
