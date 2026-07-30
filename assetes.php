@@ -364,7 +364,7 @@ $rows = $s->fetchAll(PDO::FETCH_ASSOC);
     حذف المحدد
 </button>
 <?php endif; ?>
-<form method="post" action="asset_delete_bulk.php" id="bulkDeleteForm">
+<form method="post" action="asset_delete_bulk" id="bulkDeleteForm">
 <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
 <div class="table-responsive shadow-sm rounded-3 border bg-white p-2">
   <table class="table table-hover align-middle mb-0 custom-table">
