@@ -22,9 +22,12 @@ $params = [];
 
 if ($kw !== '') {
     $q .= " AND (
-                e.main_expense LIKE ?
+                e.invoice_serial LIKE ?
+                OR e.main_expense LIKE ?
                 OR b.branch_name LIKE ?
             )";
+
+    $params[] = "%$kw%";
     $params[] = "%$kw%";
     $params[] = "%$kw%";
 }
@@ -35,10 +38,10 @@ $whereClauses = " WHERE 1 ";
 
 if ($kw !== '') {
     $whereClauses .= " AND (
-        e.main_expense LIKE ?
+        e.invoice_serial LIKE ?
+        OR e.main_expense LIKE ?
         OR b.branch_name LIKE ?
     )";
-    // نفس الـ $params اللي موجود
 }
 
 // استعلام TOTAL مع الفلتر الصحيح
@@ -352,11 +355,26 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
   </div>
 </div>
 
+<?php if(has_permission('expenses.delete')): ?>
+<form method="post" action="expenses_delete_multiple" id="bulkDeleteForm">
+    <input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
 
+    <div class="mb-2">
+        <button type="submit" class="btn btn-danger btn-sm" id="bulkDeleteBtn" disabled>
+            <i class="bi bi-trash"></i>
+            حذف المحدد
+        </button>
+
+        <span class="badge bg-secondary ms-2" id="selectedCount">0</span>
+    </div>
+<?php endif; ?>
 <div class="table-responsive shadow-sm rounded-3 border bg-white p-2">
   <table class="table table-hover align-middle mb-0 custom-table">
     <thead class="table-light border-bottom border-2 small-header">
       <tr class="text-center text-secondary fw-semibold">
+        <th width="40">
+            <input type="checkbox" id="checkAll">
+        </th>
         <th>#</th>
         <th>الرقم التسلسلي</th>
         <th>الفرع</th>
@@ -376,6 +394,13 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
     <tbody>
       <?php foreach($rows as $r): ?>
       <tr class="text-center">
+        <td>
+            <input
+                type="checkbox"
+                class="row-check"
+                name="ids[]"
+                value="<?= $r['id'] ?>">
+        </td>
         <td data-label="#" class="fw-bold text-muted"><?= $r['id'] ?></td>
         <td data-label="رقم تسلسلي"><?= esc($r['invoice_serial']) ?></td>
         <td data-label="الفرع"><?= esc($r['branch_name'] ?? '-') ?></td>
@@ -549,6 +574,9 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 </tbody>
 </table>
 </div>
+<?php if(has_permission('expenses.delete')): ?>
+</form>
+<?php endif; ?>
 <?php if ($total_pages > 1): ?>
 <nav aria-label="صفحات النتائج" class="mt-3">
   <ul class="pagination justify-content-center flex-wrap overflow-auto" style="gap:4px;">
@@ -1250,5 +1278,73 @@ document.getElementById('multipleExpensesTable').addEventListener('change', func
     const row = e.target.closest('tr');
     calculateTotal(row);
   }
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+
+    const checkAll = document.getElementById('checkAll');
+    const deleteBtn = document.getElementById('bulkDeleteBtn');
+    const countBox = document.getElementById('selectedCount');
+
+    function updateCount(){
+        const checked =
+            document.querySelectorAll('.row-check:checked').length;
+
+        countBox.textContent = checked;
+
+        if(deleteBtn){
+            deleteBtn.disabled = checked === 0;
+        }
+    }
+
+    if(checkAll){
+        checkAll.addEventListener('change', function(){
+
+            document.querySelectorAll('.row-check')
+            .forEach(cb => cb.checked = this.checked);
+
+            updateCount();
+        });
+    }
+
+    document.addEventListener('change', function(e){
+
+        if(e.target.classList.contains('row-check')){
+
+            const all =
+                document.querySelectorAll('.row-check').length;
+
+            const checked =
+                document.querySelectorAll('.row-check:checked').length;
+
+            if(checkAll){
+                checkAll.checked = all === checked;
+            }
+
+            updateCount();
+        }
+    });
+
+    const form = document.getElementById('bulkDeleteForm');
+
+    if(form){
+        form.addEventListener('submit', function(e){
+
+            const checked =
+                document.querySelectorAll('.row-check:checked').length;
+
+            if(checked === 0){
+                e.preventDefault();
+                return;
+            }
+
+            if(!confirm('هل أنت متأكد من حذف العناصر المحددة؟')){
+                e.preventDefault();
+            }
+        });
+    }
+
 });
 </script>

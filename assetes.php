@@ -206,7 +206,13 @@ $count_q = "
 $count_params = [];
 
 if ($kw !== '') {
-  $count_q .= " AND (a.name LIKE ? OR b.branch_name LIKE ?)";
+  $count_q .= " AND (
+      a.name LIKE ?
+      OR b.branch_name LIKE ?
+      OR a.invoice_serial LIKE ?
+  )";
+
+  $count_params[] = "%$kw%";
   $count_params[] = "%$kw%";
   $count_params[] = "%$kw%";
 }
@@ -229,7 +235,13 @@ $q = "
 $ps = [];
 
 if ($kw !== '') {
-  $q .= " AND (a.name LIKE ? OR b.branch_name LIKE ?)";
+  $q .= " AND (
+      a.name LIKE ?
+      OR b.branch_name LIKE ?
+      OR a.invoice_serial LIKE ?
+  )";
+
+  $ps[] = "%$kw%";
   $ps[] = "%$kw%";
   $ps[] = "%$kw%";
 }

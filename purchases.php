@@ -228,7 +228,10 @@ if ($kw !== '') {
     $q .= " AND (
                 p.name LIKE ?
                 OR b.branch_name LIKE ?
+                OR o.invoice_serial LIKE ?
             )";
+
+    $params[] = "%$kw%";
     $params[] = "%$kw%";
     $params[] = "%$kw%";
 }
