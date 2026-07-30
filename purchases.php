@@ -349,15 +349,17 @@ $branches = $pdo->query("SELECT id, branch_name FROM branches ORDER BY branch_na
       <i class="bi bi-file-text me-1"></i> إضافة أصناف عبر Excel
     </button>
     <?php endif ?>
-    <button
-        type="button"
-        id="bulkDeleteBtn"
-        class="btn btn-danger">
+    <?php if(has_permission('purchases.delete')): ?>
+      <button
+          type="button"
+          id="bulkDeleteBtn"
+          class="btn btn-danger">
 
-        <i class="fas fa-trash"></i>
-        حذف المحدد
+          <i class="fas fa-trash"></i>
+          حذف المحدد
 
-    </button>
+      </button>
+    <?php endif ?>
   </div>
 </div>
 
