@@ -185,6 +185,22 @@
   white-space: nowrap;
   text-align: center;
 }
+
+
+.table-responsive {
+    overflow-x: auto !important;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+}
+
+.custom-table {
+    min-width: 1800px; /* أو 2000px حسب عدد الأعمدة */
+}
+
+.custom-table th,
+.custom-table td {
+    white-space: nowrap;
+}
 </style>
 
 <?php if(!empty($_SESSION['toast'])): 
