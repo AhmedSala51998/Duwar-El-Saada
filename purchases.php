@@ -443,12 +443,12 @@ $branches = $pdo->query("SELECT id, branch_name FROM branches ORDER BY branch_na
                   </a>
                   <?php endif ?>
                   <?php if(has_permission('purchases.edit')): ?>
-                  <button class="btn btn-outline-warning w-100 mb-2" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#e<?= $r['id'] ?>">
+                  <button type="button" class="btn btn-outline-warning w-100 mb-2" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#e<?= $r['id'] ?>">
                     <i class="bi bi-pencil me-2"></i> تعديل
                   </button>
                   <?php endif ?>
                   <?php if(has_permission('purchases.delete')): ?>
-                  <button class="btn btn-outline-danger w-100" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#del<?= $r['id'] ?>">
+                  <button type="button" class="btn btn-outline-danger w-100" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#del<?= $r['id'] ?>">
                     <i class="bi bi-trash me-2"></i> حذف
                   </button>
                   <?php endif ?>

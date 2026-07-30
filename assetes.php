@@ -425,7 +425,7 @@ $rows = $s->fetchAll(PDO::FETCH_ASSOC);
         <td data-label="التاريخ"><?= esc($r['created_at'] ? date('Y-m-d', strtotime($r['created_at'])) : '') ?></td>
         <?php if(has_permission('assets.processes')): ?>
         <td class="text-center">
-          <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#actionsAsset<?= $r['id'] ?>">
+          <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#actionsAsset<?= $r['id'] ?>">
             <i class="bi bi-gear-fill"></i>
           </button>
 
@@ -445,12 +445,12 @@ $rows = $s->fetchAll(PDO::FETCH_ASSOC);
                   </a>
                   <?php endif ?>
                   <?php if(has_permission('assets.edit')): ?>
-                  <button class="btn btn-outline-warning w-100 mb-2" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#e<?= $r['id'] ?>">
+                  <button type="button" class="btn btn-outline-warning w-100 mb-2" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#e<?= $r['id'] ?>">
                     <i class="bi bi-pencil me-2"></i> تعديل
                   </button>
                   <?php endif ?>
                   <?php if(has_permission('assets.delete')): ?>
-                  <button class="btn btn-outline-danger w-100" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#del<?= $r['id'] ?>">
+                  <button type="button" class="btn btn-outline-danger w-100" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#del<?= $r['id'] ?>">
                     <i class="bi bi-trash me-2"></i> حذف
                   </button>
                   <?php endif ?>
