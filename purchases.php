@@ -920,7 +920,7 @@ $branches = $pdo->query("SELECT id, branch_name FROM branches ORDER BY branch_na
 <?php endif; ?>
 
 <?php require __DIR__.'/partials/footer.php'; ?>
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 function previewFile(input, textId, previewId) {
   const file = input.files[0];
