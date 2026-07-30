@@ -356,11 +356,25 @@ $rows = $s->fetchAll(PDO::FETCH_ASSOC);
     <?php endif; ?> 
   </div>
 </div>
-
+<?php if(has_permission('assets.delete')): ?>
+<button type="button"
+        class="btn btn-danger d-flex align-items-center"
+        id="bulkDeleteBtn">
+    <i class="bi bi-trash me-1"></i>
+    حذف المحدد
+</button>
+<?php endif; ?>
+<form method="post" action="asset_delete_bulk.php" id="bulkDeleteForm">
+<input type="hidden" name="_csrf" value="<?= esc(csrf_token()) ?>">
 <div class="table-responsive shadow-sm rounded-3 border bg-white p-2">
   <table class="table table-hover align-middle mb-0 custom-table">
     <thead class="table-light border-bottom border-2 small-header text-center text-secondary fw-semibold">
       <tr>
+        <?php if(has_permission('assets.delete')): ?>
+          <th width="40">
+              <input type="checkbox" id="checkAll">
+          </th>
+        <?php endif; ?>
         <th>#</th>
         <th>الرقم التسلسلي</th>
         <th>الاسم</th>
@@ -379,6 +393,11 @@ $rows = $s->fetchAll(PDO::FETCH_ASSOC);
     <tbody>
       <?php foreach($rows as $r): ?>
       <tr class="text-center">
+        <?php if(has_permission('assets.delete')): ?>
+          <td>
+              <input type="checkbox" class="row-check" name="ids[]" value="<?= $r['id'] ?>">
+          </td>
+        <?php endif; ?>
         <td data-label="#" class="fw-bold text-muted"><?= $r['id'] ?></td>
         <td data-label="رقم تسلسلي"><?= esc($r['invoice_serial']) ?></td>
         <!--<td>
@@ -573,6 +592,7 @@ $rows = $s->fetchAll(PDO::FETCH_ASSOC);
   </tbody>
 </table>
 </div>
+</form>
 <?php if ($total_pages > 1): ?>
 <nav aria-label="صفحات النتائج" class="mt-3">
   <ul class="pagination justify-content-center flex-wrap overflow-auto" style="gap:4px;">
@@ -1075,3 +1095,24 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 </script>
 
+<script>
+document.getElementById('checkAll')?.addEventListener('change', function () {
+    document.querySelectorAll('.row-check').forEach(cb => {
+        cb.checked = this.checked;
+    });
+});
+
+document.getElementById('bulkDeleteBtn')?.addEventListener('click', function () {
+
+    let checked = document.querySelectorAll('.row-check:checked');
+
+    if(checked.length === 0){
+        alert('اختر عنصر واحد على الأقل');
+        return;
+    }
+
+    if(confirm('هل أنت متأكد من حذف العناصر المحددة؟')){
+        document.getElementById('bulkDeleteForm').submit();
+    }
+});
+</script>
