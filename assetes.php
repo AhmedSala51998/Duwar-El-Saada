@@ -477,7 +477,7 @@ $rows = $s->fetchAll(PDO::FETCH_ASSOC);
         </td>
         <?php endif; ?>
       </tr>
-
+</form>
 
     <!-- Modal تعديل -->
     <?php if(has_permission('assets.edit')): ?>
@@ -608,7 +608,6 @@ $rows = $s->fetchAll(PDO::FETCH_ASSOC);
   </tbody>
 </table>
 </div>
-</form>
 <?php if ($total_pages > 1): ?>
 <nav aria-label="صفحات النتائج" class="mt-3">
   <ul class="pagination justify-content-center flex-wrap overflow-auto" style="gap:4px;">

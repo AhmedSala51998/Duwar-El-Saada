@@ -478,7 +478,9 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
         </td>
         <?php endif; ?>
       </tr>
-
+<?php if(has_permission('expenses.delete')): ?>
+</form>
+<?php endif; ?>
 
 <!-- مودال التعديل -->
 <?php if(has_permission('expenses.edit')): ?>
@@ -589,9 +591,6 @@ document.addEventListener("DOMContentLoaded",()=>{let el=document.getElementById
 </tbody>
 </table>
 </div>
-<?php if(has_permission('expenses.delete')): ?>
-</form>
-<?php endif; ?>
 <?php if ($total_pages > 1): ?>
 <nav aria-label="صفحات النتائج" class="mt-3">
   <ul class="pagination justify-content-center flex-wrap overflow-auto" style="gap:4px;">
