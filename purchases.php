@@ -249,10 +249,11 @@ $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
 $whereClauses = " WHERE 1 ";
 
 if ($kw !== '') {
-    $whereClauses .= " AND (
-        p.name LIKE ?
-        OR b.branch_name LIKE ?
-    )";
+  $whereClauses .= " AND (
+      p.name LIKE ?
+      OR b.branch_name LIKE ?
+      OR o.invoice_serial LIKE ?
+  )";
     // نفس الـ $params اللي عندك جاهز
 }
 
