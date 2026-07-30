@@ -194,7 +194,7 @@
 }
 
 .custom-table {
-    min-width: 1800px; /* أو 2000px حسب عدد الأعمدة */
+    min-width: 1850px; /* أو 2000px حسب عدد الأعمدة */
 }
 
 .custom-table th,
