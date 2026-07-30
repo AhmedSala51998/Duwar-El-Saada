@@ -423,7 +423,7 @@ $branches = $pdo->query("SELECT id, branch_name FROM branches ORDER BY branch_na
 
         <?php if(has_permission('purchases.processes')): ?>
         <td class="text-center">
-          <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#actions<?= $r['id'] ?>">
+          <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#actions<?= $r['id'] ?>">
             <i class="bi bi-gear-fill"></i>
           </button>
 
