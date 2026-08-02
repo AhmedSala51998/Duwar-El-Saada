@@ -72,6 +72,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
         ]);
         $expense_id = $pdo->lastInsertId();
 
+        require_once __DIR__.'/libs/activity_log.php';
+
+        add_activity_log(
+            $pdo,
+            'add',
+            'expenses',
+            $expense_id,
+            "إضافة مصروفات - {$serial_invoice}"
+        );
+
         // خصم العهدة إذا مصدر الدفع "عهدة"
         if($payment_source === 'عهدة'){
             $stmtC = $pdo->prepare("SELECT * FROM custodies WHERE person_name=? AND branch_id=? AND amount > 0 ORDER BY taken_at ASC");

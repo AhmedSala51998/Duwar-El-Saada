@@ -37,6 +37,16 @@ if($id){
         // حذف المصروف نفسه
         $pdo->prepare("DELETE FROM expenses WHERE id=?")->execute([$id]);
 
+        require_once __DIR__.'/libs/activity_log.php';
+
+        add_activity_log(
+            $pdo,
+            'delete',
+            'expenses',
+            $id,
+            "حذف مصروفات - {$id}"
+        );
+
         $pdo->commit(); // إنهاء المعاملة بنجاح
         $_SESSION['toast'] = ['type' => 'success', 'msg' => 'تم الحذف بنجاح'];
 

@@ -214,6 +214,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
                 ]);
         }
 
+        require_once __DIR__.'/libs/activity_log.php';
+
+        add_activity_log(
+            $pdo,
+            'edit',
+            'purchases',
+            $id,
+            "تعديل مشتريات"
+        );
+
         $pdo->commit();
     } catch (Exception $e) {
         $pdo->rollBack();

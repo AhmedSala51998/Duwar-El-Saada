@@ -317,6 +317,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             'home' => 'الرئيسية',
                             'systems_settings' => 'اعدادات النظام',
                             'branches' => 'الفروع',
+                            'logs' => 'العمليات والتحديثات',
                         ];
                         ?>
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<?= $group.$r['id'] ?>">
@@ -515,6 +516,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         'home' => 'الرئيسية',
                         'systems_settings' => 'اعدادات النظام',
                         'branches' => 'الفروع',
+                        'logs' => 'العمليات والتحديثات',
                     ];
                     ?>
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAdd<?= $group ?>">

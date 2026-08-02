@@ -184,6 +184,16 @@ try{
                 ]);
             }
         }
+
+        require_once __DIR__.'/libs/activity_log.php';
+
+        add_activity_log(
+            $pdo,
+            'delete',
+            'purchases',
+            $id,
+            "حذف مشتريات"
+        );
     }
 
     $pdo->commit();

@@ -157,7 +157,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
             $pdo->prepare("UPDATE assets SET name=?, type=?, quantity=?, price=?, has_vat=?, vat_value=?, total_amount=?, payer_name=?, payment_source=?, image=?, branch_id=? WHERE id=?")
                 ->execute([$newData['name'],$newData['type'],$newData['quantity'],$price,$has_vat,$vat_value,$total_amount,$newData['payer_name'],$newData['payment_source'],$newData['image'],$branch_id,$id]);
 
+            require_once __DIR__.'/libs/activity_log.php';
+
+            add_activity_log(
+                $pdo,
+                'edit',
+                'assets',
+                $id,
+                'تعديل أصل'
+            );
+            
             $pdo->commit();
+
             $_SESSION['toast'] = ['type'=>'success','msg'=>'تم تعديل الأصل بنجاح'];
         } else {
             $pdo->commit();

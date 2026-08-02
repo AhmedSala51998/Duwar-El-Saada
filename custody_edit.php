@@ -59,6 +59,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
     if ($changed) {
         $stmt = $pdo->prepare("UPDATE custodies SET branch_id=?, person_name=?, amount=?, main_amount=?, sub_amount=?, taken_at=?, notes=? WHERE id=?");
         $stmt->execute([$branch_id, $person_name, $amount, $amount, $amount, $taken_at, $notes, $id]);
+        require_once __DIR__.'/libs/activity_log.php';
+
+        add_activity_log(
+            $pdo,
+            'edit',
+            'custodies',
+            $id,
+            "تعديل عهد"
+        );
         $_SESSION['toast'] = ['type' => 'success', 'msg' => 'تم تعديل العهدة بنجاح'];
     } else {
         $_SESSION['toast'] = ['type' => 'info', 'msg' => 'لا تغييرات للحفظ'];

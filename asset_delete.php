@@ -41,8 +41,19 @@ if ($id) {
             $pdo->prepare("DELETE FROM assets WHERE id=?")->execute([$id]);
         }
 
+        require_once __DIR__.'/libs/activity_log.php';
+
+        add_activity_log(
+            $pdo,
+            'delete',
+            'assets',
+            $id,
+            'حذف أصل'
+        );
+
         // إنهاء المعاملة بنجاح
         $pdo->commit();
+
         $_SESSION['toast'] = ['type' => 'success', 'msg' => 'تم الحذف بنجاح'];
     } catch (Exception $e) {
         // إذا حصل أي خطأ، يتم التراجع عن كل التغييرات

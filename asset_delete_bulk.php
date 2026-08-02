@@ -84,6 +84,16 @@ try {
             DELETE FROM assets
             WHERE id=?
         ")->execute([$id]);
+
+        require_once __DIR__.'/libs/activity_log.php';
+
+        add_activity_log(
+            $pdo,
+            'delete',
+            'assets',
+            $oldData['id'],
+            'حذف أصل'
+        );
     }
 
     $pdo->commit();

@@ -103,6 +103,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
 
                 $expense_id = $pdo->lastInsertId();
 
+                require_once __DIR__.'/libs/activity_log.php';
+
+                add_activity_log(
+                    $pdo,
+                    'add_excel',
+                    'expenses',
+                    $expense_id,
+                    "إضافة مصروفات - {$serial_invoice}"
+                );
+
                 // التعامل مع العهدة
                 if ($payment_source === 'عهدة') {
                     $amountToDeduct = $total_amount;

@@ -53,6 +53,16 @@ try {
     ");
     $upd->execute([$name, $addr, $phone, $id]);
 
+    require_once __DIR__.'/libs/activity_log.php';
+
+    add_activity_log(
+        $pdo,
+        'edit',
+        'branches',
+        $id,
+        "تعديل فرع"
+    );
+
     $pdo->commit();
 
     $_SESSION['toast'] = ['type'=>'success','msg'=>'تم تعديل الفرع بنجاح'];

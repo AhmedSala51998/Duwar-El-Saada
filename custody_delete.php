@@ -31,6 +31,15 @@ if ($id > 0) {
     } else {
         // مفيش حركات، نحذف بأمان
         $pdo->prepare("DELETE FROM custodies WHERE id = ?")->execute([$id]);
+        require_once __DIR__.'/libs/activity_log.php';
+
+        add_activity_log(
+            $pdo,
+            'delete',
+            'custodies',
+            $id,
+            "حذف عهد"
+        );
         $_SESSION['toast'] = ['type' => 'success', 'msg' => 'تم حذف العهدة بنجاح'];
     }
 }

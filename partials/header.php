@@ -3031,6 +3031,12 @@ dotlottie-wc {
     </a>
     <?php endif ?>
 
+    <?php if(has_permission('logs.view')): ?>
+    <a class="mobile-item <?= $current_page=='activity_logs.php'?'active':'' ?>" href="<?= BASE_URL ?>/activity_logs.php">
+      <i class="bi bi-file-earmark-text"></i> العمليات والتحديثات
+    </a>
+    <?php endif ?>
+
 
     <!-- الإعدادات -->
     <div class="menu-divider"></div>
@@ -3145,6 +3151,12 @@ dotlottie-wc {
       <?php if(has_permission('reports.view')): ?>
       <a class="sidebar-link <?= $current_page=='reports.php'?'active':'' ?>" href="<?= BASE_URL ?>/reports.php">
         <i class="bi bi-graph-up"></i> التقارير
+      </a>
+      <?php endif ?>
+
+      <?php if(has_permission('logs.view')): ?>
+      <a class="sidebar-link <?= $current_page=='activity_logs.php'?'active':'' ?>" href="<?= BASE_URL ?>/activity_logs.php">
+        <i class="bi bi-file-earmark-text"></i> العمليات والتحديثات
       </a>
       <?php endif ?>
 

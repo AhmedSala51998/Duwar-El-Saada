@@ -72,6 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
         $order_id = $pdo->lastInsertId();
 
         // إدخال تفاصيل الأصناف
+        $countProducts = 0;
         foreach ($names as $i => $name) {
             $name = trim($name);
             if (!$name) continue;
@@ -95,6 +96,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
             ");
             $stmt->execute([$branch_id, $name, $unit_quantity , $unit_quantity , $single_package , $quantity, $unit, $package,$unit_price, $price, $payer, $payment_source , $subtotal_unit , $vat_unit , $alltotal_unit, $order_id]);
             $purchase_id = $pdo->lastInsertId();
+
+            $countProducts++;
 
             if ($payment_source === 'عهدة') {
                 $amountNeeded = ($price * $quantity) + $vat_unit;
@@ -138,6 +141,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
                 }
             }
         }
+
+        require_once __DIR__.'/libs/activity_log.php';
+
+        add_activity_log(
+            $pdo,
+            'add',
+            'purchases',
+            $order_id,
+            "إضافة مشتريات - الفاتورة: {$serial_invoice} - عدد المنتجات: {$countProducts}"
+        );
 
         // لو كله تمام، اعمل commit
         $pdo->commit();

@@ -104,6 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?,?,?,?, ? ,? ,?, ?,?)
             ");
 
+            $countProducts = 0;
             foreach($items as $data) {
                 $name = trim($data['name']);
                 if (!$name) continue;
@@ -126,6 +127,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
 
                 $stmt->execute([$branch_id, $name, $single_quantity, $single_quantity ,$unit_quantity , $quantity , $unit, $package, $unit_price , $price, $payer, $source, $subtotal_unit , $vat_unit , $alltotal_unit, $order_id]);
                 $purchase_id = $pdo->lastInsertId();
+
+                $countProducts++;
 
                 if ($source === 'عهدة') {
                     $amountNeeded = ($price * $quantity) + $vat_unit;
@@ -168,6 +171,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
                     }
                 }
             }
+
+            require_once __DIR__.'/libs/activity_log.php';
+
+            add_activity_log(
+                $pdo,
+                'add_excel',
+                'purchases',
+                $order_id,
+                "إضافة فاتورة مشتريات من ملف إكسل - الفاتورة: {$serial_invoice} - عدد المنتجات: {$countProducts}"
+            );
 
             // لو كل شيء تمام
             $pdo->commit();

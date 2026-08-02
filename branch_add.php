@@ -58,6 +58,16 @@ try {
     ");
     $ins->execute([$branchCode, $name, $addr, $phone]);
 
+    require_once __DIR__.'/libs/activity_log.php';
+
+    add_activity_log(
+        $pdo,
+        'add',
+        'branches',
+        null,
+        "إضافة فرع جديد - {$branchCode}"
+    );
+
     $pdo->commit();
 
     $_SESSION['toast']=[

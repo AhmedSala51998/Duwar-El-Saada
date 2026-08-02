@@ -57,6 +57,16 @@ try {
     $del = $pdo->prepare("DELETE FROM branches WHERE id = ?");
     $del->execute([$id]);
 
+    require_once __DIR__.'/libs/activity_log.php';
+
+    add_activity_log(
+        $pdo,
+        'delete',
+        'branches',
+        $id,
+        "حذف فرع"
+    );
+
     // 🎯 تأكيد العملية
     $pdo->commit();
 

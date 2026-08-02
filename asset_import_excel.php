@@ -69,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
                 INSERT INTO assets (branch_id, bill_number, invoice_serial, name, type, quantity, price, has_vat, vat_value, total_amount, payer_name, payment_source, image, created_at)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ");
-
+            
             foreach ($rows as $r) {
                 $data = array_combine($header, $r);
                 $name = trim($data['name']);
@@ -104,6 +104,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
                 ]);
 
                 $asset_id = $pdo->lastInsertId();
+
+                require_once __DIR__.'/libs/activity_log.php';
+
+                add_activity_log(
+                    $pdo,
+                    'import_excel',
+                    'assets',
+                    $asset_id,
+                    "استيراد أصل من ملف Excel - فاتورة {$serial_invoice}"
+                );
 
                 // التعامل مع العهدة إن وجدت
                 if ($payment_source === 'عهدة') {
@@ -147,6 +157,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
             }
 
             $pdo->commit();
+
             $_SESSION['toast'] = ['type'=>'success','msg'=>"✅ تم استيراد الأصول وإنشاء الفاتورة رقم {$serial_invoice} بنجاح"];
 
         } catch (Exception $e) {

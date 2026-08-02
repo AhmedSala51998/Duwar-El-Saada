@@ -64,6 +64,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_validate($_POST['_csrf'] ?? ''
             /* === الإدخال === */
             $stmt->execute([$branchCode, $name, $address, $phone]);
             $insertedCount++;
+
+            require_once __DIR__.'/libs/activity_log.php';
+
+            add_activity_log(
+                $pdo,
+                'add_group',
+                'branches',
+                null,
+                "إضافة فرع - {$branchCode}"
+            );
         }
 
         $pdo->commit();

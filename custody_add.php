@@ -28,6 +28,16 @@ if($_SERVER['REQUEST_METHOD']==='POST' && csrf_validate($_POST['_csrf'] ?? '')){
     $pdo->prepare("INSERT INTO custodies(branch_id, invoice_serial , person_name,amount , main_amount,sub_amount,taken_at,notes) VALUES(?,?,?,?,?,?,?,?)")
         ->execute([$branch_id, $serial_invoice,$person_name,$amount , $main_amount,$main_amount,$taken_at,$notes]);
 
+    require_once __DIR__.'/libs/activity_log.php';
+
+    add_activity_log(
+        $pdo,
+        'add',
+        'custodies',
+        null,
+        "إضافة عهد - {$serial_invoice}"
+    );
+
     $_SESSION['toast'] = ['type'=>'success','msg'=>'تمت الإضافة بنجاح'];
 }
 

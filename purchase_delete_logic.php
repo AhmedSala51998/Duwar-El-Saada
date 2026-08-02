@@ -60,6 +60,16 @@ if ($oldData) {
             $_SESSION['toast'] = ['type'=>'success','msg'=>'تم حذف العملية بنجاح'];
         }
 
+        require_once __DIR__.'/libs/activity_log.php';
+
+        add_activity_log(
+            $pdo,
+            'delete',
+            'purchases',
+            $oldData['id'],
+            "حذف مشتريات"
+        );
+
         $pdo->commit(); // تأكيد المعاملة
     } catch (\Exception $e) {
         $pdo->rollBack(); // التراجع عن كل التغييرات في حالة الخطأ
