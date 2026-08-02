@@ -9,6 +9,7 @@ $from_date = $_GET['from_date'] ?? '';
 $to_date   = $_GET['to_date'] ?? '';
 $kw        = trim($_GET['kw'] ?? '');
 $branch_id = $_GET['branch_id'] ?? '';
+$payment_source = trim($_GET['payment_source'] ?? '');
 
 // ضبط التواريخ بناءً على نوع التاريخ
 if ($date_type === 'today') {
@@ -48,6 +49,12 @@ if ($branch_id !== '') {
     $params[] = $branch_id;
 }
 
+// فلترة مصدر الدفع
+if ($payment_source !== '') {
+    $q .= " AND a.payment_source = ?";
+    $params[] = $payment_source;
+}
+
 $q .= " ORDER BY a.id DESC";
 
 // تنفيذ الاستعلام
@@ -55,8 +62,31 @@ $s = $pdo->prepare($q);
 $s->execute($params);
 $rows = $s->fetchAll(PDO::FETCH_ASSOC);
 
+$report_note = '';
+
+if ($date_type === 'today') {
+    $report_note = 'تقرير اليوم (' . date('Y-m-d') . ')';
+} elseif ($date_type === 'yesterday') {
+    $report_note = 'تقرير أمس (' . date('Y-m-d', strtotime('-1 day')) . ')';
+} elseif ($from_date || $to_date) {
+    $report_note = 'الفترة من ' . ($from_date ?: 'بداية') . ' إلى ' . ($to_date ?: 'اليوم');
+} else {
+    $report_note = 'كل التقارير';
+}
+
 // تجهيز البيانات للتصدير
 $data = [];
+
+if ($report_note !== '') {
+    $data[] = [$report_note];
+}
+
+if (!empty($payment_source)) {
+    $data[] = ['مصدر الدفع: ' . $payment_source];
+}
+
+$data[] = []; // سطر فارغ
+
 $data[] = ["ID", "الاسم", "النوع", "العدد", "السعر", "الإجمالي الطبيعي", "الضريبة (15%)", "الإجمالي بعد الضريبة", "الدافع", "مصدر الدفع", "الفرع", "التاريخ"];
 
 foreach ($rows as $r) {

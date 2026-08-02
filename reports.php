@@ -244,6 +244,22 @@ $current_branch = $_GET['branch_id'] ?? '';
         </select>
       </div>
 
+      <div class="col-md-3">
+          <label class="form-label">مصدر الدفع</label>
+          <select name="payment_source" class="form-select">
+              <option value="">كل المصادر</option>
+              <option value="كاش" <?= ($_GET['payment_source'] ?? '') == 'كاش' ? 'selected' : '' ?>>
+                  كاش
+              </option>
+              <option value="بنك" <?= ($_GET['payment_source'] ?? '') == 'بنك' ? 'selected' : '' ?>>
+                  بنك
+              </option>
+              <option value="عهدة" <?= ($_GET['payment_source'] ?? '') == 'عهدة' ? 'selected' : '' ?>>
+                  عهدة
+              </option>
+          </select>
+      </div>
+
       <div class="col-md-3 d-flex align-items-end">
         <button type="submit" class="btn btn-warning w-100 filter_button" style="border: none; color:#FFF">
           <i class="bi bi-funnel"></i> تطبيق الفلتر
@@ -260,6 +276,9 @@ if (!empty($_GET['from_date'])) $filterParams .= '&from_date=' . $_GET['from_dat
 if (!empty($_GET['to_date'])) $filterParams .= '&to_date=' . $_GET['to_date'];
 if (!empty($_GET['date_type'])) $filterParams .= '&date_type=' . $_GET['date_type'];
 if (!empty($_GET['branch_id'])) $filterParams .= '&branch_id=' . $_GET['branch_id']; 
+if (!empty($_GET['payment_source'])) {
+    $filterParams .= '&payment_source=' . urlencode($_GET['payment_source']);
+}
 ?>
 
 <!-- 📦 بطاقات التصدير -->

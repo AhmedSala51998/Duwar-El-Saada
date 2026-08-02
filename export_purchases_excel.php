@@ -9,6 +9,7 @@ $date_type = $_GET['date_type'] ?? '';
 $from_date = $_GET['from_date'] ?? '';
 $to_date   = $_GET['to_date'] ?? '';
 $branch_id = $_GET['branch_id'] ?? '';
+$payment_source = trim($_GET['payment_source'] ?? '');
 
 /* منطق اليوم / أمس */
 if ($date_type === 'today') {
@@ -48,6 +49,12 @@ if ($kw !== '') {
 if (!empty($branch_id) && $branch_id != 0) {
     $q .= " AND o.branch_id = ?";
     $params[] = $branch_id;
+}
+
+/* فلترة بمصدر الدفع */
+if ($payment_source !== '') {
+    $q .= " AND p.payment_source = ?";
+    $params[] = $payment_source;
 }
 
 /* فلترة بالتواريخ */
@@ -140,7 +147,17 @@ if ($date_type === 'today') {
     $header_note = "كل التقارير";
 }
 
+$payment_note = '';
+
+if ($payment_source !== '') {
+    $payment_note = 'مصدر الدفع: ' . $payment_source;
+}
+
 /* إضافته كأول صف */
+if ($payment_note !== '') {
+    array_unshift($data, [$payment_note]);
+}
+
 array_unshift($data, [$header_note]);
 
 /* إنشاء وتنزيل الملف */

@@ -12,6 +12,7 @@ $from_date = $_GET['from_date'] ?? '';
 $to_date   = $_GET['to_date'] ?? '';
 $kw        = trim($_GET['kw'] ?? '');
 $branch_id = $_GET['branch_id'] ?? '';
+$payment_source = trim($_GET['payment_source'] ?? '');
 
 /* === اليوم / أمس === */
 if ($date_type === 'today') {
@@ -49,6 +50,11 @@ if ($kw !== '') {
 if (!empty($branch_id) && $branch_id != 0) {
     $q .= " AND o.branch_id = ?";
     $params[] = $branch_id;
+}
+
+if ($payment_source !== '') {
+    $q .= " AND p.payment_source = ?";
+    $params[] = $payment_source;
 }
 
 /* فلترة تاريخ */
@@ -123,6 +129,9 @@ th, td {
         echo "<div>الفترة من $fromText إلى $toText</div>";
     } else {
         echo "<div>كل التقرير</div>";
+    }
+    if (!empty($payment_source)) {
+        echo "<div>مصدر الدفع: " . esc($payment_source) . "</div>";
     }
     ?>
   </div>

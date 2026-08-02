@@ -9,6 +9,7 @@ $date_type  = $_GET['date_type'] ?? '';
 $from_date  = $_GET['from_date'] ?? '';
 $to_date    = $_GET['to_date'] ?? '';
 $branch_id  = $_GET['branch_id'] ?? ''; // فرع
+$payment_source = trim($_GET['payment_source'] ?? '');
 
 // استعلام قاعدة البيانات
 $q  = "SELECT * FROM expenses WHERE 1"; 
@@ -44,11 +45,29 @@ if ($branch_id !== '') {
     $ps[] = $branch_id;
 }
 
+// فلترة مصدر الدفع
+if ($payment_source !== '') {
+    $q .= " AND payment_source = ?";
+    $ps[] = $payment_source;
+}
+
 $q .= " ORDER BY id DESC";
 
 $s = $pdo->prepare($q);
 $s->execute($ps);
 $rows = $s->fetchAll(PDO::FETCH_ASSOC);
+
+$report_note = '';
+
+if ($date_type === 'today') {
+    $report_note = 'تقرير اليوم (' . date('Y-m-d') . ')';
+} elseif ($date_type === 'yesterday') {
+    $report_note = 'تقرير أمس (' . date('Y-m-d', strtotime('-1 day')) . ')';
+} elseif ($from_date || $to_date) {
+    $report_note = 'الفترة من ' . ($from_date ?: 'بداية') . ' إلى ' . ($to_date ?: 'اليوم');
+} else {
+    $report_note = 'كل التقارير';
+}
 
 // إعداد بيانات التصدير
 $data = [[
@@ -65,6 +84,12 @@ $data = [[
     "الفرع",           // إضافة اسم الفرع
     "التاريخ"
 ]];
+
+array_unshift($data, [$report_note]);
+
+if (!empty($payment_source)) {
+    array_unshift($data, ['مصدر الدفع: ' . $payment_source]);
+}
 
 foreach ($rows as $r) {
     $before = (float)$r['expense_amount'];

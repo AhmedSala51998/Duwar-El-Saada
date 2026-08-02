@@ -8,6 +8,7 @@ $date_type  = $_GET['date_type'] ?? '';
 $from_date  = $_GET['from_date'] ?? '';
 $to_date    = $_GET['to_date'] ?? '';
 $branch_id  = $_GET['branch_id'] ?? '';
+$payment_source = trim($_GET['payment_source'] ?? '');
 
 $params = [];
 $dateFilter = '';
@@ -50,6 +51,12 @@ if ($to_date) {
 if ($branch_id !== '') {
     $q .= " AND a.branch_id = ?";
     $params[] = $branch_id;
+}
+
+// فلترة مصدر الدفع
+if ($payment_source !== '') {
+    $q .= " AND a.payment_source = ?";
+    $params[] = $payment_source;
 }
 
 $q .= " ORDER BY a.id DESC";
@@ -111,6 +118,12 @@ if ($date_type === 'today') {
     echo "<p style='text-align:center;font-weight:bold'>الفترة من $fromText إلى $toText</p>";
 } else {
     echo "<p style='text-align:center;font-weight:bold'>كل التقرير</p>";
+}
+
+if (!empty($payment_source)) {
+    echo "<p style='text-align:center;font-weight:bold'>
+            مصدر الدفع: " . htmlspecialchars($payment_source) . "
+          </p>";
 }
 ?>
 
