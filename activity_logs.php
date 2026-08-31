@@ -64,158 +64,126 @@ $rows = $stmt->fetchAll();
 .action-logout{
     background:#6c757d;
 }
+/* ============================
+   DARK MODE - LOGS PAGE
+============================ */
 
-    /* ============================
-        🌙 DARK MODE GLOBAL THEME
-    ============================ */
-    body.dark-mode {
-      background-color: #121212 !important;
-      color: #ffffff !important;
-    }
+body.dark-mode .log-card{
+    background:#1b1b1b !important;
+    border:1px solid #333 !important;
+    box-shadow:0 0 15px rgba(0,0,0,.4) !important;
+}
 
-    /* النص */
-    body.dark-mode * {
-      color: #eaeaea !important;
-    }
+body.dark-mode .log-header{
+    background:linear-gradient(135deg,#ff6a00,#ff8c42) !important;
+    color:#fff !important;
+}
 
-    /* الروابط */
-    body.dark-mode a {
-      color: #ff944d !important;
-    }
+body.dark-mode .log-header *{
+    color:#fff !important;
+}
 
-    /* النافبار */
-    body.dark-mode .custom-navbar {
-      background: rgba(18,18,18,0.9) !important;
-      border-bottom: 1px solid #333 !important;
-    }
+/* نموذج البحث */
+body.dark-mode input.form-control{
+    background:#232323 !important;
+    border:1px solid #444 !important;
+    color:#fff !important;
+}
 
-    /* الأيقونات */
-    body.dark-mode i {
-      color: #ff944d !important;
-    }
+body.dark-mode input.form-control::placeholder{
+    color:#999 !important;
+}
 
-    /* الخلفيات العامة */
-    body.dark-mode .card,
-    body.dark-mode .table,
-    body.dark-mode .modal-content,
-    body.dark-mode .offcanvas,
-    body.dark-mode .dropdown-menu,
-    body.dark-mode .form-control,
-    body.dark-mode input,
-    body.dark-mode select,
-    body.dark-mode textarea {
-      background-color: #1e1e1e !important;
-      color: #fff !important;
-      border-color: #333 !important;
-    }
+/* الجدول */
+body.dark-mode .table{
+    background:#1b1b1b !important;
+    color:#fff !important;
+}
 
-    /* الكروت */
-    body.dark-mode .card {
-      box-shadow: 0 0 10px rgba(0,0,0,0.5) !important;
-    }
+body.dark-mode .table thead{
+    background:#252525 !important;
+}
 
-    /* الجداول */
-    body.dark-mode table {
-      color: #fff !important;
-    }
-    body.dark-mode table tr {
-      background: #1b1b1b !important;
-    }
-    body.dark-mode table td,
-    body.dark-mode table th {
-      border-color: #333 !important;
-    }
+body.dark-mode .table thead th{
+    background:#252525 !important;
+    color:#ff944d !important;
+    border-color:#333 !important;
+    font-weight:700;
+}
 
-    /* المودال */
-    body.dark-mode .modal-header,
-    body.dark-mode .modal-footer {
-      border-color: #333 !important;
-    }
+body.dark-mode .table tbody tr{
+    background:#1b1b1b !important;
+    transition:.2s;
+}
 
-    /* dropdown */
-    body.dark-mode .dropdown-menu {
-      background-color: #1f1f1f !important;
-      border-color: #333 !important;
-    }
-    body.dark-mode .dropdown-item:hover {
-      background-color: #333 !important;
-    }
+body.dark-mode .table tbody tr:nth-child(even){
+    background:#202020 !important;
+}
 
-    /* البادجات */
-    body.dark-mode .role-badge {
-      background: #2c2c2c !important;
-      color: #ff944d !important;
-      border-color: #ff944d !important;
-    }
+body.dark-mode .table tbody tr:hover{
+    background:#2b2b2b !important;
+}
 
-    /* السايدبار */
-    body.dark-mode .sidebar-link {
-      color: #ddd !important;
-    }
-    body.dark-mode .sidebar-link:hover,
-    body.dark-mode .sidebar-link.active {
-      background: #333 !important;
-      color: #ff944d !important;
-    }
+body.dark-mode .table td{
+    color:#eee !important;
+    border-color:#333 !important;
+}
 
-    /* loader */
-    body.dark-mode .loader {
-      background: #121212 !important;
-    }
-    body.dark-mode .loader-text {
-      color: #ff944d !important;
-    }
+body.dark-mode .table th{
+    border-color:#333 !important;
+}
 
-    /* buttons */
-    body.dark-mode .btn-logout,
-    body.dark-mode .btn-orange {
-      background: #ff6a00 !important;
-      color: white !important;
-    }
-    body.dark-mode .btn-orange:hover {
-      background: #e65c00 !important;
-    }
+/* البيانات المهمة */
+body.dark-mode .table strong{
+    color:#fff !important;
+}
 
-    /* حقول الإدخال */
-    body.dark-mode .form-control {
-      background: #1f1f1f !important;
-      color: white !important;
-      border-color: #444 !important;
-    }
+/* بطاقة العملية */
+body.dark-mode .badge-action{
+    box-shadow:0 2px 8px rgba(0,0,0,.4);
+}
 
-    body.dark-mode .form-control:focus {
-      background: #222 !important;
-      border-color: #ff944d !important;
-      color: #fff !important;
-    }
-    /* خلفية الكونتينر */
-    body.dark-mode .table-responsive {
-        background-color: #1a1a1a !important;
-        border-color: #333 !important;
-    }
+/* زر البحث */
+body.dark-mode .btn-warning{
+    background:#ff6a00 !important;
+    border-color:#ff6a00 !important;
+    color:#fff !important;
+}
 
-    /* خلفية الجدول */
-    body.dark-mode .custom-table {
-        background-color: #1a1a1a !important;
-    }
+body.dark-mode .btn-warning:hover{
+    background:#ff7d26 !important;
+    border-color:#ff7d26 !important;
+}
 
-    /* خلايا الجدول */
-    body.dark-mode .custom-table td,
-    body.dark-mode .custom-table th {
-        background-color: #1e1e1e !important;
-        color: #fff !important;
-    }
+/* العنوان */
+body.dark-mode h3{
+    color:#fff !important;
+}
 
-    /* رأس الجدول */
-    body.dark-mode .custom-table thead th {
-        background-color: #222 !important;
-        color: #fff !important;
-    }
+/* جدول responsive */
+body.dark-mode .table-responsive{
+    background:#1b1b1b !important;
+}
 
-    /* الصفوف */
-    body.dark-mode .custom-table tbody tr:nth-child(even) td {
-        background-color: #262626 !important;
-    }
+/* Scrollbar */
+body.dark-mode ::-webkit-scrollbar{
+    width:8px;
+    height:8px;
+}
+
+body.dark-mode ::-webkit-scrollbar-track{
+    background:#1b1b1b;
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb{
+    background:#444;
+    border-radius:10px;
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb:hover{
+    background:#666;
+}
+
 </style>
 
 <div class="d-flex justify-content-between align-items-center mb-3">
