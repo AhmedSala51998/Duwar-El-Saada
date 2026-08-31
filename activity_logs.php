@@ -183,7 +183,66 @@ body.dark-mode ::-webkit-scrollbar-thumb{
 body.dark-mode ::-webkit-scrollbar-thumb:hover{
     background:#666;
 }
+/* جسم الجدول */
+body.dark-mode .table tbody,
+body.dark-mode .table tbody tr,
+body.dark-mode .table tbody td{
+    background:#1b1b1b !important;
+    color:#fff !important;
+}
 
+/* صفوف متبادلة */
+body.dark-mode .table tbody tr:nth-child(even){
+    background:#222 !important;
+}
+
+body.dark-mode .table tbody tr:nth-child(even) td{
+    background:#222 !important;
+}
+
+/* Hover */
+body.dark-mode .table-hover tbody tr:hover,
+body.dark-mode .table-hover tbody tr:hover td{
+    background:#2d2d2d !important;
+}
+
+/* الهيدر */
+body.dark-mode .table-light,
+body.dark-mode .table-light th{
+    background:#252525 !important;
+    color:#ff944d !important;
+}
+
+/* Responsive wrapper */
+body.dark-mode .table-responsive{
+    background:#1b1b1b !important;
+}
+
+/* الحدود */
+body.dark-mode .table>:not(caption)>*>*{
+    border-color:#333 !important;
+}
+
+/* لو Bootstrap عامل table-striped */
+body.dark-mode .table-striped>tbody>tr:nth-of-type(odd)>*{
+    background:#1f1f1f !important;
+    color:#fff !important;
+}
+
+
+
+body.dark-mode .table tbody tr{
+    background:#171717 !important;
+}
+
+body.dark-mode .table tbody tr:nth-child(even){
+    background:#1d1d1d !important;
+}
+
+body.dark-mode .table-hover tbody tr:hover td{
+    background:#2a2a2a !important;
+    box-shadow: inset 4px 0 0 #ff6a00;
+}
 </style>
 
 <div class="d-flex justify-content-between align-items-center mb-3">
