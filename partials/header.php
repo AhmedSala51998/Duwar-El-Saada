@@ -3037,6 +3037,13 @@ dotlottie-wc {
     </a>
     <?php endif ?>
 
+    <?php if (has_permission('dhimam.view')): ?>
+        <a class="mobile-item <?= $current_page == 'dhimam.php' ? 'active' : '' ?>"
+          href="<?= BASE_URL ?>/dhimam.php">
+            <i class="bi bi-cash-coin"></i> الذمم المالية
+        </a>
+    <?php endif; ?>
+
 
     <!-- الإعدادات -->
     <div class="menu-divider"></div>
@@ -3159,6 +3166,13 @@ dotlottie-wc {
         <i class="bi bi-file-earmark-text"></i> العمليات والتحديثات
       </a>
       <?php endif ?>
+
+      <?php if (has_permission('dhimam.view')): ?>
+          <a class="sidebar-link <?= $current_page == 'dhimam.php' ? 'active' : '' ?>"
+            href="<?= BASE_URL ?>/dhimam.php">
+              <i class="bi bi-cash-coin"></i> الذمم المالية
+          </a>
+      <?php endif; ?>
 
       <?php if(has_permission('systems_settings.view')): ?>
         <hr>
