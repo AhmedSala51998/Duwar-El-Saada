@@ -73,6 +73,187 @@ $canDelete = has_permission('dhimam.delete');
     border-color: #ff6a00;
     color: #fff;
 }
+
+
+/* ============================
+   DARK MODE - LOGS PAGE
+============================ */
+
+body.dark-mode .log-card{
+    background:#1b1b1b !important;
+    border:1px solid #333 !important;
+    box-shadow:0 0 15px rgba(0,0,0,.4) !important;
+}
+
+body.dark-mode .log-header{
+    background:linear-gradient(135deg,#ff6a00,#ff8c42) !important;
+    color:#fff !important;
+}
+
+body.dark-mode .log-header *{
+    color:#fff !important;
+}
+
+/* نموذج البحث */
+body.dark-mode input.form-control{
+    background:#232323 !important;
+    border:1px solid #444 !important;
+    color:#fff !important;
+}
+
+body.dark-mode input.form-control::placeholder{
+    color:#999 !important;
+}
+
+/* الجدول */
+body.dark-mode .table{
+    background:#1b1b1b !important;
+    color:#fff !important;
+}
+
+body.dark-mode .table thead{
+    background:#252525 !important;
+}
+
+body.dark-mode .table thead th{
+    background:#252525 !important;
+    color:#ff944d !important;
+    border-color:#333 !important;
+    font-weight:700;
+}
+
+body.dark-mode .table tbody tr{
+    background:#1b1b1b !important;
+    transition:.2s;
+}
+
+body.dark-mode .table tbody tr:nth-child(even){
+    background:#202020 !important;
+}
+
+body.dark-mode .table tbody tr:hover{
+    background:#2b2b2b !important;
+}
+
+body.dark-mode .table td{
+    color:#eee !important;
+    border-color:#333 !important;
+}
+
+body.dark-mode .table th{
+    border-color:#333 !important;
+}
+
+/* البيانات المهمة */
+body.dark-mode .table strong{
+    color:#fff !important;
+}
+
+/* بطاقة العملية */
+body.dark-mode .badge-action{
+    box-shadow:0 2px 8px rgba(0,0,0,.4);
+}
+
+/* زر البحث */
+body.dark-mode .btn-warning{
+    background:#ff6a00 !important;
+    border-color:#ff6a00 !important;
+    color:#fff !important;
+}
+
+body.dark-mode .btn-warning:hover{
+    background:#ff7d26 !important;
+    border-color:#ff7d26 !important;
+}
+
+/* العنوان */
+body.dark-mode h3{
+    color:#fff !important;
+}
+
+/* جدول responsive */
+body.dark-mode .table-responsive{
+    background:#1b1b1b !important;
+}
+
+/* Scrollbar */
+body.dark-mode ::-webkit-scrollbar{
+    width:8px;
+    height:8px;
+}
+
+body.dark-mode ::-webkit-scrollbar-track{
+    background:#1b1b1b;
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb{
+    background:#444;
+    border-radius:10px;
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb:hover{
+    background:#666;
+}
+/* جسم الجدول */
+body.dark-mode .table tbody,
+body.dark-mode .table tbody tr,
+body.dark-mode .table tbody td{
+    background:#1b1b1b !important;
+    color:#fff !important;
+}
+
+/* صفوف متبادلة */
+body.dark-mode .table tbody tr:nth-child(even){
+    background:#222 !important;
+}
+
+body.dark-mode .table tbody tr:nth-child(even) td{
+    background:#222 !important;
+}
+
+/* Hover */
+body.dark-mode .table-hover tbody tr:hover,
+body.dark-mode .table-hover tbody tr:hover td{
+    background:#2d2d2d !important;
+}
+
+/* الهيدر */
+body.dark-mode .table-light,
+body.dark-mode .table-light th{
+    background:#252525 !important;
+    color:#ff944d !important;
+}
+
+/* Responsive wrapper */
+body.dark-mode .table-responsive{
+    background:#1b1b1b !important;
+}
+
+/* الحدود */
+body.dark-mode .table>:not(caption)>*>*{
+    border-color:#333 !important;
+}
+
+/* لو Bootstrap عامل table-striped */
+body.dark-mode .table-striped>tbody>tr:nth-of-type(odd)>*{
+    background:#1f1f1f !important;
+    color:#fff !important;
+}
+
+
+
+body.dark-mode .table tbody tr{
+    background:#171717 !important;
+}
+
+body.dark-mode .table tbody tr:nth-child(even){
+    background:#1d1d1d !important;
+}
+
+body.dark-mode .table-hover tbody tr:hover td{
+    background:#2a2a2a !important;
+    box-shadow: inset 4px 0 0 #ff6a00;
+}
 </style>
 
 <?php if (!empty($_SESSION['toast'])):
@@ -218,7 +399,7 @@ $canDelete = has_permission('dhimam.delete');
         <div class="modal fade" id="edit<?= $id ?>" tabindex="-1">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <form method="post" action="dhimam_edit.php">
+                    <form method="post" action="dhimam_edit">
                         <input type="hidden" name="_csrf"
                                value="<?= esc(csrf_token()) ?>">
                         <input type="hidden" name="id" value="<?= $id ?>">
@@ -285,7 +466,7 @@ $canDelete = has_permission('dhimam.delete');
         <div class="modal fade" id="delete<?= $id ?>" tabindex="-1">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <form method="post" action="dhimam_delete.php">
+                    <form method="post" action="dhimam_delete">
                         <input type="hidden" name="_csrf"
                                value="<?= esc(csrf_token()) ?>">
                         <input type="hidden" name="id" value="<?= $id ?>">
@@ -321,7 +502,7 @@ $canDelete = has_permission('dhimam.delete');
 <div class="modal fade" id="addDhimma" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form method="post" action="dhimam_add.php">
+            <form method="post" action="dhimam_add">
                 <input type="hidden" name="_csrf"
                        value="<?= esc(csrf_token()) ?>">
 
