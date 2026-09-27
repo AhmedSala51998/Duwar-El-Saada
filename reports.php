@@ -345,6 +345,16 @@ if (!empty($_GET['payment_source'])) {
       'excel_perm' => 'reports.report_vat_excel',
       'pdf_perm'   => 'reports.report_vat_pdf',
     ],
+    [
+      'title' => 'الذمم المالية',
+      'desc'  => 'تصدير جميع الذمم المالية',
+      'excel' => 'export_dhimam_excel.php',
+      'pdf'   => 'export_dhimam_pdf.php',
+      'icon'  => 'bi-cash-coin',
+      'view_perm'  => 'dhimam.view',
+      'excel_perm' => 'dhimam.view',
+      'pdf_perm'   => 'dhimam.view',
+    ],
   ];
 
   foreach($reports as $r):
