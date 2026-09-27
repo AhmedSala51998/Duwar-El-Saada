@@ -40,7 +40,8 @@ $whereClauses = " WHERE 1 ";
 
 if ($kw !== '') {
     $whereClauses .= " AND (
-        e.invoice_serial LIKE ?
+        e.id LIKE ?
+        OR e.invoice_serial LIKE ?
         OR e.main_expense LIKE ?
         OR b.branch_name LIKE ?
     )";
