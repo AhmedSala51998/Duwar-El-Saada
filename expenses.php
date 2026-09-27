@@ -22,11 +22,13 @@ $params = [];
 
 if ($kw !== '') {
     $q .= " AND (
-                e.invoice_serial LIKE ?
+                e.id LIKE ?
+                OR e.invoice_serial LIKE ?
                 OR e.main_expense LIKE ?
                 OR b.branch_name LIKE ?
             )";
 
+    $params[] = "%$kw%";
     $params[] = "%$kw%";
     $params[] = "%$kw%";
     $params[] = "%$kw%";
